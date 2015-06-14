@@ -1,0 +1,31 @@
+Package: bnclassify
+Title: Learning Bayesian Network Classifiers from Data
+Description: Algorithms for learning Bayesian network classifiers from data.
+Version: 0.2.0
+Authors@R: 
+    c(person("Mihaljevic","Bojan",email="bmihaljevic@fi.upm.es",role=c("aut","cre")),
+    person("Bielza","Concha",email="mcbielza@fi.upm.es",role="aut"),
+    person("Larranaga","Pedro",email="pedro.larranaga@fi.upm.es",role="aut"))
+Depends: R (>= 3.2.0)
+Imports: assertthat (>= 0.1),
+         entropy(>= 1.2.0), 
+         crossval(>= 1.0.2),
+         gRain(>= 1.2-3), 
+         gRbase(>= 1.7-0.1), 
+         graph(>= 1.42.0),
+         matrixStats(>= 0.14.0),
+         plyr(>= 1.8.1), 
+         pryr(>= 0.1.1),
+         RBGL(>= 1.40.1), 
+         Rgraphviz(>= 2.8.1), 
+         rpart(>= 4.1-8)
+Suggests: mlr(>= 2.2), 
+          testthat(>= 0.8.1),
+          knitr
+License: GPL (>= 3)
+Packaged: 2014-12-14 15:12:44 UTC; Bojan
+Author: Mihaljevic Bojan [aut, cre],
+  Bielza Concha [aut],
+  Larranaga Pedro [aut]
+Maintainer: Mihaljevic Bojan <bmihaljevic@fi.upm.es>
+VignetteBuilder: knitr
