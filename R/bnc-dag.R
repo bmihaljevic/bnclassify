@@ -77,6 +77,9 @@ bnc_get_dag <- function(x) {
   stopifnot(inherits(x, "bnc_dag"))
   x$.dag
 }
+to_graphNEL <- function(x) {
+  bnc_get_dag(x)
+}
 bnc_class <- function(x) {
   stopifnot(inherits(x, "bnc_dag"))
   x$.class
@@ -97,4 +100,16 @@ bnc_families <- function(x) {
 bnc_feature_families <- function(x) {
   stopifnot(inherits(x, "bnc_dag"))
   lapply(bnc_families(x), setdiff, bnc_class(x))
+}
+# ========================
+# Type functions
+is_semi_naive <- function(x) {
+  warning(as.character(match.call()[[1]]), "Not implemented.")
+  TRUE
+}
+is_aug_nb <- function(x) {
+  warning(as.character(match.call()[[1]]), "Not implemented.")
+  # Check call has no parents
+  # Check class is in all families
+  TRUE
 }

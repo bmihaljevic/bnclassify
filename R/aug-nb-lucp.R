@@ -27,6 +27,14 @@ compute_augnb_luccpx <- function(x, dataset) {
 #   Multiply factors
   sum_log_factors(factors)
 }
+
+get_ccx_factors <- function(xcpts, dataset) {
+  # Get variables (1D of cpts)
+  # Make indices to get for each class
+  # Fetch from CPTs
+  # Format accordingly
+}
+
 # Makes the indices to get values for observations of CPT variables and each
 # possible class
 make_xcpt_indices <- function(features, class, nclass, dataset) {

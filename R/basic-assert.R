@@ -37,6 +37,9 @@ are_factors <- function(x) {
   stopifnot(is.data.frame(x))
   all(vapply(x, is.factor, FUN.VALUE = logical(1)))
 }
+is_just <- function(x, class) {
+  identical(class(x), class)
+}
 ## Checks
 # Checks the object is non-empty and has no NA's
 check_non_empty_complete <- function(x) {

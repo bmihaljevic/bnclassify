@@ -19,6 +19,14 @@ nbcar <- function() {
   lp(nb('class', car), car, smooth = 1)
 }
 
+nbcarp <- function(cardata) {
+  lp(nb('class', cardata), cardata, smooth = 1)
+}
+
+nbcarclass <- function() {
+  lp(nb('class', car[, 'class', drop = FALSE]), car, smooth = 1)
+}
+
 bnc <- function(class, dataset, smooth = 1) {
   lp(nb(class, dataset), dataset, smooth = smooth)
 }
