@@ -1,3 +1,33 @@
+# Checks cpts ordered according to bnc_vars and 1D names correspond to bnc_vars()
+
+families2cpts <- function(families, dataset, smooth) {
+  # Check dataset 
+  check_dataset(dataset)
+  # Check families 
+}
+
+check_cpts <- function(x) {
+  # Check it is a bnc_bn
+  stopifnot(inherits(x, "bnc_bn"))
+  cpts <- bnc_params(x)
+  # TODO: see new-design.md for cpt module
+  # Check the names of cpts are equal to the names of the vars
+  vars <- names(cpts)
+  stopifnot(identical(vars, names(bnc_vars(x))))
+  # Checks 1D corresponds to vars
+  cpt_vars_values(bnc_params(x))
+}
+check_cpts <- function() {
+#   Check that the class is last in all dimensions
+#   Check that the name of the cpt is the name of the 1st one 
+#   Check that the values all match ...
+#   Check that class has no parents
+#   Not checking for cycles though...
+  warning("Not implemented.")
+}
+extract_cpt <- function(vars, dataset, smooth) {
+  ctgt2cpt(extract_ctgt(vars, dataset), smooth = smooth)
+}
 #' Turns a contingency table into a conditional probability table  
 ctgt2cpt <- function(ctgt, smooth) {
   #   Check smooth is numeric and non-negative
@@ -41,16 +71,21 @@ cpt_vars_values <- function(cpts) {
 #' Returns the name of the first dimensions and the values in the dimension of
 #' the table.
 cpt_1d_values <- function(cpt) {
-  # Check it is table
-  stopifnot(is.table(cpt))
   # Get 1d name and check not empty
-  var <- names(dimnames(cpt))[[1]]
-  stopifnot(length(var) > 0)
+  var <- cpt_1d_var(cpt)
   # Get 1d cases and check not empty
   values <- dimnames(cpt)[[1]]
   check_non_empty_complete(values)
   # Return var name and values
   list(var = var, values = values)
+}
+cpt_1d_var <- function(cpt) {
+  # Check it is table
+  stopifnot(is.table(cpt))
+  # Get 1d name and check not empty
+  var <- names(dimnames(cpt))[[1]]
+  stopifnot(assertthat::is.string(var))
+  var
 }
 get_cpt_vars <- function(cpt) {
   # Check is a table
@@ -65,6 +100,9 @@ get_cpt_values <- function(cpt) {
 }
 get_cpts_vars <- function(cpts) {
   unique(unlist(lapply(cpts, get_cpt_vars), use.names = FALSE))
+}
+get_cpts_families <- function(cpts) {
+  lapply(cpts, get_cpt_vars)
 }
 # Gets cpt entries using a list of indices
 # Returns a vector

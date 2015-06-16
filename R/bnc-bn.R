@@ -31,18 +31,6 @@ check_bnc_bn <- function(x) {
   #Check values correspond to the 1st dim of the CPTs
   check_cpts(x)
 }
-# Checks cpts ordered according to bnc_vars and 1D names correspond to bnc_vars()
-check_cpts <- function(x) {
-  # Check it is a bnc_bn
-  stopifnot(inherits(x, "bnc_bn"))
-  cpts <- bnc_params(x)
-  # TODO: see new-design.md for cpt module
-  # Check the names of cpts are equal to the names of the vars
-  vars <- names(cpts)
-  stopifnot(identical(vars, names(bnc_vars(x))))
-  # Checks 1D corresponds to vars
-  cpt_vars_values(bnc_params(x))
-}
 # Accessors 
 bnc_params <- function(x) {
   stopifnot(inherits(x, "bnc_bn"))  

@@ -1,20 +1,16 @@
-compute_cp_multi <- function(x, dataset)  {
+compute_lucp_multi <- function(x, dataset)  {
   # We can only apply the optimization if data is complete 
   if (!anyNA(dataset)) {
-    compute_cp_multi_complete(x, dataset)
+    compute_lucp_multi_complete(x, dataset)
   }
   else {
     stop("Not implemented.")
   }
 }
 
-compute_cp_multi_complete <- function(x, dataset) {
-  # x is a list of cpts.
-  # each list of cpts is an aug nb
-  # Get unique CPT families 
-  # Get the entries for each CPT
-  # Get the common ones 
-  # For each x, multiply the not common ones 
+compute_lucp_multi_complete <- function(x, dataset) {
+  stopifnot(!anyNA(dataset)) 
+  compute_augnb_lucp_multi(x, dataset)
 }
 
 # x is a bnc_dag

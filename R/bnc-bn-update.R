@@ -57,14 +57,38 @@ do_bnc_call <- function(fargs, dataset) {
   call <- pryr::make_call(fargs[[1]], .args = fargs[-1])
   eval(call)
 }
-# do_bnc_call <- function(lcall, args) {
-#   call <- pryr::modify_call(lcall$call, args)
-#   eval(call, lcall$env)
-# }
-# save_bnc_call <- function(call, env) {
-#   list(call=call, env=env)
-# }
-# check_bnc_call <- function(lcall) {
-#   stopifnot(is.call(lcall$call))
-#   stopifnot(is.environment(lcall$env))
+# multi_learn_predict <- function(x, cp, classes, lp_args, prob = FALSE) {
+multi_learn_predict <- function(x, smooth, dataset, prob = FALSE) {
+#   Get the probabilities entries for each features CPT
+  list_of_cpts <- multi_learn(x, smooth, dataset)
+#   Get unnormalized log class posterior for each list of cpts (each dag)
+  compute_augnb_lucp_multi(list_of_cpts, bnc_class(x), dataset)
+#   For each x, 
+}
+multi_learn <- function(x, smooth, dataset) {
+  # x is a list of bnc_dag. Ensure it is a list.
+  # Get all families, including that of the class, for each x
+  families_list <- lapply(x, bnc_families)
+  # Assign unique id to each family
+  families_list <- lapply(families_list, tag_families)
+  # Get the unique families. TODO: Standardize families first?
+  ufams <- unique_families(families_list)
+#   Extract the CPT of each unique family
+  ucpts <- lapply(ufams, extract_cpt, dataset, smooth = smooth)
+#   Return the list of the cpts. 
+  lapply(families_list, function(dag_fams) ucpts[names(dag_fams)])
+#     Could return a bnc_bn object: cpts + class. This would also need to ensure an  
+#     order of the variables.
+}
+unique_cpts <- function() {
+  # ... 
+}
+
+# multi_learn_predict (dags, dataset) {
+#   tag the families in each dag
+#   get unique families
+#   get cpts for unique families
+#   get unique cpts 
+#   multi posterior (tagged_dags, unique_cpts, dataset)
+#   map
 # }

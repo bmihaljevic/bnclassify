@@ -56,9 +56,6 @@ extract_ctgt <- function(cols, dataset) {
   #   Return table over cols
   table(dataset, dnn = cols)
 }
-extract_cpt <- function(vars, dataset, smooth) {
-  ctgt2cpt(extract_ctgt(vars, dataset), smooth = smooth)
-}
 #' Get the level of each variable 
 extract_var_levels <- function(dataset) {
  check_dataset(dataset)

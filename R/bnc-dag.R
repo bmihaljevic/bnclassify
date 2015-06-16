@@ -10,7 +10,8 @@ bnc_dag <- function(dag, class, call) {
   vars <- setNames(nm = c(features, class))
 #  For each var, extract the family in the dag
   families <- lapply(vars, family, dag)  
-#  Check class is in every family (augmented naive Bayes)
+#  Check class is in every family (augmented naive Bayes).
+    TODO: Factor out.
   class_in_families <- Reduce(intersect, families, init = class)
   stopifnot(identical(class_in_families, class))
 # Make class last element of each family 
