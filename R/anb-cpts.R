@@ -1,29 +1,22 @@
 # Checks cpts ordered according to bnc_vars and 1D names correspond to bnc_vars()
-
-families2cpts <- function(families, dataset, smooth) {
+cpts2families <- function(cpts) {
+  lapply(cpts, cpt2family) 
+}
+check_anb_cpts <- function(cpts, class) {
+  # Check families
+  fams <- cpts2families(cpts)
+  check_anb_families(fams, class)
+  # Not checking the actual values in the CPTs...
+}
+# check_anb_cpt <- function() {
+#   # check the family. that is, get the variables and that. 
+# }
+families2cpts <- function(class, families, dataset, smooth) {
   # Check dataset 
   check_dataset(dataset)
   # Check families 
-}
-
-check_cpts <- function(x) {
-  # Check it is a bnc_bn
-  stopifnot(inherits(x, "bnc_bn"))
-  cpts <- bnc_params(x)
-  # TODO: see new-design.md for cpt module
-  # Check the names of cpts are equal to the names of the vars
-  vars <- names(cpts)
-  stopifnot(identical(vars, names(bnc_vars(x))))
-  # Checks 1D corresponds to vars
-  cpt_vars_values(bnc_params(x))
-}
-check_cpts <- function() {
-#   Check that the class is last in all dimensions
-#   Check that the name of the cpt is the name of the 1st one 
-#   Check that the values all match ...
-#   Check that class has no parents
-#   Not checking for cycles though...
-  warning("Not implemented.")
+  check_anb_families(families, class)
+  lapply(families, extract_cpt, dataset, smooth = smooth)
 }
 extract_cpt <- function(vars, dataset, smooth) {
   ctgt2cpt(extract_ctgt(vars, dataset), smooth = smooth)
@@ -58,36 +51,30 @@ ctgt2cpt <- function(ctgt, smooth) {
   # Return 
   cpt
 }
-#' just in their own cpt 1d, not checking in others. 
+#' Get just form first dimension in their own cpt, not checking for consistency
+#' in others.
+#' @keywords internal
 cpt_vars_values <- function(cpts) {
-  # Get 1D names and values for each cpt 
-  vars_values <- lapply(cpts, cpt_1d_values)
   # Check the names of cpts are equal to the name of their first dim 
-  vars <- vapply(vars_values, function(v) v$var, FUN.VALUE = character(1))
+  vars <- vapply(cpts, cpt_1d_var, FUN.VALUE = character(1))
   stopifnot(identical(unname(vars), names(cpts)))
   # Return the values
-  lapply(vars_values, function(v) v$values)
+  lapply(cpts, cpt_1d_values)
 }
 #' Returns the name of the first dimensions and the values in the dimension of
 #' the table.
 cpt_1d_values <- function(cpt) {
-  # Get 1d name and check not empty
-  var <- cpt_1d_var(cpt)
   # Get 1d cases and check not empty
-  values <- dimnames(cpt)[[1]]
+  values <- get_cpt_values(cpt)[[1]]
   check_non_empty_complete(values)
-  # Return var name and values
-  list(var = var, values = values)
+  values
 }
 cpt_1d_var <- function(cpt) {
-  # Check it is table
-  stopifnot(is.table(cpt))
-  # Get 1d name and check not empty
-  var <- names(dimnames(cpt))[[1]]
+  var <- cpt2family(cpt)[[1]]
   stopifnot(assertthat::is.string(var))
   var
 }
-get_cpt_vars <- function(cpt) {
+cpt2family <- function(cpt) {
   # Check is a table
   stopifnot(is.table(cpt))
   # TODO: check is a CPT
@@ -97,12 +84,6 @@ get_cpt_vars <- function(cpt) {
 get_cpt_values <- function(cpt) {
   stopifnot(is.table(cpt))
   dimnames(cpt)
-}
-get_cpts_vars <- function(cpts) {
-  unique(unlist(lapply(cpts, get_cpt_vars), use.names = FALSE))
-}
-get_cpts_families <- function(cpts) {
-  lapply(cpts, get_cpt_vars)
 }
 # Gets cpt entries using a list of indices
 # Returns a vector

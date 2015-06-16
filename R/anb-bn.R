@@ -1,35 +1,31 @@
-# Produces a list of CPTs and possible values for DAG variable  
+# Produces a list of CPTs for the families in the DAG
 bnc_bn <- function(x, dataset, smooth, call) {   
   # Check bnc dag
   check_bnc_dag(x) 
-  # Check dataset 
-  check_dataset(dataset)
   # Get a CPT table for each family
-  families <- bnc_families(x)
-  params <- lapply(families, extract_cpt, dataset, smooth = smooth)
-  # Create object
+  params <- families2cpts(bnc_class(x), bnc_families(x), dataset, smooth)
   # Currently not forming a grain upon creating the object
-  bnc_bn <- append(x, list(.params = params, .grain = NULL, .call_bn = call))
-  class(bnc_bn) <- c('bnc_bn', class(x))
+  bnc_bn <- make_bnc_bn(x, params = params, grain = NULL, call = NULL)
   # check
   check_bnc_bn(bnc_bn) 
   # Return
   bnc_bn
 }
+make_bnc_bn <- function(bnc_dag, params, grain, call) {
+  bnc_bn <- append(bnc_dag, list(.params = params, .grain = NULL, 
+                                 .call_bn = call))
+  class(bnc_bn) <- c('bnc_bn', class(bnc_dag))
+  bnc_bn
+}
 check_bnc_bn <- function(x) {
-  # Check it is a bnc_bn
-  stopifnot(inherits(x, "bnc_bn"))
   # Check it is a bnc dag
   check_bnc_dag(x)
-  # Check names of CPT dims equal to the families of bnc 
+  # Check CPT families match original families equal to the families of bnc 
   params <- bnc_params(x)
-  dnames <- lapply(params, function(cpt) names(dimnames(cpt)))
-  families <- bnc_families(x)
-  stopifnot(identical(families, dnames)) 
+  stopifnot(identical(cpts2families(params), bnc_families(x)))
+  check_anb_cpts(params, bnc_class(x))
   # Check values
   stopifnot(identical(names(bnc_values(x)), names(bnc_vars(x))))
-  #Check values correspond to the 1st dim of the CPTs
-  check_cpts(x)
 }
 # Accessors 
 bnc_params <- function(x) {
@@ -44,7 +40,6 @@ bnc_classes <- function(x) {
   cpt_vars_values(bnc_params(x))[[bnc_class(x)]]
 }
 # Accessors 
-
 #' To grain
 #' @export
 to_grain <- function(x) {

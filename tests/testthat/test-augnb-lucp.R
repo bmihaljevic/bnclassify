@@ -52,12 +52,9 @@ test_that("multi predict", {
   a <- nbcar()  
   b <- nbcarp(car[, 4:7])
   d <- multi_learn(list(a, b), smooth = 1, car)
-  debugonce(compute_augnb_lucp_multi)
+  # debugonce(compute_augnb_lucp_multi)
   preds <- compute_augnb_lucp_multi(d, 'class', car)  
 })
-
-
-
 
 # Not implemented to receive just CPTs
 # test_that("compute augnb lucp", {
