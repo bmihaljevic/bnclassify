@@ -54,7 +54,7 @@ compute_ulcp_incomplete <- function(x, dataset) {
   # Get gRain from bnc_bn 
   grain <- to_grain(x)
   # Get class var
-  class <- bnc_class(x)
+  class <- class_var(x)
   # Call grain class posterior
   compute_grain_luccpx(grain, dataset, class)
 }

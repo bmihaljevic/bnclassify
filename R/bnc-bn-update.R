@@ -62,13 +62,13 @@ multi_learn_predict <- function(x, smooth, dataset, prob = FALSE) {
 #   Get the probabilities entries for each features CPT
   list_of_cpts <- multi_learn(x, smooth, dataset)
 #   Get unnormalized log class posterior for each list of cpts (each dag)
-  compute_augnb_lucp_multi(list_of_cpts, bnc_class(x), dataset)
+  compute_augnb_lucp_multi(list_of_cpts, class_var(x), dataset)
 #   For each x, 
 }
 multi_learn <- function(x, smooth, dataset) {
   # x is a list of bnc_dag. Ensure it is a list.
   # Get all families, including that of the class, for each x
-  families_list <- lapply(x, bnc_families)
+  families_list <- lapply(x, families)
   # Assign unique id to each family
   families_list <- lapply(families_list, tag_families)
   # Get the unique families. TODO: Standardize families first?

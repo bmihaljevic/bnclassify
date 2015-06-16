@@ -23,7 +23,7 @@ test_that("Just the class with incomplete data set", {
   nb <- bnc_bn(nb('Class', voting[, 17, drop = FALSE]), voting,smooth = 0, NULL)
   a <- compute_cp(x = nb, voting)
   check_cp(a, nrow(voting), levels(voting$Class))
-  cp <- as.vector(bnc_params(nb)[[bnc_class(nb)]])
+  cp <- as.vector(params(nb)[[class_var(nb)]])
   expect_true(all(apply(a, 1, equivalent_num, cp)  ))
 })
 

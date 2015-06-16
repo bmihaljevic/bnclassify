@@ -19,10 +19,10 @@ predict.bnc_bn <- function(object, newdata, prob = F, ...) {
 #' @keywords internal
 map <- function(pred, x) {
   max_ind <- max.col(m = pred, ties.method = "random") 
-  classes <- bnc_classes(x=x)
+  classes <- classes(x = x)
   predicted <- classes[max_ind]
   #   Return a factor with the levels of the class variable
-  factor(predicted, levels=classes)
+  factor(predicted, levels = classes)
 }
 #' CV
 #' @export
@@ -32,7 +32,7 @@ bnc_cv <- function(x, dataset, k, dag = FALSE) {
     x <- list(x)
   }
   # TODO: Check that all x have the same class?
-  class <- bnc_class(x[[1]])
+  class <- class_var(x[[1]])
   update_args <- lapply(x, bnc_get_update_args, dag = dag)
   do_crossval(update_args, class = class, dataset = dataset, k = k)
 }

@@ -5,13 +5,13 @@
 # Returns sets of non class-conditionally independent features
 not_cci <- function(x) {
   stopifnot(is_aug_nb(x))
-  features <- subgraph(bnc_features(x), to_graphNEL(x))
+  features <- subgraph(features(x), to_graphNEL(x))
   connected_components(features)
 }
 add_feature_parents <- function(parents, feature, x) {
   stopifnot(is_aug_nb(x))  
   g <- condition_on(parents, feature, to_graphNEL(x))
-  bnc_dag(g, bnc_class(x), NULL)
+  bnc_dag(g, class_var(x), NULL)
 }
 relate_supenodes <- function(child_sn, parent_sn, x) {
 #   stopifnot(is_aug_nb(x))  
@@ -23,7 +23,7 @@ relate_supenodes <- function(child_sn, parent_sn, x) {
 add_feature <- function(node, x) {
   stopifnot(assertthat::is.string(node))
   a <- add_node(node, to_graphNEL(x))
-  class <- bnc_class(x)
+  class <- class_var(x)
   a <- condition_on(parents = class, nodes = node, x=a)
   bnc_dag(a, class, NULL)
 }

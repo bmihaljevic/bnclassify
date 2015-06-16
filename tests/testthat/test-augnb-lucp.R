@@ -26,7 +26,7 @@ test_that("0 rows dataset", {
 test_that("make cpt inds", {
   tn <- bnc_bn(nb('class', car), car, smooth = 0, NULL)
   # Nominal
-  tinds <- make_xcpt_indices(bnc_features(tn), bnc_class(tn), 4L, car)
+  tinds <- make_xcpt_indices(features(tn), class_var(tn), 4L, car)
   expect_equal(names(tinds), colnames(car))
   expect_equal(length(tinds), 7)
   expect_equal(length(tinds[[1]]), nrow(car) * 4)
@@ -48,13 +48,13 @@ test_that("matches grain", {
   gp <- compute_grain_luccpx(grain = g, v[, -17], 'Class')
 })
 
-test_that("multi predict", {
-  a <- nbcar()  
-  b <- nbcarp(car[, 4:7])
-  d <- multi_learn(list(a, b), smooth = 1, car)
-  # debugonce(compute_augnb_lucp_multi)
-  preds <- compute_augnb_lucp_multi(d, 'class', car)  
-})
+# test_that("multi predict", {
+#   a <- nbcar()  
+#   b <- nbcarp(car[, 4:7])
+#   d <- multi_learn(list(a, b), smooth = 1, car)
+#   # debugonce(compute_augnb_lucp_multi)
+#   preds <- compute_augnb_lucp_multi(d, 'class', car)  
+# })
 
 # Not implemented to receive just CPTs
 # test_that("compute augnb lucp", {

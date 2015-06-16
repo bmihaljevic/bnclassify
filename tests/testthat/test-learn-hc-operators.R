@@ -7,7 +7,7 @@ test_that("Expand supernode nominal", {
   expect_equal(length(ex), 5)
   maint <- ex[[1]]
   expect_equal(graph::numEdges(to_graphNEL(maint)), 7)
-  expect_equal(bnc_families(maint)[['buying']], c('buying', 'maint', 'class'))
+  expect_equal(families(maint)[['buying']], c('buying', 'maint', 'class'))
   
   a <- nbcar()
   expect_error(expand_supernodes(new_node = 'safety', 
@@ -21,7 +21,7 @@ test_that("includes_by_joins nominal", {
   cands <- includes_by_joins(a, colnames(car)[-7])
   expect_equal(length(cands), 4 * 2)
   buying <- cands[[1]]
-  expect_equal(bnc_families(buying)[['buying']], 
+  expect_equal(families(buying)[['buying']], 
                c('buying', 'lug_boot', 'class'))
 })
 

@@ -1,4 +1,4 @@
-# Checks cpts ordered according to bnc_vars and 1D names correspond to bnc_vars()
+# Checks cpts ordered according to vars() and 1D names correspond to vars()
 cpts2families <- function(cpts) {
   lapply(cpts, cpt2family) 
 }

@@ -57,7 +57,7 @@ retrieve_bnc_properties <- function() {
 #   class <- NULL
 #   if (inherits(x, what = "bnc_dag")) {  
 #     learner <- as_mlr(x, struct = struct)
-#     class <- bnc_class(x)
+#     class <- class_var(x)
 #   } else {   
 #     stopifnot(is.list(x))
 #     # Assign a unique ID to each learner
@@ -65,7 +65,7 @@ retrieve_bnc_properties <- function() {
 #     learner <- mapply(as_mlr, x, ids, MoreArgs = list(struct = struct), 
 #                       SIMPLIFY = FALSE)
 #     # Get it just from first element
-#     class <- bnc_class(x[[1]])
+#     class <- class_var(x[[1]])
 #   }
 #   # Make resampling description 
 #   rdesc <- mlr::makeResampleDesc(method = "CV", stratify = TRUE, iters = folds)

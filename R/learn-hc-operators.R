@@ -1,5 +1,5 @@
 get_candidate_features <- function(bnc_dag, all_features) {
-  setdiff(all_features, bnc_features(bnc_dag))
+  setdiff(all_features, features(bnc_dag))
 }
 # Forms dags by conditioninng each not-included feature on each of the supernodes
 includes_by_joins <- function(bnc_dag, all_features) {

@@ -32,15 +32,15 @@ compute_augnb_lucp_multi <- function(lists_of_fams, unique_cpts, dataset) {
 compute_augnb_luccpx <- function(x, dataset) {
 # TODO: check it is aug nb, only that way the factorization will work
 # Make a copy of class posterior per data point
-  cp <- bnc_params(x)[[bnc_class(x)]]
+  cp <- params(x)[[class_var(x)]]
   wcp <- make_cp_factor(cp, dataset) 
 #  Add class posterior to factors list
   factors <- list(wcp)
 # If there are features, get the class conditional probabilities
-  features <- bnc_features(x)
+  features <- features(x)
   if (length(features) > 0) {
-    cptsx <- bnc_params(x)[features]
-    xp <- get_ccx_factors(cptsx, dataset, bnc_class(x), names(cp))
+    cptsx <- params(x)[features]
+    xp <- get_ccx_factors(cptsx, dataset, class_var(x), names(cp))
     factors <- append(factors, xp)
   }
 #   Multiply factors

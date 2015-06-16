@@ -16,13 +16,13 @@ make_bnc_dag <- function(class, families, graphNEL, call) {
 }
 #' Checks it is a valid bnc_dag object 
 check_bnc_dag <- function(x) {
-  class <- bnc_class(x)
-  features <- bnc_features(x)
+  class <- class_var(x)
+  features <- features(x)
   check_class(class)
   check_features(features = features, class = class)
-  stopifnot(identical(bnc_vars(x), setNames(nm = c(features, class))))
+  stopifnot(identical(vars(x), setNames(nm = c(features, class))))
   # Check families
-  families <- bnc_families(x)
+  families <- families(x)
   check_anb_families(families, class)  
   # Check dag is a graphNEL.
   # stopifnot(inherits(to_graphNEL(x), "graphNEL"))
@@ -32,17 +32,17 @@ to_graphNEL <- function(x) {
   stopifnot(inherits(x, "bnc_dag"))
   x$.dag
 }
-bnc_class <- function(x) {
+class_var <- function(x) {
   stopifnot(inherits(x, "bnc_dag"))
   x$.class
 }
-bnc_features <- function(x) {
-  setdiff(bnc_vars(x), bnc_class(x))
+features <- function(x) {
+  setdiff(vars(x), class_var(x))
 }
-bnc_vars <- function(x) {
-  setNames(nm = get_family_vars(bnc_families(x)))
+vars <- function(x) {
+  setNames(nm = get_family_vars(families(x)))
 }
-bnc_families <- function(x) {
+families <- function(x) {
   stopifnot(inherits(x, "bnc_dag"))
   x$.families
 }

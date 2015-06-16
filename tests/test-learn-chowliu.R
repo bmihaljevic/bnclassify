@@ -3,8 +3,8 @@
 # check_cl <- function(x, nedges, class, features) {
 #   expect_is(x, "bnc_dag")
 #   expect_equal(graph::numEdges(to_graphNEL(x)), nedges)
-#   expect_equal(bnc_class(x), class)
-#   expect_equal(bnc_features(x), features)
+#   expect_equal(class_var(x), class)
+#   expect_equal(features(x), features)
 # }
 # 
 # test_that("chowliu nominal car", {

@@ -11,7 +11,7 @@ test_that("not cci nominal TAN", {
   s <- not_cci(tn)
   expect_true(is.list(s))
   expect_equal(length(s), 1)  
-  expect_equal(length(s[[1]]), length(bnc_features(tn))) 
+  expect_equal(length(s[[1]]), length(features(tn))) 
   
 })
 
@@ -24,7 +24,7 @@ test_that("not cci no features", {
 test_that("include node nominal", {
   nb <- nbcarclass()
   a <- add_feature('safety', nb)
-  expect_equal(bnc_features(a), 'safety')
+  expect_equal(features(a), 'safety')
 })
 
 test_that("include node multiple nodes", {

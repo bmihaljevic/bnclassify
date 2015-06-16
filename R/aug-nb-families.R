@@ -45,7 +45,7 @@ check_anb_families <- function(families, class) {
 is_anb_family <- function(family, var, class) {
   is.character(family) && is_non_empty_complete(family) && is_last(class, family) && is_at_pos(var, 1, family)
 }
-# Returns bnc_families but with a unique name
+# Returns families() but with a unique name
 tag_families <- function(fams) {
   ids <- lapply(fams, paste0, collapse = "")
   setNames(fams, nm = ids)
