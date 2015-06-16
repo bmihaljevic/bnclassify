@@ -50,3 +50,21 @@ bsej_step <- function(bnc_dag, ...) {
   c(excludes(bnc_dag), 
     merge_supernodes(bnc_dag))
 }
+#' Arcs that do not invalidate the tree-like structure
+#' 
+#' @param ... Ignored.
+#' @keywords internal
+augment_ode <- function(bnc_dag, ...) {
+  stopifnot(is_ode(bnc_dag))
+  
+  pairs <- augmenting_ode_arcs(features, orphans, bnc_dag(model))
+  # The same as in relating in merge_supernodes.
+  if (is.null(pairs)) return(NULL)
+  stopifnot(is.matrix(pairs))
+  dags <- apply(pairs, 2, function(x) {    
+    relate_nodes(x[1], x[2], model, complete=FALSE)
+  })  
+  stopifnot(all(vapply(dags, is_ode, FUN.VALUE = logical(1))))
+  
+}
+

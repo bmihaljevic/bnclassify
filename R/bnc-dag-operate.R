@@ -55,3 +55,61 @@ is_aug_nb <- function(x) {
   # Check class is in all families
   TRUE
 }
+
+# ========================
+# Keogh
+
+#' Returns augmenting arcs that do not invalidate the ODE. 
+#' 
+#' @keywords internal
+#' @return a character matrix. NULL if not arcs can be added.
+get_aug_ode_arcs <- function(bnc_dag) {
+  features <- features(bnc_dag)  
+  if (length(features) < 2) return(NULL) # No pairs   
+  orphans <- tan_orphans(x = bnc_dag)  
+  stopifnot(length(orphans) >= 1) 
+  if (length(orphans) == 1) return(NULL)
+  pairs <- lapply(features, augmenting_ode_arcs_node, features, orphans, x)
+  names(pairs) <- features
+  if (!length(unlist(pairs))) return(NULL)
+  g <- graph::graphNEL(features, edgeL=pairs, edgemode='directed')
+  named_edge_matrix(g)  
+}
+
+#' Lists 'TAN orphans'.
+#' 
+#' @references Koegh E and Pazzani M (2002).Learning the structure of augmented 
+#'   Bayesian classifiers. In \emph{International Journal on Artificial
+#'   Intelligence Tools}, \bold{11}(4), pp. 587-601.
+#' @keywords internal
+# tan_orphans <- function(x) {
+
+# Features conditioned only on the class
+cci <- function(x) {
+  stopifnot(is_aug_nb(x))  
+  fams <- feature_families(x)
+  feature_fams <- lapply(fams, family_features, class_var(x))
+  fam_size <- vapply(feature_fams, length) 
+  stopifnot(all(fam_size > 0))
+  orphans <- names(fams)[fam_size == 1]
+  stopifnot(all(orhans %in% features(x)))
+  orphans
+}
+#' Returns augmenting arcs from node that do not invalidate the ODE. 
+#' 
+#' @keywords internal
+augmenting_ode_arcs_node <- function(node, features, orphans, g) {  
+  if (length(orphans) <= 1) return(NULL)
+  feats_split <- split_vector(node, features)
+  feats_preceding <- feats_split$pre
+  feats_following <- feats_split$post
+  feats_preceding <- intersect(feats_preceding, orphans)
+  feats_following <- intersect(feats_following, orphans)
+  to <- NULL
+  # If not orphan, then not added an incoming arc from preceding features. Make 
+  # it parent of preceding:
+  if (!node %in% orphans && length(feats_preceding)) to <- feats_preceding
+  if (length(feats_following)) to <- c(to, feats_following)
+  # Finally, make sure no cycles are introduced
+  setdiff(to, gRbase::ancestors(node, g))  
+}
