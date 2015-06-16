@@ -15,7 +15,7 @@ greedy_search <- function(class, features, start, move, dataset, epsilon, k,
   candidate_dags <- list(start)
   while (length(candidate_dags) > 0) {
     #     Score all candidate states
-    scores <- score_candidates(candidate_dags, dataset, k = k, smooth = smooth)
+    scores <- dag_cv(candidate_dags, dataset, k = k, smooth = smooth)
     #     Identify the best score among candidate states 
     best_score <- max(scores)
     #     Stop if it is not better than current_score 

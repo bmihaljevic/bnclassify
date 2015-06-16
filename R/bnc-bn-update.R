@@ -66,7 +66,7 @@ multi_learn_predict <- function(dags, dataset, smooth, prob = FALSE) {
   uxcpts <- families2cpts(uxfams, dataset = dataset, smooth = smooth)
   # Extract class CPT 
   class <- class_var(dags[[1]])
-  cp <- families2cpts(list(class), dataset = dataset, smooth = smooth)[[1]]
+  cp <- extract_cpt(class, dataset = dataset, smooth = smooth)
   compute_augnb_lucp_multi(class, xfams_ids, uxcpts, cp, dataset = dataset)
   #   map
 }
