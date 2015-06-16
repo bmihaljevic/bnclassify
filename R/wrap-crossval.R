@@ -22,3 +22,23 @@ crossval_fun <- function(train.x, train.y, test.x, test.y, x) {
   # Compute accuracy
   vapply(predictions, accuracy, test.y, FUN.VALUE = numeric(1))
 }
+do_crossval_multi <- function(x, class, dataset, smooth, k) {
+  cnames <- colnames(dataset)
+  stopifnot(!are_disjoint(class, cnames))
+  ind_class <- which(colnames(dataset) == class)
+  # Call cross-validation
+  cv_results <- 
+    crossval::crossval(crossval_fun_multi, dataset[, -ind_class, drop = FALSE], 
+                       dataset[, ind_class], K = k, B = 1, verbose = FALSE, x = x,
+                       smooth = smooth)
+  cv_results$stat
+}
+crossval_fun_multi <- function(train.x, train.y, test.x, test.y, x, smooth) {
+  # Check x is a plain list 
+  stopifnot(inherits(x, "list")) 
+  dataset <- cbind(train.x, class = train.y) 
+  predictions <- multi_learn_predict(x, train = dataset, test = test.x, 
+                                     smooth = smooth, prob = FALSE)
+  # Compute accuracy
+  vapply(predictions, accuracy, test.y, FUN.VALUE = numeric(1))
+}

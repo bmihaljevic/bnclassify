@@ -23,12 +23,36 @@ test_that("bnc update bnc_bn with struct learning", {
   expect_equal(diff, 2.776258, tolerance = 1e-6)
 })
 
-test_that("multi learn predict nominal", {
+test_that("multi learn predict probs", {
   a <- nbcar()  
   b <- nbcarp(car[, 4:7])
-  d <- multi_learn_predict(list(a, b), car, smooth = 1)
+  d <- multi_learn_predict(list(a, b), train = car, test = car, 
+                           smooth = 1, prob = TRUE)
   e <- compute_augnb_luccpx(a, car)
   expect_equal(d[[1]], e)
   f <- compute_augnb_luccpx(b, car)
+  expect_equal(d[[2]], f)
+})
+
+test_that("multi learn predict nominal class values", {
+  a <- nbcar()  
+  b <- nbcarp(car[, 4:7])
+  d <- multi_learn_predict(list(a, b), train = car, test = car, smooth = 1,
+                           prob = FALSE)
+  e <- predict(a, car)
+  expect_equal(d[[1]], e)
+  f <- predict(b, car)
+  expect_equal(d[[2]], f)
+})
+
+test_that("multi learn predict single row test set", {
+  a <- nbcar()  
+  b <- nbcarp(car[, 4:7])
+  t <- car[1, , drop = FALSE]
+  d <- multi_learn_predict(list(a, b), train = car, test = t, smooth = 1,
+                           prob = FALSE)
+  e <- predict(a, t)
+  expect_equal(d[[1]], e)
+  f <- predict(b, t)
   expect_equal(d[[2]], f)
 })

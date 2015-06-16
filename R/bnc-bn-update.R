@@ -50,7 +50,7 @@ do_bnc_call <- function(fargs, dataset) {
   call <- pryr::make_call(fargs[[1]], .args = fargs[-1])
   eval(call)
 }
-multi_learn_predict <- function(dags, dataset, smooth, prob = FALSE) {
+multi_learn_predict <- function(dags, train, test, smooth, prob = FALSE) {
   # Ensure it is a list
   if (!is_just(dags, "list")) {
     dags <- list(dags)
@@ -63,10 +63,15 @@ multi_learn_predict <- function(dags, dataset, smooth, prob = FALSE) {
   # Replace families with theid ids 
   xfams_ids <- lapply(xfams_list, make_families_ids)
 #   Extract the CPT of each unique feature family
-  uxcpts <- families2cpts(uxfams, dataset = dataset, smooth = smooth)
+  uxcpts <- families2cpts(uxfams, dataset = train, smooth = smooth)
   # Extract class CPT 
   class <- class_var(dags[[1]])
-  cp <- extract_cpt(class, dataset = dataset, smooth = smooth)
-  compute_augnb_lucp_multi(class, xfams_ids, uxcpts, cp, dataset = dataset)
-  #   map
+  cp <- extract_cpt(class, dataset = train, smooth = smooth)
+  p <- compute_augnb_lucp_multi(class, xfams_ids, uxcpts, cp, dataset = test)
+  if (!prob) {
+   lapply(p, map) 
+  }
+  else {
+    p 
+  }
 }

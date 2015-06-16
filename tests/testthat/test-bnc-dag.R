@@ -38,5 +38,5 @@ test_that("feature families nominal", {
   n <- nbcar()
   a <- feature_families(n)
   expect_equal(length(a), 6)
-  expect_equal(unlist(a, use.names = FALSE), colnames(car)[1:6])
+  expect_equal(a[[1]], c('buying', 'class'))
 })
