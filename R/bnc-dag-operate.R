@@ -31,3 +31,15 @@ add_feature <- function(node, x) {
 plot.bnc_dag <- function(x, y, layoutType='dot', ...) {
   graph::plot(to_graphNEL(x))
 }
+# ========================
+# Type functions
+is_semi_naive <- function(x) {
+  warning(as.character(match.call()[[1]]), "Not implemented.")
+  TRUE
+}
+is_aug_nb <- function(x) {
+  warning(as.character(match.call()[[1]]), "Not implemented.")
+  # Check call has no parents
+  # Check class is in all families
+  TRUE
+}

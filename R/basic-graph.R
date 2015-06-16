@@ -44,33 +44,6 @@ named_edge_matrix <- function(g) {
   stopifnot(is.character(u))
   u
 }
-#' Gets the parents of a node in the graph
-parents <- function(x, g) {
-  # Check x is character
-  stopifnot(is.character(x))
-  # If graph has no arcs, return empty character
-  if (graph::numEdges(g) == 0) return (character())
-  # Check g is directed 
-  stopifnot(graph::edgemode(g) == "directed")
-# Check x is in g
-  stopifnot(x %in% graph::nodes(g))
-  # Get matrix of edges
-  edges <- named_edge_matrix(g)  
-  # Get index of edges to x 
-  ind_to <- edges['to', ] == x
-  # Get nodes pointing to x 
-  parents <- unname(edges['from', ind_to])
-  # Check all parents are unique   
-  stopifnot(length(parents) == length(unique(parents)))
-  # return parents
-  parents
-}
-#'  Gets the parents of a node in the graph
-family <- function(x, g) {
-  parents <- parents(x, g)
-  stopifnot(is.character(parents))
-  c(x, parents)
-}
 #' Direct an undirected graph.
 #' 
 #' Starting from a \code{root} not, directs all arcs away from it and applies 
@@ -188,10 +161,8 @@ check_dag <- function(dag) {
   #   If non-empty graph, check dag is a dag. gRbase fails with empty graph.
   if (graph::numNodes(dag) > 0) { stopifnot(gRbase::is.DAG.graphNEL(dag))   }   
 }
-#' Checks it is a valid node
 check_node <- function(node) {
-  stopifnot(is.character(node))
-  stopifnot(length(node) == 1)
+  stopifnot(assertthat::is.string(node))
 }
 #' Returns a naive Bayes structure
 #' 

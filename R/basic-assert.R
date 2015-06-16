@@ -24,6 +24,15 @@ is_subset <- function(x, y) {
 is_positive <- function(x) {
   assertthat::is.number(x) && (x > 0)
 }
+is_last <- function(element, vector) { 
+  # Basically does not work for numerics due to identical
+  identical(element, get_last(vector))
+}
+
+is_at_pos <- function(element, position, vector) {
+  # Basically does not work for numerics due to identical
+  identical(get_null_safe(vector, position), element)
+}
 # use this e.g., in  check_dataset
 are_all_unique <- function(x) {	
 	length(x) == length(unique(x))
