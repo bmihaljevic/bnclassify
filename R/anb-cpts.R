@@ -11,11 +11,9 @@ check_anb_cpts <- function(cpts, class) {
 # check_anb_cpt <- function() {
 #   # check the family. that is, get the variables and that. 
 # }
-families2cpts <- function(class, families, dataset, smooth) {
+families2cpts <- function(families, dataset, smooth) {
   # Check dataset 
   check_dataset(dataset)
-  # Check families 
-  check_anb_families(families, class)
   lapply(families, extract_cpt, dataset, smooth = smooth)
 }
 extract_cpt <- function(vars, dataset, smooth) {

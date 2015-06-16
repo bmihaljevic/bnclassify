@@ -3,7 +3,7 @@ bnc_bn <- function(x, dataset, smooth, call) {
   # Check bnc dag
   check_bnc_dag(x) 
   # Get a CPT table for each family
-  params <- families2cpts(class_var(x), families(x), dataset, smooth)
+  params <- families2cpts(families(x), dataset, smooth)
   # Currently not forming a grain upon creating the object
   bnc_bn <- make_bnc_bn(x, params = params, grain = NULL, call = call)
   # check

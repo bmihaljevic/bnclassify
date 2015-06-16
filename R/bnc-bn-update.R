@@ -3,13 +3,6 @@
 # x
 # }
 
-# # Repeats the procedure used to learn x on \code{dataset}  
-# bnc_update <- function(x, dataset, dag = FALSE) {
-#   args <- bnc_get_update_args(x, dag = dag)
-#   args$dataset <- dataset
-#   stopifnot(is_subset(c('lp_fargs', 'dataset'), names(args)))
-#   do.call('bnc_update_args', args)
-# }
 # Arguments to be passed to bnc_update_args()
 bnc_get_update_args <- function(x, dag) {
   stopifnot(is.logical(dag))
@@ -57,38 +50,23 @@ do_bnc_call <- function(fargs, dataset) {
   call <- pryr::make_call(fargs[[1]], .args = fargs[-1])
   eval(call)
 }
-# multi_learn_predict <- function(x, cp, classes, lp_args, prob = FALSE) {
-multi_learn_predict <- function(x, smooth, dataset, prob = FALSE) {
-#   Get the probabilities entries for each features CPT
-  list_of_cpts <- multi_learn(x, smooth, dataset)
-#   Get unnormalized log class posterior for each list of cpts (each dag)
-  compute_augnb_lucp_multi(list_of_cpts, class_var(x), dataset)
-#   For each x, 
-}
-multi_learn <- function(x, smooth, dataset) {
-  # x is a list of bnc_dag. Ensure it is a list.
-  # Get all families, including that of the class, for each x
-  families_list <- lapply(x, families)
-  # Assign unique id to each family
-  families_list <- lapply(families_list, tag_families)
+multi_learn_predict <- function(dags, dataset, smooth, prob = FALSE) {
+  # Ensure it is a list
+  if (!is_just(dags, "list")) {
+    dags <- list(dags)
+  }
+  xfams_list <- lapply(dags, feature_families)
   # Get the unique families. TODO: Standardize families first?
-  ufams <- unique_families(families_list)
-#   Extract the CPT of each unique family
-  ucpts <- lapply(ufams, extract_cpt, dataset, smooth = smooth)
-#   Return the list of the cpts. 
-  lapply(families_list, function(dag_fams) ucpts[names(dag_fams)])
-#     Could return a bnc_bn object: cpts + class. This would also need to ensure an  
-#     order of the variables.
+  uxfams <- unique_families(xfams_list)
+  # Name the entires in ufams with families ids
+  names(uxfams) <- vapply(uxfams, make_family_id, FUN.VALUE = character(1))
+  # Replace families with theid ids 
+  xfams_ids <- lapply(xfams_list, make_families_ids)
+#   Extract the CPT of each unique feature family
+  uxcpts <- families2cpts(uxfams, dataset = dataset, smooth = smooth)
+  # Extract class CPT 
+  class <- class_var(dags[[1]])
+  cp <- families2cpts(list(class), dataset = dataset, smooth = smooth)[[1]]
+  compute_augnb_lucp_multi(class, xfams_ids, uxcpts, cp, dataset = dataset)
+  #   map
 }
-unique_cpts <- function() {
-  # ... 
-}
-
-# multi_learn_predict (dags, dataset) {
-#   tag the families in each dag
-#   get unique families
-#   get cpts for unique families
-#   get unique cpts 
-#   multi posterior (tagged_dags, unique_cpts, dataset)
-#   map
-# }

@@ -33,3 +33,10 @@ test_that("Accessors", {
   dg <- bnc_dag(ran, class = 'z', call = NULL)
   expect_identical(unname(sort(vars(dg))), letters)  
 })
+
+test_that("feature families nominal", {
+  n <- nbcar()
+  a <- feature_families(n)
+  expect_equal(length(a), 6)
+  expect_equal(unlist(a, use.names = FALSE), colnames(car)[1:6])
+})

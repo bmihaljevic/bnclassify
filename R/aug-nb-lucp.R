@@ -1,33 +1,20 @@
-# compute_augnb_lucp_multi <- function(list_of_cpts, class, dataset) {
-#   # cptsx x is a list of cpts.
-#   stopifnot(is_just(list_of_cpts, "list"))
-#   # TODO: each list of cpts is an aug nb
-#   # Get unique CPT families with unique ID for each 
-#   families_list <- lapply(list_of_cpts, get_cpts_families) # But must use unique id!
-#   families_list <- lapply(families_list, tag_families)
-#   # Get the entries for each cptsx 
-#   ucpts <- unique_families(families_list)
-#   
-#   # Get the common ones 
-#   # For each x, multiply the not common ones 
-# }
-compute_augnb_lucp_multi <- function(lists_of_fams, unique_cpts, dataset) {
-  # Format the cp accordingly 
-  cp <- unique_cpts[[class]]
+# The names of the unique CPTs are the family tags.
+# The names of the fam dags are also the family tags.
+# The families should actually just contain the tags.
+compute_augnb_lucp_multi <- function(class, xfams_id_dags, unique_xcpts, cp,
+                                     dataset) {
+  stopifnot(is_just(xfams_id_dags, "list"))
   stopifnot(is_non_empty_complete(cp))
   cp_factor <- make_cp_factor(cp, dataset)
-  # For each cptsx, 
-  xcpts <- unique_cpts[setdiff(names(unique_cpts), class)]
-  # Get the probabilities for each unique CPT
-  # TODO: length 0 works?
-  xp <- get_ccx_factors(xcpts, dataset, class, classes = names(cp))
+  # Now get the probabilities for each unique CPT. TODO: length 0 works?
+  xp <- get_ccx_factors(unique_xcpts, dataset, class, 
+                        classes = get_cpt_values(cp)[[1]])
   # for each list_of_cpts (dag), get the correct factors
-  factors_list <- lapply(lists_of_fams, function(dag_fams) {
-    append(list(cp_factor), xp[names(dag_fams)])
+  factors_list <- lapply(xfams_id_dags, function(tagged_fam_dag) {
+    append(list(cp_factor), xp[tagged_fam_dag])
   })
   lapply(factors_list, sum_log_factors)
 }
-
 # Computes the 
 compute_augnb_luccpx <- function(x, dataset) {
 # TODO: check it is aug nb, only that way the factorization will work

@@ -46,3 +46,8 @@ families <- function(x) {
   stopifnot(inherits(x, "bnc_dag"))
   x$.families
 }
+# Returns all feature families excluding the class variable
+feature_families <- function(x) {
+  feature_fams <- families(x)[features(x)]
+  lapply(feature_fams, family_features, class_var(x))
+}

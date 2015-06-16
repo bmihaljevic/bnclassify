@@ -45,10 +45,15 @@ check_anb_families <- function(families, class) {
 is_anb_family <- function(family, var, class) {
   is.character(family) && is_non_empty_complete(family) && is_last(class, family) && is_at_pos(var, 1, family)
 }
-# Returns families() but with a unique name
-tag_families <- function(fams) {
-  ids <- lapply(fams, paste0, collapse = "")
-  setNames(fams, nm = ids)
+make_families_ids <- function(fams) {
+  vapply(fams, make_family_id, FUN.VALUE = character(1))
+}
+make_family_id <- function(fam) {
+  paste0(fam, collapse = "")
+}
+family_features <- function(fam, class) {
+  stopifnot(!are_disjoint(fam, class))
+  setdiff(fam, class)
 }
 # Returns the unique families accross these dags. 
 unique_families <- function(fams) {
