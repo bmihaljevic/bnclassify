@@ -5,7 +5,7 @@ bnc_bn <- function(x, dataset, smooth, call) {
   # Get a CPT table for each family
   params <- families2cpts(bnc_class(x), bnc_families(x), dataset, smooth)
   # Currently not forming a grain upon creating the object
-  bnc_bn <- make_bnc_bn(x, params = params, grain = NULL, call = NULL)
+  bnc_bn <- make_bnc_bn(x, params = params, grain = NULL, call = call)
   # check
   check_bnc_bn(bnc_bn) 
   # Return

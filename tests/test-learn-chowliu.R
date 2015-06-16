@@ -2,7 +2,7 @@
 # 
 # check_cl <- function(x, nedges, class, features) {
 #   expect_is(x, "bnc_dag")
-#   expect_equal(graph::numEdges(bnc_get_dag(x)), nedges)
+#   expect_equal(graph::numEdges(to_graphNEL(x)), nedges)
 #   expect_equal(bnc_class(x), class)
 #   expect_equal(bnc_features(x), features)
 # }
