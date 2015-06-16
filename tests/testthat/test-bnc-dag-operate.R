@@ -27,6 +27,8 @@ test_that("include node nominal", {
   expect_equal(features(a), 'safety')
 })
 
+
+
 test_that("include node multiple nodes", {
   nb <- nbcarclass()
   expect_error(add_feature(c('safety', 'doors'), nb), "string")
@@ -35,4 +37,15 @@ test_that("include node multiple nodes", {
 test_that("include node already included", {
   nb <- nbcar()
   expect_error(add_feature('safety', nb)  , "already")
+})
+
+test_that("remove feature nominal", {
+  nb <- nbcar()
+  rnb <- remove_feature('safety', nb)
+  expect_equal(features(rnb), colnames(car)[1:5])
+})
+
+test_that("remove feature not in graph", {
+  nb <- nbcarclass()
+  expect_error(remove_feature('safety', nb), "not in")
 })

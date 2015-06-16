@@ -34,6 +34,8 @@ compute_augnb_luccpx <- function(x, dataset) {
   sum_log_factors(factors)
 }
 get_ccx_factors <- function(cptsx, dataset, class, classes) {
+  # Return empty list if no cpts
+  if (length(cptsx) == 0) return( list() )
   # Get variables (1D of cpts)
   features <- vapply(cptsx, cpt_1d_var, FUN.VALUE = character(1))
   #   Get x CPT indices replicated for each class

@@ -49,6 +49,8 @@ bnc_cv <- function(x, dataset, k, dag = FALSE) {
 #   update_args <- lapply(updateable, bnc_get_update_args, dag = FALSE)
 #   do_crossval(update_args, class = class, dataset = dataset, k = k)
 # }
+#'  CV for fixed structures.
+#'  @export
 dag_cv <- function(x, class, dataset, smooth, k) {
   do_crossval_multi(x, class = class, dataset = dataset, smooth = smooth, k = k)
 }

@@ -24,6 +24,9 @@ is_subset <- function(x, y) {
 is_positive <- function(x) {
   assertthat::is.number(x) && (x > 0)
 }
+is_nonnegative <- function(x) {
+  assertthat::is.number(x) && (x >= 0)
+}
 is_last <- function(element, vector) { 
   # Basically does not work for numerics due to identical
   identical(element, get_last(vector))

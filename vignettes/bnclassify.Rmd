@@ -5,7 +5,6 @@ date: "`r Sys.Date()`"
 output: 
   rmarkdown::pdf_document:
     toc: true
-    keep_tex: true
 fontsize: 11pt
 vignette: >
   %\VignetteIndexEntry{bnclassify}
@@ -34,15 +33,29 @@ predict(object=nb, newdata=car[1000:1001, ], prob = TRUE)
 It is much faster than gRain and identical to bnlearn.
 
 ```{r}
+library(microbenchmark)
 nb <- nb('class', car)
-nb <- lp(nb, car, smooth=0)
+nb <- lp(nb, car, smooth = 0)
 gr <- to_grain(nb)
-microbenchmark::microbenchmark(predict(object=nb, newdata=car, prob = TRUE))
-microbenchmark::microbenchmark(gRain::predict.grain(gr, 'class', newdata=car),
-                               times=1)
+microbenchmark(predict(object = nb, newdata = car, prob = TRUE))
+microbenchmark(gRain::predict.grain(gr, 'class', newdata = car),
+                               times = 1)
 ```
 
 Note that when predicting on a data set with incomplete cases, gRain is used underneath and it will be slow
+
+
+## Cross-validation
+There is rather fast cross-validation. It takes advantage of the modularity of Bayesian networks by accessing only onces the CPTs shared accross structures. 
+
+```{r}
+a <- lp(nb('class', car), car, smooth = 1)	
+b <- lp(nb('class', car[, 'class', drop = FALSE]), car, smooth = 1)
+d <- lp(nb('class', car[, c(sample(1:6, 4), 7), drop = FALSE]), car, smooth = 1)	
+set.seed(0)
+microbenchmark(r <- dag_cv(list(a, b, d), 'class', car, smooth = 1, k = 10))
+r
+```
 
 ## Feature selection
 

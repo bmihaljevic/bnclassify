@@ -13,23 +13,35 @@ add_feature_parents <- function(parents, feature, x) {
   g <- condition_on(parents, feature, to_graphNEL(x))
   bnc_dag(g, class_var(x), NULL)
 }
-relate_supenodes <- function(child_sn, parent_sn, x) {
-#   stopifnot(is_aug_nb(x))  
-#   check child is_supernode (child, x)
-#   check parent is supernode  (parent, x)
-#   condition_on(child_sn, parent_sn, bnc_dag(x))
-  # bnc_struct(g, class=x$class_var)
+relate_supernodes <- function(child_sn, parent_sn, x) {
+  stopifnot(is_aug_nb(x))  
+#   check child and parent are supernodes 
+  stopifnot(is_supernode(child_sn, x), is_supernode(parent_sn, x))
+  g <- condition_on(parent_sn, child_sn, to_graphNEL(x))
+  bnc_dag(g, class_var(x), NULL)
 }
 add_feature <- function(node, x) {
   stopifnot(assertthat::is.string(node))
   a <- add_node(node, to_graphNEL(x))
   class <- class_var(x)
-  a <- condition_on(parents = class, nodes = node, x=a)
+  a <- condition_on(parents = class, nodes = node, x = a)
   bnc_dag(a, class, NULL)
+}
+remove_feature <- function(node, x) {
+  stopifnot(assertthat::is.string(node))
+  g <- remove_node(node, to_graphNEL(x))
+  bnc_dag(g, class_var(x), NULL)
+}
+narcs <- function(x) {
+  num_arcs(to_graphNEL(x))
 }
 #' @export 
 plot.bnc_dag <- function(x, y, layoutType='dot', ...) {
   graph::plot(to_graphNEL(x))
+}
+is_supernode <- function(node, x) {
+  warning("Not implemented")
+  TRUE
 }
 # ========================
 # Type functions

@@ -25,7 +25,6 @@ family <- function(x, g) {
   stopifnot(is.character(parents))
   c(x, parents)
 }
-
 subgraph <- function(vars, x) {
   graph::subGraph(snodes=vars, x)
 }
@@ -42,10 +41,10 @@ connected_components <- function(x) {
 # Adds arcs from parents to node
 condition_on <- function(parents, nodes, x) {
 #   Replicate parents for each node 
-  parents <- rep(parents, length(nodes))
-  nodes <- rep(nodes, each = length(parents))
+  wparents <- rep(parents, length(nodes))
+  wnodes <- rep(nodes, each = length(parents))
 #   Add edges
-  add_edges(parents, nodes, x)
+  add_edges(wparents, wnodes, x)
 }
 add_edges <- function(from, to, x) {
   # check from and to are disjoint and same length
@@ -61,10 +60,16 @@ add_edges <- function(from, to, x) {
   # Not checking because it cannot find the method 
   # x <- gRbase::as.adjMAT(x)
   # stopifnot(gRbase::is.DAG.matrix(x))
-  nx <- graph::addEdge(from=from, to=to, graph=x)
+  nx <- graph::addEdge(from = from, to = to, graph = x)
   # stopifnot(gRbase::is.DAG.matrix(nx))
   nx
 } 
 add_node <- function(node, x) {
   graph::addNode(node, x)
+}
+remove_node <- function(node, x) {
+  graph::removeNode(node, x)
+}
+num_arcs <- function(x) {
+  graph::numEdges(x)
 }

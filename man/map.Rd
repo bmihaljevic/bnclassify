@@ -4,7 +4,7 @@
 \alias{map}
 \title{Assigns instances to the most likely class.}
 \usage{
-map(pred, x)
+map(pred)
 }
 \arguments{
 \item{pred}{A numeric matrix. Each row corresponds to class posterior
