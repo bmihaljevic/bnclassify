@@ -10,8 +10,8 @@ compute_augnb_lucp_multi <- function(class, xfams_id_dags, unique_xcpts, cp,
   xp <- get_ccx_factors(unique_xcpts, dataset, class, 
                         classes = get_cpt_values(cp)[[1]])
   # for each list_of_cpts (dag), get the correct factors
-  factors_list <- lapply(xfams_id_dags, function(tagged_fam_dag) {
-    append(list(cp_factor), xp[tagged_fam_dag])
+  factors_list <- lapply(xfams_id_dags, function(fams_dag) {
+    append(list(class = cp_factor), xp[fams_dag])
   })
   lapply(factors_list, sum_log_factors)
 }
@@ -22,7 +22,7 @@ compute_augnb_luccpx <- function(x, dataset) {
   cp <- params(x)[[class_var(x)]]
   wcp <- make_cp_factor(cp, dataset) 
 #  Add class posterior to factors list
-  factors <- list(wcp)
+  factors <- list(class = wcp)
 # If there are features, get the class conditional probabilities
   features <- features(x)
   if (length(features) > 0) {

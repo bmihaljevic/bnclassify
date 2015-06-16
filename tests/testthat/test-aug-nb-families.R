@@ -93,7 +93,7 @@ test_that("Unique families none in common", {
 
 test_that("Tag families nominal", {
   cr <- families(nbcar())
-  fms <- tag_families(cr)  
+  fms <- make_families_ids(cr)  
   expect_equal(length(fms), 7)
-  expect_equal(fms$personsclass, c("persons", "class"))
+  expect_equal(fms[['persons']], "personsclass")
 })

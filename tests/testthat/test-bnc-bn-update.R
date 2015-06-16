@@ -26,7 +26,9 @@ test_that("bnc update bnc_bn with struct learning", {
 test_that("multi learn predict nominal", {
   a <- nbcar()  
   b <- nbcarp(car[, 4:7])
-  debugonce(compute_augnb_lucp_multi)
   d <- multi_learn_predict(list(a, b), car, smooth = 1)
-  expect_equal(length(d), 2)
+  e <- compute_augnb_luccpx(a, car)
+  expect_equal(d[[1]], e)
+  f <- compute_augnb_luccpx(b, car)
+  expect_equal(d[[2]], f)
 })
