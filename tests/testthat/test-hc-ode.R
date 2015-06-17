@@ -143,7 +143,6 @@ test_that("Superparents no orphans", {
 
 test_that("augment ode hc nominal", {
   nb <- nbcar()
-  debugonce(augment_ode_sp)
   a <- augment_ode_sp(nb, NULL, car, smooth = 0.01, k = 10)
   expect_equal(length(a), 5)  
 })

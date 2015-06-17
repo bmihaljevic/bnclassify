@@ -62,6 +62,22 @@ r
 
 Keogh has a similar optimization but not quite the same and only for one feature. This is generalized.
 
+##Wrappers
+
+Using cross-validation, we can use wrappers with the desired number of folds. 
+
+
+```{r}
+a <- tanhc('class', car, k = 10, epsilon = 0, smooth = 1)
+b <- tanhc_sp('class', car, k = 10, epsilon = 0, smooth = 1)
+c <- bsej('class', car, k = 10, epsilon = 0, smooth = 1)
+d <- fssj('class', car, k = 10, epsilon = 0, smooth = 1)
+plot(a)
+plot(b)
+plot(c)
+plot(d)
+```
+
 ## Feature selection
 
 Some algorithms perform implicit feature selection. E.g., ... For more, use the mlr or feature selector package. See below. 

@@ -26,7 +26,8 @@ greedy_search <- function(class, to_include, init, step, dataset, epsilon, k,
                            features_to_include = to_include, 
                            dataset = dataset, smooth = smooth, k = k)
   }      
-  list(model = current_dag, log = scores_log)
+  current_dag$.greedy_scores_log <- scores_log
+  current_dag
 }
 is_improvement <- function(new_scores, current_score, epsilon) {
   (max(new_scores) - epsilon >= current_score) # TODO: Enable relative improvement

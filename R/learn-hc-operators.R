@@ -42,7 +42,7 @@ includes <- function(bnc_dag, features_to_include) {
 excludes <- function(bnc_dag) {
   lapply(features(bnc_dag), remove_feature, bnc_dag)  
 }
-fssj_step <- function(bnc_dag, features_to_include) {
+fssj_step <- function(bnc_dag, features_to_include, ...) {
   append(includes(bnc_dag, features_to_include), 
          includes_in_supernodes(bnc_dag,features_to_include))
 }
