@@ -17,3 +17,12 @@ test_that("Rep factor as int", {
   expect_identical(length(fi), 260L)
   expect_true(all(fi == 1:26))
 })
+
+test_that("Random max nominal", {
+  set.seed(0)
+  x <- c(1, runif(5), 1)
+  a <- max_random(x)
+  b <- max_random(x)
+  expect_true(a != b)
+  expect_equal(x[a], x[b])
+})

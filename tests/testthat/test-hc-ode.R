@@ -105,3 +105,45 @@ test_that("augment ode nominal", {
   anbs <- augment_ode(nb)
   expect_equal(length(anbs), 15)
 })
+
+test_that("augment ode iterate", {
+  nb <- nbcarp(car[ , 4:7])
+  anbs <- augment_ode(nb)
+  expect_equal(length(anbs), 3)
+  
+  nb <- anbs[[1]]
+  anbs <- augment_ode(nb)
+  expect_equal(length(anbs), 2)
+  
+  nb <- anbs[[1]]
+  anbs <- augment_ode(nb)
+  expect_equal(length(anbs), 0)
+})
+
+test_that("Superparents nominal", {  
+  nb <- nbcar()
+  a <- superparent_children(nb)
+  expect_equal(length(a), 6)
+  expect_equal(a[[1]], setdiff(features(nb), 'buying'))
+  expect_equal(a[[6]], setdiff(features(nb), 'safety'))
+})
+
+test_that("Superparents one feature", {  
+  nb <- nbcarp(car[, 6:7])
+  a <- superparent_children(nb)
+  expect_null(a)
+})
+
+test_that("Superparents no orphans", {  
+  nb <- nbcarp(car[, 5:7])
+  nb <- add_feature_parents('safety', 'lug_boot', nb)
+  a <- superparent_children(nb)
+  expect_null(a)
+})
+
+test_that("augment ode hc nominal", {
+  nb <- nbcar()
+  debugonce(augment_ode_sp)
+  a <- augment_ode_sp(nb, NULL, car, smooth = 0.01, k = 10)
+  expect_equal(length(a), 5)  
+})

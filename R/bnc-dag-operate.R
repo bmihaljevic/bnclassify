@@ -13,6 +13,10 @@ add_feature_parents <- function(parents, feature, x) {
   g <- condition_on(parents, feature, to_graphNEL(x))
   bnc_dag(g, class_var(x), NULL)
 }
+# Just a convenience for calling add_feature_parents from *ply loops
+add_feature_children <- function(feature, parents, x) {
+  add_feature_parents(parents, feature, x)
+}
 relate_supernodes <- function(child_sn, parent_sn, x) {
   stopifnot(is_aug_nb(x))  
 #   check child and parent are supernodes 

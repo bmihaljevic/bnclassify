@@ -23,3 +23,17 @@ bsej <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {
                 step = bsej_step, dataset = dataset, epsilon = epsilon, k = k,
                 smooth = smooth)
 }
+#' @export
+tanhc <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {    
+  full_nb <- nb(class = class, dataset)
+  greedy_search(class = class, to_include = NULL, init = full_nb,
+                step = augment_ode, dataset = dataset, epsilon = epsilon, k = k,
+                smooth = smooth)
+}
+#' @export
+tanhc_sp <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {    
+  full_nb <- nb(class = class, dataset)
+  greedy_search(class = class, to_include = NULL, init = full_nb,
+                step = augment_ode_sp, dataset = dataset, epsilon = epsilon, 
+                k = k, smooth = smooth)
+}

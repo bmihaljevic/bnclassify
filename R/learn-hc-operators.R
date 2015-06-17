@@ -136,6 +136,64 @@ discard_reversed <- function(matrix) {
   matrix
 }
 
+# An ode to which no more arcs can be added. 
+# maximal_ode <- function(x) {
+#   is_ode
+#   narcs among features must be <= n features
+#   can count the sizes of families
+# }
+
+# augment_ode_sp 
+#   is ode 
+#   is not maximal ode 
+#   get all sps and children
+#   if empty, then return 
+#   if only one, then skip next step 
+#   if multiple, 
+#     make a dag for each sp with its children 
+#     score each and select best
+#   make a separate dag for each of the possible children
+
+augment_ode_sp <- function(bnc_dag, features_to_include, dataset, 
+                           smooth, k) {
+  rm(features_to_include) # ignored
+  # Select superparent:
+  sp_children <- superparent_children(bnc_dag)
+  if (length(sp_children) < 1) return(NULL)
+  # Select best superparent (could be skipped if there is just one)
+  sp_dags <- mapply(add_feature_parents, names(sp_children), sp_children, 
+                MoreArgs = list(x = bnc_dag), SIMPLIFY = FALSE)
+  scores <- dag_cv(sp_dags, class = class_var(bnc_dag), dataset = dataset, 
+                   smooth = smooth, k = k)
+  best_ind <- max_random(scores)  
+  # Form a dag for each possible child of the superparent
+  superparent <- names(sp_children)[best_ind]
+  children <- sp_children[[superparent]]
+  dags <- lapply(children, add_feature_children, superparent, x = bnc_dag)
+  stopifnot(all(vapply(dags, is_ode, FUN.VALUE = logical(1)))) 
+  dags
+}
+#' Return nodes which can be superparents along with their possible children.
+#' 
+#' @keywords internal 
+#' @return list of \code{search_state}. NULL if no orphans
+superparent_children <- function(bnc_dag) {
+  stopifnot(is_ode(bnc_dag))
+  orphans <- feature_orphans(bnc_dag)
+  stopifnot(length(orphans) >= 1) 
+  if (length(orphans) == 1) return(NULL)
+  features <- features(bnc_dag)
+  #possible children of each feature: orphans != itself and its ancestors 
+  ancestors <- lapply(features, gRbase::ancestors, to_graphNEL(bnc_dag))
+  fs_children <- mapply(ok_children, feature = features, ancestors = ancestors, 
+         MoreArgs = list(orphans = orphans), SIMPLIFY = FALSE)
+  # a feature with at least 1 possible child can be a superparent 
+  fs_children[element_lengths(fs_children) > 0]
+}
+# Acceptable children for a feature
+ok_children <- function(feature, ancestors, orphans) {
+  setdiff(orphans, c(feature, ancestors))
+}
 # On the one hand, you do not want to consider repeated structures. On the other,
 # you do not want to include those that are introducing cycles. 
 # 

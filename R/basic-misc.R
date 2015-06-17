@@ -47,6 +47,16 @@ accuracy <- function(x, y) {
 }
 #  a list to a matrix where the names are kept in the second column
 unlist_keepnames <- function(list) {
-  lengths <- vapply(list, length, FUN.VALUE = integer(1))
+  lengths <- element_lengths(list)
   unname(cbind(unlist(list, use.names = FALSE), rep(names(list), lengths)))
+}
+element_lengths <- function(list) {
+  vapply(list, length, FUN.VALUE = integer(1))
+}
+max_random <- function(x) {
+  ind <- which(fast_equal(x, max(x)))
+  if (length(ind) > 1) {
+    ind <- sample(ind, 1)
+  }
+  ind  
 }

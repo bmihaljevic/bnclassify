@@ -39,3 +39,17 @@ test_that("bsej nominal", {
   expect_equal(length(f$log), 5)
   expect_equal(f$log, sort(f$log))
 })
+
+test_that("tanhc nominal", {
+  set.seed(0)
+  t <- tanhc('class', dataset = car, k = 10, epsilon = 0)
+  expect_equal(length(features(t$model)), 6)
+  expect_equal(narcs(t$model), 10)
+})
+
+test_that("tanhc sp nominal", {
+  set.seed(0)
+  t <- tanhc_sp('class', dataset = car, k = 10, epsilon = 0)
+  expect_equal(length(features(t$model)), 6)
+  expect_equal(narcs(t$model), 11)
+})
