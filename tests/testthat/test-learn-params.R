@@ -8,7 +8,7 @@ test_that("learn params", {
   expect_identical(nf, nf2)
 })
 
-test_that("S probability instead of 0", {
+test_that("Uniform probability instead of 0", {
   cbs <- car[1:4, c('buying', 'safety')]
   nb <- lp(nb('buying', cbs), cbs, smooth = 0)
   p <- as.vector(params(nb)[['safety']][, 'low'])
@@ -21,4 +21,13 @@ test_that("Smoothing", {
   expect_equivalent(params(nb)[['safety']]['low'], 0.5)
   nb <- lp(nb('safety', car[, c('buying', 'safety')]), car[1:4, ], smooth = 1)
   expect_equivalent(params(nb)[['safety']]['low'], 3/7)
+})
+
+test_that('Set feature weights', {
+  nb <- nbcar()
+  w <- structure(rep(0.5, 6), names = features(nb))
+  f <- set_weights(nb, w)
+  expect_equal(params(f)$class, params(nb)$class)
+  expect_true(all(params(f)$buying != params(nb)$buying))
+  expect_true(are_pdists(t(params(f)$buying)))
 })

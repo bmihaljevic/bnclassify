@@ -28,7 +28,12 @@ ctgt2cpt <- function(ctgt, smooth) {
   # Check it has got non-emtpy and no-NA dimnames 
   stopifnot(are_complete_dimnames(ctgt))
   #   Add smooth to ctgt 
-  ctgt <- ctgt + smooth
+  cpt <- normalize_ctgt(ctgt + smooth)
+  # Return 
+  cpt
+}
+# Normalizes the contigency table on the first dimension. Returns a table.
+normalize_ctgt <- function(ctgt) {
   # Initialize cpt
   cpt <- NULL
   # If ctgt is 1D then cpt is normalized ctgt
@@ -43,10 +48,9 @@ ctgt2cpt <- function(ctgt, smooth) {
     cpt <- apply(ctgt, conditioning, normalize)
   }
   # Make sure it is an array
-  cpt <- as.table(cpt)
+  cpt <- as.table(cpt) 
   # Check dimnames
   stopifnot(identical(dimnames(cpt), dimnames(ctgt)))
-  # Return 
   cpt
 }
 #' Get just form first dimension in their own cpt, not checking for consistency
@@ -92,4 +96,7 @@ subset_cpt <- function(cpt, indices) {
   # Get index matrix from df 
   x_indices <- do.call('cbind', indices[vars])
   cpt[x_indices]
+}
+exponentiate_cpt <- function(cpt, value) {
+  normalize_ctgt(cpt ^ value)
 }

@@ -60,3 +60,15 @@ max_random <- function(x) {
   }
   ind  
 }
+#' Return a bootstrap sub-sample.
+#' 
+#' @param dataset a \code{data.frame}  
+#' @param proportion numeric given as fraction of \code{dataset} size
+#' @keywords internal
+bootstrap_ss <- function(dataset, proportion) {
+  stopifnot(is_positive(proportion))
+  N <- nrow(dataset)
+  stopifnot(N > 0)
+  subsample_size <- trunc(N * proportion)
+  dataset[sample(N, replace = T, size = subsample_size), , drop = FALSE]
+}

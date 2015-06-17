@@ -26,3 +26,17 @@ test_that("Random max nominal", {
   expect_true(a != b)
   expect_equal(x[a], x[b])
 })
+
+test_that("Boostrap nominal", {
+  d <- bootstrap_ss(dataset = car, proportion = 0.25)  
+  expect_equal(dim(d), c(432, ncol(car)))
+  expect_equal(colnames(d), colnames(car))
+  
+  d <- bootstrap_ss(dataset = voting, proportion = 0.2)  
+  expect_equal(dim(d), c(87, 17))
+  expect_equal(colnames(d), colnames(voting))  
+})
+
+test_that("Boostrap 0 proportion", {
+  expect_error(bootstrap_ss(dataset = car, proportion = 0), "positive")  
+})
