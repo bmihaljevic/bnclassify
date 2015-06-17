@@ -1,5 +1,3 @@
-
-
 #' Chow-Liu ODE. 
 #' @param class character
 #' @param dataset data frame
@@ -40,13 +38,13 @@ pairwise_ode_scores <- function(class, dataset, score) {
   to <- edges[2, ]; rm(edges)
 # For each get pairwise contribution to score
   pairwise_score <- mapply(local_ode_score, from, to, 
-                     MoreArgs = list(class=class, dataset=dataset), 
+                     MoreArgs = list(class = class, dataset = dataset), 
                      SIMPLIFY = TRUE)
   stopifnot(identical(rownames(pairwise_score), decomposed_ode_scores()))
 # Select the score 
   pairwise_score <- pairwise_score[score, ]  
-# Remove negative scores (possible for BIC and AIC) and weight the edges
-  ind_keep <- pairwise_score >= 0
+# Remove nonpositive scores (possible for BIC and AIC) and weight the edges
+  ind_keep <- pairwise_score > 0
   from <- from[ind_keep]
   to <- to[ind_keep]
   pairwise_score <- pairwise_score[ind_keep]
@@ -64,7 +62,7 @@ local_ode_score <- function(x, y, class, dataset) {
 # Ignore dataset from here on
   rm(dataset)
 #  Compute I(X;Y | Z) 
-  cmi <- cmi_table(freqs, unit="log")
+  cmi <- cmi_table(freqs, unit = "log")
 #   Get number of degrees of freedom
   df <- cmi_degrees_freedom(freqs_table = freqs)  
 #  Make sure it is non-negative 
@@ -75,6 +73,6 @@ local_ode_score <- function(x, y, class, dataset) {
   bic <- N * cmi  - (log(N) / 2) * df
 #  Compute aic 
   aic <- N * cmi  - df 
-  c(loglik=cmi, bic=bic, aic=aic)  
+  c(loglik = cmi, bic = bic, aic = aic)  
 }
 decomposed_ode_scores <- function() { c('loglik', 'bic', 'aic') }

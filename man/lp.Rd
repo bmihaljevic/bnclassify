@@ -4,7 +4,7 @@
 \alias{lp}
 \title{Learn parameters.}
 \usage{
-lp(x, dataset, smooth)
+lp(x, dataset, smooth, weights = NULL)
 }
 \description{
 Learn parameters.

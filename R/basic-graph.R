@@ -55,8 +55,9 @@ named_edge_matrix <- function(g) {
 #' @return A directed \code{\link{graphNEL}}.
 #' @keywords internal
 direct_forest <- function(g, root = NULL) {  
-  if (graph::numEdges(g) < 1) return(g)
-  stopifnot(!graph::isDirected(g))  
+  if (graph::numNodes(g) == 0L) {
+    return(direct_graph(g))
+  }
   if (length(root)) stopifnot(root %in% graph::nodes(g))
   components <- RBGL::connectedComp(g) 
   components <- lapply(components, graph::subGraph, g)
@@ -69,7 +70,9 @@ direct_forest <- function(g, root = NULL) {
 #' @return A \code{\link{graphNEL}}. The directed tree.
 #' @keywords internal
 direct_tree <- function(g, root = NULL) {
-  if (graph::numEdges(g) < 1) return(g)
+  if (graph::numEdges(g) < 1) {
+    return(direct_graph(g))
+  }
   stopifnot(!graph::isDirected(g))  
   stopifnot(graph::isConnected(g))
   current_root <- graph::nodes(g)[1]  
@@ -92,6 +95,10 @@ direct_tree <- function(g, root = NULL) {
     direct_away_queue <- c(direct_away_queue, adjacent)
   }
   directed
+}
+direct_graph <- function(g) {
+  graph::edgemode(g) <- 'directed'
+  g
 }
 #' Returns the undirected augmenting forest.
 #' 
@@ -187,64 +194,3 @@ random_aug_nb_dag <- function(class, V, maxpar, wgt) {
   dg <- gRbase::random_dag(V = V, maxpar = maxpar, wgt = wgt)
   superimpose_node(dag = dg, class)
 }
-# #' Relates two disjoint, disconnected sets of nodes.
-# #' 
-# #' Inserts arcs from all nodes in \code{a} to all nodes in \code{b}.
-# #' 
-# #' If \code{complete == TRUE}, the node sets must be complete, i.e. there must 
-# #' be an arc between each of their elements (useful for semi-naive Bayes).
-# #' 
-# #' @param a A character vector.
-# #' @param b A character vector.
-# #' @param g A \code{graphNEL} directed acyclic graph.
-# #' @return A \code{graphNEL} directed acyclic graph.
-# #' @return logical Whether to check \code{a}, \code{b}, and their created 
-# #'   subgraph are complete.
-# #' @keywords internal
-# relate_nodes_in_graph <- function(a, b, g, complete=TRUE) {
-#   #   Maybe there is a more efficient implementation of the checks(e.g. igraph) to 
-#   #   use instead.  
-#   stopifnot(gRbase::is.DAG(g))
-#   stopifnot(!length(intersect(a, b)))
-#   ug <- graph::ugraph(g)
-#   if (complete) {
-#     stopifnot(gRbase::is.complete(ug, a))
-#     stopifnot(gRbase::is.complete(ug, b))    
-#   }
-#   #   Make sure no arc between them.   
-#   sapply(b, function(n) {
-#     neigh <- any(graph::isAdjacent(ug, from = a, to = n))  
-#     if (neigh) stop("Nodes cannot be neighbors")
-#     NULL
-#   })
-#   rm(ug)  
-#   sapply(b, function(n) {
-#     g <<- graph::addEdge(from=a, to=n, graph=g)
-#     NULL
-#   })
-#   if (complete) {
-#     ug <- graph::ugraph(g)  
-#     stopifnot(gRbase::is.complete(ug, c(a, b)))
-#   }  
-#   stopifnot(gRbase::is.DAG(g))
-#   g
-# }
-# #' Removes edges with weight below \code{alpha}
-# #' 
-# #' @param g a \code{graphNEL} object 
-# #' @param alpha numeric 
-# filter_edges_by_attr <- function(attr, g, comparison, alpha) {
-#   stopifnot(length(attr) > 0)
-#   stopifnot(!graph::isDirected(g))
-#   stopifnot(is.numeric(alpha))
-#   stopifnot(comparison %in% c('<', '>', '<=', '>=', '=='))    
-#   remove <- NULL
-#   em <- named_edge_matrix(g)
-#   if (length(em) > 0) {    
-#     ew <- unlist(graph::edgeData(g, from = em[1, ], to = em[2, ], attr= attr))  
-#     remove_ind <- do.call(comparison, args=list(ew, alpha))
-#     remove <- em[, remove_ind, drop=T]  
-#     g <- graph::removeEdge(from=remove[1,], to=remove[2,], graph=g)
-#   }
-#   list(filtered=g, removed=remove)  
-# }

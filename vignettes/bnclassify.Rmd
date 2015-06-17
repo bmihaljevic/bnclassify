@@ -16,6 +16,9 @@ vignette: >
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 ```
 
+## Intro
+This is mainly for complete data but works for incomplete, too. Only discrete.
+
 ## Predicting 
 
 ### 0 probabilities
@@ -99,7 +102,10 @@ It's easy to use bnclassify with the mlr package. If you have mlr installed, you
   detach('package:mlr')
 ```
 
+## Incomplete data
+You can use this package with incomplete data, but it is very slow. Example with the voting data set...
 
+Best not to use incomplete data with wrapper classifiers.
 
 ## Vignette docs
 

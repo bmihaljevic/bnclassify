@@ -29,7 +29,8 @@ test_that("Superimpose node", {
 test_that("Direct tree", {
   g <- graph::graphNEL()  
   e <- direct_tree(g)
-  expect_identical(e, g)
+  expect_equal(graph::edgemode(e), "directed")
+  expect_equal(graph::ugraph(e), g)
   
   gr <- pairwise_ode_scores(class = 'class', dataset = car, score = 'loglik')
   af <- max_weight_forest(gr)
