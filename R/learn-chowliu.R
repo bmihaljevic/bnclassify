@@ -40,7 +40,8 @@ pairwise_ode_scores <- function(class, dataset, score) {
   to <- edges[2, ]; rm(edges)
 # For each get pairwise contribution to score
   pairwise_score <- mapply(local_ode_score, from, to, 
-                     MoreArgs = list(class=class, dataset=dataset))
+                     MoreArgs = list(class=class, dataset=dataset), 
+                     SIMPLIFY = TRUE)
   stopifnot(identical(rownames(pairwise_score), decomposed_ode_scores()))
 # Select the score 
   pairwise_score <- pairwise_score[score, ]  

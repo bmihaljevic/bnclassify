@@ -46,7 +46,7 @@ Note that when predicting on a data set with incomplete cases, gRain is used und
 
 
 ## Cross-validation
-There is rather fast cross-validation. It takes advantage of the modularity of Bayesian networks by accessing only onces the CPTs shared accross structures. 
+There is rather fast cross-validation. It takes advantage of the modularity of Bayesian networks by accessing only onces the CPTs shared accross structures. In this example it is faster than CV multiple structures.
 
 ```{r}
 a <- lp(nb('class', car), car, smooth = 1)	
@@ -55,7 +55,12 @@ d <- lp(nb('class', car[, c(sample(1:6, 4), 7), drop = FALSE]), car, smooth = 1)
 set.seed(0)
 microbenchmark(r <- dag_cv(list(a, b, d), 'class', car, smooth = 1, k = 10))
 r
+set.seed(0)
+microbenchmark(r <- bnc_cv(list(a), car, dag = FALSE, k = 10))
+r
 ```
+
+Keogh has a similar optimization but not quite the same and only for one feature. This is generalized.
 
 ## Feature selection
 

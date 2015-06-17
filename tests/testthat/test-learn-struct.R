@@ -19,10 +19,10 @@ test_that("nb No features ", {
 test_that("fssj nominal", {
   set.seed(0)
   f <- fssj('class', dataset = car, k = 10, epsilon = 0.01)
-  expect_equal(features(f$model), )
+  expect_equal(features(f$model), character())
   set.seed(0)
   f <- fssj('class', dataset = car, k = 10, epsilon = 0)
-  expect_equal(features(f$model), )
+  expect_equal(features(f$model), 'buying')
 })
 
 test_that("bsej nominal", {

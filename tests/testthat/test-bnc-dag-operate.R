@@ -49,3 +49,28 @@ test_that("remove feature not in graph", {
   nb <- nbcarclass()
   expect_error(remove_feature('safety', nb), "not in")
 })
+
+test_that("feature orphans nominal", {
+  nb <- nbcar()
+  o <- feature_orphans(nb)
+  expect_equal(o, features(nb))
+})
+
+test_that("feature orphans no features", {
+  nb <- nbcarclass()
+  o <- feature_orphans(nb)
+  expect_null(o)
+})
+
+test_that("feature orphans ode", {
+  nb <- nbcarp(car[, 5:7])
+  nb <- add_feature_parents('lug_boot', 'safety', nb)  
+  o <- feature_orphans(nb)
+  expect_equal(o, 'lug_boot')
+})
+
+# Remove non dags.
+# Ensure all are ODE.
+
+# Cannot introduce cycles!!
+# An orphan may have children. If the child is descendant then it is not good.

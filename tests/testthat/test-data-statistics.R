@@ -34,7 +34,7 @@ test_that("Contingency table", {
 	vars <- c('buying', 'doors', 'maint')
 	expect_identical(names(d), vars)
 	levs <- lapply(car[, vars], levels)
-	expect_true(all(mapply(identical, levs, d)))
+	expect_true(all(mapply(identical, levs, d, SIMPLIFY = TRUE)))
 	t <- extract_ctgt('crime', voting)
 	expect_identical(sum(t), 418L) 
 })

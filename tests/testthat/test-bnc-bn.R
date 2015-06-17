@@ -7,7 +7,7 @@ test_that("nominal", {
   expect_equal(tout, texp)
   tvalues <- values(tbn)
   levs <- lapply(car, levels)
-  expect_true(all(mapply(identical, levs, tvalues)))
+  expect_true(all(mapply(identical, levs, tvalues, SIMPLIFY = TRUE)))
   expect_identical(values(tbn)$buying, levels(car$buying))
   expect_is(to_grain(tbn), 'grain')
 })

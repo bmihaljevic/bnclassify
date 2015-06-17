@@ -55,16 +55,97 @@ bsej_step <- function(bnc_dag, ...) {
 #' @param ... Ignored.
 #' @keywords internal
 augment_ode <- function(bnc_dag, ...) {
-  stopifnot(is_ode(bnc_dag))
-  
-  pairs <- augmenting_ode_arcs(features, orphans, bnc_dag(model))
-  # The same as in relating in merge_supernodes.
-  if (is.null(pairs)) return(NULL)
-  stopifnot(is.matrix(pairs))
-  dags <- apply(pairs, 2, function(x) {    
-    relate_nodes(x[1], x[2], model, complete=FALSE)
-  })  
+  arcs <- augment_ode_arcs(bnc_dag)
+  if (length(arcs) == 0) return(NULL)
+  dags <- mapply(add_feature_parents, arcs[, 'from'], arcs[, 'to'], 
+                 MoreArgs = list(x = bnc_dag), SIMPLIFY = FALSE)
   stopifnot(all(vapply(dags, is_ode, FUN.VALUE = logical(1))))
-  
+  dags
+}
+#' Returns augmenting arcs that do not invalidate the ODE. 
+#' 
+#' @keywords internal
+#' @return a character matrix. NULL if no arcs can be added.
+augment_ode_arcs <- function(bnc_dag) {
+  stopifnot(is_ode(bnc_dag))
+  orphans <- feature_orphans(bnc_dag) 
+  # An ODE must have at least one orphan
+  stopifnot(length(orphans) >= 1)  
+  if (length(orphans) == 1) return(matrix(character(), ncol = 2))
+  non_orphans <- setdiff(features(bnc_dag), orphans)
+  arcs <- arcs_to_orphans(orphans, non_orphans)
+  arcs <- discard_cycles(arcs, bnc_dag)
+  # discard equivalent arcs
+  discard_reversed(arcs)
+}
+# Returns each possible ode-augmenting arc. It also includes equivalent arcs among orphans --- e.g., A -> B is yields an equivalent structure as B -> A --- but this is handled by discard_reversed. Returns a data frame.
+arcs_to_orphans <- function(orphans, non_orphans) {
+  # Check they are disjoint
+  stopifnot(are_disjoint(orphans, non_orphans))
+  # If no orphans return empty
+  if (length(orphans) == 0) return(NULL)
+  # Add an arc from each non_orphans to each ode orphans 
+  a <- expand.grid(from = non_orphans, to = orphans, stringsAsFactors = FALSE, 
+                   KEEP.OUT.ATTRS = FALSE)
+  # Add each orphan combination, too.
+  if (length(orphans) > 1) {
+    b <- t(combn(orphans, 2))
+    # Add the reversed arcs, too (b[, 2:1])
+    b <- rbind(b, b[, 2:1])
+    # rbind requires same column names
+    colnames(b) <- c('from', 'to')
+    a <- rbind(a, b)  
+  }
+  as.matrix(a)
 }
 
+# Remove from arcs_df arcs that would introduce a cycle in bnc_dag
+discard_cycles <- function(arcs_df, bnc_dag) {
+  stopifnot(is.matrix(arcs_df), is.character(arcs_df))
+  from <- unique(arcs_df[, 'from'])
+  # gRbase always converts to adjMAT!! cannot "pre-convert"
+  # g <- gRbase::as.adjMAT(to_graphNEL(bnc_dag))
+  ancestors <- lapply(from, gRbase::ancestors, to_graphNEL(bnc_dag))
+  # [from] to ensures that ancestors and potential_children are in same order
+  potential_children <- tapply(arcs_df[, 'to'], arcs_df[, 'from'],
+                              identity)[from]
+  cycle_free <- mapply(setdiff, potential_children, ancestors, 
+                       SIMPLIFY = FALSE)
+  cycle_free_mat <- unlist_keepnames(cycle_free)
+  colnames(cycle_free_mat) <- c('to', 'from')
+  cycle_free_mat[, c('from', 'to')]
+}
+
+discard_reversed <- function(matrix) {
+  if (nrow(matrix) == 0) return(matrix(character(), ncol = 2))
+  # Remove name so that reversed is the exact reflection
+  remember_names <- colnames(matrix)
+  matrix <- unname(matrix)
+  reversed <- matrix[, rev(seq_len(ncol(matrix)))]
+  stopifnot(identical(matrix, reversed[, 2:1]))
+  unique <- rep(FALSE, nrow(matrix))
+  # Count last element as unique
+  unique[length(unique)] <- TRUE
+  for (row in rev(seq_len(nrow(matrix) - 1))) {
+    this_row <- matrix[row, ]
+    unique[row] <- !any(apply(reversed[unique, , drop = FALSE], 1, 
+                              identical, this_row))
+  }
+  matrix <- matrix[ unique, , drop = FALSE]
+  colnames(matrix) <- remember_names
+  matrix
+}
+
+# On the one hand, you do not want to consider repeated structures. On the other,
+# you do not want to include those that are introducing cycles. 
+# 
+# If an orphan is ancestor of some of those, then it cannot be its parent. 
+# non-orphan ancestors. 
+# 
+# AT the end, just remove symetrical.
+# Do a reflection and remove identical
+# subset_symmetric()
+
+# Get possible arcs 
+# Remove cycle-introducing 
+# Remove identical 
