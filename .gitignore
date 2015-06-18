@@ -2,3 +2,5 @@ inst/doc
 develop/
 design-and-manage/
 .Rproj.user/
+tmp-vignette-example.Rmd
+
