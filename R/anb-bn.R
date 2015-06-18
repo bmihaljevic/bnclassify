@@ -12,7 +12,8 @@ bnc_bn <- function(x, dataset, smooth, call) {
   bnc_bn
 }
 multi_bnc_bn <- function(x, dataset, smooth, call) {
-  x <- ensure_list(x)
+  # Unnamed so that it would pass no names to objects created by itearting on it
+  x <- ensure_multi_list(x)
   # Check bnc dag
   lapply(x, check_bnc_dag)
   # Check the class is common to all data sets
@@ -41,9 +42,14 @@ make_bnc_bn <- function(bnc_dag, params, grain, call) {
   bnc_bn
 }
 bn2dag <- function(x) {
-  stopifnot(inherits(x, "bnc_bn"))
-  make_bnc_dag(class = class_var(x), families = families(x), 
-               graphNEL = to_graphNEL(x))
+  stopifnot(inherits(x, "bnc_dag"))
+  if (is_just(x, "bnc_dag")) {
+    x
+  }
+  else {
+    make_bnc_dag(class = class_var(x), families = families(x), 
+                 graphNEL = to_graphNEL(x))  
+  }
 }
 check_bnc_bn <- function(x) {
   # Check it is a bnc dag

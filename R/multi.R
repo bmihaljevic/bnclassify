@@ -8,7 +8,7 @@ get_common_class <- function(x) {
 # Unique in terms of the variables, I assume their contents are identical if
 # their vars match
 get_unique_cpts <- function(x) {
-  x <- ensure_list(x)
+  x <- ensure_multi_list(x)
   ufams <- unique_families(lapply(x, families))
   ufams_ids <- as.vector(make_families_ids(ufams))
   all_cpts <- unlist(lapply(x, params), recursive = FALSE)
@@ -25,6 +25,10 @@ ensure_list <- function(x) {
     x <- list(x)
   }
   x
+}
+# Unnamed so that it would pass no names to objects created by itearting on it
+ensure_multi_list <- function(x) {
+  unname(ensure_list(x))
 }
 # compute_lucp_multi <- function(x, dataset)  {
 #   # We can only apply the optimization if data is complete 

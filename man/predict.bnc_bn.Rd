@@ -4,9 +4,9 @@
 \alias{predict.bnc_bn}
 \title{Predict.}
 \usage{
-\method{predict}{bnc_bn}(object, newdata, prob = F, ...)
+\method{predict}{bnc_bn}(object, newdata, prob = FALSE, ...)
 }
 \description{
-Predict.
+Ties are resolved randomly.
 }
 

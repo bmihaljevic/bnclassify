@@ -106,7 +106,7 @@ get_cpt_id <- function(cpt) {
 # # Need unique names for CPTs
 # names(ufams) <- vapply(ufams, make_family_id, FUN.VALUE = character(1))
 # extract_unique_cpts <- function(x, dataset, smooth) {
-#   x <- ensure_list(x)
+#   x <- ensure_multi_list(x)
 #   ufams <- unique_families(lapply(x, families))
 #   families2cpts(ufams, dataset = dataset, smooth = smooth)
 # }

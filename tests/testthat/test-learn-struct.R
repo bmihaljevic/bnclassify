@@ -44,12 +44,12 @@ test_that("tanhc nominal", {
   set.seed(0)
   t <- tanhc('class', dataset = car, k = 10, epsilon = 0)
   expect_equal(length(features(t)), 6)
-  expect_equal(narcs(t), 10)
+  expect_equal(narcs(t), 9)
 })
 
 test_that("tanhc sp nominal", {
   set.seed(0)
   t <- tanhc_sp('class', dataset = car, k = 10, epsilon = 0)
   expect_equal(length(features(t)), 6)
-  expect_equal(narcs(t), 11)
+  expect_equal(narcs(t), 10)
 })

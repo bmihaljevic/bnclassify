@@ -11,8 +11,8 @@ greedy_search <- function(class, to_include, init, step, dataset, epsilon, k,
     # if max accuracy then break
     if (isTRUE(fast_equal(current_score, 1))) { break }
     #     Score all candidate states
-    scores <- dag_cv(candidate_dags, class = class, dataset = dataset, 
-                     smooth = smooth, k = k)
+    scores <- cv(candidate_dags, dataset = dataset, k = k, dag = FALSE, 
+                 smooth = smooth)
     #     Stop if it is not better than current_score 
     if (!is_improvement(scores, current_score, epsilon)) break         
     #     Make the best dag the current one

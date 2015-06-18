@@ -11,26 +11,6 @@ predict.bnc_bn <- function(object, newdata, prob = FALSE, ...) {
   }
   pred
 }
-multi_predict <- function(object, newdata, prob = FALSE) {
-  #   if complete, then all one together
-  if (!anyNA(newdata)) {
-    p <- multi_compute_augnb_luccpx(object, newdata)
-    p <- lapply(p, log_normalize)
-    stopifnot(all(vapply(p, are_pdists, FUN.VALUE = logical(1))))
-    if (prob) {
-      p
-    }
-    else {
-      lapply(p, map)
-    }
-  }
-  #   otherwise get posterior for each separately
-  else {
-    lapply(object, predict, newdata,  prob = prob)
-  }  
-}
-
-
 #' Assigns instances to the most likely class.
 #' 
 #' Ties are resolved randomly.
@@ -49,28 +29,25 @@ map <- function(pred) {
   factor(predicted, levels = classes)
 }
 #' CV
-#' @export
-bnc_cv <- function(x, dataset, k, dag = FALSE) {
-  # Ensure x is list because cross val expects one
-  if (!inherits(x, "list")) {
-    x <- list(x)
+#'  @export
+cv <- function(x, dataset, k, dag, smooth = NULL) {
+  multi_crossval(x, dataset = dataset, k = k, dag = dag, smooth = smooth)
+}
+multi_predict <- function(object, newdata, prob = FALSE) {
+  #   if complete, then all one together
+  if (!anyNA(newdata)) {
+    p <- multi_compute_augnb_luccpx(object, newdata)
+    p <- lapply(p, log_normalize)
+    stopifnot(all(vapply(p, are_pdists, FUN.VALUE = logical(1))))
+    if (prob) {
+      p
+    }
+    else {
+      lapply(p, map)
+    }
   }
-  # TODO: Check that all x have the same class?
-  class <- class_var(x[[1]])
-  update_args <- lapply(x, bnc_get_update_args, dag = dag)
-  do_crossval(update_args, class = class, dataset = dataset, k = k)
-}
-# dag_cv <- function(x, lp_args, class, dataset, k) {
-#   updateable <- lapply(x, make_daglp_updateable, lp_args)
-#   update_args <- lapply(updateable, bnc_get_update_args, dag = FALSE)
-#   do_crossval(update_args, class = class, dataset = dataset, k = k)
-# }
-#'  CV for fixed structures.
-#'  @export
-dag_cv <- function(x, class, dataset, smooth, k) {
-  do_crossval_multi(x, class = class, dataset = dataset, smooth = smooth, k = k)
-}
-#'  @export
-cv <- function(x, dataset, k, dag) {
-  multi_crossval(x, dataset = dataset, k = k, dag = dag)
+  #   otherwise get posterior for each separately
+  else {
+    lapply(object, predict, newdata,  prob = prob)
+  }  
 }

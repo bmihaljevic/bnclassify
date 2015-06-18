@@ -1,5 +1,5 @@
 multi_compute_augnb_luccpx <- function(x, dataset) {
-  x <- ensure_list(x)
+  x <- ensure_multi_list(x)
   class <- get_common_class(x)
   ucpts <- get_unique_cpts(x)
   names(ucpts) <- vapply(ucpts, get_cpt_id, FUN.VALUE = character(1))

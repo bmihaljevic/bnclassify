@@ -4,7 +4,7 @@
 \alias{bnc_dag}
 \title{Creates an augmented naive Bayes with structure but no parameters.}
 \usage{
-bnc_dag(dag, class, call)
+bnc_dag(dag, class)
 }
 \description{
 Creates an augmented naive Bayes with structure but no parameters.
