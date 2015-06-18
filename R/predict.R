@@ -1,4 +1,7 @@
 #' Predict. 
+#' 
+#' Ties are resolved randomly.
+#' 
 #' @export
 predict.bnc_bn <- function(object, newdata, prob = F, ...) {      
   # stopifnot(inherits(object, "bnc_fit"))  
@@ -17,13 +20,6 @@ predict.bnc_bn <- function(object, newdata, prob = F, ...) {
 #' @param x a \code{bnc_fit} object.
 #' @return a factor with the same levels as the class variable.
 #' @keywords internal
-# map <- function(pred, x) {
-#   max_ind <- max.col(m = pred, ties.method = "random") 
-#   classes <- classes(x = x)
-#   predicted <- classes[max_ind]
-#   #   Return a factor with the levels of the class variable
-#   factor(predicted, levels = classes)
-# }
 map <- function(pred) {
   max_ind <- max.col(m = pred, ties.method = "random") 
   classes <- colnames(pred)

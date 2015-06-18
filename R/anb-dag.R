@@ -1,16 +1,14 @@
 #' Creates an augmented naive Bayes with structure but no parameters.
-bnc_dag <- function(dag, class, call) {
+bnc_dag <- function(dag, class) {
   families <- graph2families(dag, class)  
 #   Save dag, class, features,and call 
-  obj <- make_bnc_dag(class = class, families = families, graphNEL = dag, 
-                      call = call)
+  obj <- make_bnc_dag(class = class, families = families, graphNEL = dag)
   check_bnc_dag(obj)
   obj
 }
-make_bnc_dag <- function(class, families, graphNEL, call) {
+make_bnc_dag <- function(class, families, graphNEL) {
   # Not checking families for efficiency; they are checked in bnc_dag anyway
-  obj <- list(.dag = graphNEL, .class = class, .families = families, 
-              .call_struct = call)
+  obj <- list(.dag = graphNEL, .class = class, .families = families)
   class(obj) <- 'bnc_dag'
   obj
 }

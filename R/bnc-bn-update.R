@@ -3,6 +3,19 @@
 # x
 # }
 
+add_dag_call_arg <- function(bnc_dag, call, env, force = FALSE) {
+  add_call_arg(bnc_dag, call, env, arg = '.call_struct', force = force)
+}
+
+add_call_arg <- function(bnc_dag, call, env, arg, force) {
+  stopifnot(inherits(bnc_dag, "bnc_dag"))
+  if (!force) { 
+    stopifnot(is.null(bnc_dag[[arg]]))
+  }
+  bnc_dag[[arg]] <- save_bnc_call(call, env)
+  bnc_dag
+}
+
 # Arguments to be passed to bnc_update_args()
 bnc_get_update_args <- function(x, dag) {
   stopifnot(is.logical(dag))

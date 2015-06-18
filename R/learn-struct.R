@@ -4,36 +4,39 @@ nb <- function(class, dataset = NULL, features = NULL) {
   if (!is.null(dataset)) {
     features <- get_features(class = class, dataset = dataset)
   }
-  dag <- nb_dag(class, features)
-  call <- save_bnc_call(match.call(), parent.frame())
-  bnc_dag(dag, class = class, call = call)
+  nb <- bnc_dag(nb_dag(class, features), class)
+  add_dag_call_arg(nb, call = match.call(), env = parent.frame())
 }
 #' @export
 fssj <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {    
   just_class_nb <- nb(class = class)
   features <- get_features(class, dataset)
-  greedy_search(class = class, to_include = features, init = just_class_nb,
+  x <- greedy_search(class = class, to_include = features, init = just_class_nb,
                 step = fssj_step, dataset = dataset, epsilon = epsilon, k = k,
                 smooth = smooth)
+  add_dag_call_arg(x, call = match.call(), env = parent.frame(), force = TRUE)
 }
 #' @export
 bsej <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {    
   full_nb <- nb(class = class, dataset)
-  greedy_search(class = class, to_include = NULL, init = full_nb,
+  x <- greedy_search(class = class, to_include = NULL, init = full_nb,
                 step = bsej_step, dataset = dataset, epsilon = epsilon, k = k,
                 smooth = smooth)
+  add_dag_call_arg(x, call = match.call(), env = parent.frame())
 }
 #' @export
 tanhc <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {    
   full_nb <- nb(class = class, dataset)
-  greedy_search(class = class, to_include = NULL, init = full_nb,
+  x <- greedy_search(class = class, to_include = NULL, init = full_nb,
                 step = augment_ode, dataset = dataset, epsilon = epsilon, k = k,
                 smooth = smooth)
+  add_dag_call_arg(x, call = match.call(), env = parent.frame(), force = TRUE)
 }
 #' @export
 tanhc_sp <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {    
   full_nb <- nb(class = class, dataset)
-  greedy_search(class = class, to_include = NULL, init = full_nb,
+  x <- greedy_search(class = class, to_include = NULL, init = full_nb,
                 step = augment_ode_sp, dataset = dataset, epsilon = epsilon, 
                 k = k, smooth = smooth)
+  add_dag_call_arg(x, call = match.call(), env = parent.frame(), force = TRUE)
 }

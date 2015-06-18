@@ -14,20 +14,20 @@ test_that("nominal", {
 
 test_that("bnc_bn no class in dataset ", {     
   tbdag <- nb_dag('class', 'buying')
-  tb <- bnc_dag(tbdag, class = 'class', call = NULL)
+  tb <- bnc_dag(tbdag, class = 'class')
   expect_error(bnc_bn(tb, car[ , 1, drop = FALSE], smooth = 0, call = NULL),
                "subset")
 })
 
 test_that("Just the class in dataset", {
   tbdag <- nb_dag('class', character())
-  tbdag <- bnc_dag(tbdag, class = 'class', call = NULL)
+  tbdag <- bnc_dag(tbdag, class = 'class')
   tbn <- bnc_bn(tbdag, car, smooth = 0, call = NULL)    
   expect_equal(class_var(tbn), 'class')
 })  
 
 test_that(" Wrong data set", {
   tbdag <- nb_dag('class', colnames(car)[-7])
-  tbdag <- bnc_dag(tbdag, class = 'class', call = NULL)
+  tbdag <- bnc_dag(tbdag, class = 'class')
   expect_error(bnc_bn(tbdag, voting, smooth = 0, call = NULL)   , "colnames")
 })

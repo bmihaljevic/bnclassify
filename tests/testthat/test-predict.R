@@ -50,3 +50,11 @@ test_that("CV structures for fitting", {
   d <- bnc_cv(list(a, b), car, k = 10, dag = FALSE)
   expect_equal(r, d)
 })
+
+test_that("CV a wrapper", {
+  t <- tanhc('class', car, k = 2, epsilon = 0, smooth = 0.01)
+  t <- lp(t, car, smooth = 0.01)
+  set.seed(0)
+  r <- bnc_cv(t, car, k = 2, dag = TRUE)
+  expect_true(is_positive(r))
+})

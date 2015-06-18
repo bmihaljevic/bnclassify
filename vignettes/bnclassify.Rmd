@@ -19,6 +19,20 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 ## Intro
 This is mainly for complete data but works for incomplete, too. Only discrete.
 
+## Chow-Liu based 
+Quadratic time fast. 
+
+You can learn with these functions ...
+
+## Wrapper ones 
+
+## Fitting parameters 
+
+You call the lp function.
+
+You can also have the convenience `bnc` function bnc('class', car, tan) is equivalent to tan() lp(x, ..)
+Note tan is not a string but function object (must have bnclassify attached)
+
 ## Predicting 
 
 ### 0 probabilities

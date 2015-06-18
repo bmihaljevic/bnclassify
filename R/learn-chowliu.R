@@ -19,7 +19,7 @@ chowliu <- function(class, dataset, score='loglik', blacklist = NULL,
 #   input <- list(score = score, root = root)
 #   weights <- graph::edgeWeights(object = aug_forest)
 #   bnc_log(s, input = input, blacklisted=black$removed, ode_weights=weights)
-  bnc_dag(dag = ode, class = class, call = NULL)
+  bnc_dag(dag = ode, class = class)
 }
 
 pairwise_ode_scores <- function(class, dataset, score) {

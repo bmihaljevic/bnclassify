@@ -11,7 +11,7 @@ not_cci <- function(x) {
 add_feature_parents <- function(parents, feature, x) {
   stopifnot(is_aug_nb(x))  
   g <- condition_on(parents, feature, to_graphNEL(x))
-  bnc_dag(g, class_var(x), NULL)
+  bnc_dag(g, class_var(x))
 }
 # Just a convenience for calling add_feature_parents from *ply loops
 add_feature_children <- function(feature, parents, x) {
@@ -22,19 +22,19 @@ relate_supernodes <- function(child_sn, parent_sn, x) {
 #   check child and parent are supernodes 
   stopifnot(is_supernode(child_sn, x), is_supernode(parent_sn, x))
   g <- condition_on(parent_sn, child_sn, to_graphNEL(x))
-  bnc_dag(g, class_var(x), NULL)
+  bnc_dag(g, class_var(x))
 }
 add_feature <- function(node, x) {
   stopifnot(assertthat::is.string(node))
   a <- add_node(node, to_graphNEL(x))
   class <- class_var(x)
   a <- condition_on(parents = class, nodes = node, x = a)
-  bnc_dag(a, class, NULL)
+  bnc_dag(a, class)
 }
 remove_feature <- function(node, x) {
   stopifnot(assertthat::is.string(node))
   g <- remove_node(node, to_graphNEL(x))
-  bnc_dag(g, class_var(x), NULL)
+  bnc_dag(g, class_var(x))
 }
 narcs <- function(x) {
   num_arcs(to_graphNEL(x))

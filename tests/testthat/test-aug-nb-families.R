@@ -69,9 +69,6 @@ test_that("is is family missing values", {
   expect_true(!is_anb_family(f, 'a', 'g'))
 })
 
-
-
-
 test_that("Unique families some in common", {
   a <- families(nbcar())
   b <- families(nbcarp(car[, 4:7]))
