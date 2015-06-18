@@ -1,18 +1,18 @@
-# The names of the unique CPTs are the family tags.
-# The names of the fam dags are also the family tags.
-# The families should actually just contain the tags.
-
 multi_compute_augnb_luccpx <- function(x, dataset) {
-#   x <- ensure_list(x)
-#   get class var (x)
-#   cp <- get cp from x (also multi)
-#   get unique fams 
-#   get unique cpts
-  xp <- get_ccx_factors(unique_xcpts, dataset, class, 
-                        classes = get_cpt_values(cp)[[1]])
-  factors_list <- lapply(xfams_id_dags, function(fams_dag) {
-    append(list(class = cp_factor), xp[fams_dag])
-  })
+  x <- ensure_list(x)
+  class <- get_common_class(x)
+  ucpts <- get_unique_cpts(x)
+  names(ucpts) <- vapply(ucpts, get_cpt_id, FUN.VALUE = character(1))
+  ind_class <- which(class == names(ucpts))
+  stopifnot(assertthat::is.count(ind_class))
+  uxcpts <- ucpts[-ind_class]
+  cp <- ucpts[[ind_class]] 
+  rm(ucpts) # Not needed any more
+  factors <- get_ccx_factors(uxcpts, dataset, 
+                             class, classes = cpt_1d_values(cp))
+  factors[[class]] <- make_cp_factor(cp, dataset)
+  dag_fams_ids <- lapply(x, families_ids)
+  factors_list <- lapply(dag_fams_ids, function(cpt_ids) factors[cpt_ids] )
   lapply(factors_list, sum_log_factors)
 }
 compute_augnb_lucp_multi <- function(class, xfams_id_dags, unique_xcpts, cp,
@@ -31,8 +31,9 @@ compute_augnb_lucp_multi <- function(class, xfams_id_dags, unique_xcpts, cp,
 }
 # Computes the 
 compute_augnb_luccpx <- function(x, dataset) {
-# TODO: check it is aug nb, only that way the factorization will work
-# Make a copy of class posterior per data point
+# X must be an aug nb and data must be complete for this factorization to work
+# ...TODO: check for aug nb
+  stopifnot(!anyNA(dataset))
   cp <- params(x)[[class_var(x)]]
   wcp <- make_cp_factor(cp, dataset) 
 #  Add class posterior to factors list

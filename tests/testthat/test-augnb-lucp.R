@@ -48,13 +48,27 @@ test_that("matches grain", {
   gp <- compute_grain_luccpx(grain = g, v[, -17], 'Class')
 })
 
-# test_that("multi predict", {
-#   a <- nbcar()  
-#   b <- nbcarp(car[, 4:7])
-#   d <- multi_learn(list(a, b), smooth = 1, car)
-#   # debugonce(compute_augnb_lucp_multi)
-#   preds <- compute_augnb_lucp_multi(d, 'class', car)  
-# })
+test_that("fail with incomplete data", {
+  v <- nbvote()
+  expect_error(compute_augnb_luccpx(v, voting), "anyNA")
+})
+
+test_that("multi class posterior nominal", {
+  a <- nbcar()  
+  b <- nbcarp(car[, 4:7])
+  cr <- multi_compute_augnb_luccpx(list(a, b), car)  
+  ar <- compute_augnb_luccpx(a, car)
+  expect_equal(cr[[1]], ar)
+  br <- compute_augnb_luccpx(b, car)
+  expect_equal(cr[[2]], br)
+})
+
+test_that("multi class posterior single bnc", {
+  a <- nbcar()  
+  b <- multi_compute_augnb_luccpx(a, car)  
+  c <- compute_augnb_luccpx(a, car)
+  expect_equal(b[[1]], c)
+})
 
 # Not implemented to receive just CPTs
 # test_that("compute augnb lucp", {

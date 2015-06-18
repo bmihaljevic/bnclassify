@@ -86,11 +86,21 @@ multi_learn_predict <- function(dags, train, test, smooth, prob = FALSE) {
     p 
   }
 }
-multi_update <- function(bnc_bns, dataset, dag) {
+
+get_dag_update_args <- function(x) {
+  stopifnot(!is.null(x$.call_struct))
+  x$.call_struct
+}
+update_dag <- function(x, dataset)  {
+  do_bnc_call(get_dag_update_args(x), dataset)
+}
+multi_update <- function(x, dataset, dag) {
+  x <- ensure_list(x)
   dags <- NULL
   if (dag) {
-    dags <- update_dags(bnc_bns, dataset)
+    dags <- lapply(x, update_dag, dataset)
   }
-  smooth = get_lp_args(bnc_bns)
-  multi_bnc_bn(bnc_bns, dataset, smooth = smooth)
+#   smooth = get_lp_args(bnc_bns) TODO!!
+  smooth = 1e10
+  multi_bnc_bn(dags, dataset, smooth = smooth, call = NULL)
 }

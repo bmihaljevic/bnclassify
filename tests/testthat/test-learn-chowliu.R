@@ -36,6 +36,10 @@ test_that("chowliu bic voting", {
 #   t <- chowliu(class = 'Class', dataset = dbreast, score = "bic")
 #   expect_equal(narcs(t), 13) 
 
+test_that("chowliu single-row dataset", {
+  t <- chowliu(class = 'class', dataset = car[1, ], score = "loglik")
+  expect_equal(narcs(t), 11)
+})
 
 test_that("pairwise local scores nominal", {  
   a <- pairwise_ode_scores(class = 'class', dataset = car, score= "loglik")  

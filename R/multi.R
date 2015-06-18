@@ -5,11 +5,16 @@ get_common_class <- function(x) {
   assertthat::is.string(class)
   class
 }
-get_common_cp <- function(x, just_first = FALSE) {
-  # Assuming the cp is identical in each of them.
-  # Check it. 
-  # Check is a boolean. Can skip it. 
-  # If not check then return just first
+# Unique in terms of the variables, I assume their contents are identical if
+# their vars match
+get_unique_cpts <- function(x) {
+  x <- ensure_list(x)
+  ufams <- unique_families(lapply(x, families))
+  ufams_ids <- as.vector(make_families_ids(ufams))
+  all_cpts <- unlist(lapply(x, params), recursive = FALSE)
+  all_cpts_ids <- vapply(lapply(all_cpts, cpt2family), make_family_id, 
+                         FUN.VALUE = character(1))
+  all_cpts[match(ufams_ids, all_cpts_ids)]
 }
 extract_unique_cpts <- function(x, dataset, smooth) {
   ufams <- unique_families(lapply(x, families))
@@ -21,3 +26,17 @@ ensure_list <- function(x) {
   }
   x
 }
+# compute_lucp_multi <- function(x, dataset)  {
+#   # We can only apply the optimization if data is complete 
+#   if (!anyNA(dataset)) {
+#     compute_lucp_multi_complete(x, dataset)
+#   }
+#   else {
+#     stop("Not implemented.")
+#   }
+# }
+# 
+# compute_lucp_multi_complete <- function(x, dataset) {
+#   stopifnot(!anyNA(dataset)) 
+#   compute_augnb_lucp_multi(x, dataset)
+# }

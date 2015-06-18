@@ -14,6 +14,13 @@ test_that("bnc update bnc_bn", {
 	expect_equal(diff, 2.393358, tolerance = 1e-7)
 })
 
+test_that("Update dag", {
+  t <- tan_bnc('class', car)
+  d <- update_dag(t, car[1, ])  
+  expect_identical(narcs(d), narcs(t))
+  expect_true(!identical(families(d), families(t)))
+})
+
 test_that("bnc update bnc_bn with struct learning", {
   dgcar <- lp(nb('class', car), car, smooth = 1)	
   ua <- bnc_get_update_args(dgcar, dag = TRUE)

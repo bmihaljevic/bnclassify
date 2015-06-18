@@ -84,3 +84,10 @@ feature_orphans <- function(bnc_dag) {
 is_orphan_fam <- function(fam, feat, class) {
   identical(fam, c(feat, class))
 }
+
+# ========================
+# Internal
+families_ids <- function(x) {
+  families <- families(x)
+  make_families_ids(families)
+}

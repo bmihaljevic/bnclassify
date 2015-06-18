@@ -100,8 +100,9 @@ subset_cpt <- function(cpt, indices) {
 exponentiate_cpt <- function(cpt, value) {
   normalize_ctgt(cpt ^ value)
 }
-
-
+get_cpt_id <- function(cpt) {
+  make_family_id(cpt2family(cpt))
+}
 # # Need unique names for CPTs
 # names(ufams) <- vapply(ufams, make_family_id, FUN.VALUE = character(1))
 # extract_unique_cpts <- function(x, dataset, smooth) {

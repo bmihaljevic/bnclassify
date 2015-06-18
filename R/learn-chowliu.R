@@ -43,8 +43,10 @@ pairwise_ode_scores <- function(class, dataset, score) {
   stopifnot(identical(rownames(pairwise_score), decomposed_ode_scores()))
 # Select the score 
   pairwise_score <- pairwise_score[score, ]  
-# Remove nonpositive scores (possible for BIC and AIC) and weight the edges
-  ind_keep <- pairwise_score > 0
+# Remove negative scores (possible for BIC and AIC) and weight the edges
+# ...If I also removed 0 scores --which are possible for loglik-- the structure
+# ...may turn out a forest even when using loglik
+  ind_keep <- pairwise_score >= 0
   from <- from[ind_keep]
   to <- to[ind_keep]
   pairwise_score <- pairwise_score[ind_keep]
