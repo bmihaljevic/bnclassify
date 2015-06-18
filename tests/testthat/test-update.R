@@ -1,5 +1,8 @@
 context("Update")
 
+# ==============================================================================
+# To delete
+
 test_that("bnc update bnc_dag", {
   dgcar <- nb('class', car)  
   # Currently, parameter fitting is required for updating; dag learning is not

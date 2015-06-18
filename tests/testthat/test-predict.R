@@ -2,7 +2,7 @@ context("predict")
 
 test_that("Maximum a posteriori", {  
   h <- nbvote()
-  pred <- predict(h, voting, prob=T)
+  pred <- predict(h, voting, prob = TRUE)
   p <- map(pred)
   accu <- sum(p == voting$Class) / nrow(voting)
   expect_equal(accu, 0.9034483, tolerance = 1e-7)
@@ -57,4 +57,19 @@ test_that("CV a wrapper", {
   set.seed(0)
   r <- bnc_cv(t, car, k = 2, dag = TRUE)
   expect_true(is_positive(r))
+})
+
+test_that("correct cv result", {
+  t <- tanhc('class', car, k = 5, epsilon = 0, smooth = 0.12)
+  t <- lp(t, car, smooth = 0.01)
+  set.seed(0)
+  s <- cv(t, car, k = 5, dag = TRUE)
+  expect_equal(s, 0.9380898, tolerance = 1e-6)
+})
+
+test_that("correct cv result with missing data", {
+  nb <- nbvote()
+  set.seed(0)
+  s <- cv(nb, voting, k = 5, dag = TRUE)
+  expect_equal(s, 0.9034483, tolerance = 1e-6)
 })

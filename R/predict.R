@@ -3,7 +3,7 @@
 #' Ties are resolved randomly.
 #' 
 #' @export
-predict.bnc_bn <- function(object, newdata, prob = F, ...) {      
+predict.bnc_bn <- function(object, newdata, prob = FALSE, ...) {      
   # stopifnot(inherits(object, "bnc_fit"))  
   pred <- compute_cp(x = object, dataset = newdata)  
   if (!prob) {
@@ -11,15 +11,22 @@ predict.bnc_bn <- function(object, newdata, prob = F, ...) {
   }
   pred
 }
-multi_predict <- function(object, newdata, prob = F) {
+multi_predict <- function(object, newdata, prob = FALSE) {
   #   if complete, then all one together
   if (!anyNA(newdata)) {
-    multi_compute_augnb_lucp(object, newdata)
+    p <- multi_compute_augnb_luccpx(object, newdata)
+    p <- lapply(p, log_normalize)
+    stopifnot(all(vapply(p, are_pdists, FUN.VALUE = logical(1))))
+    if (prob) {
+      p
+    }
+    else {
+      lapply(p, map)
+    }
   }
   #   otherwise get posterior for each separately
   else {
-    stop("Not implemented.")
-    # Add done in crossval.
+    lapply(object, predict, newdata,  prob = prob)
   }  
 }
 
@@ -63,5 +70,7 @@ bnc_cv <- function(x, dataset, k, dag = FALSE) {
 dag_cv <- function(x, class, dataset, smooth, k) {
   do_crossval_multi(x, class = class, dataset = dataset, smooth = smooth, k = k)
 }
-
-
+#'  @export
+cv <- function(x, dataset, k, dag) {
+  multi_crossval(x, dataset = dataset, k = k, dag = dag)
+}
