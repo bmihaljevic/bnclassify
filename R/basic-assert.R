@@ -31,10 +31,12 @@ is_last <- function(element, vector) {
   # Basically does not work for numerics due to identical
   identical(element, get_last(vector))
 }
-
 is_at_pos <- function(element, position, vector) {
   # Basically does not work for numerics due to identical
   identical(get_null_safe(vector, position), element)
+}
+are_all_equal <- function(x) {
+  length(unique(x)) == 1L
 }
 # use this e.g., in  check_dataset
 are_all_unique <- function(x) {	

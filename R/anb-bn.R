@@ -40,6 +40,11 @@ make_bnc_bn <- function(bnc_dag, params, grain, call) {
   class(bnc_bn) <- c('bnc_bn', class(bnc_dag))
   bnc_bn
 }
+bn2dag <- function(x) {
+  stopifnot(inherits(x, "bnc_bn"))
+  make_bnc_dag(class = class_var(x), families = families(x), 
+               graphNEL = to_graphNEL(x))
+}
 check_bnc_bn <- function(x) {
   # Check it is a bnc dag
   check_bnc_dag(x)
