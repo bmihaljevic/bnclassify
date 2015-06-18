@@ -55,10 +55,10 @@ family_features <- function(fam, class) {
   stopifnot(!are_disjoint(fam, class))
   setdiff(fam, class)
 }
-# Returns the unique families accross these dags. 
+# Returns the unique families accross these dags. TODO: Standardize families
+# first? Does not take into account that same may only differ in the order of
+# parents Use duplicated instead of unique in order to preserve the names
 unique_families <- function(fams) {
   all_fams <- unlist(fams, recursive = FALSE)
-  # Does not take into account that same may only differ in the order of parents
-  # Use duplicated instead of unique in order to preserve the names
   all_fams[!duplicated(all_fams)]
 }

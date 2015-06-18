@@ -11,6 +11,19 @@ predict.bnc_bn <- function(object, newdata, prob = F, ...) {
   }
   pred
 }
+multi_predict <- function(object, newdata, prob = F) {
+  #   if complete, then all one together
+  if (!anyNA(newdata)) {
+    multi_compute_augnb_lucp(object, newdata)
+  }
+  #   otherwise get posterior for each separately
+  else {
+    stop("Not implemented.")
+    # Add done in crossval.
+  }  
+}
+
+
 #' Assigns instances to the most likely class.
 #' 
 #' Ties are resolved randomly.
@@ -50,3 +63,5 @@ bnc_cv <- function(x, dataset, k, dag = FALSE) {
 dag_cv <- function(x, class, dataset, smooth, k) {
   do_crossval_multi(x, class = class, dataset = dataset, smooth = smooth, k = k)
 }
+
+

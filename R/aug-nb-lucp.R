@@ -1,6 +1,20 @@
 # The names of the unique CPTs are the family tags.
 # The names of the fam dags are also the family tags.
 # The families should actually just contain the tags.
+
+multi_compute_augnb_luccpx <- function(x, dataset) {
+#   x <- ensure_list(x)
+#   get class var (x)
+#   cp <- get cp from x (also multi)
+#   get unique fams 
+#   get unique cpts
+  xp <- get_ccx_factors(unique_xcpts, dataset, class, 
+                        classes = get_cpt_values(cp)[[1]])
+  factors_list <- lapply(xfams_id_dags, function(fams_dag) {
+    append(list(class = cp_factor), xp[fams_dag])
+  })
+  lapply(factors_list, sum_log_factors)
+}
 compute_augnb_lucp_multi <- function(class, xfams_id_dags, unique_xcpts, cp,
                                      dataset) {
   stopifnot(is_just(xfams_id_dags, "list"))

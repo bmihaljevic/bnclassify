@@ -65,9 +65,7 @@ do_bnc_call <- function(fargs, dataset) {
 }
 multi_learn_predict <- function(dags, train, test, smooth, prob = FALSE) {
   # Ensure it is a list
-  if (!is_just(dags, "list")) {
-    dags <- list(dags)
-  }
+  dags <- ensure_list(dags)
   xfams_list <- lapply(dags, feature_families)
   # Get the unique families. TODO: Standardize families first?
   uxfams <- unique_families(xfams_list)
@@ -87,4 +85,12 @@ multi_learn_predict <- function(dags, train, test, smooth, prob = FALSE) {
   else {
     p 
   }
+}
+multi_update <- function(bnc_bns, dataset, dag) {
+  dags <- NULL
+  if (dag) {
+    dags <- update_dags(bnc_bns, dataset)
+  }
+  smooth = get_lp_args(bnc_bns)
+  multi_bnc_bn(bnc_bns, dataset, smooth = smooth)
 }

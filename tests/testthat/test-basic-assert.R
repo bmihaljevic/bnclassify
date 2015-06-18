@@ -12,8 +12,8 @@ test_that("non-empty complete 1 NA", {
   expect_error(check_non_empty_complete(NA), "complete")
   expect_error(check_non_empty_complete(rep(NA, 1e2)), "complete")
 })
-# test_that("is just list",{
-#   expect_true(is_just(list(), "list"))
-#   t <- structure(list(), class="test")
-#   expect_true(!is_just(t, "list"))
-# })
+test_that("is just list",{
+  expect_true(is_just(list(), "list"))
+  t <- structure(list(), class="test")
+  expect_true(!is_just(t, "list"))
+})

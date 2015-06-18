@@ -11,3 +11,5 @@ test_that("subset_cpt 1D cpt", {
   obs <- vapply(car[, 5:6], as.integer, FUN.VALUE = integer(nrow(car)))
   expect_error(p <- subset_cpt(cp, obs), "vars")
 })
+
+

@@ -66,8 +66,3 @@ are_complete_dimnames <- function(x) {
   # Check each dimension is non-empty complete
   all(vapply(dnames, is_non_empty_complete, FUN.VALUE = logical(1)))
 }
-# Not used.
-# # Checks that x is exactly of class class.
-# is_just <- function(x, class) {
-#   identical(class(x), class)
-# }
