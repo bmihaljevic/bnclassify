@@ -19,7 +19,7 @@ families2cpts <- function(families, dataset, smooth) {
 extract_cpt <- function(vars, dataset, smooth) {
   ctgt2cpt(extract_ctgt(vars, dataset), smooth = smooth)
 }
-#' Turns a contingency table into a conditional probability table  
+# Turns a contingency table into a conditional probability table  
 ctgt2cpt <- function(ctgt, smooth) {
   #   Check smooth is numeric and non-negative
   stopifnot(smooth >= 0)
@@ -63,8 +63,8 @@ cpt_vars_values <- function(cpts) {
   # Return the values
   lapply(cpts, cpt_1d_values)
 }
-#' Returns the name of the first dimensions and the values in the dimension of
-#' the table.
+# Returns the name of the first dimensions and the values in the dimension of
+# the table.
 cpt_1d_values <- function(cpt) {
   # Get 1d cases and check not empty
   values <- get_cpt_values(cpt)[[1]]

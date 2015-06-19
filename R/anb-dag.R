@@ -1,4 +1,4 @@
-#' Creates an augmented naive Bayes with structure but no parameters.
+# Creates an augmented naive Bayes with structure but no parameters.
 bnc_dag <- function(dag, class) {
   families <- graph2families(dag, class)  
 #   Save dag, class, features,and call 
@@ -12,7 +12,7 @@ make_bnc_dag <- function(class, families, graphNEL) {
   class(obj) <- 'bnc_dag'
   obj
 }
-#' Checks it is a valid bnc_dag object 
+# Checks it is a valid bnc_dag object 
 check_bnc_dag <- function(x) {
   class <- class_var(x)
   features <- features(x)

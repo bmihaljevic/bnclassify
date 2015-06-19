@@ -70,10 +70,7 @@ a <- lp(nb('class', car), car, smooth = 1)
 b <- lp(nb('class', car[, 'class', drop = FALSE]), car, smooth = 1)
 d <- lp(nb('class', car[, c(sample(1:6, 4), 7), drop = FALSE]), car, smooth = 1)	
 set.seed(0)
-microbenchmark(r <- dag_cv(list(a, b, d), 'class', car, smooth = 1, k = 10))
-r
-set.seed(0)
-microbenchmark(r <- bnc_cv(list(a), car, dag = FALSE, k = 10))
+microbenchmark(r <- cv(list(a, b, d), car, k = 10, dag = FALSE, smooth = 1))
 r
 ```
 

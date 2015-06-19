@@ -1,6 +1,9 @@
 #' makeRLearner
 #' @export
 makeRLearner.bnc <- function() {
+  if (!requireNamespace("mlr", quietly = TRUE)) {
+    stop("Package mlr required for this functionality.")
+  }
   mlr::makeRLearnerClassif(
     cl = "bnc",
     package = "bnclassify",

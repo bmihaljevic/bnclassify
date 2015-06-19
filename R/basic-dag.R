@@ -1,4 +1,4 @@
-#' Gets the parents of a node in the graph
+# Gets the parents of a node in the graph
 parents <- function(x, g) {
   # Check x is character
   check_node(x)

@@ -71,3 +71,13 @@ test_that("correct cv result with missing data", {
   s <- cv(nb, voting, k = 5, dag = TRUE)
   expect_equal(s, 0.9034483, tolerance = 1e-6)
 })
+
+test_that("cv with just-class classifier", {
+  a <- lp(nb('class', car), car, smooth = 1)	
+  b <- lp(nb('class', car[, 'class', drop = FALSE]), car, smooth = 1)
+  d <- lp(nb('class', car[, c(sample(1:6, 4), 7), drop = FALSE]), car, smooth = 1)	
+  set.seed(0)
+  r <- cv(list(a, b, d), car, k = 10, dag = TRUE, smooth = 1)
+})
+
+

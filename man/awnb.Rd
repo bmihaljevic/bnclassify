@@ -2,43 +2,16 @@
 % Please edit documentation in R/learn-params-awnb.R
 \name{awnb}
 \alias{awnb}
-\title{#Returns the minimum testing depth for every feature in a classification tree.
-#
-#The classification tree is learned from a a bootstrap subsample of
-#\code{dataset}. A feature which is not tested in the tree has depth 0.
-#
-#}
+\title{Compute feature weights according to the AWNB method.}
 \usage{
 awnb(class, dataset, bootstrap_size = 0.5, trees = 10)
 }
-\arguments{
-\item{class}{character
-#}
-}
-\value{
-a numeric vector
-#
-}
 \description{
-#Returns the minimum testing depth for every feature in a classification tree.
-#
-#The classification tree is learned from a a bootstrap subsample of
-#\code{dataset}. A feature which is not tested in the tree has depth 0.
-#
-#
+Compute feature weights according to the AWNB method.
 }
 \references{
 Mark Hall (2004). A decision tree-based attribute weighting
   filter for naive Bayes. \emph{Knowledge-based Systems}, \bold{20}(2),
   120-126.
 }
-\keyword{AWNB}
-\keyword{Compute}
-\keyword{according}
-\keyword{feature}
-\keyword{internal}
-\keyword{method.}
-\keyword{the}
-\keyword{to}
-\keyword{weights}
 

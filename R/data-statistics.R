@@ -1,4 +1,4 @@
-#' Returns the (conditional) mutual information among (three) two sets of variables.
+# Returns the (conditional) mutual information among (three) two sets of variables.
 cmi <- function(x, y, dataset, z = NULL, unit="log") {  
 # Check x,y,z have length 1. z may be NULL
   stopifnot(assertthat::is.string(x), assertthat::is.string(y))
@@ -43,6 +43,7 @@ cmi_table <- function(xyz_freqs, unit = "log") {
 #' Each variable may be a character vector.
 #' 
 #' Any rows with incomplete observations of the variables are ignored. 
+#' @keywords internal
 extract_ctgt <- function(cols, dataset) {
   # check cols non empty unique characters 
   stopifnot(is_non_empty_complete(cols), is.character(cols), 
@@ -56,12 +57,12 @@ extract_ctgt <- function(cols, dataset) {
   #   Return table over cols
   table(dataset, dnn = cols)
 }
-#' Get the level of each variable 
+# Get the level of each variable 
 extract_var_levels <- function(dataset) {
  check_dataset(dataset)
  lapply(dataset, levels)
 }
-#' Compute the degrees of freedom for a I(X;Y | Z) test for singleton X, Y, Z.
+# Compute the degrees of freedom for a I(X;Y | Z) test for singleton X, Y, Z.
 cmi_degrees_freedom <- function(freqs_table) {
 #    Stop if not numeric table. 
   stopifnot(is.numeric(freqs_table))

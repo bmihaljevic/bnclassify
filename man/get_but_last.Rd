@@ -9,4 +9,5 @@ get_but_last(x)
 \description{
 If x is NULL returns NA not NULL
 }
+\keyword{internal}
 

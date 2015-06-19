@@ -9,4 +9,5 @@ get_null_safe(x, i)
 \description{
 If x is NULL returns NA not NULL
 }
+\keyword{internal}
 

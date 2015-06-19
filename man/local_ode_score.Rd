@@ -11,4 +11,5 @@ local_ode_score(x, y, class, dataset)
 Returns pairwise component of ODE (penalized) log-likelihood scores.
 In natural logarithms.
 }
+\keyword{internal}
 

@@ -12,4 +12,5 @@ Each variable may be a character vector.
 \details{
 Any rows with incomplete observations of the variables are ignored.
 }
+\keyword{internal}
 

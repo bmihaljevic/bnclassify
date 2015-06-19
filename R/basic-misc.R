@@ -1,4 +1,4 @@
-#' Makes sure that last is the last element in x 
+# Makes sure that last is the last element in x 
 make_last <- function(x, last) {
 #   Check x and last are characters, last is length 1
   stopifnot(is.character(x), is.character(last), length(last) == 1)
@@ -12,18 +12,21 @@ make_last <- function(x, last) {
 #' Return all but last element of x. 
 #' 
 #' If x is NULL returns NA not NULL
+#' @keywords internal
 get_but_last <- function(x) { 
   get_null_safe(x, -length(x))
 } 
 #' Return last element of x. 
 #' 
 #' If x is NULL returns NA not NULL
+#' @keywords internal
 get_last <- function(x) { 
   get_null_safe(x, length(x))
 } 
 #' Get i-th element of x. 
 #' 
 #' If x is NULL returns NA not NULL
+#' @keywords internal
 get_null_safe <- function(x, i) {
   if (length(x) == 0) NA else x[i]
 }

@@ -150,7 +150,7 @@ graph_union <- function(g) {
   union <- graph::graphNEL(nodes = nodes, edgemode = "directed")
   graph::addEdge(from = edges[1,], to = edges[2,], graph = union)
 }
-#' Adds a node to DAG as root and parent of all nodes.
+# Adds a node to DAG as root and parent of all nodes.
 superimpose_node <- function(dag, node) {
   check_dag(dag)
 #   Check node is length one character 
@@ -161,7 +161,7 @@ superimpose_node <- function(dag, node) {
 #   Add node and edges
   graph::addNode(node = node, object = dag, edges = list(nodes))
 }
-#' Checks it is a valid DAG. 
+# Checks it is a valid DAG. 
 check_dag <- function(dag) {
   #   Check dag is graphNEL. Allow adjacency matrix?
   stopifnot(inherits(dag, "graphNEL"))
@@ -189,7 +189,7 @@ nb_dag <- function(class, features) {
 #    Call ftM2graphNEL 
     graph::ftM2graphNEL(ft = arcs, W=NULL, V=nodes, edgemode="directed")
 }
-#' Creates a random augmented NB with class as class. 
+# Creates a random augmented NB with class as class. 
 random_aug_nb_dag <- function(class, V, maxpar, wgt) {
   dg <- gRbase::random_dag(V = V, maxpar = maxpar, wgt = wgt)
   superimpose_node(dag = dg, class)

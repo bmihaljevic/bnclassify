@@ -54,6 +54,7 @@ pairwise_ode_scores <- function(class, dataset, score) {
 }
 #' Returns pairwise component of ODE (penalized) log-likelihood scores. 
 #' In natural logarithms.  
+#' @keywords internal
 local_ode_score <- function(x, y, class, dataset) {  
   #   If x and y and class do not have length one stop
   stopifnot(length(x) == 1)

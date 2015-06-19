@@ -1,4 +1,4 @@
-#' Checks it is a data frame, with all named unique factor columns.
+# Checks it is a data frame, with all named unique factor columns.
 check_dataset <- function(dataset) {  
 #   Check dataset is a data frame  
   stopifnot(is.data.frame(dataset))  
@@ -8,7 +8,7 @@ check_dataset <- function(dataset) {
 #   Make sure they are all factors 
   stopifnot(are_factors(dataset))
 }
-#' Checks class is a length 1 character
+# Checks class is a length 1 character
 check_class <- function(class) { 	
 #   Check class is length 1 character   
   stopifnot(assertthat::is.string(class))
