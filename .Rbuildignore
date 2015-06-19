@@ -1,4 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+tmp-vignette-example.Rmd
+.gitignore
+cran-comments.md
 develop
 design-and-manage
