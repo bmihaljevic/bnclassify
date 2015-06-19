@@ -1,20 +1,12 @@
-There are many algorithms for learning Bayesian network classifiers but only a few are available in R. Furthermore, estimating the predictive performance of a classifier usually involves some coding. the bayesclass package provides several algorithms for learning Bayesian network classifiers and simplifies performance assessment. 
+# bnclassify
 
-Concretely, the bayesclass package implements the following classifiers: 
+[![Travis-CI Build Status](https://travis-ci.org/bmihaljevic/bnclassify.svg?branch=master)](https://travis-ci.org/bmihaljevic/bnclassify)
 
-  * The naive Bayes
-  * The selective naive Bayes
-  * The tree-augmented naive Bayes
-  * The selective tree-augmented naive Bayes
+The bnclassify package implements algorithms for learning discrete Bayesian network classifiers from data and estimating their predictive accuracy.
 
-The following search heuristics are used to learn the above-mentioned classifiers:
+## Install
 
-  * Forward/backward sequential selection
-  * Forward sequential selection and joining
-  * Fackward sequential elimination and joining
-
-Different scores can be used together with a search algorithm. Currently, the only score implemented is:
-
-  * Estimation of predictive performance (accuracy, Cohen's kappa, RMSE, etc.) using resampling
-
-The caret package is used for the rasampling estimation of predictive performance. 
+```{r}
+install.packages('devtools')
+install_github('bmihaljevic/bnclassify')
+```

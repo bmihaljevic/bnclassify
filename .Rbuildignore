@@ -5,3 +5,4 @@ tmp-vignette-example.Rmd
 cran-comments.md
 develop
 design-and-manage
+^\.travis\.yml$
