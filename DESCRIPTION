@@ -6,6 +6,8 @@ Authors@R:
     c(person("Mihaljevic","Bojan",email="bmihaljevic@fi.upm.es",role=c("aut","cre")),
     person("Bielza","Concha",email="mcbielza@fi.upm.es",role="aut"),
     person("Larranaga","Pedro",email="pedro.larranaga@fi.upm.es",role="aut"))
+URL: http://github.com/bmihaljevic/bnclassify
+BugReports: http://github.com/bmihaljevic/bnclassify/issues
 Depends: R (>= 3.2.0)
 Imports: assertthat (>= 0.1),
          entropy(>= 1.2.0), 
