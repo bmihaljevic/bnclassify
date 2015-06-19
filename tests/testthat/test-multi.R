@@ -1,7 +1,7 @@
 context("Multi") 
 
 test_that("Multi bnc bn single dag", {
-  n <- nb('class', car)
+  n <- nb('class', car) 
   nb <- bnc_bn(n, car, smooth = 0.1, call = NULL)
   nm <- multi_bnc_bn(n, car, smooth = 0.1, call = NULL)
   expect_identical(nb, nm[[1]])
