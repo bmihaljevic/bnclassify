@@ -47,34 +47,3 @@ retrieve_bnc_properties <- function() {
   c("oneclass", "twoclass", "multiclass", "factors", "prob", "numerics", 
     "missings")
 }
-# #' CV
-# #' @export 
-# bnc_mlr_cv <- function(x, dataset, folds, struct) {
-#   # Check dataset is a dataframe
-#   stopifnot(is.data.frame(dataset))
-#   # Make learner from x. Get name of class variable.
-#   learner <- NULL
-#   class <- NULL
-#   if (inherits(x, what = "bnc_dag")) {  
-#     learner <- as_mlr(x, struct = struct)
-#     class <- class_var(x)
-#   } else {   
-#     stopifnot(is.list(x))
-#     # Assign a unique ID to each learner
-#     ids <- as.character(seq_along(x))
-#     learner <- mapply(as_mlr, x, ids, MoreArgs = list(struct = struct), 
-#                       SIMPLIFY = FALSE)
-#     # Get it just from first element
-#     class <- class_var(x[[1]])
-#   }
-#   # Make resampling description 
-#   rdesc <- mlr::makeResampleDesc(method = "CV", stratify = TRUE, iters = folds)
-#   # Make resampling task 
-#   t <- mlr::makeClassifTask(id = "compare", data = dataset, 
-#                             target = class, fixup.data = "no", 
-#                             check.data = FALSE) 
-#   # Do resampling
-#   b <- mlr::benchmark(learner, task = t, resampling = rdesc, measures = mlr::acc,
-#                       show.info = FALSE)
-#   mlr::getBMRAggrPerformances(b, as.df = TRUE)[, 'acc.test.mean']
-# }

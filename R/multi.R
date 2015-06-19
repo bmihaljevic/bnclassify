@@ -30,17 +30,3 @@ ensure_list <- function(x) {
 ensure_multi_list <- function(x) {
   unname(ensure_list(x))
 }
-# compute_lucp_multi <- function(x, dataset)  {
-#   # We can only apply the optimization if data is complete 
-#   if (!anyNA(dataset)) {
-#     compute_lucp_multi_complete(x, dataset)
-#   }
-#   else {
-#     stop("Not implemented.")
-#   }
-# }
-# 
-# compute_lucp_multi_complete <- function(x, dataset) {
-#   stopifnot(!anyNA(dataset)) 
-#   compute_augnb_lucp_multi(x, dataset)
-# }

@@ -1,6 +1,5 @@
 context("mlr")
 
-
 test_that("as mlr", {
   # Creates a learner just for fitting
   nf <- nbcar()
@@ -45,23 +44,3 @@ test_that("resample", {
   sfeats$x
   detach('package:mlr')
 })
-
-# test_that("bnc cv single bn", {
-#   nb <- nbcar()
-#   cvr <- bnc_cv(nb, car, folds = 5, dag = FALSE)
-#   expect_true(cvr > 0.5)
-# })
-#   
-# test_that("bnc cv single bn with struct", {
-#   nbc <- nbcar()
-#   cvr <- bnc_cv(nbc, car, folds = 5, dag = TRUE)
-#   expect_true(cvr > 0.5)
-# })
-# 
-# test_that("bnc cv multiple bns", {  
-#   nb <- nbcar()
-#   nbs <- bnc('class', car, smooth = 1)
-#   cvr <- bnc_cv(list(nb, nbs), car, folds = 5, dag = FALSE)
-#   expect_true(all(cvr > 0.5))
-# })
-

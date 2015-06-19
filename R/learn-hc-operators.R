@@ -98,7 +98,6 @@ arcs_to_orphans <- function(orphans, non_orphans) {
   }
   as.matrix(a)
 }
-
 # Remove from arcs_df arcs that would introduce a cycle in bnc_dag
 discard_cycles <- function(arcs_df, bnc_dag) {
   stopifnot(is.matrix(arcs_df), is.character(arcs_df))
@@ -135,24 +134,6 @@ discard_reversed <- function(matrix) {
   colnames(matrix) <- remember_names
   matrix
 }
-
-# An ode to which no more arcs can be added. 
-# maximal_ode <- function(x) {
-#   is_ode
-#   narcs among features must be <= n features
-#   can count the sizes of families
-# }
-
-# augment_ode_sp 
-#   is ode 
-#   is not maximal ode 
-#   get all sps and children
-#   if empty, then return 
-#   if only one, then skip next step 
-#   if multiple, 
-#     make a dag for each sp with its children 
-#     score each and select best
-#   make a separate dag for each of the possible children
 
 augment_ode_sp <- function(bnc_dag, features_to_include, dataset, 
                            smooth, k) {
@@ -193,16 +174,3 @@ superparent_children <- function(bnc_dag) {
 ok_children <- function(feature, ancestors, orphans) {
   setdiff(orphans, c(feature, ancestors))
 }
-# On the one hand, you do not want to consider repeated structures. On the other,
-# you do not want to include those that are introducing cycles. 
-# 
-# If an orphan is ancestor of some of those, then it cannot be its parent. 
-# non-orphan ancestors. 
-# 
-# AT the end, just remove symetrical.
-# Do a reflection and remove identical
-# subset_symmetric()
-
-# Get possible arcs 
-# Remove cycle-introducing 
-# Remove identical 
