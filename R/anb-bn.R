@@ -73,15 +73,3 @@ classes <- function(x) {
   stopifnot(inherits(x, "bnc_bn"))  
   cpt_vars_values(params(x))[[class_var(x)]]
 }
-# Accessors 
-#' To grain
-#' @export
-to_grain <- function(x) {
-  stopifnot(inherits(x, "bnc_bn"))  
-  if (is.null(x$.grain))  {
-    compile_grain(params(x))  
-  }
-  else {
-    x$.grain  
-  }  
-}

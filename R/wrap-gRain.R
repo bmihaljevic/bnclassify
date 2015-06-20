@@ -1,4 +1,20 @@
+# Accessors 
+#' To grain
+#' @export
+to_grain <- function(x) {
+  stopifnot(inherits(x, "bnc_bn"))  
+  if (is.null(x$.grain))  {
+    compile_grain(params(x))  
+  }
+  else {
+    x$.grain  
+  }  
+}
 compute_grain_luccpx <- function(grain, dataset, class) {
+  if (!requireNamespace("gRain", quietly = TRUE)) {
+    stop("gRain needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
   # Check gRain compiled
   stopifnot(is_grain_compiled(grain))
   # Check data set
@@ -39,6 +55,14 @@ compute_grain_uccpx_instance <- function(instance, grain, class) {
 # Set, if I retract evidence, the question is whether it is making copies or not. Might be faster by making copies.
 # Compiles a grain from a a list of CPTs
 compile_grain <- function(cpts) {
+  if (!requireNamespace("gRain", quietly = TRUE)) {
+    stop("gRain needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
+  if (!requireNamespace("gRbase", quietly = TRUE)) {
+    stop("gRain needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
   # Check cpts is a list 
   stopifnot(is.list(cpts))
   # TODO: Check each cpt. 
@@ -53,5 +77,9 @@ compile_grain <- function(cpts) {
   gRain::compile.CPTgrain(gRain::compile.CPTgrain(grain))
 }
 is_grain_compiled <- function(g) {
+  if (!requireNamespace("gRain", quietly = TRUE)) {
+    stop("gRain needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
   is(g, "grain") && g$isCompiled
 }
