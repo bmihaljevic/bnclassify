@@ -41,3 +41,9 @@ test_that('lawnb nominal', {
   expect_true(are_pdists(t(params(a)$buying)))
   expect_equal(a$.call_bn[[1]], "lpawnb")
 })
+
+test_that('bnc function nominal', {
+  a <- bnc('nb', 'class', car, smooth = 1)
+  b <- lp(nb('class', car), car, smooth = 1)
+  expect_identical(a, b)
+})

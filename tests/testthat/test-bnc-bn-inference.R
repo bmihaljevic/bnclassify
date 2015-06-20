@@ -14,12 +14,18 @@ test_that("Complete data set ", {
 })
 
 test_that("Incomplete data set", {
+  if (!requireNamespace("gRain", quietly = TRUE)) {
+    skip("Requires gRain")
+  }
   t <- nbvote()
   a <- compute_cp(x = t, voting)
   check_cp(a, nrow(voting), levels(voting$Class))
 })
 
 test_that("Just the class with incomplete data set", {
+  if (!requireNamespace("gRain", quietly = TRUE)) {
+    skip("Requires gRain")
+  }
   nb <- bnc_bn(nb('Class', voting[, 17, drop = FALSE]), voting,smooth = 0)
   a <- compute_cp(x = nb, voting)
   check_cp(a, nrow(voting), levels(voting$Class))
@@ -27,7 +33,10 @@ test_that("Just the class with incomplete data set", {
   expect_true(all(apply(a, 1, equivalent_num, cp)  ))
 })
 
-test_that("Single feature with complete data", {
+test_that("Single feature with incomplete data", {
+  if (!requireNamespace("gRain", quietly = TRUE)) {
+    skip("Requires gRain")
+  }
   nb <- lp(nb(class = 'Class', v[, c('crime', 'Class'), drop = FALSE]), v, 
            smooth = 0.01)
   p <- compute_cp(x=nb, v)
@@ -36,6 +45,9 @@ test_that("Single feature with complete data", {
 
 
 test_that("No rows returns empty matrix", {
+  if (!requireNamespace("gRain", quietly = TRUE)) {
+    skip("Requires gRain")
+  }
   nb <- nbvote()
   a <- compute_cp(x=nb, voting[FALSE, ])
   check_cp(a, 0L, levels(voting$Class))
@@ -53,6 +65,9 @@ test_that("Complete with incomplete data", {
 
  
 test_that("All incomplete rows", {
+  if (!requireNamespace("gRain", quietly = TRUE)) {
+    skip("Requires gRain")
+  }
   a <- nbvote()
   vna <- voting[!complete.cases(voting), -17]
   cp <- compute_ulcp_incomplete(a, vna)
@@ -67,7 +82,7 @@ test_that("Incomplete with complete data", {
 
 test_that("Uniform for rows with 0 probabilities ", {
   # some rows have 0 prob
-  nb <- bnc('class', car[c(1, 700), ], smooth=0)
+  nb <- bnc('nb', 'class', car[c(1, 700), ], smooth = 0)
   p <- compute_cp(x=nb, car[1000:1001, ])
   check_cp(p, 2, levels(car$class))
   expect_equivalent(rep(0.25, 4), p[1, ])

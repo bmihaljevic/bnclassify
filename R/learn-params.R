@@ -1,6 +1,13 @@
+#' @export
+bnc <- function(dag_learner, class, dataset, smooth) {
+  # It is easier to handle a funct. name than a funct. object in save_bnc_call
+  stopifnot(assertthat::is.string(dag_learner))
+  dag <- do.call(dag_learner, list(class = class, dataset = dataset))
+  lp(dag, dataset = dataset, smooth = smooth)
+}
 #' Learn parameters.
 #' @export
-lp <- function(x, dataset, smooth, weights = NULL) {
+lp <- function(x, dataset, smooth) {
   bn <- bnc_bn(x, dataset, smooth)
   add_params_call_arg(bn, call = match.call(), env = parent.frame(), force = TRUE)
 }

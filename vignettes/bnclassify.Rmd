@@ -77,7 +77,8 @@ plot(d)
 ## Learning parameters
 You call the lp function.
 
-You can also have the convenience `bnc` function bnc('class', car, tan) is equivalent to tan() lp(x, ..)
+  
+bnc('class', car, tan) is equivalent to tan() lp(x, ..)
 Note tan is not a string but function object (must have bnclassify attached)
 
 
@@ -93,6 +94,17 @@ It is intented for naive Bayes but you can also use it with other classifiers
 t <- tan_bnc('class', car)
 anb <- lpawnb(t, car, smooth = 1, trees = 5, bootstrap_size = 0.5)
 ```
+
+
+You can also use the convenience `bnc()` function to do structure and parameter learning in a single call. 
+
+```{r}
+a <- bnc('tan_bnc', 'class', car, smooth = 1)
+b <- lp(tan_bnc('class', car), car, smooth = 1)
+identical(a, b)
+```
+
+`bnc()` does not allow AWNB weighted parameters.
 
 ## Predicting 
 
@@ -176,6 +188,4 @@ It's easy to use bnclassify with the mlr package. If you have mlr installed, you
 ```
 
 ## Incomplete data
-You can use this package with incomplete data, but it is very slow. Example with the voting data set...
-
-Best not to use incomplete data with wrapper classifiers.
+You can learn from incomplete data (just ignoring the missing), but prediction with missing is very slow. This is mainly a problem if you are using wrappers for learning, which is not  advised with incomplete data unless you have little data or a lot of time. Put example microbenchmark with the voting data set...

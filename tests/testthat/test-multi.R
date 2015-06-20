@@ -46,7 +46,7 @@ test_that("get unique cpts single dag" ,{
 
 test_that("learn and predict", {
   a <- nb('class', car)
-  b <- lp(a, car, smooth = 0.01, NULL)
+  b <- lp(a, car, smooth = 0.01)
   x <- multi_bnc_bn(a, car, smooth = 0.01)
   # TODO: what to do about this call?
   b$.call_bn <- x[[1]]$.call_bn <- NULL

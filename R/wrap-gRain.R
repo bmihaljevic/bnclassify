@@ -36,6 +36,10 @@ compute_grain_luccpx <- function(grain, dataset, class) {
 }
 # incomplete instance Unnormalized class-posterior
 compute_grain_uccpx_instance <- function(instance, grain, class) {
+  if (!requireNamespace("gRain", quietly = TRUE)) {
+    stop("gRain needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
   # Instance is character
   stopifnot(is.character(instance))    
   # Get non-NA nodes in instance 

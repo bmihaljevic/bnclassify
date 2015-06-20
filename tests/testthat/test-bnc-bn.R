@@ -1,7 +1,7 @@
 context("bnc bn")
 
 test_that("nominal", {
-  tbn <- bnc('class', car, smooth = 0)
+  tbn <- bnc('nb', 'class', car, smooth = 0)
   texp <- prop.table(table(car$class, dnn = 'class') )
   tout <- params(tbn)$class 
   expect_equal(tout, texp)

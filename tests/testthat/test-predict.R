@@ -79,5 +79,3 @@ test_that("cv with just-class classifier", {
   set.seed(0)
   r <- cv(list(a, b, d), car, k = 10, dag = TRUE, smooth = 1)
 })
-
-
