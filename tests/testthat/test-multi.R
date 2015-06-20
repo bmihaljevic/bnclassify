@@ -2,15 +2,15 @@ context("Multi")
 
 test_that("Multi bnc bn single dag", {
   n <- nb('class', car) 
-  nb <- bnc_bn(n, car, smooth = 0.1, call = NULL)
-  nm <- multi_bnc_bn(n, car, smooth = 0.1, call = NULL)
+  nb <- bnc_bn(n, car, smooth = 0.1)
+  nm <- multi_bnc_bn(n, car, smooth = 0.1)
   expect_identical(nb, nm[[1]])
 })
 
 test_that("Multi bnc bn two dags", {
   n <- nb('class', car)
-  nb <- bnc_bn(n, car, smooth = 0.1, call = NULL)
-  nm <- multi_bnc_bn(list(n, n), car, smooth = 0.1, call = NULL)
+  nb <- bnc_bn(n, car, smooth = 0.1)
+  nm <- multi_bnc_bn(list(n, n), car, smooth = 0.1)
   expect_identical(nb, nm[[1]])
   expect_identical(nb, nm[[2]])
 })
@@ -18,7 +18,7 @@ test_that("Multi bnc bn two dags", {
 test_that("Multi bnc bn different class vars dags", {
   n <- nb('class', car)
   v <- nb('Class', voting)
-  expect_error(multi_bnc_bn(list(n, v), car, smooth = 0.1, call = NULL),
+  expect_error(multi_bnc_bn(list(n, v), car, smooth = 0.1),
                "string")
 })
 
@@ -47,7 +47,7 @@ test_that("get unique cpts single dag" ,{
 test_that("learn and predict", {
   a <- nb('class', car)
   b <- lp(a, car, smooth = 0.01, NULL)
-  x <- multi_bnc_bn(a, car, smooth = 0.01, NULL)
+  x <- multi_bnc_bn(a, car, smooth = 0.01)
   # TODO: what to do about this call?
   b$.call_bn <- x[[1]]$.call_bn <- NULL
   expect_identical(b, x[[1]])

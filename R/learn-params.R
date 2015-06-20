@@ -1,17 +1,17 @@
 #' Learn parameters.
 #' @export
 lp <- function(x, dataset, smooth, weights = NULL) {
-  call <- save_bnc_call(match.call(), parent.frame())
-  bnc_bn(x, dataset, smooth, call = call)
+  bn <- bnc_bn(x, dataset, smooth)
+  add_params_call_arg(bn, call = match.call(), env = parent.frame(), force = TRUE)
 }
 #' @export
 #' @seealso \link{awnb}
 lpawnb <- function(x, dataset, smooth, trees, bootstrap_size) {
-  call <- save_bnc_call(match.call(), parent.frame())
-  bn <- bnc_bn(x, dataset, smooth, call = call)
+  bn <- bnc_bn(x, dataset, smooth)
   weights <- awnb(class_var(bn), dataset = dataset, trees = trees, 
                   bootstrap_size = bootstrap_size)
-  set_weights(bn, weights)
+  bn <- set_weights(bn, weights)
+  add_params_call_arg(bn, call = match.call(), env = parent.frame(), force = TRUE)
 }
 set_weights <- function(bn, weights) {
   # Currently only expecting weights that can decrease the importance of a feature

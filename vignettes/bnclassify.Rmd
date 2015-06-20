@@ -73,12 +73,26 @@ plot(d)
 
 
 
-## Fitting parameters 
 
+## Learning parameters
 You call the lp function.
 
 You can also have the convenience `bnc` function bnc('class', car, tan) is equivalent to tan() lp(x, ..)
 Note tan is not a string but function object (must have bnclassify attached)
+
+
+You can use awnb. 
+
+```{r}
+nb <- nb('class', car)
+anb <- lpawnb(nb, car, smooth = 1, trees = 5, bootstrap_size = 0.5)
+```
+
+It is intented for naive Bayes but you can also use it with other classifiers
+```{r}
+t <- tan_bnc('class', car)
+anb <- lpawnb(t, car, smooth = 1, trees = 5, bootstrap_size = 0.5)
+```
 
 ## Predicting 
 
@@ -121,19 +135,6 @@ r
 
 Keogh has a similar optimization but not quite the same and only for one feature. This is generalized.
 
-## Learning parameters
-You can use awnb. 
-
-```{r}
-nb <- nb('class', car)
-anb <- lpawnb(nb, car, smooth = 1, trees = 5, bootstrap_size = 0.5)
-```
-
-It is intented for naive Bayes but you can also use it with other classifiers
-```{r}
-t <- tan_bnc('class', car)
-anb <- lpawnb(t, car, smooth = 1, trees = 5, bootstrap_size = 0.5)
-```
 
 ## Connection to other packages 
 

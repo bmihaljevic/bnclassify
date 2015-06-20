@@ -56,6 +56,9 @@ do_bnc_call <- function(fargs, dataset) {
 add_dag_call_arg <- function(bnc_dag, call, env, force = FALSE) {
   add_call_arg(bnc_dag, call, env, arg = '.call_struct', force = force)
 }
+add_params_call_arg <- function(bnc_bn, call, env, force = TRUE) {
+  add_call_arg(bnc_bn, call, env, arg = '.call_bn', force = force)
+}
 add_call_arg <- function(bnc_dag, call, env, arg, force) {
   stopifnot(inherits(bnc_dag, "bnc_dag"))
   if (!force) { 
@@ -100,15 +103,14 @@ multi_update <- function(x, dataset, dag, smooth = NULL) {
   }
   # smooth overrides lp args that may be in x 
   if (!is.null(smooth)) {
-    multi_bnc_bn(dags, dataset, smooth = smooth, call = NULL)
+    multi_bnc_bn(dags, dataset, smooth = smooth)
   }
   else {
     lp_multi_args <- lapply(x, get_lp_multi_update_args)
     if (are_all_equal(lp_multi_args)) {
       # If all lp args are the same, then can call multi_bnc_bn
       # TODO: use weights and awnb if needed.
-      multi_bnc_bn(dags, dataset, smooth = lp_multi_args[[1]]$smooth, 
-                   call = NULL)
+      multi_bnc_bn(dags, dataset, smooth = lp_multi_args[[1]]$smooth)
     }
     else {
       lp_args <- lapply(x, get_lp_update_args)

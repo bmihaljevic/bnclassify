@@ -20,7 +20,7 @@ test_that("Incomplete data set", {
 })
 
 test_that("Just the class with incomplete data set", {
-  nb <- bnc_bn(nb('Class', voting[, 17, drop = FALSE]), voting,smooth = 0, NULL)
+  nb <- bnc_bn(nb('Class', voting[, 17, drop = FALSE]), voting,smooth = 0)
   a <- compute_cp(x = nb, voting)
   check_cp(a, nrow(voting), levels(voting$Class))
   cp <- as.vector(params(nb)[[class_var(nb)]])
@@ -28,8 +28,8 @@ test_that("Just the class with incomplete data set", {
 })
 
 test_that("Single feature with complete data", {
-  nb <- lp(nb(class='Class', v[, c('crime', 'Class'), drop=FALSE]), v, 
-           smooth=0.01)
+  nb <- lp(nb(class = 'Class', v[, c('crime', 'Class'), drop = FALSE]), v, 
+           smooth = 0.01)
   p <- compute_cp(x=nb, v)
   check_cp(p, nrow(v), levels(v$Class))
 })

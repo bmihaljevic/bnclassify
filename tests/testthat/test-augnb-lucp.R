@@ -12,7 +12,7 @@ test_that("Missing features", {
 })
 
 test_that("Single predictor", {
-  tn <- bnc_bn(nb('class', car[, c(1,7)]), car, smooth = 0, NULL)
+  tn <- bnc_bn(nb('class', car[, c(1,7)]), car, smooth = 0)
   pt <- compute_augnb_luccpx(tn, car[, 1:2])
   expect_identical(dim(pt), c(nrow(car), 4L))
 })
@@ -24,7 +24,7 @@ test_that("0 rows dataset", {
 })
 
 test_that("make cpt inds", {
-  tn <- bnc_bn(nb('class', car), car, smooth = 0, NULL)
+  tn <- bnc_bn(nb('class', car), car, smooth = 0)
   # Nominal
   tinds <- make_xcpt_indices(features(tn), class_var(tn), 4L, car)
   expect_equal(names(tinds), colnames(car))
