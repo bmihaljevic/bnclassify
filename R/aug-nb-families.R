@@ -4,7 +4,7 @@ graph2families <- function(dag, class) {
   #   Check class is length 1 character  
   check_class(class)
   #   Check dag is graphNEL (or graph adjm?)
-  stopifnot(is_dag_graph(dag)) # TODO: Remove as it is redundant with id_dag(families) below
+  stopifnot(is_dag_graph(dag))
   #   Check class is in nodes of dag  
   stopifnot(class %in% graph::nodes(dag)) # TODO: call basic-dag here
   #   Features = all nodes other than class
@@ -16,7 +16,6 @@ graph2families <- function(dag, class) {
   families <- lapply(vars, family, dag)  
   # Make class last element of each family 
   families <- lapply(families, format_family, class)  
-  stopifnot(is_dag(families))
   families
 }
 # Ensures class is last.
@@ -64,7 +63,7 @@ unique_families <- function(fams) {
   all_fams <- unlist(fams, recursive = FALSE)
   all_fams[!duplicated(all_fams)]
 }
-is_dag <- function(families) {
+is_dag_families <- function(families) {
   !(is.null(order_acyclic(families)))
 }
 #' Provide an acyclic ordering (i.e., a topological sort). 
@@ -134,6 +133,7 @@ get_family_parents <- function(family) {
   family[-1]
 }
 get_ancestors <- function(node, families) {
+  stopifnot(node %in% names(families))
   find_my_parents <- node 
   ancestors <- character()
   # while find_my_parents not empty

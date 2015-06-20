@@ -125,7 +125,7 @@ test_that("Find ancestors not in graph nominal", {
   b <- get_ancestors('safety', families(a))
   expect_true(is_perm(b, c('buying', 'class')))
   b <- get_ancestors('class', families(a))
-  expect_true(is_perm(b, c('buying', 'class')))
+  expect_equal(b, character())
 })
 
 test_that("Find ancestors", {
@@ -136,11 +136,5 @@ test_that("Find ancestors", {
 
 test_that("Find ancestors not in graph", {
   a <- nbcarclass()
-  expect_error(get_ancestors('p', families(a)), "nodes is not")
+  expect_error(get_ancestors('p', families(a)), "families")
 })
-
-test_that("Find ancestors not in graph", {
-  a <- nbcarclass()
-  expect_error(get_ancestors('p', families(a)), "nodes is not")
-})
-

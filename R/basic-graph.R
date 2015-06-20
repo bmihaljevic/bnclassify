@@ -164,13 +164,11 @@ superimpose_node <- function(dag, node) {
 is_dag_graph <- function(dag) {
   #   Check dag is graphNEL. Allow adjacency matrix?
   if (!(inherits(dag, "graphNEL"))) return(FALSE)
-  # If non-empty graph, check dag is a dag. gRbase fails with empty graph.
-  if (graph::numNodes(dag) > 0) { 
-    gRbase::is.DAG.graphNEL(dag)   
-  }
-  else {
-    TRUE   
-  }
+  # Empty graphs are OK
+  if (graph::numEdges(dag) == 0) return(TRUE)
+  tsort <- tryCatch(RBGL::tsort(dag), warning = function(e) character(0), 
+                    error = function(e) character(0))
+  length(tsort) > 0 
 } 
 check_node <- function(node) {
   stopifnot(assertthat::is.string(node))
@@ -186,12 +184,12 @@ nb_dag <- function(class, features) {
     narcs <- length(features)
     arcs  <- matrix(character(narcs * 2), ncol = 2)
     if (narcs > 0) { 
-      arcs <- cbind(from=class, to=features)
+      arcs <- cbind(from = class, to = features)
     }
 #   Set nodes as class + features 
     nodes <- c(class, features)
 #    Call ftM2graphNEL 
-    graph::ftM2graphNEL(ft = arcs, W=NULL, V=nodes, edgemode="directed")
+    graph::ftM2graphNEL(ft = arcs, W = NULL, V = nodes, edgemode = "directed")
 }
 # Creates a random augmented NB with class as class. 
 random_aug_nb_dag <- function(class, V, maxpar, wgt) {

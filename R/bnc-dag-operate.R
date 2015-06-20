@@ -50,18 +50,27 @@ is_supernode <- function(node, x) {
 # ========================
 # Type functions
 is_semi_naive <- function(x) {
+  if (!is_aug_nb(x)) return(FALSE)
   warning(as.character(match.call()[[1]]), "Not implemented.")
   TRUE
 }
 is_aug_nb <- function(x) {
-  warning(as.character(match.call()[[1]]), "Not implemented.")
-  # Check call has no parents
-  # Check class is in all families
-  TRUE
+  if (!is_dag_graph(to_graphNEL(x))) return(FALSE)
+  # Check call has no parents and class is in all families. This
+  # code assumes class is last in each family.
+  last <- unique(unlist(lapply(families(x), get_last)), use.names = FALSE)
+  identical(last, class_var(x))
+}
+is_nb <- function(x) {
+  is_kde(x, 0)
 }
 is_ode <- function(x) {
-  warning(as.character(match.call()[[1]]), "Not implemented.")
-  TRUE
+  is_kde(x, 1)
+}
+is_kde <- function(x, k) {
+  if (!is_aug_nb(x)) return(FALSE)
+  fam_size  <- lengths(families(x), use.names = FALSE)
+  max(fam_size) <= k + 2
 }
 # ========================
 # Keogh
@@ -84,7 +93,6 @@ feature_orphans <- function(bnc_dag) {
 is_orphan_fam <- function(fam, feat, class) {
   identical(fam, c(feat, class))
 }
-
 # ========================
 # Internal
 families_ids <- function(x) {
