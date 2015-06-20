@@ -132,6 +132,8 @@ get_family_node <- function(family) {
 get_family_parents <- function(family) {
   family[-1]
 }
+#' Based on gRbase::ancestors()
+#' @keywords internal
 get_ancestors <- function(node, families) {
   stopifnot(node %in% names(families))
   find_my_parents <- node 

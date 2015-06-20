@@ -12,19 +12,19 @@ Depends: R (>= 3.2.0)
 Imports: assertthat (>= 0.1),
          entropy(>= 1.2.0), 
          crossval(>= 1.0.2),
-         gRain(>= 1.2-3), 
-         gRbase(>= 1.7-0.1), 
          graph(>= 1.42.0),
          matrixStats(>= 0.14.0),
          pryr(>= 0.1.1),
          RBGL(>= 1.40.1), 
          rpart(>= 4.1-8)
-Suggests: mlr(>= 2.2), 
+Suggests: gRain(>= 1.2-3), 
+          gRbase(>= 1.7-0.1), 
+          mlr(>= 2.2), 
           testthat(>= 0.8.1),
           knitr,
           ParamHelpers(>= 1.5),
-          Rgraphviz(>= 2.8.1), 
-License: GPL (>= 3)
+          Rgraphviz(>= 2.8.1)
+License: GPL (>= 2)
 Author: Mihaljevic Bojan [aut, cre],
   Bielza Concha [aut],
   Larranaga Pedro [aut]
