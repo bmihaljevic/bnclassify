@@ -5,9 +5,7 @@
 #' @keywords internal
 complete_graph <- function(nodes) {   
   g <- graph::graphNEL(nodes)
-  gg <- graph::complement(g)
-  stopifnot(gRbase::is.complete(gg))
-  gg
+  graph::complement(g)
 } 
 make_graph <- function(nodes, from, to, weights) {  
 # Check nodes is character 
@@ -190,9 +188,4 @@ nb_dag <- function(class, features) {
     nodes <- c(class, features)
 #    Call ftM2graphNEL 
     graph::ftM2graphNEL(ft = arcs, W = NULL, V = nodes, edgemode = "directed")
-}
-# Creates a random augmented NB with class as class. 
-random_aug_nb_dag <- function(class, V, maxpar, wgt) {
-  dg <- gRbase::random_dag(V = V, maxpar = maxpar, wgt = wgt)
-  superimpose_node(dag = dg, class)
 }

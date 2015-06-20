@@ -56,12 +56,8 @@ add_edges <- function(from, to, x) {
   undirected_to <- c(to, from)
   adj <- any(graph::isAdjacent(x, from = undirected_from, to = undirected_to))
   stopifnot(!adj)
-  # is.DAG is unefficient, because it converts to ajd matrix 
-  # Not checking because it cannot find the method 
-  # x <- gRbase::as.adjMAT(x)
-  # stopifnot(gRbase::is.DAG.matrix(x))
   nx <- graph::addEdge(from = from, to = to, graph = x)
-  # stopifnot(gRbase::is.DAG.matrix(nx))
+  stopifnot(is_dag_graph(nx))
   nx
 } 
 add_node <- function(node, x) {

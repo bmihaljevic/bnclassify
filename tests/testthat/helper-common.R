@@ -42,6 +42,12 @@ random_letters_vector <- function(nletters, n) {
   sample(letters[1:nletters], n, replace = TRUE)
 }
 
+# Creates a random augmented NB with class as class. 
+random_aug_nb_dag <- function(class, V, maxpar, wgt) {
+  dg <- gRbase::random_dag(V = V, maxpar = maxpar, wgt = wgt)
+  superimpose_node(dag = dg, class)
+}
+
 # Load data
 
 data(car)

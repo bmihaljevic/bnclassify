@@ -102,10 +102,8 @@ arcs_to_orphans <- function(orphans, non_orphans) {
 discard_cycles <- function(arcs_df, bnc_dag) {
   stopifnot(is.matrix(arcs_df), is.character(arcs_df))
   from <- unique(arcs_df[, 'from'])
-  # gRbase always converts to adjMAT!! cannot "pre-convert"
-  # g <- gRbase::as.adjMAT(to_graphNEL(bnc_dag))
-  ancestors <- lapply(from, gRbase::ancestors, to_graphNEL(bnc_dag))
-  # [from] to ensures that ancestors and potential_children are in same order
+  ancestors <- lapply(from, get_ancestors, families(bnc_dag))
+  # the [from] to ensures that ancestors and potential_children are in same order
   potential_children <- tapply(arcs_df[, 'to'], arcs_df[, 'from'],
                               identity)[from]
   cycle_free <- mapply(setdiff, potential_children, ancestors, 
@@ -114,7 +112,6 @@ discard_cycles <- function(arcs_df, bnc_dag) {
   colnames(cycle_free_mat) <- c('to', 'from')
   cycle_free_mat[, c('from', 'to')]
 }
-
 discard_reversed <- function(matrix) {
   if (nrow(matrix) == 0) return(matrix(character(), ncol = 2))
   # Remove name so that reversed is the exact reflection
@@ -164,7 +161,7 @@ superparent_children <- function(bnc_dag) {
   if (length(orphans) == 1) return(NULL)
   features <- features(bnc_dag)
   #possible children of each feature: orphans != itself and its ancestors 
-  ancestors <- lapply(features, gRbase::ancestors, to_graphNEL(bnc_dag))
+  ancestors <- lapply(features, get_ancestors, families(bnc_dag))
   fs_children <- mapply(ok_children, feature = features, ancestors = ancestors, 
          MoreArgs = list(orphans = orphans), SIMPLIFY = FALSE)
   # a feature with at least 1 possible child can be a superparent 
