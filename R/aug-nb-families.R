@@ -95,32 +95,6 @@ order_acyclic <- function(families) {
     # Return acyclic ordering 
     order
   }
-  
-#     # Empty list of nodes in acyclic ordering 
-#     order <- character()  
-#     nodes <- get_families_nodes(families)
-#     # Get the parents here for efficiency
-#     family_parents <- lapply(families, get_family_parents)
-#     not_in_order <- nodes
-#     while (length(not_in_order) > 0) {
-#       # Get nodes not in list and without parents among them
-#       can_be_added <- vapply(family_parents[not_in_order], are_disjoint, 
-#                              not_in_order, FUN.VALUE = logical(1))
-#       if (sum(can_be_added) == 0) { break }
-#       # Add them to end of the acyclic ordering 
-#       to_add <- not_in_order[can_be_added]
-#       order <- append(order, to_add)
-#       not_in_order <- setdiff(not_in_order, order)
-#     }
-#     if (length(nodes) != length(order)) {
-#     # if (!is_perm(nodes, order)) { Too slow.
-#       # There is a cycle
-#       NULL
-#     }
-#     else {
-#       # Return acyclic ordering 
-#       order
-#     }
 }
 get_families_nodes <- function(families) {
   unname(vapply(families, get_family_node, 
