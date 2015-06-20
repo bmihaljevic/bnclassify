@@ -4,7 +4,7 @@ graph2families <- function(dag, class) {
   #   Check class is length 1 character  
   check_class(class)
   #   Check dag is graphNEL (or graph adjm?)
-  check_dag(dag) # TODO: May comment out this check because it slows down.
+  stopifnot(is_dag_graph(dag)) # TODO: Remove as it is redundant with id_dag(families) below
   #   Check class is in nodes of dag  
   stopifnot(class %in% graph::nodes(dag)) # TODO: call basic-dag here
   #   Features = all nodes other than class
@@ -15,7 +15,9 @@ graph2families <- function(dag, class) {
   #  For each var, extract the family in the dag
   families <- lapply(vars, family, dag)  
   # Make class last element of each family 
-  lapply(families, format_family, class)  
+  families <- lapply(families, format_family, class)  
+  stopifnot(is_dag(families))
+  families
 }
 # Ensures class is last.
 # TODO: maybe should ensure an alphabetic ordering of non-class parents
@@ -61,4 +63,89 @@ family_features <- function(fam, class) {
 unique_families <- function(fams) {
   all_fams <- unlist(fams, recursive = FALSE)
   all_fams[!duplicated(all_fams)]
+}
+is_dag <- function(families) {
+  !(is.null(order_acyclic(families)))
+}
+#' Provide an acyclic ordering (i.e., a topological sort). 
+#' @references Beng-Jensen and Gutin, 2007, page 14. 
+#' @keywords internal
+order_acyclic <- function(families) {
+  # Empty list of nodes in acyclic ordering 
+  order <- character()  
+  not_in_acyc_order <- rep(TRUE, length(families))
+  nodes <- get_families_nodes(families)
+  # Get the parents here for efficiency
+  family_parents <- lapply(families, get_family_parents)
+  while (sum(not_in_acyc_order) > 0) {
+    # Get nodes not in list and without parents among them
+    can_be_added <- vapply(family_parents[not_in_acyc_order], are_disjoint, 
+                           nodes[not_in_acyc_order], FUN.VALUE = logical(1))
+    if (sum(can_be_added) == 0) { break }
+    # Add them to end of the acyclic ordering 
+    to_add <- nodes[not_in_acyc_order][can_be_added]
+    order <- append(order, to_add)
+    not_in_acyc_order <- !(nodes %in% order)
+  }
+  if (length(nodes) != length(order)) {
+  # if (!is_perm(nodes, order)) { Too slow.
+    # There is a cycle
+    NULL
+  }
+  else {
+    # Return acyclic ordering 
+    order
+  }
+  
+#     # Empty list of nodes in acyclic ordering 
+#     order <- character()  
+#     nodes <- get_families_nodes(families)
+#     # Get the parents here for efficiency
+#     family_parents <- lapply(families, get_family_parents)
+#     not_in_order <- nodes
+#     while (length(not_in_order) > 0) {
+#       # Get nodes not in list and without parents among them
+#       can_be_added <- vapply(family_parents[not_in_order], are_disjoint, 
+#                              not_in_order, FUN.VALUE = logical(1))
+#       if (sum(can_be_added) == 0) { break }
+#       # Add them to end of the acyclic ordering 
+#       to_add <- not_in_order[can_be_added]
+#       order <- append(order, to_add)
+#       not_in_order <- setdiff(not_in_order, order)
+#     }
+#     if (length(nodes) != length(order)) {
+#     # if (!is_perm(nodes, order)) { Too slow.
+#       # There is a cycle
+#       NULL
+#     }
+#     else {
+#       # Return acyclic ordering 
+#       order
+#     }
+}
+get_families_nodes <- function(families) {
+  unname(vapply(families, get_family_node, 
+                FUN.VALUE = character(1)))
+}
+get_family_node <- function(family) {
+  family[1]
+}
+get_family_parents <- function(family) {
+  family[-1]
+}
+get_ancestors <- function(node, families) {
+  find_my_parents <- node 
+  ancestors <- character()
+  # while find_my_parents not empty
+  while (length(find_my_parents) > 0) {
+    # get unique parents of all find_my_parents 
+    parents <- unique(unlist(lapply(families[find_my_parents], 
+                                    get_family_parents), use.names = FALSE))
+    # set find_my_parents ot parents that are not in ancestors
+    new_parents <- setdiff(parents, ancestors)
+    find_my_parents <- new_parents 
+    # add the new parents to ancestors
+    ancestors <- append(ancestors, new_parents)
+  }
+  ancestors
 }

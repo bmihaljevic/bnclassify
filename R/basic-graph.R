@@ -152,7 +152,7 @@ graph_union <- function(g) {
 }
 # Adds a node to DAG as root and parent of all nodes.
 superimpose_node <- function(dag, node) {
-  check_dag(dag)
+  stopifnot(is_dag_graph(dag))
 #   Check node is length one character 
   check_node(node)  
 #   Check node not in dag nodes 
@@ -161,13 +161,17 @@ superimpose_node <- function(dag, node) {
 #   Add node and edges
   graph::addNode(node = node, object = dag, edges = list(nodes))
 }
-# Checks it is a valid DAG. 
-check_dag <- function(dag) {
+is_dag_graph <- function(dag) {
   #   Check dag is graphNEL. Allow adjacency matrix?
-  stopifnot(inherits(dag, "graphNEL"))
-  #   If non-empty graph, check dag is a dag. gRbase fails with empty graph.
-  if (graph::numNodes(dag) > 0) { stopifnot(gRbase::is.DAG.graphNEL(dag))   }   
-}
+  if (!(inherits(dag, "graphNEL"))) return(FALSE)
+  # If non-empty graph, check dag is a dag. gRbase fails with empty graph.
+  if (graph::numNodes(dag) > 0) { 
+    gRbase::is.DAG.graphNEL(dag)   
+  }
+  else {
+    TRUE   
+  }
+} 
 check_node <- function(node) {
   stopifnot(assertthat::is.string(node))
 }

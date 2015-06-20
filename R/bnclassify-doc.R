@@ -1,4 +1,4 @@
-#' Algorithms for Bayesian network classifiers.
+#' Algorithms for learning Bayesian network classifiers from data.
 #' 
 #' @docType package
 #' @name bnclassify

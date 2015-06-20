@@ -31,10 +31,10 @@ bnc <- function(class, dataset, smooth = 1) {
   lp(nb(class, dataset), dataset, smooth = smooth)
 }
 
-random_letters_db <- function() {
-  df <- replicate(6, sample(letters, 100, replace = TRUE))
+random_letters_db <- function(nlet = 6, nrow = 100) {
+  df <- replicate(nlet, random_letters_vector(nlet, nrow))
   df <- as.data.frame(df)
-  colnames(df) <- letters[1:6]
+  colnames(df) <- letters[seq_len(nlet)]
   df
 }
 

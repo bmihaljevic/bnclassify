@@ -26,7 +26,7 @@ test_that("graph 2 families  Undirected graph" , {
   e <- list(A = 'B', B = 'A')
   g <- graph::graphNEL(nodes = LETTERS[1:2], edgeL = e, edgemode = "directed")
   g <- graph::graphNEL(nodes = LETTERS[1:2], edgeL = e, edgemode = "undirected")
-  expect_error(graph2families(dag = g, class = LETTERS[1]), 'DAG')
+  expect_error(graph2families(dag = g, class = LETTERS[1]), 'is_dag_graph')
 })
 
 test_that("check families", {
@@ -94,3 +94,53 @@ test_that("Tag families nominal", {
   expect_equal(length(fms), 7)
   expect_equal(fms[['persons']], "personsclass")
 })
+
+test_that("Acyclic order nominal", {
+ n <- nbcar()
+ o <- order_acyclic(families(n))  
+ expect_equal(o, c('class', colnames(car)[1:6]))
+})
+
+test_that("Acyclic order a cycle", {
+  n <- nbcar()
+  n <- add_feature_parents('safety', 'lug_boot', n)
+  n <- add_feature_parents('lug_boot', 'doors', n)
+  f <- families(n)
+  f[['safety']] <- c('safety', 'doors', 'class')
+  o <- order_acyclic(f)  
+  expect_null(o)
+})
+
+test_that("Acyclic order 0 node is a DAG", {
+  o <- order_acyclic(list())  
+  # expect_equal(o, get_family_node(character()))
+  # Not sure what should happen here...
+  expect_equal(o, character())
+})
+
+test_that("Find ancestors not in graph nominal", {
+  a <- tan_bnc('class', car)
+  b <- get_ancestors('doors', families(a))
+  expect_true(is_perm(b, c('lug_boot', 'safety', 'buying', 'class')))
+  b <- get_ancestors('safety', families(a))
+  expect_true(is_perm(b, c('buying', 'class')))
+  b <- get_ancestors('class', families(a))
+  expect_true(is_perm(b, c('buying', 'class')))
+})
+
+test_that("Find ancestors", {
+  a <- nbcarclass()
+  b <- get_ancestors('class', families(a))
+  expect_equal(b, character())
+})
+
+test_that("Find ancestors not in graph", {
+  a <- nbcarclass()
+  expect_error(get_ancestors('p', families(a)), "nodes is not")
+})
+
+test_that("Find ancestors not in graph", {
+  a <- nbcarclass()
+  expect_error(get_ancestors('p', families(a)), "nodes is not")
+})
+

@@ -4,9 +4,9 @@
 \name{bnclassify}
 \alias{bnclassify}
 \alias{bnclassify-package}
-\title{Algorithms for Bayesian network classifiers.}
+\title{Algorithms for learning Bayesian network classifiers from data.}
 \description{
-Algorithms for Bayesian network classifiers.
+Algorithms for learning Bayesian network classifiers from data.
 }
 \references{
 Bielza C and Larra\~{n}aga P (2014), Discrete Bayesian network
