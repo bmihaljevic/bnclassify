@@ -36,10 +36,11 @@ extract_params_cptpool <- function(x, cpt_pool) {
   cpt_pool[match(fams_ids, cpts_ids)]
 }
 make_bnc_bn <- function(bnc_dag, params, grain, call) {
-  bnc_bn <- append(bnc_dag, list(.params = params, .grain = NULL, 
-                                 .call_bn = call))
-  class(bnc_bn) <- c('bnc_bn', class(bnc_dag))
-  bnc_bn
+  bnc_dag$.params <- params
+  bnc_dag$.grain = NULL
+  bnc_dag$.call_bn = call
+  class(bnc_dag) <- c('bnc_bn', class(bnc_dag))
+  bnc_dag
 }
 bn2dag <- function(x) {
   stopifnot(inherits(x, "bnc_dag"))
