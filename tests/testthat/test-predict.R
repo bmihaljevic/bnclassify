@@ -10,7 +10,7 @@ test_that("Maximum a posteriori", {
 
 test_that("CV a structure with no fitting args", {
   n <- nb('class', car)
-  expect_error(cv(n, car, k = 5, dag = FALSE), "args")
+  expect_error(cv(n, car, k = 5, dag = FALSE), "elements")
 })
 
 test_that("CV a bnc_bn", {

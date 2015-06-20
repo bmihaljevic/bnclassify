@@ -136,6 +136,17 @@ r
 Keogh has a similar optimization but not quite the same and only for one feature. This is generalized.
 
 
+You can also cross-validate the awnb computation of the weights. The computation is performed on each fold. 
+
+```{r}
+data(voting)
+a <- nb('Class', voting)
+b <- lpawnb(a, voting, smooth = 1, trees = 40, bootstrap_size = 0.5)
+c <- lp(a, voting, smooth = 1)
+r <- cv(list(b, c), voting, k = 2, dag = FALSE)
+r
+```
+
 ## Connection to other packages 
 
 ```{r}

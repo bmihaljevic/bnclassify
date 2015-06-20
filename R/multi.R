@@ -20,13 +20,17 @@ extract_unique_cpts <- function(x, dataset, smooth) {
   ufams <- unique_families(lapply(x, families))
   families2cpts(ufams, dataset = dataset, smooth = smooth)
 }
-ensure_list <- function(x) {
+ensure_list <- function(x, type = NULL) {
   if (!is_just(x, "list")) {
     x <- list(x)
+  }
+  if (!is.null(type)) {
+    all_type <- all(vapply(x, inherits, type, FUN.VALUE = logical(1)))
+    if (!all_type) stop(paste0("All elements must inherit from ", type))
   }
   x
 }
 # Unnamed so that it would pass no names to objects created by itearting on it
-ensure_multi_list <- function(x) {
-  unname(ensure_list(x))
+ensure_multi_list <- function(x, type = NULL) {
+  unname(ensure_list(x, type = type))
 }

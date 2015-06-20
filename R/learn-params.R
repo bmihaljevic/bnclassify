@@ -22,6 +22,8 @@ set_weights <- function(bn, weights) {
   stopifnot(is_non_empty_complete(feats), all(feats %in% features(bn)))
   # modify cpts directly
   bn$.params[feats] <- 
-    mapply(exponentiate_cpt, bn$.params[feats], weights)
+    mapply(exponentiate_cpt, bn$.params[feats], weights, SIMPLIFY = FALSE)
+  # register weights
+  bn$.weights <- weights
   bn
 }

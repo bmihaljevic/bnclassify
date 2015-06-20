@@ -71,7 +71,7 @@ add_call_arg <- function(bnc_dag, call, env, arg, force) {
 get_lp_multi_update_args <- function(x) {
   args <- x$.call_bn
   stopifnot(!is.null(args))
-  stopifnot(as.character(args[[1]]) == 'lp')
+  stopifnot(as.character(args[[1]]) %in% c('lp', 'lpawnb'))
   args <- args[-1]
   args$x <- NULL
   args
@@ -93,7 +93,13 @@ update_lp <- function(dag, lp_fargs, dataset) {
 }
 
 multi_update <- function(x, dataset, dag, smooth = NULL) {
-  x <- ensure_multi_list(x)
+# The lp args must be either smooth or within the x objects: 
+  if (is.null(smooth)) {
+    x <- ensure_list(x, type = "bnc_bn")  
+  }
+  else {
+    x <- ensure_list(x)  
+  }
   dags <- NULL
   if (dag) {
     dags <- lapply(x, update_dag, dataset)

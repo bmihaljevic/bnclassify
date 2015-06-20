@@ -86,6 +86,24 @@ test_that("Update dag", {
   expect_true(!identical(families(d), families(t)))
 })
 
+test_that("Update with awnb param learning", {
+  a <- nb('Class', voting)
+  set.seed(0)
+  b <- lpawnb(a, voting, smooth = 1, trees = 1, bootstrap_size = 0.5)
+  c <- lpawnb(a, voting, smooth = 1, trees = 45, bootstrap_size = 1)
+  d <- lp(b, voting, smooth = 1)
+  r <- cv(list(b, c, d), voting, k = 2, dag = FALSE)
+  # All three values are different
+  expect_equal(r, c(0.9080138, 0.9448484, 0.9011225), tolerance = 1e-6)
+})
+
+test_that("Multi-update bnc_dag", {
+  a <- nb('class', car)
+  b <- lp(a, car, smooth = 1)
+  expect_error(cv(list(a, b), car, k = 10, dag = FALSE), "must inherit")
+})
+
+
 #  TODO: delete
 # test_that("multi learn predict nominal class values", {
 #   a <- nbcar()  
