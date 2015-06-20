@@ -38,23 +38,29 @@ You can maximize either likelihood, BIC or AIC scores.
 
 By maximizing accuracy.
 
+## Naive Bayes
+```{r}
+library(bnclassify)
+data(car)
+nb('class', car)
+```
+
 ## Chow-Liu based 
 <!-- Quadratic time fast. -->
 <!-- You can learn with these functions ... -->
 
-```{r, warning=FALSE}
-#tan <- tan_bnc(class = 'class', dataset = car)
-#tan_bic <- tan_bnc(class = 'class', dataset = car)
-#plot(tan)
-#plot(tanbic)
+```{r}
+tan <- tan_bnc(class = 'class', dataset = car)
+tan_bic <- tan_bnc(class = 'class', dataset = car, score = 'bic')
+plot(tan)
+plot(tan_bic)
 ```
 
 ##Wrappers
 
 Using cross-validation, we can use wrappers with the desired number of folds. 
 
-
-```{r, warning=FALSE}
+```{r}
 a <- tanhc('class', car, k = 10, epsilon = 0, smooth = 1)
 b <- tanhc_sp('class', car, k = 10, epsilon = 0, smooth = 1)
 c <- bsej('class', car, k = 10, epsilon = 0, smooth = 1)
@@ -65,7 +71,7 @@ plot(c)
 plot(d)
 ```
 
-(Keep the warnings)
+
 
 ## Fitting parameters 
 
@@ -80,17 +86,15 @@ Note tan is not a string but function object (must have bnclassify attached)
 If for some instance there is 0 probability for each class, then a uniform distribution over the classes is returned (not the class prior). 
 
 ```{r}
-library(bnclassify)
-data(car)
 nb <- nb('class', car)
-nb <- lp(nb, car[c(1, 700), ], smooth=0)
-predict(object=nb, newdata=car[1000:1001, ], prob = TRUE)
+nb <- lp(nb, car[c(1, 700), ], smooth = 0)
+predict(object = nb, newdata = car[1000:1001, ], prob = TRUE)
 ```
 
 ### Speed 
 It is much faster than gRain and identical to bnlearn.
 
-```{r, warning=FALSE}
+```{r}
 library(microbenchmark)
 nb <- nb('class', car)
 nb <- lp(nb, car, smooth = 0)
@@ -106,7 +110,7 @@ Note that when predicting on a data set with incomplete cases, gRain is used und
 ## Cross-validation
 There is rather fast cross-validation. It takes advantage of the modularity of Bayesian networks by accessing only onces the CPTs shared accross structures. In this example it is faster than CV multiple structures.
 
-```{r, warning=FALSE}
+```{r}
 a <- lp(nb('class', car), car, smooth = 1)	
 b <- lp(nb('class', car[, 'class', drop = FALSE]), car, smooth = 1)
 d <- lp(nb('class', car[, c(sample(1:6, 4), 7), drop = FALSE]), car, smooth = 1)	
@@ -117,7 +121,19 @@ r
 
 Keogh has a similar optimization but not quite the same and only for one feature. This is generalized.
 
+## Learning parameters
+You can use awnb. 
 
+```{r}
+nb <- nb('class', car)
+anb <- lpawnb(nb, car, smooth = 1, trees = 5, bootstrap_size = 0.5)
+```
+
+It is intented for naive Bayes but you can also use it with other classifiers
+```{r}
+t <- tan_bnc('class', car)
+anb <- lpawnb(t, car, smooth = 1, trees = 5, bootstrap_size = 0.5)
+```
 
 ## Connection to other packages 
 
@@ -133,7 +149,7 @@ Some algorithms perform implicit feature selection. E.g., ... For more, use the 
 ## mlr package
 It's easy to use bnclassify with the mlr package. If you have mlr installed, you just need to call `as_mlr()` to use mlr functions: select features, resample, etc.
 
-```{r, warning=FALSE}
+```{r}
   library(mlr)
   ctrl = makeFeatSelControlSequential(alpha = 0, method = "sfs")
   rdesc = makeResampleDesc(method = "Holdout")

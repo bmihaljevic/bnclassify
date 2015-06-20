@@ -2,11 +2,16 @@
 #' @export
 lp <- function(x, dataset, smooth, weights = NULL) {
   call <- save_bnc_call(match.call(), parent.frame())
+  bnc_bn(x, dataset, smooth, call = call)
+}
+#' @export
+#' @seealso \link{awnb}
+lpawnb <- function(x, dataset, smooth, trees, bootstrap_size) {
+  call <- save_bnc_call(match.call(), parent.frame())
   bn <- bnc_bn(x, dataset, smooth, call = call)
-  if (!is.null(weights)) {
-    bn <- set_weights(bn, weights)
-  }
-  bn
+  weights <- awnb(class_var(bn), dataset = dataset, trees = trees, 
+                  bootstrap_size = bootstrap_size)
+  set_weights(bn, weights)
 }
 set_weights <- function(bn, weights) {
   # Currently only expecting weights that can decrease the importance of a feature

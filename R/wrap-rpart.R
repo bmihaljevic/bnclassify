@@ -3,10 +3,10 @@
 learn_unprunned_tree <- function(dataset, class) {
   form <- as.formula(paste(class, '~ .'))    
   # Save time by avoiding CV or surrogates
-  control <- rpart::rpart.control(minsplit=2, minbucket=1, cp = 0, maxcompete=0,
-                                  maxsurrogate=0, xval=0)
-  rpart::rpart(form, data=dataset, na.action=rpart::na.rpart, method="class", 
-               parms=list(split="information"), control=control)  
+  control <- rpart::rpart.control(minsplit = 2, minbucket = 1, cp = 0, 
+                                  maxcompete = 0,maxsurrogate = 0, xval = 0)
+  rpart::rpart(form, data = dataset, na.action = rpart::na.rpart, method
+               = "class", parms = list(split = "information"), control = control)
 }
 #' Identifies all depths at which the features of a classification tree are
 #' tested.
@@ -15,9 +15,9 @@ learn_unprunned_tree <- function(dataset, class) {
 #' @return a numeric vector. The names are the names of the variables.
 #' @keywords internal
 identify_all_testing_depths <- function(tree) {
-  stopifnot(inherits(x=tree, what='rpart'))
+  stopifnot(inherits(x = tree, what = 'rpart'))
   #   Filter out leaves
-  vars <- subset(tree$frame, var != "<leaf>", select='var', drop = F)
+  vars <- subset(tree$frame, var != "<leaf>", select = 'var', drop = F)
   ordering <- as.integer(rownames(vars))
   # if there are no split in the tree - return
   if (length(ordering) == 0) return(NULL) 
@@ -27,4 +27,14 @@ identify_all_testing_depths <- function(tree) {
   # a small check
   stopifnot(min(depths) == 1)
   depths
+}
+#' Identifies the lowest (closest to root) depths at which the features of a 
+#' classification tree are tested.
+#' 
+#' @keywords internal
+identify_min_testing_depths <- function(tree) {
+  depths <- identify_all_testing_depths(tree)
+  if (length(depths) == 0) return(NULL)
+  stopifnot(length(names(depths)) > 0)
+  sort(tapply(depths, names(depths), min))
 }

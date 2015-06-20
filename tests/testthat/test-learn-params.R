@@ -31,3 +31,12 @@ test_that('Set feature weights', {
   expect_true(all(params(f)$buying != params(nb)$buying))
   expect_true(are_pdists(t(params(f)$buying)))
 })
+
+test_that('lawnb nominal', {
+  nb <- nbcar()
+  a <- lpawnb(nb, car, smooth = 1, trees = 1, bootstrap_size = 1) 
+  b <- lp(nb, car, smooth = 1)
+  expect_equal(params(a)$class, params(b)$class)
+  expect_true(all(params(a)$buying != params(b)$buying))
+  expect_true(are_pdists(t(params(a)$buying)))
+})
