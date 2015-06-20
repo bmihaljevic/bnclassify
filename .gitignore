@@ -1,6 +1,6 @@
 inst/doc
-develop/
-design-and-manage/
+.develop/
+.design-and-manage/
 .Rproj.user/
 
 .Rproj.user
