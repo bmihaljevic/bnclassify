@@ -39,4 +39,5 @@ test_that('lawnb nominal', {
   expect_equal(params(a)$class, params(b)$class)
   expect_true(all(params(a)$buying != params(b)$buying))
   expect_true(are_pdists(t(params(a)$buying)))
+  expect_equal(a$.call_bn[[1]], "lpawnb")
 })
