@@ -37,7 +37,7 @@ compute_ulcp_incomplete <- function(x, dataset) {
   # Check x is a bnc_bn
   check_bnc_bn(x)
   # Get gRain from bnc_bn 
-  grain <- to_grain(x)
+  grain <- as_grain(x)
   # Get class var
   class <- class_var(x)
   # Call grain class posterior

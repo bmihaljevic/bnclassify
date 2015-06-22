@@ -1,12 +1,12 @@
 #' @export 
 #' @describeIn bnc_dag_object  Returns the number of arcs.
 narcs <- function(x) {
-  num_arcs(to_graphNEL(x))
+  num_arcs(as_graphNEL(x))
 }
 #' @export 
 # @describeIn bnc_dag_object Plots the dag.  
 plot.bnc_dag <- function(x, y, layoutType='dot', ...) {
-  graph::plot(to_graphNEL(x))
+  graph::plot(as_graphNEL(x))
 }
 #' Print basic information about a classifier.
 #' @export
@@ -30,7 +30,7 @@ is_semi_naive <- function(x) {
 #' @export 
 #' @describeIn bnc_dag_object Returns TRUE if \code{x} is an augmented naive Bayes.
 is_anb <- function(x) {
-  if (!is_dag_graph(to_graphNEL(x))) return(FALSE)
+  if (!is_dag_graph(as_graphNEL(x))) return(FALSE)
   # Check call has no parents and class is in all families. This
   # code assumes class is last in each family.
   last <- unique(unlist(lapply(families(x), get_last)), use.names = FALSE)
@@ -54,12 +54,12 @@ is_kde <- function(x, k) {
 # Returns sets of non class-conditionally independent features
 not_cci <- function(x) {
   stopifnot(is_anb(x))
-  features <- subgraph(features(x), to_graphNEL(x))
+  features <- subgraph(features(x), as_graphNEL(x))
   connected_components(features)
 }
 add_feature_parents <- function(parents, feature, x) {
   stopifnot(is_anb(x))  
-  g <- condition_on(parents, feature, to_graphNEL(x))
+  g <- condition_on(parents, feature, as_graphNEL(x))
   bnc_dag(g, class_var(x))
 }
 # Just a convenience for calling add_feature_parents from *ply loops
@@ -70,19 +70,19 @@ relate_supernodes <- function(child_sn, parent_sn, x) {
   stopifnot(is_anb(x))  
 #   check child and parent are supernodes 
   stopifnot(is_supernode(child_sn, x), is_supernode(parent_sn, x))
-  g <- condition_on(parent_sn, child_sn, to_graphNEL(x))
+  g <- condition_on(parent_sn, child_sn, as_graphNEL(x))
   bnc_dag(g, class_var(x))
 }
 add_feature <- function(node, x) {
   stopifnot(assertthat::is.string(node))
-  a <- add_node(node, to_graphNEL(x))
+  a <- add_node(node, as_graphNEL(x))
   class <- class_var(x)
   a <- condition_on(parents = class, nodes = node, x = a)
   bnc_dag(a, class)
 }
 remove_feature <- function(node, x) {
   stopifnot(assertthat::is.string(node))
-  g <- remove_node(node, to_graphNEL(x))
+  g <- remove_node(node, as_graphNEL(x))
   bnc_dag(g, class_var(x))
 }
 is_supernode <- function(node, x) {

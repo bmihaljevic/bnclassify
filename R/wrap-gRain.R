@@ -1,7 +1,7 @@
 # Accessors 
 #' To grain
 #' @export
-to_grain <- function(x) {
+as_grain <- function(x) {
   stopifnot(inherits(x, "bnc_bn"))  
   if (is.null(x$.grain))  {
     compile_grain(params(x))  

@@ -9,7 +9,7 @@ test_that("nominal", {
   levs <- lapply(car, levels)
   expect_true(all(mapply(identical, levs, tvalues, SIMPLIFY = TRUE)))
   expect_identical(values(tbn)$buying, levels(car$buying))
-  expect_is(to_grain(tbn), 'grain')
+  expect_is(as_grain(tbn), 'grain')
 })
 
 test_that("bnc_bn no class in dataset ", {     

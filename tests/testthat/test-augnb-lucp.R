@@ -38,13 +38,13 @@ test_that("make cpt inds", {
 test_that("matches grain", {
   tn <- nbcar()
   b <- compute_augnb_luccpx(tn, car)
-  g <- to_grain(tn)
+  g <- as_grain(tn)
   gp <- compute_grain_luccpx(grain = g, car[, -7], 'class')
   expect_equal(b, gp) 
   
   tn <- nbvotecomp()
   b <- compute_augnb_luccpx(tn, v)
-  g <- to_grain(tn)
+  g <- as_grain(tn)
   gp <- compute_grain_luccpx(grain = g, v[, -17], 'Class')
 })
 

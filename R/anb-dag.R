@@ -23,12 +23,12 @@ check_bnc_dag <- function(x) {
   families <- families(x)
   check_anb_families(families, class)  
   # Check dag is a graphNEL.
-  # stopifnot(inherits(to_graphNEL(x), "graphNEL"))
+  # stopifnot(inherits(as_graphNEL(x), "graphNEL"))
 } 
 # Accessor functions 
 #' @export 
 #' @describeIn  bnc_dag_object Returns the dag as a \code{graph::graphNEL} object.
-to_graphNEL <- function(x) {
+as_graphNEL <- function(x) {
   stopifnot(inherits(x, "bnc_dag"))
   x$.dag
 }

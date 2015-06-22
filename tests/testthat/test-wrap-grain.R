@@ -5,7 +5,7 @@ test_that("nominal unnormalized class posterior instance", {
     skip("Requires gRain")
   }
   a <- nbvote()
-  g <- to_grain(a)
+  g <- as_grain(a)
   vc <- as.matrix(voting)
   cp <- compute_grain_uccpx_instance(vc[1, -17], g, 'Class')
   expect_true(is.numeric(cp))
@@ -18,7 +18,7 @@ test_that(" unnormalized class posterior instance with no evidence", {
     skip("Requires gRain")
   }
   a <- nbvote()
-  g <- to_grain(a)
+  g <- as_grain(a)
   vc <- as.matrix(voting)
   inst <- vc[1, -17]
   inst[] <- NA
