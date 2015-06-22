@@ -1,4 +1,9 @@
+#' Returns a naive Bayes network structure.
+#' 
 #' @export
+#' @param class A character. Name of the class variable.
+#' @param dataset The data frame from which to learn the classifier.
+#' @param features  A character vector. The names of the features. This argument is ignored if \code{dataset} is provided. 
 nb <- function(class, dataset = NULL, features = NULL) {
   #   # if dataset is provided features is ignored
   if (!is.null(dataset)) {
