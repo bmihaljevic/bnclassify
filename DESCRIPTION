@@ -23,7 +23,8 @@ Suggests: gRain(>= 1.2-3),
           testthat(>= 0.8.1),
           knitr,
           ParamHelpers(>= 1.5),
-          Rgraphviz(>= 2.8.1)
+          Rgraphviz(>= 2.8.1),
+          rmarkdown(>= 0.7)
 License: GPL (>= 2)
 Author: Mihaljevic Bojan [aut, cre],
   Bielza Concha [aut],
