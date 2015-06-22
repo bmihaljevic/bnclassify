@@ -51,10 +51,25 @@ NULL
 
 #' Learns a tree augmented naive Bayes classifier (TAN).
 #' 
-#' @name chowliu
-#' 
 #' Learns a one-dependence Bayesian classifier using Chow-Liu's algorithm. The 
 #' structure is learned so that either likelihood, the BIC or AIC scores are 
 #' maximized; the first option corresponds to the well-known tree augmented 
 #' naive Bayes (Friedman et al., 1997).
+#' 
+#' Edges with negative BIC or AIC weights are blacklisted from the final 
+#' structure. The structure thus might be a forest rather than a tree.
+#' 
+#' @name tan_chowliu
+#'   
+#' @param blacklist A character matrix. Edges that may be blacklisted from the
+#'   resulting structure.
+#' @param root A character. The feature to be used as root of the augmenting 
+#'   tree. Only one feature can be supplied, even in case of an augmenting 
+#'   forest. This argument is optional.
+#' @param score character The score to be maximized. \code{'loglik'},
+#'   \code{'bic'}, and \code{'aic'} return the maximum likelihood, maximum BIC
+#'   and maximum AIC tree/forest, respectively.
+#'   
+#' @references Friedman N, Geiger D and Goldszmidt M (1997). Bayesian network 
+#'   classifiers. \emph{Machine Learning}, \bold{29}, pp. 131--163.
 NULL

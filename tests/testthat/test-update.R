@@ -48,7 +48,7 @@ test_that("Multi update data subset", {
 })
 
 test_that("Multi update with dag", {
-  t <- lp(tan_bnc('class', car), car, smooth = 0.02)
+  t <- lp(tan_cl('class', car), car, smooth = 0.02)
   b <- multi_update(t, car[1:5, ], dag = TRUE)
   expect_equal(narcs(b[[1]]), narcs(t))
   expect_true(!isTRUE(all.equal(families(b[[1]]), families(t))))
@@ -71,7 +71,7 @@ test_that("Multi update with dag with different lp args", {
 })
 
 test_that("Multi update with dag two", {
-  a <- lp(tan_bnc('class', car), car, smooth = 1e-20)
+  a <- lp(tan_cl('class', car), car, smooth = 1e-20)
   b <- lp(nb('class', car), car, smooth = 1e-20)
   c <- multi_update(list(a, b), car[1:5, ], dag = TRUE)
   expect_equal(narcs(c[[1]]), narcs(a))
@@ -80,7 +80,7 @@ test_that("Multi update with dag two", {
 })
 
 test_that("Update dag", {
-  t <- tan_bnc('class', car)
+  t <- tan_cl('class', car)
   d <- update_dag(t, car[1, ])  
   expect_identical(narcs(d), narcs(t))
   expect_true(!identical(families(d), families(t)))

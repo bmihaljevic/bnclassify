@@ -119,7 +119,7 @@ test_that("Acyclic order 0 node is a DAG", {
 })
 
 test_that("Find ancestors not in graph nominal", {
-  a <- tan_bnc('class', car)
+  a <- tan_cl('class', car)
   b <- get_ancestors('doors', families(a))
   expect_true(is_perm(b, c('lug_boot', 'safety', 'buying', 'class')))
   b <- get_ancestors('safety', families(a))
