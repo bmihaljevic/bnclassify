@@ -63,9 +63,9 @@ NULL
 #' 
 #' bsej is the backward \emph{sequential elimination and joining} algorithm
 #' whereas fssj is the \emph{forward sequential selection and joining}
-#' algorithms for learning a semi-naive Bayes classifier (Pazzani, 1996). tanhc
+#' algorithms for learning a semi-naive Bayes classifier (Pazzani, 1996). tan_hc
 #' Learns a tree augmented naive Bayes with a greedy hill-climbing search. tanhc
-#' is the super-parent variant of tanhc.
+#' is the super-parent variant of tan_hc.
 #' 
 #' @name wrapper
 #'   

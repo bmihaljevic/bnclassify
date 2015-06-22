@@ -51,14 +51,14 @@ test_that("Fast structure fitting with smooth", {
 })
 
 test_that("CV a wrapper", {
-  t <- tanhc('class', car, k = 2, epsilon = 0, smooth = 0.01)
+  t <- tan_hc('class', car, k = 2, epsilon = 0, smooth = 0.01)
   t <- lp(t, car, smooth = 0.01)
   r <- cv(t, car, k = 2, dag = TRUE)
   expect_true(is_positive(r))
 })
 
 test_that("correct cv result", {
-  t <- tanhc('class', car, k = 5, epsilon = 0, smooth = 0.12)
+  t <- tan_hc('class', car, k = 5, epsilon = 0, smooth = 0.12)
   t <- lp(t, car, smooth = 0.01)
   set.seed(0)
   s <- cv(t, car, k = 5, dag = TRUE)

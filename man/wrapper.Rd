@@ -3,8 +3,8 @@
 \name{wrapper}
 \alias{bsej}
 \alias{fssj}
-\alias{tanhc}
-\alias{tanhc_sp}
+\alias{tan_hc}
+\alias{tan_hcsp}
 \alias{wrapper}
 \title{Learns Bayesian network classifiers in a wrapper fashion.}
 \usage{
@@ -12,9 +12,9 @@ fssj(class, dataset, k, epsilon = 0.01, smooth = 0.01)
 
 bsej(class, dataset, k, epsilon = 0.01, smooth = 0.01)
 
-tanhc(class, dataset, k, epsilon = 0.01, smooth = 0.01)
+tan_hc(class, dataset, k, epsilon = 0.01, smooth = 0.01)
 
-tanhc_sp(class, dataset, k, epsilon = 0.01, smooth = 0.01)
+tan_hcsp(class, dataset, k, epsilon = 0.01, smooth = 0.01)
 }
 \arguments{
 \item{class}{A character. Name of the class variable.}
@@ -30,9 +30,9 @@ parameter estimation.}
 \description{
 bsej is the backward \emph{sequential elimination and joining} algorithm
 whereas fssj is the \emph{forward sequential selection and joining}
-algorithms for learning a semi-naive Bayes classifier (Pazzani, 1996). tanhc
+algorithms for learning a semi-naive Bayes classifier (Pazzani, 1996). tan_hc
 Learns a tree augmented naive Bayes with a greedy hill-climbing search. tanhc
-is the super-parent variant of tanhc.
+is the super-parent variant of tan_hc.
 }
 \references{
 Pazzani M (1996). Constructive induction of Cartesian product

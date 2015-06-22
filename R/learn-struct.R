@@ -33,7 +33,7 @@ bsej <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {
 }
 #' @export
 #' @rdname wrapper
-tanhc <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {    
+tan_hc <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {    
   full_nb <- nb(class = class, dataset)
   x <- greedy_search(class = class, to_include = NULL, init = full_nb,
                 step = augment_ode, dataset = dataset, epsilon = epsilon, k = k,
@@ -42,7 +42,7 @@ tanhc <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {
 }
 #' @export
 #' @rdname wrapper
-tanhc_sp <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {    
+tan_hcsp <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {    
   full_nb <- nb(class = class, dataset)
   x <- greedy_search(class = class, to_include = NULL, init = full_nb,
                 step = augment_ode_sp, dataset = dataset, epsilon = epsilon, 

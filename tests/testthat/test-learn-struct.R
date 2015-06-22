@@ -40,16 +40,16 @@ test_that("bsej nominal", {
   expect_equal(f$.greedy_scores_log, sort(f$.greedy_scores_log))
 })
 
-test_that("tanhc nominal", {
+test_that("tan_hc nominal", {
   set.seed(0)
-  t <- tanhc('class', dataset = car, k = 10, epsilon = 0)
+  t <- tan_hc('class', dataset = car, k = 10, epsilon = 0)
   expect_equal(length(features(t)), 6)
   expect_equal(narcs(t), 9)
 })
 
 test_that("tanhc sp nominal", {
   set.seed(0)
-  t <- tanhc_sp('class', dataset = car, k = 10, epsilon = 0)
+  t <- tan_hcsp('class', dataset = car, k = 10, epsilon = 0)
   expect_equal(length(features(t)), 6)
   expect_equal(narcs(t), 10)
 })
