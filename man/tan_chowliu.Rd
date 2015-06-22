@@ -8,7 +8,11 @@
 tan_cl(class, dataset, score = "loglik", blacklist = NULL, root = NULL)
 }
 \arguments{
-\item{score}{character The score to be maximized. \code{'loglik'},
+\item{class}{A character. Name of the class variable.}
+
+\item{dataset}{The data frame from which to learn the classifier.}
+
+\item{score}{A character. The score to be maximized. \code{'loglik'},
   \code{'bic'}, and \code{'aic'} return the maximum likelihood, maximum BIC
   and maximum AIC tree/forest, respectively.}
 

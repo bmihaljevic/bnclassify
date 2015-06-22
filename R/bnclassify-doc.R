@@ -37,6 +37,11 @@ NULL
 #' 
 #' @name wrapper
 #'   
+#' @inheritParams nb 
+#' @param epsilon A numeric. Minimum absolute improvement required to keep 
+#'   searching.
+#' @inheritParams cv 
+#'   
 #' @references Pazzani M (1996). Constructive induction of Cartesian product 
 #'   attributes. In \emph{Proceedings of the Information, Statistics and 
 #'   Induction in Science Conference (ISIS-1996)}, pp. 66-77
@@ -44,9 +49,6 @@ NULL
 #'   Koegh E and Pazzani M (2002).Learning the structure of augmented Bayesian 
 #'   classifiers. In \emph{International Journal on Artificial Intelligence 
 #'   Tools}, \bold{11}(4), pp. 587-601.
-#' @param class A character. Name of the class variable.
-#' @param epsilon A numeric. Minimum absolute improvement required to keep 
-#'   searching.
 NULL
 
 #' Learns a tree augmented naive Bayes classifier (TAN).
@@ -61,12 +63,13 @@ NULL
 #' 
 #' @name tan_chowliu
 #'   
+#' @inheritParams nb 
 #' @param blacklist A character matrix. Edges that may be blacklisted from the
 #'   resulting structure.
 #' @param root A character. The feature to be used as root of the augmenting 
 #'   tree. Only one feature can be supplied, even in case of an augmenting 
 #'   forest. This argument is optional.
-#' @param score character The score to be maximized. \code{'loglik'},
+#' @param score A character. The score to be maximized. \code{'loglik'},
 #'   \code{'bic'}, and \code{'aic'} return the maximum likelihood, maximum BIC
 #'   and maximum AIC tree/forest, respectively.
 #'   

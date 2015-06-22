@@ -2,11 +2,28 @@
 % Please edit documentation in R/predict.R
 \name{cv}
 \alias{cv}
-\title{CV}
+\title{Stratified cross validation estimate of predictive accuracy.}
 \usage{
 cv(x, dataset, k, dag, smooth = NULL)
 }
+\arguments{
+\item{x}{List of \code{\link{bnc_bn}}. The classifiers to evaluate.}
+
+\item{dataset}{The data frame on which to evaluate the classifiers.}
+
+\item{k}{An integer. The number of folds.}
+
+\item{dag}{A logical. Whether to repeat structure learning on each fold or
+just parameter learning.}
+
+\item{smooth}{A numeric. The smoothing value for Bayesian parameter
+estimation.}
+}
+\value{
+A numeric vector. The predictive accuracy of each classifier in
+  \code{x}.
+}
 \description{
-CV
+Stratified cross validation estimate of predictive accuracy.
 }
 
