@@ -5,9 +5,10 @@
 #' @name as_mlr
 #' 
 #' @inheritParams cv
-#' @param x A \code{\link{bnc_bn}} object.
+#' @param x A \code{\link{bnc_bn_object}} object.
 #' @param id A character.
 #' @param .learner,.task,.subset,.weights,.model,.newdata Internal.
+#' @param ... Internal.
 #' @export
 NULL
 
@@ -38,6 +39,7 @@ as_mlr <- function(x, dag, id = "1") {
   mlr::makeLearner("bnc", id = id, par.vals = list(args=args))
 }
 #' @export 
+#' @rdname as_mlr
 trainLearner.bnc = function(.learner, .task, .subset, .weights, ...) {
   if (!requireNamespace("mlr", quietly = TRUE)) {
     stop("Package mlr required for this functionality.")

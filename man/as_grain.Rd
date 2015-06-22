@@ -6,6 +6,9 @@
 \usage{
 as_grain(x)
 }
+\arguments{
+\item{x}{A \code{\link{bnc_bn_object}}.}
+}
 \description{
 To grain
 }

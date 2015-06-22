@@ -21,14 +21,17 @@ tan_hcsp(class, dataset, k, epsilon = 0.01, smooth = 0.01)
 
 \item{dataset}{The data frame from which to learn the classifier.}
 
+\item{k}{An integer. The number of folds.}
+
 \item{epsilon}{A numeric. Minimum absolute improvement required to keep
-searching.}
+  searching.}
 
 \item{smooth}{A nonnegative numeric. The smoothing value for Bayesian
 parameter estimation.}
 }
 \description{
-Learns Bayesian network classifiers in a wrapper fashion.
+Each candidate structure is evaluated according to the cross-validated
+estimate of predictive accuracy.
 }
 \references{
 Pazzani M (1996). Constructive induction of Cartesian product

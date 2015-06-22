@@ -9,5 +9,19 @@ The bnclassify package implements algorithms for learning discrete Bayesian netw
 
 ```{r}
 install.packages('devtools')
-install_github('bmihaljevic/bnclassify')
+devtools::install_github('bmihaljevic/bnclassify')
+#devtools::install_github('bmihaljevic/bnclassify', build_vignettes = TRUE)
+```
+
+## Use
+
+See the list of implemented algorithms with 
+
+```{r}
+?bnclassify
+```
+
+Use the vignette to get started. 
+```{r}
+vignette('bnclassify')
 ```

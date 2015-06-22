@@ -7,12 +7,14 @@
 \method{predict}{bnc_bn}(object, newdata, prob = FALSE, ...)
 }
 \arguments{
-\item{object}{A \code{\link{bnc_bn}} object.}
+\item{object}{A \code{\link{bnc_bn_object}} object.}
 
 \item{newdata}{A data frame containing observations whose class has to be
 predicted.}
 
 \item{prob}{A logical. Whether class posterior probability should be returned.}
+
+\item{...}{Ignored.}
 }
 \value{
 If \code{prob=FALSE}, then returns a length-\eqn{N} factor with the

@@ -1,5 +1,6 @@
 # Accessors 
 #' To grain
+#' @param x A \code{\link{bnc_bn_object}}.
 #' @export
 as_grain <- function(x) {
   stopifnot(inherits(x, "bnc_bn"))  

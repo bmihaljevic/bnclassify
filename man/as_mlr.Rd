@@ -4,16 +4,19 @@
 \alias{as_mlr}
 \alias{makeRLearner.bnc}
 \alias{predictLearner.bnc}
+\alias{trainLearner.bnc}
 \title{Bridge to \code{mlr}}
 \usage{
 makeRLearner.bnc()
 
 as_mlr(x, dag, id = "1")
 
+trainLearner.bnc(.learner, .task, .subset, .weights, ...)
+
 predictLearner.bnc(.learner, .model, .newdata, ...)
 }
 \arguments{
-\item{x}{A \code{\link{bnc_bn}} object.}
+\item{x}{A \code{\link{bnc_bn_object}} object.}
 
 \item{dag}{A logical. Whether to repeat structure learning on each fold or
 just parameter learning.}
@@ -21,6 +24,8 @@ just parameter learning.}
 \item{id}{A character.}
 
 \item{.learner,.task,.subset,.weights,.model,.newdata}{Internal.}
+
+\item{...}{Internal.}
 }
 \description{
 Only \code{as_mlr} should be called by the user.

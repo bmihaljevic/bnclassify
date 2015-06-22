@@ -60,8 +60,9 @@ check_bnc_bn <- function(x) {
   stopifnot(identical(names(values(x)), names(vars(x))))
 }
 # Accessors 
+
 #' @export 
-#' @describeIn bnc_bn_object Returns the list of CPTs, in the same order as \code{\link{vars}}
+#' @describeIn bnc_bn_object Returns the list of CPTs, in the same order as \code{\link{vars}}.
 params <- function(x) {
   stopifnot(inherits(x, "bnc_bn"))  
   x$.params

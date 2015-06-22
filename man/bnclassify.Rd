@@ -7,9 +7,9 @@
 \title{Algorithms for learning Bayesian network classifiers from data.}
 \description{
 The bnclassify package implements algorithms for learning discrete Bayesian
-networks from data. Learning can be performed on both complete and incomplete
-data whereas prediction is much slower in the latter case and thus wrapper
-learners are not recommended in that case.
+network classifiers from data. Learning can be performed on both complete and
+incomplete data whereas prediction is much slower in the latter case and thus
+wrapper learners are not recommended in that case.
 }
 \details{
 Structure learning algorithms \itemize{ \item Naive Bayes \code{\link{nb}}

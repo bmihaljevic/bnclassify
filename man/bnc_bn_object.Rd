@@ -13,12 +13,15 @@ values(x)
 
 classes(x)
 }
+\arguments{
+\item{x}{The bnc_bn_object}
+}
 \description{
 You can query this object using the following functions, in addition to all the functions that can be applied to a \code{\link{bnc_dag_object}}.
 }
 \section{Functions}{
 \itemize{
-\item \code{params}: Returns the list of CPTs, in the same order as \code{\link{vars}}
+\item \code{params}: Returns the list of CPTs, in the same order as \code{\link{vars}}.
 
 \item \code{values}: Returns the possible values of each variable, in the same order as \code{\link{vars}}.
 

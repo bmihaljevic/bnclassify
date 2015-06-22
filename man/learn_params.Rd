@@ -14,6 +14,8 @@ lp(x, dataset, smooth)
 lpawnb(x, dataset, smooth, trees, bootstrap_size)
 }
 \arguments{
+\item{class}{A character. Name of the class variable.}
+
 \item{dataset}{The data frame from which to estimate network parameters.}
 
 \item{trees}{An integer. The number of bootstrap samples to generate.}
@@ -21,13 +23,18 @@ lpawnb(x, dataset, smooth, trees, bootstrap_size)
 \item{bootstrap_size}{A numeric. The size of the bootstrap subsample,
 relative to the size of \code{dataset} (given in [0,1]).}
 
-\item{x}{a \code{\link{bnc_dag}} object. The Bayesian network structure.}
+\item{x}{a \code{\link{bnc_dag_object}} object. The Bayesian network structure.}
 
 \item{smooth}{A nonnegative numeric. The smoothing value for Bayesian
 parameter estimation.}
 }
 \description{
-\code{lpawnb} weights the features' CPTs according to the AWNB method.
+\code{lp} estimates parameters with maximum likelihood or Bayesian
+estimation.
+}
+\details{
+\code{lpawnb} extends \code{lp} by weighting the features' CPTs according to
+the AWNB method.
 }
 \references{
 Mark Hall (2004). A decision tree-based attribute weighting

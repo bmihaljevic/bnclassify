@@ -1,5 +1,6 @@
 inst/doc
 .develop/
+*.pdf
 .design-and-manage/
 .Rproj.user/
 .Rproj.user
