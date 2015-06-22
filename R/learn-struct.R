@@ -7,15 +7,8 @@ nb <- function(class, dataset = NULL, features = NULL) {
   nb <- bnc_dag(nb_dag(class, features), class)
   add_dag_call_arg(nb, call = match.call(), env = parent.frame())
 }
-#' Learns Bayesian network classifiers in a wrapper fashion.
-#' 
-#' @references Pazzani M (1996). Constructive induction of Cartesian product 
-#'   attributes. In \emph{Proceedings of the Information, Statistics and 
-#'   Induction in Science Conference (ISIS-1996)}, pp. 66-77
-#' @param class A character. Name of the class variable.
-#' @param epsilon A numeric. Minimum absolute improvement required to keep
-#'   searching.
 #' @export
+#' @rdname wrapper
 fssj <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {    
   just_class_nb <- nb(class = class)
   features <- get_features(class, dataset)
@@ -24,7 +17,7 @@ fssj <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {
                 smooth = smooth)
   add_dag_call_arg(x, call = match.call(), env = parent.frame(), force = TRUE)
 }
-#' @rdname fssj
+#' @rdname wrapper
 #' @export
 bsej <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {    
   full_nb <- nb(class = class, dataset)
@@ -34,6 +27,7 @@ bsej <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {
   add_dag_call_arg(x, call = match.call(), env = parent.frame())
 }
 #' @export
+#' @rdname wrapper
 tanhc <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {    
   full_nb <- nb(class = class, dataset)
   x <- greedy_search(class = class, to_include = NULL, init = full_nb,
@@ -42,6 +36,7 @@ tanhc <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {
   add_dag_call_arg(x, call = match.call(), env = parent.frame(), force = TRUE)
 }
 #' @export
+#' @rdname wrapper
 tanhc_sp <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {    
   full_nb <- nb(class = class, dataset)
   x <- greedy_search(class = class, to_include = NULL, init = full_nb,

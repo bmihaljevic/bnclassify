@@ -26,3 +26,35 @@ NULL
 #' @docType data
 #' @name car
 NULL
+
+#' Learns Bayesian network classifiers in a wrapper fashion.
+#' 
+#' bsej is the backward \emph{sequential elimination and joining} algorithm
+#' whereas fssj is the \emph{forward sequential selection and joining}
+#' algorithms for learning a semi-naive Bayes classifier (Pazzani, 1996). tanhc
+#' Learns a tree augmented naive Bayes with a greedy hill-climbing search. tanhc
+#' is the super-parent variant of tanhc.
+#' 
+#' @name wrapper
+#'   
+#' @references Pazzani M (1996). Constructive induction of Cartesian product 
+#'   attributes. In \emph{Proceedings of the Information, Statistics and 
+#'   Induction in Science Conference (ISIS-1996)}, pp. 66-77
+#'   
+#'   Koegh E and Pazzani M (2002).Learning the structure of augmented Bayesian 
+#'   classifiers. In \emph{International Journal on Artificial Intelligence 
+#'   Tools}, \bold{11}(4), pp. 587-601.
+#' @param class A character. Name of the class variable.
+#' @param epsilon A numeric. Minimum absolute improvement required to keep 
+#'   searching.
+NULL
+
+#' Learns a tree augmented naive Bayes classifier (TAN).
+#' 
+#' @name chowliu
+#' 
+#' Learns a one-dependence Bayesian classifier using Chow-Liu's algorithm. The 
+#' structure is learned so that either likelihood, the BIC or AIC scores are 
+#' maximized; the first option corresponds to the well-known tree augmented 
+#' naive Bayes (Friedman et al., 1997).
+NULL
