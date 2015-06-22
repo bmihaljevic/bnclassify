@@ -26,20 +26,30 @@ check_bnc_dag <- function(x) {
   # stopifnot(inherits(to_graphNEL(x), "graphNEL"))
 } 
 # Accessor functions 
+#' @export 
+#' @describeIn  bnc_dag_object Returns the dag as a \code{graph::graphNEL} object.
 to_graphNEL <- function(x) {
   stopifnot(inherits(x, "bnc_dag"))
   x$.dag
 }
+#' @export 
+#' @describeIn  bnc_dag_object Returns the class variable.
 class_var <- function(x) {
   stopifnot(inherits(x, "bnc_dag"))
   x$.class
 }
+#' @export 
+#' @describeIn  bnc_dag_object Returns the features.
 features <- function(x) {
   setdiff(vars(x), class_var(x))
 }
+#' @export 
+#' @describeIn  bnc_dag_object Returns all variables (i.e., features + class).
 vars <- function(x) {
   setNames(nm = get_family_vars(families(x)))
 }
+#' @export 
+#' @describeIn  bnc_dag_object Returns the family of each variable.
 families <- function(x) {
   stopifnot(inherits(x, "bnc_dag"))
   x$.families
@@ -49,6 +59,8 @@ families <- function(x) {
 #   feature_fams <- families(x)[features(x)]
 #   lapply(feature_fams, family_features, class_var(x))
 # }
+#' @export 
+#' @describeIn  bnc_dag_object Returns the family of each feature.
 feature_families <- function(x) {
   families(x)[features(x)]
 }

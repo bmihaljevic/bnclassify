@@ -5,16 +5,16 @@
 #' data whereas prediction is much slower in the latter case and thus wrapper 
 #' learners are not recommended in that case.
 #' 
-#' Structure learning algorithms \itemize{ \item Naive Bayes \code{\link{nb}}
-#' \item Tree augmented naive Bayes \code{\link{tan_cl}} \item Backward
-#' sequential elimination and joining \code{\link{bsej}} \item Forward
-#' sequential selection and joining \code{\link{fssj}} \item Hill-climbing tree 
-#' augmented naive Bayes \code{\link{tan_hc}} \item Hill-climbing super-parent
-#' tree augmented naive Bayes \code{\link{tan_hcsp}}  }
+#' Structure learning algorithms \itemize{ \item Naive Bayes \code{\link{nb}} 
+#' \item Tree augmented naive Bayes \code{\link{tan_cl}} \item Backward 
+#' sequential elimination and joining \code{\link{bsej}} (Pazzani, 1996) \item
+#' Forward sequential selection and joining (Pazzani, 1996) \code{\link{fssj}}
+#' \item Hill-climbing tree augmented naive Bayes \code{\link{tan_hc}} \item
+#' Hill-climbing super-parent tree augmented naive Bayes \code{\link{tan_hcsp}} 
+#' }
 #' 
-#' Parameter estimation \itemize{ \item Attribute-weighted naive Bayes
-#' \code{\link{lp_awnb}} }
-#' 
+#' Parameter estimation \itemize{ \item Attribute-weighted naive Bayes 
+#' \code{\link{lpawnb}} }
 #' 
 #' @docType package
 #' @name bnclassify
@@ -61,11 +61,6 @@ NULL
 
 #' Learns Bayesian network classifiers in a wrapper fashion.
 #' 
-#' bsej is the backward \emph{sequential elimination and joining} algorithm
-#' whereas fssj is the \emph{forward sequential selection and joining}
-#' algorithms for learning a semi-naive Bayes classifier (Pazzani, 1996). tan_hc
-#' Learns a tree augmented naive Bayes with a greedy hill-climbing search. tanhc
-#' is the super-parent variant of tan_hc.
 #' 
 #' @name wrapper
 #'   
@@ -125,4 +120,18 @@ NULL
 #' @references Mark Hall (2004). A decision tree-based attribute weighting 
 #'   filter for naive Bayes. \emph{Knowledge-based Systems}, \bold{20}(2), 
 #'   120-126.
+NULL
+
+#' A Bayesian network classifier structure.
+#' 
+#' You can query this object using the following functions.
+#' 
+#' @name bnc_dag_object
+NULL
+
+#' A Bayesian network classifier with structure and parameters.
+#' 
+#' You can query this object using the following functions, in addition to all the functions that can be applied to a \code{\link{bnc_dag_object}}. 
+#' 
+#' @name bnc_bn_object
 NULL

@@ -28,11 +28,7 @@ searching.}
 parameter estimation.}
 }
 \description{
-bsej is the backward \emph{sequential elimination and joining} algorithm
-whereas fssj is the \emph{forward sequential selection and joining}
-algorithms for learning a semi-naive Bayes classifier (Pazzani, 1996). tan_hc
-Learns a tree augmented naive Bayes with a greedy hill-climbing search. tanhc
-is the super-parent variant of tan_hc.
+Learns Bayesian network classifiers in a wrapper fashion.
 }
 \references{
 Pazzani M (1996). Constructive induction of Cartesian product

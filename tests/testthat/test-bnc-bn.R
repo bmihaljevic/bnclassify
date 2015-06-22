@@ -31,3 +31,8 @@ test_that(" Wrong data set", {
   tbdag <- bnc_dag(tbdag, class = 'class')
   expect_error(bnc_bn(tbdag, voting, smooth = 0)   , "colnames")
 })
+
+test_that(" Classes", {
+  a <- bnc_bn(nb('class', car), car, smooth = 0)   
+  expect_equal(classes(a), levels(car$class))
+})

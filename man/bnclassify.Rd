@@ -14,13 +14,14 @@ learners are not recommended in that case.
 \details{
 Structure learning algorithms \itemize{ \item Naive Bayes \code{\link{nb}}
 \item Tree augmented naive Bayes \code{\link{tan_cl}} \item Backward
-sequential elimination and joining \code{\link{bsej}} \item Forward
-sequential selection and joining \code{\link{fssj}} \item Hill-climbing tree
-augmented naive Bayes \code{\link{tan_hc}} \item Hill-climbing super-parent
-tree augmented naive Bayes \code{\link{tan_hcsp}}  }
+sequential elimination and joining \code{\link{bsej}} (Pazzani, 1996) \item
+Forward sequential selection and joining (Pazzani, 1996) \code{\link{fssj}}
+\item Hill-climbing tree augmented naive Bayes \code{\link{tan_hc}} \item
+Hill-climbing super-parent tree augmented naive Bayes \code{\link{tan_hcsp}}
+}
 
 Parameter estimation \itemize{ \item Attribute-weighted naive Bayes
-\code{\link{lp_awnb}} }
+\code{\link{lpawnb}} }
 }
 \references{
 Bielza C and Larranaga P (2014), Discrete Bayesian network

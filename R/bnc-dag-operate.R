@@ -1,7 +1,56 @@
-# supernodes: related ..
-# include_feature: include_node ...
-# add_feature_parents: relate_nodes
-# ===========================================================
+#' @export 
+#' @describeIn bnc_dag_object  Returns the number of arcs.
+narcs <- function(x) {
+  num_arcs(to_graphNEL(x))
+}
+#' @export 
+# @describeIn bnc_dag_object Plots the dag.  
+plot.bnc_dag <- function(x, y, layoutType='dot', ...) {
+  graph::plot(to_graphNEL(x))
+}
+#' Print basic information about a classifier.
+#' @export
+#' @keywords internal
+print.bnc_dag <- function(x, ...) {  
+  cat("\n  Bayesian network classifier\n\n")  
+  cat("  class variable:       ", class_var(x), "\n")
+  cat("  num. features:  ", length(features(x)), "\n")
+  cat("  arcs:  ", narcs(x), "\n")
+  if (!is.null(x$.call_struct)) {
+    cat("  learning algorithm:   ", as.character(x$.call_struct[[1]]), "\n")
+  }
+}
+#' @export 
+#' @describeIn bnc_dag_object Returns TRUE if \code{x} is a semi-naive Bayes.
+is_semi_naive <- function(x) {
+  if (!is_aug_nb(x)) return(FALSE)
+  warning(as.character(match.call()[[1]]), "Not implemented.")
+  TRUE
+}
+#' @export 
+#' @describeIn bnc_dag_object Returns TRUE if \code{x} is an augmented naive Bayes.
+is_aug_nb <- function(x) {
+  if (!is_dag_graph(to_graphNEL(x))) return(FALSE)
+  # Check call has no parents and class is in all families. This
+  # code assumes class is last in each family.
+  last <- unique(unlist(lapply(families(x), get_last)), use.names = FALSE)
+  identical(last, class_var(x))
+}
+#' @export 
+#' @describeIn bnc_dag_object Returns TRUE if \code{x} is a naive Bayes.
+is_nb <- function(x) {
+  is_kde(x, 0)
+}
+#' @export 
+#' @describeIn bnc_dag_object Returns TRUE if \code{x} is a one-dependence estimator.
+is_ode <- function(x) {
+  is_kde(x, 1)
+}
+is_kde <- function(x, k) {
+  if (!is_aug_nb(x)) return(FALSE)
+  fam_size  <- lengths(families(x), use.names = FALSE)
+  max(fam_size) <= k + 2
+}
 # Returns sets of non class-conditionally independent features
 not_cci <- function(x) {
   stopifnot(is_aug_nb(x))
@@ -36,43 +85,10 @@ remove_feature <- function(node, x) {
   g <- remove_node(node, to_graphNEL(x))
   bnc_dag(g, class_var(x))
 }
-narcs <- function(x) {
-  num_arcs(to_graphNEL(x))
-}
-#' @export 
-plot.bnc_dag <- function(x, y, layoutType='dot', ...) {
-  graph::plot(to_graphNEL(x))
-}
 is_supernode <- function(node, x) {
   warning("Not implemented")
   TRUE
 }
-# ========================
-# Type functions
-is_semi_naive <- function(x) {
-  if (!is_aug_nb(x)) return(FALSE)
-  warning(as.character(match.call()[[1]]), "Not implemented.")
-  TRUE
-}
-is_aug_nb <- function(x) {
-  if (!is_dag_graph(to_graphNEL(x))) return(FALSE)
-  # Check call has no parents and class is in all families. This
-  # code assumes class is last in each family.
-  last <- unique(unlist(lapply(families(x), get_last)), use.names = FALSE)
-  identical(last, class_var(x))
-}
-is_nb <- function(x) {
-  is_kde(x, 0)
-}
-is_ode <- function(x) {
-  is_kde(x, 1)
-}
-is_kde <- function(x, k) {
-  if (!is_aug_nb(x)) return(FALSE)
-  fam_size  <- lengths(families(x), use.names = FALSE)
-  max(fam_size) <= k + 2
-}
-# ========================
 # Keogh
 feature_orphans <- function(bnc_dag) {
   # Get the family of each feature 

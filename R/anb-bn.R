@@ -60,14 +60,19 @@ check_bnc_bn <- function(x) {
   stopifnot(identical(names(values(x)), names(vars(x))))
 }
 # Accessors 
+#' @export 
+#' @describeIn bnc_bn_object Returns the list of CPTs, in the same order as \code{\link{vars}}
 params <- function(x) {
   stopifnot(inherits(x, "bnc_bn"))  
   x$.params
 }
+#' @export 
+#' @describeIn bnc_bn_object Returns the possible values of each variable, in the same order as \code{\link{vars}}.
 values <- function(x) {
   cpt_vars_values(params(x))
 }
+#' @export 
+#' @describeIn bnc_bn_object Returns the possible values of the class variable.
 classes <- function(x) {
-  stopifnot(inherits(x, "bnc_bn"))  
-  cpt_vars_values(params(x))[[class_var(x)]]
+  values(x)[[class_var(x)]]
 }
