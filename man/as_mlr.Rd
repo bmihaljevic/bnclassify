@@ -2,11 +2,27 @@
 % Please edit documentation in R/wrap-mlr.R
 \name{as_mlr}
 \alias{as_mlr}
-\title{To mlr}
+\alias{makeRLearner.bnc}
+\alias{predictLearner.bnc}
+\title{Bridge to \code{mlr}}
 \usage{
+makeRLearner.bnc()
+
 as_mlr(x, dag, id = "1")
+
+predictLearner.bnc(.learner, .model, .newdata, ...)
+}
+\arguments{
+\item{x}{A \code{\link{bnc_bn}} object.}
+
+\item{dag}{A logical. Whether to repeat structure learning on each fold or
+just parameter learning.}
+
+\item{id}{A character.}
+
+\item{.learner,.task,.subset,.weights,.model,.newdata}{Internal.}
 }
 \description{
-To mlr
+Only \code{as_mlr} should be called by the user.
 }
 
