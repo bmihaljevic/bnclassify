@@ -23,13 +23,13 @@ print.bnc_dag <- function(x, ...) {
 #' @export 
 #' @describeIn bnc_dag_object Returns TRUE if \code{x} is a semi-naive Bayes.
 is_semi_naive <- function(x) {
-  if (!is_aug_nb(x)) return(FALSE)
+  if (!is_anb(x)) return(FALSE)
   warning(as.character(match.call()[[1]]), "Not implemented.")
   TRUE
 }
 #' @export 
 #' @describeIn bnc_dag_object Returns TRUE if \code{x} is an augmented naive Bayes.
-is_aug_nb <- function(x) {
+is_anb <- function(x) {
   if (!is_dag_graph(to_graphNEL(x))) return(FALSE)
   # Check call has no parents and class is in all families. This
   # code assumes class is last in each family.
@@ -47,18 +47,18 @@ is_ode <- function(x) {
   is_kde(x, 1)
 }
 is_kde <- function(x, k) {
-  if (!is_aug_nb(x)) return(FALSE)
+  if (!is_anb(x)) return(FALSE)
   fam_size  <- lengths(families(x), use.names = FALSE)
   max(fam_size) <= k + 2
 }
 # Returns sets of non class-conditionally independent features
 not_cci <- function(x) {
-  stopifnot(is_aug_nb(x))
+  stopifnot(is_anb(x))
   features <- subgraph(features(x), to_graphNEL(x))
   connected_components(features)
 }
 add_feature_parents <- function(parents, feature, x) {
-  stopifnot(is_aug_nb(x))  
+  stopifnot(is_anb(x))  
   g <- condition_on(parents, feature, to_graphNEL(x))
   bnc_dag(g, class_var(x))
 }
@@ -67,7 +67,7 @@ add_feature_children <- function(feature, parents, x) {
   add_feature_parents(parents, feature, x)
 }
 relate_supernodes <- function(child_sn, parent_sn, x) {
-  stopifnot(is_aug_nb(x))  
+  stopifnot(is_anb(x))  
 #   check child and parent are supernodes 
   stopifnot(is_supernode(child_sn, x), is_supernode(parent_sn, x))
   g <- condition_on(parent_sn, child_sn, to_graphNEL(x))

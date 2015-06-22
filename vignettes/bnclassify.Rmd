@@ -50,8 +50,8 @@ nb('class', car)
 <!-- You can learn with these functions ... -->
 
 ```{r}
-tan <- tan_bnc(class = 'class', dataset = car)
-tan_bic <- tan_bnc(class = 'class', dataset = car, score = 'bic')
+tan <- tan_cl(class = 'class', dataset = car)
+tan_bic <- tan_cl(class = 'class', dataset = car, score = 'bic')
 plot(tan)
 plot(tan_bic)
 ```
@@ -61,8 +61,8 @@ plot(tan_bic)
 Using cross-validation, we can use wrappers with the desired number of folds. 
 
 ```{r}
-a <- tanhc('class', car, k = 10, epsilon = 0, smooth = 1)
-b <- tanhc_sp('class', car, k = 10, epsilon = 0, smooth = 1)
+a <- tan_hc('class', car, k = 10, epsilon = 0, smooth = 1)
+b <- tan_hcsp('class', car, k = 10, epsilon = 0, smooth = 1)
 c <- bsej('class', car, k = 10, epsilon = 0, smooth = 1)
 d <- fssj('class', car, k = 10, epsilon = 0, smooth = 1)
 plot(a)
@@ -91,7 +91,7 @@ anb <- lpawnb(nb, car, smooth = 1, trees = 5, bootstrap_size = 0.5)
 
 It is intented for naive Bayes but you can also use it with other classifiers
 ```{r}
-t <- tan_bnc('class', car)
+t <- tan_cl('class', car)
 anb <- lpawnb(t, car, smooth = 1, trees = 5, bootstrap_size = 0.5)
 ```
 
@@ -99,8 +99,8 @@ anb <- lpawnb(t, car, smooth = 1, trees = 5, bootstrap_size = 0.5)
 You can also use the convenience `bnc()` function to do structure and parameter learning in a single call. 
 
 ```{r}
-a <- bnc('tan_bnc', 'class', car, smooth = 1)
-b <- lp(tan_bnc('class', car), car, smooth = 1)
+a <- bnc('tan_cl', 'class', car, smooth = 1)
+b <- lp(tan_cl('class', car), car, smooth = 1)
 identical(a, b)
 ```
 

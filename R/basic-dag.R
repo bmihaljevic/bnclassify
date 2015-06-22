@@ -19,7 +19,7 @@ parents <- function(x, g) {
   # return parents
   parents
 }
-#'  Gets the parents of a node in the graph
+#  Gets the parents of a node in the graph
 family <- function(x, g) {
   parents <- parents(x, g)
   stopifnot(is.character(parents))

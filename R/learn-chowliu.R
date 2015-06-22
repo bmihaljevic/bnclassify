@@ -1,9 +1,3 @@
-#' Chow-Liu ODE. 
-#' @param class character
-#' @param dataset data frame
-#' @param score character
-#' @param blacklist character matrix 
-#' @param root character   
 chowliu <- function(class, dataset, score='loglik', blacklist = NULL, 
                     root = NULL) {
 # Get pairwise scores   

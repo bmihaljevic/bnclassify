@@ -2,33 +2,65 @@ Package: bnclassify
 Title: Learning Bayesian Network Classifiers from Data
 Description: Algorithms for learning Bayesian network classifiers from data.
 Version: 0.2.0
-Authors@R: 
-    c(person("Mihaljevic","Bojan",email="bmihaljevic@fi.upm.es",role=c("aut","cre")),
+Authors@R: c(person("Mihaljevic","Bojan",email="bmihaljevic@fi.upm.es",role=c("aut","cre")),
     person("Bielza","Concha",email="mcbielza@fi.upm.es",role="aut"),
     person("Larranaga","Pedro",email="pedro.larranaga@fi.upm.es",role="aut"))
 URL: http://github.com/bmihaljevic/bnclassify
 BugReports: http://github.com/bmihaljevic/bnclassify/issues
-Depends: R (>= 3.2.0)
-Imports: assertthat (>= 0.1),
-         entropy(>= 1.2.0), 
-         crossval(>= 1.0.2),
-         graph(>= 1.42.0),
-         matrixStats(>= 0.14.0),
-         pryr(>= 0.1.1),
-         RBGL(>= 1.40.1), 
-         rpart(>= 4.1-8)
-Suggests: gRain(>= 1.2-3), 
-          gRbase(>= 1.7-0.1), 
-          mlr(>= 2.2), 
-          testthat(>= 0.8.1),
-          knitr(>= 1.10.5),
-          microbenchmark(>= 1.4-2),
-          ParamHelpers(>= 1.5),
-          Rgraphviz(>= 2.8.1),
-          rmarkdown(>= 0.7)
+Depends:
+    R (>= 3.2.0)
+Imports:
+    assertthat (>= 0.1),
+    entropy(>= 1.2.0),
+    crossval(>= 1.0.2),
+    graph(>= 1.42.0),
+    matrixStats(>= 0.14.0),
+    pryr(>= 0.1.1),
+    RBGL(>= 1.40.1),
+    rpart(>= 4.1-8)
+Suggests:
+    gRain(>= 1.2-3),
+    gRbase(>= 1.7-0.1),
+    mlr(>= 2.2),
+    testthat(>= 0.8.1),
+    knitr(>= 1.10.5),
+    microbenchmark(>= 1.4-2),
+    ParamHelpers(>= 1.5),
+    Rgraphviz(>= 2.8.1),
+    rmarkdown(>= 0.7)
 License: GPL (>= 2)
 Author: Mihaljevic Bojan [aut, cre],
-  Bielza Concha [aut],
-  Larranaga Pedro [aut]
+    Bielza Concha [aut],
+    Larranaga Pedro [aut]
 Maintainer: Mihaljevic Bojan <bmihaljevic@fi.upm.es>
 VignetteBuilder: knitr
+Collate:
+    'bnclassify-doc.R'
+    'anb-bn.R'
+    'anb-cpts.R'
+    'anb-dag.R'
+    'aug-nb-families.R'
+    'aug-nb-lucp.R'
+    'basic-assert.R'
+    'basic-dag.R'
+    'basic-families.R'
+    'basic-graph.R'
+    'basic-misc.R'
+    'basic-probs.R'
+    'bnc-bn-inference.R'
+    'bnc-dag-operate.R'
+    'data-input.R'
+    'data-statistics.R'
+    'learn-chowliu.R'
+    'learn-hc-operators.R'
+    'learn-hc.R'
+    'learn-params-awnb.R'
+    'learn-params.R'
+    'learn-struct.R'
+    'multi.R'
+    'predict.R'
+    'update.R'
+    'wrap-crossval.R'
+    'wrap-gRain.R'
+    'wrap-mlr.R'
+    'wrap-rpart.R'

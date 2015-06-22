@@ -6,7 +6,7 @@
 \alias{families}
 \alias{feature_families}
 \alias{features}
-\alias{is_aug_nb}
+\alias{is_anb}
 \alias{is_nb}
 \alias{is_ode}
 \alias{is_semi_naive}
@@ -31,7 +31,7 @@ narcs(x)
 
 is_semi_naive(x)
 
-is_aug_nb(x)
+is_anb(x)
 
 is_nb(x)
 
@@ -58,7 +58,7 @@ You can query this object using the following functions.
 
 \item \code{is_semi_naive}: Returns TRUE if \code{x} is a semi-naive Bayes.
 
-\item \code{is_aug_nb}: Returns TRUE if \code{x} is an augmented naive Bayes.
+\item \code{is_anb}: Returns TRUE if \code{x} is an augmented naive Bayes.
 
 \item \code{is_nb}: Returns TRUE if \code{x} is a naive Bayes.
 
