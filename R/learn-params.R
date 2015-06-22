@@ -1,18 +1,30 @@
+#' Learn a structure and parameters.
+#' 
+#' A convenience function to learn the structure and parameters in a single
+#' call.
+#' 
+#' @inheritParams nb
+#' @inheritParams learn_params
+#' @param dag_learner A character. Name of the structure learning function.
+#' @param dag_args A list. Optional additional arguments to \code{dag_learner}.
+#' @param dataset The data frame from which to learn network structure and
+#'   parameters.
 #' @export
-bnc <- function(dag_learner, class, dataset, smooth) {
+bnc <- function(dag_learner, class, dataset, smooth, dag_args = NULL) {
   # It is easier to handle a funct. name than a funct. object in save_bnc_call
   stopifnot(assertthat::is.string(dag_learner))
-  dag <- do.call(dag_learner, list(class = class, dataset = dataset))
+  dag_args <- append(list(class = class, dataset = dataset), dag_args)
+  dag <- do.call(dag_learner, dag_args)
   lp(dag, dataset = dataset, smooth = smooth)
 }
-#' Learn parameters.
 #' @export
+#' @rdname learn_params
 lp <- function(x, dataset, smooth) {
   bn <- bnc_bn(x, dataset, smooth)
   add_params_call_arg(bn, call = match.call(), env = parent.frame(), force = TRUE)
 }
 #' @export
-#' @seealso \link{awnb}
+#' @rdname learn_params
 lpawnb <- function(x, dataset, smooth, trees, bootstrap_size) {
   bn <- bnc_bn(x, dataset, smooth)
   weights <- awnb(class_var(bn), dataset = dataset, trees = trees, 

@@ -35,8 +35,7 @@ map <- function(pred) {
 #' @param k An integer. The number of folds.
 #' @param dag A logical. Whether to repeat structure learning on each fold or 
 #'   just parameter learning.
-#' @param smooth A numeric. The smoothing value for Bayesian parameter 
-#'   estimation.
+#' @inheritParams learn_params
 #' @export
 #' @return A numeric vector. The predictive accuracy of each classifier in
 #'   \code{x}.

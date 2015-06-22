@@ -40,7 +40,7 @@ NULL
 #' @inheritParams nb 
 #' @param epsilon A numeric. Minimum absolute improvement required to keep 
 #'   searching.
-#' @inheritParams cv 
+#' @inheritParams learn_params 
 #'   
 #' @references Pazzani M (1996). Constructive induction of Cartesian product 
 #'   attributes. In \emph{Proceedings of the Information, Statistics and 
@@ -75,4 +75,22 @@ NULL
 #'   
 #' @references Friedman N, Geiger D and Goldszmidt M (1997). Bayesian network 
 #'   classifiers. \emph{Machine Learning}, \bold{29}, pp. 131--163.
+NULL
+
+#' Learn the parameters of a Bayesian network structure.
+#' 
+#' \code{lpawnb} weights the features' CPTs according to the AWNB method.
+#' 
+#' @name learn_params
+#'   
+#' @param x a \code{\link{bnc_dag}} object. The Bayesian network structure.
+#' @param dataset The data frame from which to estimate network parameters.
+#' @param smooth A nonnegative numeric. The smoothing value for Bayesian 
+#'   parameter estimation.
+#' @param trees An integer. The number of bootstrap samples to generate.
+#' @param bootstrap_size A numeric. The size of the bootstrap subsample,
+#'   relative to the size of \code{dataset} (given in [0,1]).
+#' @references Mark Hall (2004). A decision tree-based attribute weighting 
+#'   filter for naive Bayes. \emph{Knowledge-based Systems}, \bold{20}(2), 
+#'   120-126.
 NULL

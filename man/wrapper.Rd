@@ -21,13 +21,11 @@ tanhc_sp(class, dataset, k, epsilon = 0.01, smooth = 0.01)
 
 \item{dataset}{The data frame from which to learn the classifier.}
 
-\item{k}{An integer. The number of folds.}
-
 \item{epsilon}{A numeric. Minimum absolute improvement required to keep
 searching.}
 
-\item{smooth}{A numeric. The smoothing value for Bayesian parameter
-estimation.}
+\item{smooth}{A nonnegative numeric. The smoothing value for Bayesian
+parameter estimation.}
 }
 \description{
 bsej is the backward \emph{sequential elimination and joining} algorithm

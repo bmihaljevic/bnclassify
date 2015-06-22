@@ -16,8 +16,8 @@ cv(x, dataset, k, dag, smooth = NULL)
 \item{dag}{A logical. Whether to repeat structure learning on each fold or
 just parameter learning.}
 
-\item{smooth}{A numeric. The smoothing value for Bayesian parameter
-estimation.}
+\item{smooth}{A nonnegative numeric. The smoothing value for Bayesian
+parameter estimation.}
 }
 \value{
 A numeric vector. The predictive accuracy of each classifier in

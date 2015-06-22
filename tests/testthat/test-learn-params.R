@@ -47,3 +47,9 @@ test_that('bnc function nominal', {
   b <- lp(nb('class', car), car, smooth = 1)
   expect_identical(a, b)
 })
+
+test_that('bnc with args', {
+  a <- bnc('tan_cl', 'class', car, smooth = 1, dag_args = list(root = 'safety'))
+  b <- lp(tan_cl('class', car, root = 'safety'), car, smooth = 1)
+  expect_identical(a, b)
+})
