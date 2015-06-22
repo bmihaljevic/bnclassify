@@ -6,14 +6,44 @@
 \alias{bnclassify-package}
 \title{Algorithms for learning Bayesian network classifiers from data.}
 \description{
-Algorithms for learning Bayesian network classifiers from data.
+The bnclassify package implements algorithms for learning discrete Bayesian
+networks from data. Learning can be performed on both complete and incomplete
+data whereas prediction is much slower in the latter case and thus wrapper
+learners are not recommended in that case.
+}
+\details{
+Structure learning algorithms \itemize{ \item Naive Bayes \code{\link{nb}}
+\item Tree augmented naive Bayes \code{\link{tan_cl}} \item Backward
+sequential elimination and joining \code{\link{bsej}} \item Forward
+sequential selection and joining \code{\link{fssj}} \item Hill-climbing tree
+augmented naive Bayes \code{\link{tan_hc}} \item Hill-climbing super-parent
+tree augmented naive Bayes \code{\link{tan_hcsp}}  }
+
+Parameter estimation \itemize{ \item Attribute-weighted naive Bayes
+\code{\link{lp_awnb}} }
 }
 \references{
-Bielza C and Larra\~{n}aga P (2014), Discrete Bayesian network
+Bielza C and Larranaga P (2014), Discrete Bayesian network
   classifiers: A survey. \emph{ACM Computing Surveys}, \bold{47}(1), Article
   5.
 
   Friedman N, Geiger D and Goldszmidt M (1997). Bayesian network classifiers.
   \emph{Machine Learning}, \bold{29}, pp. 131--163.
+
+  Hall M (2007). A decision tree-based attribute weighting filter for naive
+  Bayes. \emph{Knowledge-Based Systems}, \bold{20}(2), pp. 120-126.
+
+  Pazzani M (1996). Constructive induction of Cartesian product attributes.
+  In \emph{Proceedings of the Information, Statistics and Induction in
+  Science Conference (ISIS-1996)}, pp. 66-77
+
+  Koegh E and Pazzani M (2002).Learning the structure of augmented Bayesian
+  classifiers. In \emph{International Journal on Artificial Intelligence
+  Tools}, \bold{11}(4), pp. 587-601.
+
+  Blanco R and Inza I and Merino M and Quiroga J and Larranaga P (2005),
+  Feature selection in Bayesian classifiers for the prognosis of survival of
+  cirrhotic patients treated with TIPS. \emph{Journal of Biomedical
+  Informatics}, \bold{38}(5), pp. 376--388.
 }
 
