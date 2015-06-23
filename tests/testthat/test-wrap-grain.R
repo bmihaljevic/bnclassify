@@ -1,9 +1,7 @@
 context("grain")
 
 test_that("nominal unnormalized class posterior instance", { 
-  if (!requireNamespace("gRain", quietly = TRUE)) {
-    skip("Requires gRain")
-  }
+  skip_if_not_installed('gRain')
   a <- nbvote()
   g <- as_grain(a)
   vc <- as.matrix(voting)
@@ -14,9 +12,7 @@ test_that("nominal unnormalized class posterior instance", {
 })
 
 test_that(" unnormalized class posterior instance with no evidence", { 
-  if (!requireNamespace("gRain", quietly = TRUE)) {
-    skip("Requires gRain")
-  }
+  skip_if_not_installed('gRain')
   a <- nbvote()
   g <- as_grain(a)
   vc <- as.matrix(voting)
@@ -29,9 +25,7 @@ test_that(" unnormalized class posterior instance with no evidence", {
 })
 
 test_that("cpts to grain", {
-  if (!requireNamespace("gRain", quietly = TRUE)) {
-    skip("Requires gRain")
-  }
+  skip_if_not_installed('gRain')
   a <- nbvote()
   g <- compile_grain(params(a))
   # Check compiled

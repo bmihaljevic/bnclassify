@@ -1,6 +1,7 @@
 context("predict")
 
 test_that("Maximum a posteriori", {  
+  skip_if_not_installed('gRain')
   h <- nbvote()
   pred <- predict(h, voting, prob = TRUE)
   p <- map(pred)
@@ -51,6 +52,7 @@ test_that("Fast structure fitting with smooth", {
 })
 
 test_that("CV a wrapper", {
+  skip_on_cran()
   t <- tan_hc('class', car, k = 2, epsilon = 0, smooth = 0.01)
   t <- lp(t, car, smooth = 0.01)
   r <- cv(t, car, k = 2, dag = TRUE)
@@ -58,6 +60,7 @@ test_that("CV a wrapper", {
 })
 
 test_that("correct cv result", {
+  skip_on_cran()
   t <- tan_hc('class', car, k = 5, epsilon = 0, smooth = 0.12)
   t <- lp(t, car, smooth = 0.01)
   set.seed(0)
@@ -66,6 +69,7 @@ test_that("correct cv result", {
 })
 
 test_that("correct cv result with missing data", {
+  skip_on_cran()
   nb <- nbvote()
   set.seed(0)
   s <- cv(nb, voting, k = 5, dag = TRUE)

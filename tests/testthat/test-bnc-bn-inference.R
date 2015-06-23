@@ -14,18 +14,14 @@ test_that("Complete data set ", {
 })
 
 test_that("Incomplete data set", {
-  if (!requireNamespace("gRain", quietly = TRUE)) {
-    skip("Requires gRain")
-  }
+  skip_if_not_installed('gRain')
   t <- nbvote()
   a <- compute_cp(x = t, voting)
   check_cp(a, nrow(voting), levels(voting$Class))
 })
 
 test_that("Just the class with incomplete data set", {
-  if (!requireNamespace("gRain", quietly = TRUE)) {
-    skip("Requires gRain")
-  }
+  skip_if_not_installed('gRain')
   nb <- bnc_bn(nb('Class', voting[, 17, drop = FALSE]), voting,smooth = 0)
   a <- compute_cp(x = nb, voting)
   check_cp(a, nrow(voting), levels(voting$Class))
@@ -34,9 +30,7 @@ test_that("Just the class with incomplete data set", {
 })
 
 test_that("Single feature with incomplete data", {
-  if (!requireNamespace("gRain", quietly = TRUE)) {
-    skip("Requires gRain")
-  }
+  skip_if_not_installed('gRain')
   nb <- lp(nb(class = 'Class', v[, c('crime', 'Class'), drop = FALSE]), v, 
            smooth = 0.01)
   p <- compute_cp(x=nb, v)
@@ -45,9 +39,7 @@ test_that("Single feature with incomplete data", {
 
 
 test_that("No rows returns empty matrix", {
-  if (!requireNamespace("gRain", quietly = TRUE)) {
-    skip("Requires gRain")
-  }
+  skip_if_not_installed('gRain')
   nb <- nbvote()
   a <- compute_cp(x=nb, voting[FALSE, ])
   check_cp(a, 0L, levels(voting$Class))
@@ -65,9 +57,7 @@ test_that("Complete with incomplete data", {
 
  
 test_that("All incomplete rows", {
-  if (!requireNamespace("gRain", quietly = TRUE)) {
-    skip("Requires gRain")
-  }
+  skip_if_not_installed('gRain')
   a <- nbvote()
   vna <- voting[!complete.cases(voting), -17]
   cp <- compute_ulcp_incomplete(a, vna)

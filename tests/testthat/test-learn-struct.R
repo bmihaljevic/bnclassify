@@ -17,6 +17,7 @@ test_that("nb No features ", {
 })
 
 test_that("fssj nominal", {
+  skip_on_cran()
   set.seed(0)
   f <- fssj('class', dataset = car, k = 10, epsilon = 0.01)
   expect_equal(features(f), character())
@@ -26,6 +27,7 @@ test_that("fssj nominal", {
 })
 
 test_that("bsej nominal", {
+  skip_on_cran()
   set.seed(0)
   f <- bsej('class', dataset = car, k = 10, epsilon = 0.01)
   expect_equal(features(f), colnames(car)[-7])
@@ -41,6 +43,7 @@ test_that("bsej nominal", {
 })
 
 test_that("tan_hc nominal", {
+  skip_on_cran()
   set.seed(0)
   t <- tan_hc('class', dataset = car, k = 10, epsilon = 0)
   expect_equal(length(features(t)), 6)
@@ -48,6 +51,8 @@ test_that("tan_hc nominal", {
 })
 
 test_that("tanhc sp nominal", {
+  skip_on_cran()
+  skip_on_cran()
   set.seed(0)
   t <- tan_hcsp('class', dataset = car, k = 10, epsilon = 0)
   expect_equal(length(features(t)), 6)

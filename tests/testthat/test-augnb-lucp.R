@@ -36,6 +36,8 @@ test_that("make cpt inds", {
 })
 
 test_that("matches grain", {
+  skip_on_cran()
+  skip_if_not_installed('gRain')
   tn <- nbcar()
   b <- compute_augnb_luccpx(tn, car)
   g <- as_grain(tn)
