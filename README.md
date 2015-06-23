@@ -11,7 +11,7 @@ Make sure you have at least version 3.1.0 of R.
 
 ```{r}
 source("http://bioconductor.org/biocLite.R")
-biocLite(c("graph", "RBGL", "Rgraphviz")
+biocLite(c("graph", "RBGL", "Rgraphviz"))
 install.packages('devtools')
 devtools::install_github('bmihaljevic/bnclassify', build_vignettes = TRUE)
 #devtools::install_github('bmihaljevic/bnclassify')
