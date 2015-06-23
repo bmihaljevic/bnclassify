@@ -7,6 +7,8 @@ The bnclassify package implements algorithms for learning discrete Bayesian netw
 
 ## Install
 
+Make sure you have at least version 3.1.0 of R. 
+
 ```{r}
 source("http://bioconductor.org/biocLite.R")
 biocLite(c("graph", "RBGL", "Rgraphviz")
