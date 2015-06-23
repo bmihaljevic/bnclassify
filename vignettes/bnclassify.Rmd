@@ -5,6 +5,7 @@ date: "`r Sys.Date()`"
 output: 
   rmarkdown::pdf_document:
     toc: true
+    number_sections: true
 fontsize: 11pt
 vignette: >
   %\VignetteIndexEntry{bnclassify}
@@ -16,11 +17,11 @@ vignette: >
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 ```
 
-## Introduction
+# Introduction
 The `bnclassify` package implements algorithms for learning discrete Bayesian 
 network classifiers from data. It can handle incomplete in both learning and prediction, although prediction is extremely slow in this setting which makes use of wrapper classifiers not recommended with incomplete data. For the full list of implemented algorithms see the package documentation, `?bnclassify`. 
 
-## An example
+# An example
 The following shows the main functionalities:
 ```{r}
 library(bnclassify)
@@ -61,7 +62,7 @@ or estimate the classifier's predictive accuracy
 cv(b, car, k = 10, dag = FALSE)
 ```
 
-## Structure learning with the Chow-Liu algorithm
+# Structure learning with the Chow-Liu algorithm
 For some network scores, the Chow-Liu algorithm can learn optimal tree-like (i.e., each feature has at most one feature parent) Bayesian network classifiers in time quadratic in the number of features. For three such scores, the log-likelihood, the BIC and the AIC, the `tan_cl` function learns the Bayesian network classifier using the Chow-Liu algorithm.
 
 ```{r}
@@ -81,7 +82,7 @@ is_nb(tb)
 
 Note that the BIC did not consider any arc worthwhile of inclusion. Log-likelihood, on the other hand, always returns the maximal tree-like network. 
 
-## Wrapper structure learning
+# Wrapper structure learning
 Wrapper methods learn classifiers by searching in the space of structures and scoring them according to predictive performance. While this can yield accurate classifiers it can also be very time-consuming. 
 
 Below are examples of four wrapper learning algoithms with 10-fold cross validation scoring.
@@ -110,7 +111,7 @@ plot(c)
 plot(d)
 ```
 
-## Parameter estimation
+# Parameter estimation
 You may use the `bnc()` function as shorthand for the chained application of structure learning and `lp()`.
 ```{r}
 a <- tan_cl('class', car, score = 'aic')
@@ -137,12 +138,12 @@ params(t)$buying
 params(ta)$buying
 ```
 
-### Incomplete data
+# Incomplete data
 When estimating a CPT, all entries incomplete for the variables of the CPT are simply ignored. 
 
-## Predicting 
+# Predicting 
 
-### 0 probabilities
+## 0 probabilities
 If for some instance there is 0 probability for each class, then a uniform distribution over the classes is returned (not the class prior). 
 
 ```{r}
@@ -151,7 +152,7 @@ nb <- lp(nb, car[c(1, 700), ], smooth = 0)
 predict(object = nb, newdata = car[1000:1001, ], prob = TRUE)
 ```
 
-### Incomplete data
+## Incomplete data
 For each instance that has missing (`NA`) values, the `gRain` package is used for prediction due to its full implementation of inference for Bayesian networks. However, this prediction is much slower than the one implemented for complete data by the `bnclassify` package. 
 
 
@@ -176,7 +177,7 @@ car_cv[1, 4] <- NA
 microbenchmark::microbenchmark(cv(a, car_cv, k = 2, dag = FALSE), times = 3e1)
 ```
 
-## Cross-validation
+# Cross-validation
 To perform cross valiation, just pass a classifier (or a list of them) to the 'cv' function.
 
 
@@ -208,7 +209,7 @@ microbenchmark(r <- cv(list(a, b, d), car, k = 10, dag = FALSE, smooth = 1))
 r
 ```
 
-## Selecting features 
+# Selecting features 
 
 Some of the implemented algorithms, such as the `fssj` and `bsej` perform implicit feature selection. An 'outer' loop of feature selection is best done with another package; here we provide an example using `mlr`. 
 
@@ -228,7 +229,7 @@ sfeats$x
 detach('package:mlr')
 ```
 
-## Analyzing network structure
+# Analyzing network structure
 
 `gRbase` and `bnlearn` provide multiple functionalities for queries and manipulating Bayesian network structures. We can convert a `bnc_bn_object` to their formats via the `as_grain()` function. 
 
