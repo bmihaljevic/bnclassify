@@ -8,7 +8,7 @@ Authors@R: c(person("Mihaljevic","Bojan",email="bmihaljevic@fi.upm.es",role=c("a
 URL: http://github.com/bmihaljevic/bnclassify
 BugReports: http://github.com/bmihaljevic/bnclassify/issues
 Depends:
-    R (>= 3.2.0)
+    R (>= 3.1.0)
 Imports:
     assertthat (>= 0.1),
     entropy(>= 1.2.0),

@@ -8,9 +8,11 @@ The bnclassify package implements algorithms for learning discrete Bayesian netw
 ## Install
 
 ```{r}
+source("http://bioconductor.org/biocLite.R")
+biocLite(c("graph", "RBGL", "Rgraphviz")
 install.packages('devtools')
-devtools::install_github('bmihaljevic/bnclassify')
-#devtools::install_github('bmihaljevic/bnclassify', build_vignettes = TRUE)
+devtools::install_github('bmihaljevic/bnclassify', build_vignettes = TRUE)
+#devtools::install_github('bmihaljevic/bnclassify')
 ```
 
 ## Use

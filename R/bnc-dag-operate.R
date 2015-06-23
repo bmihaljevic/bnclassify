@@ -6,6 +6,9 @@ narcs <- function(x) {
 #' @export 
 # @describeIn bnc_dag_object Plots the dag.  
 plot.bnc_dag <- function(x, y, layoutType='dot', ...) {
+  if (!requireNamespace("Rgraphviz", quietly = TRUE)) {
+    stop("Rgraphviz needed ", call. = FALSE)
+  }
   graph::plot(as_graphNEL(x))
 }
 #' Print basic information about a classifier.
