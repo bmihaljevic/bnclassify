@@ -1,0 +1,242 @@
+---
+title: "bnclassify"
+author: "Bojan Mihaljevic, Concha Bielza, Pedro Larranaga"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::pdf_document:
+    toc: true
+fontsize: 11pt
+vignette: >
+  %\VignetteIndexEntry{bnclassify}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+## Introduction
+The `bnclassify` package implements algorithms for learning discrete Bayesian 
+network classifiers from data. It can handle incomplete in both learning and prediction, although prediction is extremely slow in this setting which makes use of wrapper classifiers not recommended with incomplete data. For the full list of implemented algorithms see the package documentation, `?bnclassify`. 
+
+## An example
+The following shows the main functionalities:
+```{r}
+library(bnclassify)
+data(car)
+summary(car)
+a <- nb('class', car)
+a
+```
+
+In the above, we have learned a classifier from the `car` dataset. We now can, for example, query for its features, ask whether it is a naive Bayes, or plot its network structure.
+```{r}
+features(a)
+is_nb(a)
+```
+
+```{r}
+plot(a)
+```
+For more functions to query the classifier structure object, use `?bnc_dag_object`.
+
+So far we only have the network structure and we need to learn the parameters before we can do anything useful.  
+
+```{r}
+b <- lp(a, car, smooth = 1)
+params(b)
+```
+
+The above shows as the CPT of each variable, including the class. 
+
+Now we can use predict the class of unseen data (in this example it is not unseen)
+```{r}
+p <- predict(b, car)
+head(p)
+```
+
+or estimate the classifier's predictive accuracy
+```{r}
+cv(b, car, k = 10, dag = FALSE)
+```
+
+## Structure learning with the Chow-Liu algorithm
+For some network scores, the Chow-Liu algorithm can learn optimal tree-like (i.e., each feature has at most one feature parent) Bayesian network classifiers in time quadratic in the number of features. For three such scores, the log-likelihood, the BIC and the AIC, the `tan_cl` function learns the Bayesian network classifier using the Chow-Liu algorithm.
+
+```{r}
+t <- tan_cl(class = 'class', dataset = car)
+tb <- tan_cl(class = 'class', dataset = car, score = 'bic')
+plot(t)
+plot(tb)
+```
+
+
+```{r}
+is_ode(t)
+is_nb(t)
+is_ode(tb)
+is_nb(tb)
+```
+
+Note that the BIC did not consider any arc worthwhile of inclusion. Log-likelihood, on the other hand, always returns the maximal tree-like network. 
+
+## Wrapper structure learning
+Wrapper methods learn classifiers by searching in the space of structures and scoring them according to predictive performance. While this can yield accurate classifiers it can also be very time-consuming. 
+
+Below are examples of four wrapper learning algoithms with 10-fold cross validation scoring.
+
+```{r}
+set.seed(0)
+a <- tan_hc('class', car, k = 10, epsilon = 0, smooth = 1)
+b <- tan_hcsp('class', car, k = 10, epsilon = 0, smooth = 1)
+c <- bsej('class', car, k = 10, epsilon = 0, smooth = 1)
+d <- fssj('class', car, k = 10, epsilon = 0, smooth = 1)
+```
+
+
+```{r}
+is_ode(a)
+is_ode(b)
+is_ode(c)
+is_ode(d)
+is_semi_naive(a)
+is_semi_naive(b)
+is_semi_naive(c)
+is_semi_naive(b)
+plot(a)
+plot(b)
+plot(c)
+plot(d)
+```
+
+## Parameter estimation
+You may use the `bnc()` function as shorthand for the chained application of structure learning and `lp()`.
+```{r}
+a <- tan_cl('class', car, score = 'aic')
+a <- lp(a, car, smooth = 1)
+b <- bnc('tan_cl', 'class', car, smooth = 1, dag_args = list(score = 'aic'))
+identical(a, b)
+```
+
+An alternative method for estimating parameters is the attribute weighted naive Bayes, which exponenties each features' CPT entries by a value between 0 and 1. The `lpawnb` function extends `lp` to allow for this.
+
+```{r}
+a <- nb('class', car)
+b <- lp(a, car, smooth = 1)
+c <- lpawnb(a, car, smooth = 1, trees = 20, bootstrap_size = 0.5)
+sum(abs(params(b)$safety - params(c)$safety))
+```
+
+AWNB is intented for naive Bayes but you can use it with other classifiers
+```{r}
+t <- tan_cl('class', car)
+t <- lp(t, dataset = car, smooth = 1)
+ta <- lpawnb(t, car, smooth = 1, trees = 10, bootstrap_size = 0.5)
+params(t)$buying
+params(ta)$buying
+```
+
+### Incomplete data
+When estimating a CPT, all entries incomplete for the variables of the CPT are simply ignored. 
+
+## Predicting 
+
+### 0 probabilities
+If for some instance there is 0 probability for each class, then a uniform distribution over the classes is returned (not the class prior). 
+
+```{r}
+nb <- nb('class', car)
+nb <- lp(nb, car[c(1, 700), ], smooth = 0)
+predict(object = nb, newdata = car[1000:1001, ], prob = TRUE)
+```
+
+### Incomplete data
+For each instance that has missing (`NA`) values, the `gRain` package is used for prediction due to its full implementation of inference for Bayesian networks. However, this prediction is much slower than the one implemented for complete data by the `bnclassify` package. 
+
+
+```{r}
+library(microbenchmark)
+nb <- nb('class', car)
+nb <- lp(nb, car, smooth = 0)
+gr <- as_grain(nb)
+microbenchmark(predict(object = nb, newdata = car, prob = TRUE))
+microbenchmark(gRain::predict.grain(gr, 'class', newdata = car),
+                               times = 1)
+```
+
+With even a single missing value in the data set, the prediction can become notably slower. This is relevant when performing cross validation, such is in wrapper learning.
+
+```{r}
+a <- bnc('nb', 'class', car, smooth = 1)
+car_cv <- car[1:300, ]
+microbenchmark::microbenchmark(cv(a, car_cv, k = 2, dag = FALSE), times = 3e1)
+
+car_cv[1, 4] <- NA
+microbenchmark::microbenchmark(cv(a, car_cv, k = 2, dag = FALSE), times = 3e1)
+```
+
+## Cross-validation
+To perform cross valiation, just pass a classifier (or a list of them) to the 'cv' function.
+
+
+```{r}
+data(voting)
+dag <- nb('Class', voting)
+a <- lp(dag, voting, smooth = 1)
+b <- lpawnb(dag, voting, smooth = 1, trees = 40, bootstrap_size = 0.5)
+c <- bnc('tan_cl', 'Class', voting,  smooth = 1)
+r <- cv(list(a, b, c), voting, k = 3, dag = FALSE)
+r
+```
+
+The `dag` arguments indicates whether you want to perform both structure and parameter learning on each fold or just parameter learnig. 
+
+The `bnclassify` package implements rather fast cross validation by taking advantange of the modularity of Bayesian networks. Namely, two networks over the some domain may have shared local distributions; these distributions are only fitted from data and accessed onces when evaluating multiple structures.
+
+In this example evaluating multiple is a relatively little more costly than evaluating the largest among them (it contains all the CPTs in the other structures).
+
+```{r}
+a <- lp(nb('class', car), car, smooth = 1)	
+b <- lp(nb('class', car[, 'class', drop = FALSE]), car, smooth = 1)
+d <- lp(nb('class', car[, c(sample(1:6, 4), 7), drop = FALSE]), car, smooth = 1)	
+set.seed(0)
+microbenchmark(r <- cv(a, car, k = 10, dag = FALSE, smooth = 1))
+r
+set.seed(0)
+microbenchmark(r <- cv(list(a, b, d), car, k = 10, dag = FALSE, smooth = 1))
+r
+```
+
+## Selecting features 
+
+Some of the implemented algorithms, such as the `fssj` and `bsej` perform implicit feature selection. An 'outer' loop of feature selection is best done with another package; here we provide an example using `mlr`. 
+
+If you have mlr installed, you just need to call `as_mlr()` to convert a classifier to an mlr *learner* use mlr functions: select features, resample, etc.
+
+```{r}
+library(mlr)
+ctrl = makeFeatSelControlSequential(alpha = 0, method = "sfs")
+rdesc = makeResampleDesc(method = "Holdout")
+ct <- mlr::makeClassifTask(id = "compare", data = car, target = 'class', 
+                        fixup.data = "no", check.data = FALSE)  
+nf <- lp(nb('class', car), car, 1)
+bnl <- as_mlr(nf, dag = TRUE)
+sfeats = selectFeatures(learner = bnl, task = ct, resampling = rdesc,
+                      control = ctrl, show.info = FALSE)
+sfeats$x
+detach('package:mlr')
+```
+
+## Analyze network structure
+
+`gRbase` and `bnlearn` provide multiple functionalities for queries and manipulating Bayesian network structures. We can convert a `bnc_bn_object` to their formats via the `as_grain()` function. 
+
+```{r}
+if (!requireNamespace("gRain", quietly = TRUE)) {
+    stop("gRain needed ", call. = FALSE)
+  }
+a <- lp(nb('class', car), car, smooth = 1)
+g <- as_grain(a)
+gRain::querygrain.grain(g)
+```
