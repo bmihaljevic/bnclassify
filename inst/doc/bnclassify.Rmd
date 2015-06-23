@@ -103,7 +103,7 @@ is_ode(d)
 is_semi_naive(a)
 is_semi_naive(b)
 is_semi_naive(c)
-is_semi_naive(b)
+is_semi_naive(d)
 plot(a)
 plot(b)
 plot(c)
@@ -228,7 +228,7 @@ sfeats$x
 detach('package:mlr')
 ```
 
-## Analyze network structure
+## Analyzing network structure
 
 `gRbase` and `bnlearn` provide multiple functionalities for queries and manipulating Bayesian network structures. We can convert a `bnc_bn_object` to their formats via the `as_grain()` function. 
 

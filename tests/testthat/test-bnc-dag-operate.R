@@ -41,7 +41,15 @@ test_that("is supernode class var", {
   expect_error(is_supernode('class', nb), "class")
 })
 
+test_that("is_semi_naive just class", {
+  nb <- nbcarclass()
+  expect_true(is_semi_naive(nb))
+})
 
+test_that("is_semi_naive naive Bayes", {
+  nb <- nbcar()
+  expect_true(is_semi_naive(nb))
+})
 
 test_that("include node nominal", {
   nb <- nbcarclass()
