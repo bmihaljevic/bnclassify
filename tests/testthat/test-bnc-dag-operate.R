@@ -21,6 +21,28 @@ test_that("not cci no features", {
   expect_null(s)
 })
 
+test_that("is supernode single node", {
+  nb <- nbcar()
+  expect_true(is_supernode('safety', nb))
+})
+
+test_that("is supernode two nodes not supernode", {
+  nb <- nbcar()
+  expect_true(!is_supernode(c('safety', 'buying'), nb))
+})
+
+test_that("is supernode two nodes supernode", {
+  t <- tan_cl('class', car)
+  expect_true(is_supernode(c('safety', 'buying'), t))
+})
+
+test_that("is supernode class var", {
+  nb <- nbcarclass()
+  expect_error(is_supernode('class', nb), "class")
+})
+
+
+
 test_that("include node nominal", {
   nb <- nbcarclass()
   a <- add_feature('safety', nb)
@@ -69,8 +91,3 @@ test_that("feature orphans ode", {
   expect_equal(o, 'lug_boot')
 })
 
-# Remove non dags.
-# Ensure all are ODE.
-
-# Cannot introduce cycles!!
-# An orphan may have children. If the child is descendant then it is not good.

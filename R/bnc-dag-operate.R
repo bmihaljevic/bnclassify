@@ -24,8 +24,8 @@ print.bnc_dag <- function(x, ...) {
 #' @describeIn bnc_dag_object Returns TRUE if \code{x} is a semi-naive Bayes.
 is_semi_naive <- function(x) {
   if (!is_anb(x)) return(FALSE)
-  warning(as.character(match.call()[[1]]), "Not implemented.")
-  TRUE
+  nc <- not_cci(x)
+  all(vapply(nc, is_supernode, x, FUN.VALUE = logical(1)))
 }
 #' @export 
 #' @describeIn bnc_dag_object Returns TRUE if \code{x} is an augmented naive Bayes.
@@ -85,9 +85,13 @@ remove_feature <- function(node, x) {
   g <- remove_node(node, as_graphNEL(x))
   bnc_dag(g, class_var(x))
 }
-is_supernode <- function(node, x) {
-  warning("Not implemented")
-  TRUE
+is_supernode <- function(nodes, x) {
+  stopifnot(!(class_var(x) %in% nodes))
+  fams <- families(x)[nodes]
+  arcs_within_supernode <- lapply(fams, intersect, nodes)
+  n <- length(nodes)
+  # Each node is counted in each family, hence additional n 
+  sum(lengths(arcs_within_supernode)) ==  as.integer(n + n * (n - 1 ) / 2)
 }
 # Keogh
 feature_orphans <- function(bnc_dag) {
