@@ -28,7 +28,7 @@ valid_factor <- function(x, nrow, ncol, colnames) {
 }
 # Normalizes a vector. If division by the sum is Nan then returns a uniform distribution.
 normalize <- function(x) {
-  stopifnot(!is.na(x))
+  stopifnot(!anyNA(x))
   n <- x / sum(x)
   if (all(is.nan(n))) {
     # keeps the dimnames of n 
