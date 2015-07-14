@@ -31,9 +31,10 @@ normalize <- function(x) {
   stopifnot(!is.na(x))
   n <- x / sum(x)
   if (all(is.nan(n))) {
-    setNames(rep(1/length(x), length(x)), names(x))
+    # keeps the dimnames of n 
+    n[] <- 1/length(x)
   }
-  else { n }
+  n 
 }
 log_normalize <- function(ulp) {
   # Check p is matrix of log probs?(<= 0)

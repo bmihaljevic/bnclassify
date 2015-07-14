@@ -46,11 +46,11 @@ normalize_ctgt <- function(ctgt) {
     conditioning <- setdiff(seq_along(dnames), 1)
     #   Condition the first variable on the rest. If some are NA, set to uniform
     cpt <- apply(ctgt, conditioning, normalize)
+    # Make sure it is a table
+    cpt <- as.table(cpt) 
   }
-  # Make sure it is an array
-  cpt <- as.table(cpt) 
-  # Check dimnames
-  stopifnot(identical(dimnames(cpt), dimnames(ctgt)))
+  # Check dimnames and table
+  stopifnot(identical(dimnames(cpt), dnames), is.table(cpt))
   cpt
 }
 #' Get just form first dimension in their own cpt, not checking for consistency
