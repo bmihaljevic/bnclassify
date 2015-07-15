@@ -26,13 +26,16 @@ sum_log_factors <- function(factors) {
 valid_factor <- function(x, nrow, ncol, colnames) {
   identical(dim(x), c(nrow, ncol)) && is.numeric(x) && identical(colnames, colnames(x))
 }
-# Normalizes a vector. If division by the sum is Nan then returns a uniform distribution.
+# Normalizes a vector. If division by the sum is Nan then returns a uniform distribution. 
+# Not checking the input for NAs for speed. Caller must do that. 
 normalize <- function(x) {
-  stopifnot(!anyNA(x))
   n <- x / sum(x)
-  if (all(is.nan(n))) {
+  # check the quotient is NaN since it is unclear which tolerance to use if checking
+  # sum(x) == 0
+  if (is.nan(n[1])) {
+    stopifnot(all(is.nan(n)))
     # keeps the dimnames of n 
-    n[] <- 1/length(x)
+    n[] <- 1 / length(x)
   }
   n 
 }

@@ -21,36 +21,26 @@ extract_cpt <- function(vars, dataset, smooth) {
 }
 # Turns a contingency table into a conditional probability table  
 ctgt2cpt <- function(ctgt, smooth) {
-  #   Check smooth is numeric and non-negative
-  stopifnot(smooth >= 0)
-  # Check ctgt is a table. That implies it is an array.
-  stopifnot(is.table(ctgt))
-  # Check it has got non-emtpy and no-NA dimnames 
-  stopifnot(are_complete_dimnames(ctgt))
-  #   Add smooth to ctgt 
-  cpt <- normalize_ctgt(ctgt + smooth)
-  # Return 
-  cpt
+  # Requiring ctgt be a table. That implies it is an array.
+  stopifnot(smooth >= 0, is.table(ctgt), are_complete_dimnames(ctgt))
+  # Add smooth to ctgt 
+  normalize_ctgt(ctgt + smooth)
 }
 # Normalizes the contigency table on the first dimension. Returns a table.
 normalize_ctgt <- function(ctgt) {
-  # Initialize cpt
-  cpt <- NULL
-  # If ctgt is 1D then cpt is normalized ctgt
-  dnames <- dimnames(ctgt)
-  if (length(dnames) == 1) {
-    cpt <- normalize(ctgt)
+  stopifnot(!anyNA(ctgt))  # TODO: Should check for NaN
+  # Keep attributes (e.g., class and dimension names); just change entries
+  cpt <- ctgt
+  ndims <- length(dim(ctgt))
+  if (ndims == 1) {
+    cpt[] <- normalize(cpt)
+  }
+  else if (ndims > 1) { 
+    cpt[] <- apply(ctgt, 2:ndims, normalize)
   }
   else {
-    #   Get the indices of conditioning variables
-    conditioning <- setdiff(seq_along(dnames), 1)
-    #   Condition the first variable on the rest. If some are NA, set to uniform
-    cpt <- apply(ctgt, conditioning, normalize)
-    # Make sure it is a table
-    cpt <- as.table(cpt) 
+    stop("0 dimension of", ctgt)
   }
-  # Check dimnames and table
-  stopifnot(identical(dimnames(cpt), dnames), is.table(cpt))
   cpt
 }
 #' Get just form first dimension in their own cpt, not checking for consistency
