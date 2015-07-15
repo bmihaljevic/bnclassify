@@ -1,10 +1,6 @@
 #' Multiplies a set of factors by converting to log space and then summing. 
-#' Subtracts the logarithm of the sum of exponential (logsumexp).
 #' 
-#' @return A numeric matrix. The values in log space.
-#' @references Murphy KP (2012). \emph{Machine learning: a probabilistic
-#'   perspective}. The MIT Press. pp. 86-87.
-#' @keywords internal
+#' @return A numeric matrix. Multiplied in log space.
 sum_log_factors <- function(factors) {
   # Must have at least on member 
   stopifnot(length(factors) > 0)
@@ -12,15 +8,13 @@ sum_log_factors <- function(factors) {
   n <- nrow(factors[[1]])
   nobs <- ncol(factors[[1]])
   values <- colnames(factors[[1]])
-  valid <- vapply(factors, valid_factor, n, nobs, values, FUN.VALUE=logical(1L))
+  valid <- vapply(factors, valid_factor, n, nobs, values, FUN.VALUE = logical(1L))
   stopifnot(all(valid))
 #   Apply log to all
   factors <- lapply(factors, log)
 #   Sum them 
   log_sum <- Reduce('+', factors)
-  # Log sum exp 
-  log_sum <- log_sum - matrixStats::rowLogSumExps(log_sum)
-  colnames(log_sum) <- values
+  stopifnot(identical(colnames(log_sum), values))
   log_sum
 }
 valid_factor <- function(x, nrow, ncol, colnames) {
@@ -39,18 +33,30 @@ normalize <- function(x) {
   }
   n 
 }
-log_normalize <- function(ulp) {
+#' Normalize log probabilities. 
+#' 
+#' Uses the log-sum-exp trick.
+#' 
+#' @references Murphy KP (2012). \emph{Machine learning: a probabilistic
+#'   perspective}. The MIT Press. pp. 86-87.
+#' @keywords internal
+log_normalize <- function(lp) {
+  stopifnot(is.matrix(lp))
   # Check p is matrix of log probs?(<= 0)
+  # Normalize with log sum exp 
+  log_probs <- lp - matrixStats::rowLogSumExps(lp)
   # exponentiate
-  p <- exp(ulp)
-  # Normalize 
-  sums <- rowSums(p)
-  p <- p / sums
-  # Assign a uniform where the sum is 0
-  ind_zero <- is.nan(sums)
-  if (any(ind_zero)) {
-    p[ind_zero,] <- 1 / ncol(p)
+  p <- exp(log_probs)
+  # rowAnys Does not distinguish between NA and NaN. 
+  nans <- which(matrixStats::rowAnys(p, value = NaN))
+  if (length(nans) > 0) {
+    p[nans, ] <- 1 / ncol(p)
   }
+  # Assign a uniform where the result is NaN
+#   ind_zero <- is.nan(p)
+#   if (any(ind_zero)) {
+#     p[ind_zero,] <- 1 / ncol(p)
+#   }
   p
 }
 #' Returns \code{TRUE} is \code{x} is a valid probability distribution.
@@ -62,4 +68,4 @@ are_pdists <- function(x) {
 }
 are_probs <- function(x) {
   !anyNA(x) && all(x >= 0) && all(x <= 1)
-}
+}  

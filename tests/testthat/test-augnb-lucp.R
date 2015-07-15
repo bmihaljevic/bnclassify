@@ -43,6 +43,7 @@ test_that("matches grain", {
   g <- as_grain(tn)
   gp <- compute_grain_luccpx(grain = g, car[, -7], 'class')
   expect_equal(b, gp) 
+  expect_equal(log_normalize(b), exp(gp)) 
   
   tn <- nbvotecomp()
   b <- compute_augnb_luccpx(tn, v)

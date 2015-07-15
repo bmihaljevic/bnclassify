@@ -21,7 +21,6 @@ test_that("Multiply Two factors", {
   expect_identical(colnames(a), letters[1:2])
   expect_identical(dim(td), dim(a))
   fr <- td[1, ] * td2[1, ]
-  fr <- fr / (sum (fr))
   expect_equal(fr, exp(a[1, ]))
 })
 
