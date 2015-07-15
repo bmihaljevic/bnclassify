@@ -52,7 +52,7 @@ test_that("Missing features in the dataset", {
 
 test_that("Complete with incomplete data", {
   a <- nbvote()
-  expect_error(compute_ulcp_complete(a, voting), "anyNA")
+  expect_error(compute_log_joint_complete(a, voting), "anyNA")
 })
 
  
@@ -60,14 +60,14 @@ test_that("All incomplete rows", {
   skip_if_not_installed('gRain')
   a <- nbvote()
   vna <- voting[!complete.cases(voting), -17]
-  cp <- compute_ulcp_incomplete(a, vna)
+  cp <- compute_log_joint_incomplete(a, vna)
   cp <- log_normalize(cp)
   check_cp(cp, nrow(vna), levels(voting$Class))
 })
  
 test_that("Incomplete with complete data", {
   a <- nbcar()
-  expect_error(compute_ulcp_incomplete(a, car), "complete")
+  expect_error(compute_log_joint_incomplete(a, car), "complete")
 })
 
 test_that("Uniform for rows with 0 probabilities ", {
