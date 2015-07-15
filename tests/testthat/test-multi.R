@@ -52,7 +52,7 @@ test_that("learn and predict", {
   b$.call_bn <- x[[1]]$.call_bn <- NULL
   expect_identical(b, x[[1]])
   
-  c <- compute_augnb_luccpx(b, car)
+  c <- compute_anb_log_joint(b, car)
   y <- multi_compute_augnb_luccpx(b, car)
   expect_equal(c, y[[1]])
 })

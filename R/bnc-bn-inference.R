@@ -29,7 +29,7 @@ compute_ulcp <- function(x, dataset) {
 compute_ulcp_complete <- function(x, dataset) {
   # Check dataset complete
   stopifnot(!anyNA(dataset))  
-  compute_augnb_luccpx(x, dataset)
+  compute_anb_log_joint(x, dataset)
 }
 compute_ulcp_incomplete <- function(x, dataset) {
   # Check all rows in dataset have missings 

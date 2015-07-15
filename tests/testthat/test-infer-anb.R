@@ -1,25 +1,25 @@
-context("augnb log unnormalized class posterior")
+context("anb log joint")
 
 test_that("Nominal", {
   tn <- nbcar()
-  a <- compute_augnb_luccpx(tn, car)
+  a <- compute_anb_log_joint(tn, car)
   expect_identical(colnames(a), levels(car$class))
 })
 
 test_that("Missing features", {
   tn <- nbcar()
-  expect_error(compute_augnb_luccpx(tn, car[, 1:2]), "undefined")
+  expect_error(compute_anb_log_joint(tn, car[, 1:2]), "undefined")
 })
 
 test_that("Single predictor", {
   tn <- bnc_bn(nb('class', car[, c(1,7)]), car, smooth = 0)
-  pt <- compute_augnb_luccpx(tn, car[, 1:2])
+  pt <- compute_anb_log_joint(tn, car[, 1:2])
   expect_identical(dim(pt), c(nrow(car), 4L))
 })
 
 test_that("0 rows dataset", {
   tn <- nbcar()
-  pt <- compute_augnb_luccpx(tn, car[FALSE, ])
+  pt <- compute_anb_log_joint(tn, car[FALSE, ])
   expect_identical(dim(pt), c(0L, 4L))
 })
 
@@ -39,37 +39,37 @@ test_that("matches grain", {
   skip_on_cran()
   skip_if_not_installed('gRain')
   tn <- nbcar()
-  b <- compute_augnb_luccpx(tn, car)
+  b <- compute_anb_log_joint(tn, car)
   g <- as_grain(tn)
   gp <- compute_grain_luccpx(grain = g, car[, -7], 'class')
   expect_equal(b, gp) 
   expect_equal(log_normalize(b), exp(gp)) 
   
   tn <- nbvotecomp()
-  b <- compute_augnb_luccpx(tn, v)
+  b <- compute_anb_log_joint(tn, v)
   g <- as_grain(tn)
   gp <- compute_grain_luccpx(grain = g, v[, -17], 'Class')
 })
 
 test_that("fail with incomplete data", {
   v <- nbvote()
-  expect_error(compute_augnb_luccpx(v, voting), "anyNA")
+  expect_error(compute_anb_log_joint(v, voting), "anyNA")
 })
 
 test_that("multi class posterior nominal", {
   a <- nbcar()  
   b <- nbcarp(car[, 4:7])
   cr <- multi_compute_augnb_luccpx(list(a, b), car)  
-  ar <- compute_augnb_luccpx(a, car)
+  ar <- compute_anb_log_joint(a, car)
   expect_equal(cr[[1]], ar)
-  br <- compute_augnb_luccpx(b, car)
+  br <- compute_anb_log_joint(b, car)
   expect_equal(cr[[2]], br)
 })
 
 test_that("multi class posterior single bnc", {
   a <- nbcar()  
   b <- multi_compute_augnb_luccpx(a, car)  
-  c <- compute_augnb_luccpx(a, car)
+  c <- compute_anb_log_joint(a, car)
   expect_equal(b[[1]], c)
 })
 

@@ -29,23 +29,23 @@ compute_augnb_lucp_multi <- function(class, xfams_id_dags, unique_xcpts, cp,
   })
   lapply(factors_list, sum_log_factors)
 }
-# Computes the 
-compute_augnb_luccpx <- function(x, dataset) {
-# X must be an aug nb and data must be complete for this factorization to work
-# ...TODO: check for aug nb
+#' Computes the log joint probability of the observed features for each of the classes
+#  This assumes that x is an augmented naive Bayes and that data is complete.
+compute_anb_log_joint <- function(x, dataset) {
+# TODO: check for aug nb
   stopifnot(!anyNA(dataset))
   cp <- params(x)[[class_var(x)]]
   wcp <- make_cp_factor(cp, dataset) 
 #  Add class posterior to factors list
   factors <- list(class = wcp)
-# If there are features, get the class conditional probabilities
+# Add the features' factors, if any 
   features <- features(x)
   if (length(features) > 0) {
     cptsx <- params(x)[features]
     xp <- get_ccx_factors(cptsx, dataset, class_var(x), names(cp))
     factors <- append(factors, xp)
   }
-#   Multiply factors
+# Sum factors in log space
   sum_log_factors(factors)
 }
 get_ccx_factors <- function(cptsx, dataset, class, classes) {

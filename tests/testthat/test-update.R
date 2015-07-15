@@ -133,8 +133,8 @@ test_that("Multi-update bnc_dag", {
 #   b <- nbcarp(car[, 4:7])
 #   d <- multi_learn_predict(list(a, b), train = car, test = car, 
 #                            smooth = 1, prob = TRUE)
-#   e <- compute_augnb_luccpx(a, car)
+#   e <- compute_anb_log_joint(a, car)
 #   expect_equal(d[[1]], e)
-#   f <- compute_augnb_luccpx(b, car)
+#   f <- compute_anb_log_joint(b, car)
 #   expect_equal(d[[2]], f)
 # })
