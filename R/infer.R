@@ -1,4 +1,5 @@
-# x is a bnc_dag
+# Computes class posterior. 
+# x is a bnc_dag.
 compute_cp <- function(x, dataset) {
   p <- compute_log_joint(x, dataset)
   p <- log_normalize(p)
