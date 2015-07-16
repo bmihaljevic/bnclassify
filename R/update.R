@@ -33,15 +33,6 @@ bnc_update_args <- function(lp_fargs, dataset, dag_fargs = NULL) {
   # bnc_wrap(res) TODO
   res
 }
-
-# =========================
-# Useful
-
-# bnc_wrap <- function(x, awnb, blacklist) {
-#   ...TODO
-# x
-# }
-
 save_bnc_call <- function(call, env) {
   call[[1]] <- as.character(call[[1]])
   # To make sure that this dataset is not accidentaly used on updates.
@@ -90,38 +81,4 @@ update_dag <- function(x, dataset)  {
 update_lp <- function(dag, lp_fargs, dataset) {
   lp_fargs$x <- dag
   do_bnc_call(lp_fargs, dataset)
-}
-
-multi_update <- function(x, dataset, dag, smooth = NULL) {
-# The lp args must be either smooth or within the x objects: 
-  if (is.null(smooth)) {
-    x <- ensure_list(x, type = "bnc_bn")  
-  }
-  else {
-    x <- ensure_list(x)  
-  }
-  dags <- NULL
-  if (dag) {
-    dags <- lapply(x, update_dag, dataset)
-  }
-  if (is.null(dags)) {
-    dags <- lapply(x, bn2dag)
-  }
-  # smooth overrides lp args that may be in x 
-  if (!is.null(smooth)) {
-    multi_bnc_bn(dags, dataset, smooth = smooth)
-  }
-  else {
-    lp_multi_args <- lapply(x, get_lp_multi_update_args)
-    if (are_all_equal(lp_multi_args)) {
-      # If all lp args are the same, then can call multi_bnc_bn
-      # TODO: use weights and awnb if needed.
-      multi_bnc_bn(dags, dataset, smooth = lp_multi_args[[1]]$smooth)
-    }
-    else {
-      lp_args <- lapply(x, get_lp_update_args)
-      mapply(update_lp, dags, lp_args, MoreArgs = list(dataset = dataset), 
-             SIMPLIFY = FALSE)
-    }  
-  }
 }
