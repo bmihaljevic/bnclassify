@@ -59,9 +59,9 @@ multi_predict <- function(object, newdata, prob = FALSE) {
   #   if complete, then all one together
   if (!anyNA(newdata)) {
     p <- multi_compute_augnb_luccpx(object, newdata)
-    p <- lapply(p, log_normalize)
-    stopifnot(all(vapply(p, are_pdists, FUN.VALUE = logical(1))))
     if (prob) {
+      p <- lapply(p, log_normalize)
+      stopifnot(all(vapply(p, are_pdists, FUN.VALUE = logical(1))))
       p
     }
     else {
