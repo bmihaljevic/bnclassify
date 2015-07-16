@@ -29,7 +29,7 @@ compute_augnb_lucp_multi <- function(class, xfams_id_dags, unique_xcpts, cp,
   })
   lapply(factors_list, sum_log_factors)
 }
-#' Computes the log joint probability of the observed features for each of the classes
+# Computes the log joint probability of the observed features for each of the classes.
 #  This assumes that x is an augmented naive Bayes and that data is complete.
 compute_anb_log_joint <- function(x, dataset) {
 # TODO: check for aug nb

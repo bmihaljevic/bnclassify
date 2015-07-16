@@ -79,3 +79,25 @@ test_that("Uniform for rows with 0 probabilities ", {
   expect_equivalent(rep(0.25, 4), p[2, ])
   # Could be equal to class prior, too.
 })
+
+test_that("Nominal log-likelihood two vars", {
+  cb <- car[1, c(1, 7), drop = FALSE]
+  nb <- nbcarp(cb)
+  lik <- params(nb)$class['unacc'] * params(nb)$buying['vhigh', 'unacc']
+  ll <- compute_ll(nb, cb)
+  expect_true(equivalent_num(ll, log(lik)))
+})
+
+test_that("log-likelihood with incomplete data", {
+  cb <- car[1, c(1, 7), drop = FALSE]
+  nb <- nbcarp(cb)
+  cb$buying[] <- NA_integer_
+  ll <- compute_ll(nb, cb)
+  expect_true(equivalent_num(ll, log(0.4)))
+})
+
+test_that("Nominal log-likelihood 7 vars", {
+  nb <- lp(nb('class', car), car, smooth = 0)
+  ll <- compute_ll(nb, car)
+  expect_equal(ll, -13503.69, tolerance = 1e-6)
+})

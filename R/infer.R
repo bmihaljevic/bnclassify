@@ -5,10 +5,21 @@ compute_cp <- function(x, dataset) {
   stopifnot(are_pdists(p))
   p
 }
+# Computes log-likelihood
 compute_ll <- function(x, dataset) {
-  stop("Not implemented.")
+  # Get log joint prob per class 
+  log_joint_per_class <- compute_log_joint(x, dataset)
+  # Find the entries in log prob corresponding to observed classes
+  observed_classes <- dataset[, class_var(x)]
+  ind_classes <- match(observed_classes, colnames(log_joint_per_class)) 
+  # Extract them with matrix indices
+  ind_classes <- cbind(seq_len(nrow(dataset)), ind_classes)
+  class_probs <- log_joint_per_class[ind_classes]
+  # Sum them up 
+  sum(class_probs)
 }
-# Compute unnormalized log class posterior
+# Computes the log joint probability of the observed features for each of the classes
+# The result is a numeric matrix with a column per class and a row per data instance.
 compute_log_joint <- function(x, dataset) {
   if (!anyNA(dataset)) {
     compute_log_joint_complete(x, dataset)

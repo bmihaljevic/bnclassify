@@ -25,7 +25,7 @@ compute_grain_log_joint <- function(grain, dataset, class) {
   stopifnot(nrow(dataset) > 0)
   # If class in dataset, remove it 
   if (class %in% colnames(dataset)) {
-    dataset <- dataset[, setdiff(colnames(dataset), class)]
+    dataset <- dataset[, setdiff(colnames(dataset), class), drop = FALSE]
   }
   cp <- t(apply(dataset, 1, compute_grain_log_joint_instance, grain, class))
   # Remove any rownames if they may have left over from dataset
