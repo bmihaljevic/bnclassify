@@ -49,6 +49,21 @@ test_that("matches grain", {
   b <- compute_anb_log_joint(tn, v)
   g <- as_grain(tn)
   gp <- compute_grain_log_joint(grain = g, v[, -17], 'Class')
+  expect_equal(b, gp)
+  
+  tn <- bnc('tan_cl', class = 'class', smooth = 1, dataset = car)
+  b <- compute_anb_log_joint(tn, car)
+  g <- as_grain(tn)
+  gp <- compute_grain_log_joint(grain = g, car[, -7], 'class')
+  expect_equal(b, gp)
+})
+
+test_that("correct result", {
+  carb <- car[, c(1,7)]
+  tn <- nbcarp(carb)
+  true_log_prob <- log(params(tn)$buying['vhigh', ]) + log(params(tn)$class)
+  b <- compute_anb_log_joint(tn, carb[1, , drop = FALSE])
+  expect_equal(as.vector(true_log_prob), as.vector(b[1, ]))
 })
 
 test_that("fail with incomplete data", {
