@@ -69,7 +69,6 @@ cpt_1d_var <- function(cpt) {
 cpt2family <- function(cpt) {
   # Check is a table
   stopifnot(is.table(cpt))
-  # TODO: check is a CPT
   # Return names dimnames
   names(dimnames(cpt))
 }

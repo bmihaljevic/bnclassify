@@ -16,7 +16,7 @@ multi_bnc_bn <- function(x, dataset, smooth) {
   # Unnamed so that it would pass no names to objects created by itearting on it
   x <- ensure_multi_list(x)
   # Check bnc dag
-  lapply(x, check_bnc_dag)
+  # lapply(x, check_bnc_dag)
   # Check the class is common to all data sets
   class <- get_common_class(x)
   check_class_in_dataset(class, dataset)
@@ -24,7 +24,7 @@ multi_bnc_bn <- function(x, dataset, smooth) {
   params_list <- lapply(x, extract_params_cptpool, ucpts)
   # Make a bnc_bn for each x
   bnc_bns <- mapply(make_bnc_bn, x,  params_list, SIMPLIFY = FALSE)
-  lapply(bnc_bns, check_bnc_bn)
+  # lapply(bnc_bns, check_bnc_bn)
   bnc_bns
 }
 extract_params_cptpool <- function(x, cpt_pool) {
