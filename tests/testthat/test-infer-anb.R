@@ -38,17 +38,17 @@ test_that("make cpt inds", {
 test_that("matches grain", {
   skip_on_cran()
   skip_if_not_installed('gRain')
+  
   tn <- nbcar()
   b <- compute_anb_log_joint(tn, car)
   g <- as_grain(tn)
-  gp <- compute_grain_luccpx(grain = g, car[, -7], 'class')
+  gp <- compute_grain_log_joint(grain = g, car[, -7], 'class')
   expect_equal(b, gp) 
-  expect_equal(log_normalize(b), exp(gp)) 
   
   tn <- nbvotecomp()
   b <- compute_anb_log_joint(tn, v)
   g <- as_grain(tn)
-  gp <- compute_grain_luccpx(grain = g, v[, -17], 'Class')
+  gp <- compute_grain_log_joint(grain = g, v[, -17], 'Class')
 })
 
 test_that("fail with incomplete data", {

@@ -11,7 +11,8 @@ as_grain <- function(x) {
     x$.grain  
   }  
 }
-compute_grain_luccpx <- function(grain, dataset, class) {
+#' Computes the log joint probability of the observed features for each of the classes
+compute_grain_log_joint <- function(grain, dataset, class) {
   if (!requireNamespace("gRain", quietly = TRUE)) {
     stop("gRain needed for this function to work. Please install it.",
          call. = FALSE)
@@ -26,17 +27,13 @@ compute_grain_luccpx <- function(grain, dataset, class) {
   if (class %in% colnames(dataset)) {
     dataset <- dataset[, setdiff(colnames(dataset), class)]
   }
-  # TODO: Faster to convert to character matrix before apply? 
-  # TODO: Do I make a copy of gRain or retract evidence each time? Its probably
-  # faster to retract evidence. 
-  # For each instance, get gRain class_posterior
-  cp <- t(apply(dataset, 1, compute_grain_uccpx_instance, grain, class))
+  cp <- t(apply(dataset, 1, compute_grain_log_joint_instance, grain, class))
   # Remove any rownames if they may have left over from dataset
   rownames(cp) <- NULL
-  log(cp)
+  cp
 }
-# incomplete instance Unnormalized class-posterior
-compute_grain_uccpx_instance <- function(instance, grain, class) {
+#' Computes the log joint probability of the observed features for each of the classes
+compute_grain_log_joint_instance <- function(instance, grain, class) {
   if (!requireNamespace("gRain", quietly = TRUE)) {
     stop("gRain needed for this function to work. Please install it.",
          call. = FALSE)
@@ -45,19 +42,22 @@ compute_grain_uccpx_instance <- function(instance, grain, class) {
   stopifnot(is.character(instance))    
   # Get non-NA nodes in instance 
   instance <- instance[!is.na(instance)]
-  vars <- names(instance)
-  # Check class is character and not in instance names 
+  vars <- intersect(names(instance), grain_nodes(grain))
+  # Check class is character and not in instance  
   check_class(class) 
   stopifnot(!(class %in% vars))
   # Set them as evidence if they are more than 0
   if (length(vars) > 0) {  
-	grain <- gRain::setEvidence(grain, nodes = vars, states = instance)
+	  grain <- gRain::setEvidence(grain, nodes = vars, states = instance)
   }
-  # Compute unnormalized class posterior probability 
-  gRain::querygrain.grain(grain, nodes=class, normalize=FALSE)[[class]]  
+  # gRain has a bug and cannot return unnormalized class. Therefore, using the workaround: P(C | x_evidence) * P(x_evidence)
+  cp <- gRain::querygrain.grain(grain, nodes = class, normalize = TRUE)[[class]]  
+  cp <- log(cp)
+  if (length(vars) > 0) {
+    cp <- cp + log(gRain::pEvidence(grain))
+  }
+  cp
 }
-# 
-# Set, if I retract evidence, the question is whether it is making copies or not. Might be faster by making copies.
 # Compiles a grain from a a list of CPTs
 compile_grain <- function(cpts) {
   if (!requireNamespace("gRain", quietly = TRUE)) {
@@ -65,7 +65,7 @@ compile_grain <- function(cpts) {
          call. = FALSE)
   }
   if (!requireNamespace("gRbase", quietly = TRUE)) {
-    stop("gRain needed for this function to work. Please install it.",
+    stop("gRbase needed for this function to work. Please install it.",
          call. = FALSE)
   }
   # Check cpts is a list 
@@ -87,4 +87,7 @@ is_grain_compiled <- function(g) {
          call. = FALSE)
   }
   is(g, "grain") && g$isCompiled
+}
+grain_nodes <- function(g) {
+  gRain::nodeNames.grain(g)
 }

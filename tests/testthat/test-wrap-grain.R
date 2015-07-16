@@ -1,27 +1,27 @@
 context("grain")
 
-test_that("nominal unnormalized class posterior instance", { 
+test_that("nominal joint prob instance", { 
   skip_if_not_installed('gRain')
   a <- nbvote()
   g <- as_grain(a)
   vc <- as.matrix(voting)
-  cp <- compute_grain_uccpx_instance(vc[1, -17], g, 'Class')
+  cp <- compute_grain_log_joint_instance(vc[1, -17], g, 'Class')
   expect_true(is.numeric(cp))
   expect_equal(names(cp), levels(voting$Class))
-  expect_equal(as.vector(cp), c(1.289035e-07, 9.999999e-01), tolerance = 1e-7)
+  expect_equal(exp(as.vector(cp)), c(1.956045e-09, 1.517449e-02), tolerance = 1e-6)
 })
 
-test_that(" unnormalized class posterior instance with no evidence", { 
+test_that(" joint prob instance with no evidence", { 
   skip_if_not_installed('gRain')
   a <- nbvote()
   g <- as_grain(a)
   vc <- as.matrix(voting)
   inst <- vc[1, -17]
   inst[] <- NA
-  cp <- compute_grain_uccpx_instance(inst, g, 'Class')
+  cp <- compute_grain_log_joint_instance(inst, g, 'Class')
   expect_true(is.numeric(cp))
   expect_equal(names(cp), levels(voting$Class))
-  expect_true(equivalent_num(cp, params(a)[class_var(a)][[1]]))
+  expect_true(equivalent_num(exp(cp), params(a)[class_var(a)][[1]]))
 })
 
 test_that("cpts to grain", {

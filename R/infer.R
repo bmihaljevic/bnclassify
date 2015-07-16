@@ -42,5 +42,5 @@ compute_log_joint_incomplete <- function(x, dataset) {
   # Get class var
   class <- class_var(x)
   # Call grain class posterior
-  compute_grain_luccpx(grain, dataset, class)
+  compute_grain_log_joint(grain, dataset, class)
 }
