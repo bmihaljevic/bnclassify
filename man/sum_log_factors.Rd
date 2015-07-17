@@ -2,21 +2,14 @@
 % Please edit documentation in R/basic-probs.R
 \name{sum_log_factors}
 \alias{sum_log_factors}
-\title{Multiplies a set of factors by converting to log space and then summing.
-Subtracts the logarithm of the sum of exponential (logsumexp).}
+\title{Multiplies a set of factors by converting to log space and then summing.}
 \usage{
 sum_log_factors(factors)
 }
 \value{
-A numeric matrix. The values in log space.
+A numeric matrix. Multiplied in log space.
 }
 \description{
 Multiplies a set of factors by converting to log space and then summing.
-Subtracts the logarithm of the sum of exponential (logsumexp).
 }
-\references{
-Murphy KP (2012). \emph{Machine learning: a probabilistic
-  perspective}. The MIT Press. pp. 86-87.
-}
-\keyword{internal}
 
