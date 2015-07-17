@@ -32,7 +32,7 @@ test_that("Direct tree", {
   expect_equal(graph::edgemode(e), "directed")
   expect_equal(graph::ugraph(e), g)
   
-  gr <- pairwise_ode_scores(class = 'class', dataset = car, score = 'loglik')
+  gr <- pairwise_ode_score_contribs(class = 'class', dataset = car, score = 'loglik')
   af <- max_weight_forest(gr)
   d <- direct_tree(af)  
   expect_identical(graph::edgemode(d), "directed")
@@ -43,7 +43,7 @@ test_that("Direct tree", {
 })
 
 test_that("Direct forest", {
-  gr <- pairwise_ode_scores(class = 'class', dataset = car, score = 'loglik') 
+  gr <- pairwise_ode_score_contribs(class = 'class', dataset = car, score = 'loglik') 
   af <- max_weight_forest(gr)
   f <- direct_forest(g = af)
   expect_equivalent(graph::ugraph(f), af)
@@ -90,11 +90,11 @@ test_that("graph union", {
 
 test_that("Max weight forest", {  
   # TODO: How many edges?
-#   g <- pairwise_ode_scores(class = 'Class', voting, score = 'loglik')
+#   g <- pairwise_ode_score_contribs(class = 'Class', voting, score = 'loglik')
 #   u <- max_weight_forest(g)
 #   expect_equal(graph::numEdges(u), )  
   
-  g <- pairwise_ode_scores(class = 'class', dataset = car, score = "loglik")
+  g <- pairwise_ode_score_contribs(class = 'class', dataset = car, score = "loglik")
   u <- max_weight_forest(g)
   expect_equal(graph::numEdges(u), 5)  
   

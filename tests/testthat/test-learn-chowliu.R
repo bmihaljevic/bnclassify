@@ -42,7 +42,7 @@ test_that("chowliu single-row dataset", {
 })
 
 test_that("pairwise local scores nominal", {  
-  a <- pairwise_ode_scores(class = 'class', dataset = car, score= "loglik")  
+  a <- pairwise_ode_score_contribs(class = 'class', dataset = car, score= "loglik")  
   w <- graph::edgeWeights(a)
   b <- w[['maint']][['safety']]
   cmi <- cmi("maint", "safety", car, 'class')
@@ -53,28 +53,28 @@ test_that("pairwise local scores nominal", {
 })
 
 test_that("pairwise local scores No features", {  
-  a <- pairwise_ode_scores(class = 'class', dataset = car[,7, drop=F], 
+  a <- pairwise_ode_score_contribs(class = 'class', dataset = car[,7, drop=F], 
                            score = "loglik")
   expect_equal(a, graph::graphNEL())
 # No weights kept. 
-  a <- pairwise_ode_scores(class = 'class', dataset = car, score = "bic")  
+  a <- pairwise_ode_score_contribs(class = 'class', dataset = car, score = "bic")  
   w <- graph::edgeWeights(a)  
   expect_equal(graph::nodes(a), colnames(car)[-7])
   expect_equal(length(unlist(w)), 0L)
 })
 
 test_that("pairwise local scores bic", {  
-  t <- pairwise_ode_scores(class = 'class', dataset = car, score = "bic")    
+  t <- pairwise_ode_score_contribs(class = 'class', dataset = car, score = "bic")    
   expect_equal(graph::numEdges(t), 0)
 })
 
 test_that("local scores correctness", {  
-  a <- local_ode_score(x = 'buying', y = 'maint', class = 'class', 
+  a <- local_ode_score_contrib(x = 'buying', y = 'maint', class = 'class', 
                                dataset = car)
   expect_equal(unname(a['loglik']), 0.07199921, tolerance = 0.0001)
   expect_true(a['bic'] < a['aic'])    
   
-  a <- local_ode_score(x = 'water_project_cost_sharing', y = 'crime', 
+  a <- local_ode_score_contrib(x = 'water_project_cost_sharing', y = 'crime', 
                      class = 'Class', dataset = voting)  
   expect_equal(unname(a['loglik']), 0.003924715, tolerance = 0.0001)
   expect_true(a['bic'] < a['aic'])      
@@ -82,7 +82,7 @@ test_that("local scores correctness", {
 
 test_that("local scores bic correctness", {
   v <- na.omit(voting)
-  scores <- local_ode_score(x = 'handicapped_infants', 
+  scores <- local_ode_score_contrib(x = 'handicapped_infants', 
                             y = 'water_project_cost_sharing', class = 'Class',
                             dataset = v)
   # I know the correct value; see correctness-checks.R

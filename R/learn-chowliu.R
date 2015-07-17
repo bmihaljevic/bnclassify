@@ -2,7 +2,7 @@ chowliu <- function(class, dataset, score='loglik', blacklist = NULL,
                     root = NULL) {
 # Get pairwise scores   
   pairwise_scores <- 
-    pairwise_ode_scores(class = class, dataset = dataset, score = score)
+    pairwise_ode_score_contribs(class = class, dataset = dataset, score = score)
 # Get the augmenting forest   
   aug_forest <- max_weight_forest(pairwise_scores)  
 # Direct the forest (TODO: test the forest is effectively directed) 
@@ -11,10 +11,9 @@ chowliu <- function(class, dataset, score='loglik', blacklist = NULL,
   ode <- superimpose_node(dag =  aug_forest, node = class)  
   bnc_dag(dag = ode, class = class)
 }
-
-pairwise_ode_scores <- function(class, dataset, score) {
-#   Check score in decomposed_ode_scores
-  stopifnot(score %in% decomposed_ode_scores())
+pairwise_ode_score_contribs <- function(class, dataset, score) {
+#   Check score in decomposable_ode_scores
+  stopifnot(score %in% decomposable_ode_scores())
 # Get features   
   features = get_features(class = class, dataset = dataset)
 # If 0 features then return empty graph   
@@ -27,10 +26,10 @@ pairwise_ode_scores <- function(class, dataset, score) {
   from <- edges[1, ]
   to <- edges[2, ]; rm(edges)
 # For each get pairwise contribution to score
-  pairwise_score <- mapply(local_ode_score, from, to, 
+  pairwise_score <- mapply(local_ode_score_contrib, from, to, 
                      MoreArgs = list(class = class, dataset = dataset), 
                      SIMPLIFY = TRUE)
-  stopifnot(identical(rownames(pairwise_score), decomposed_ode_scores()))
+  stopifnot(identical(rownames(pairwise_score), decomposable_ode_scores()))
 # Select the score 
   pairwise_score <- pairwise_score[score, ]  
 # Remove negative scores (possible for BIC and AIC) and weight the edges
@@ -45,7 +44,7 @@ pairwise_ode_scores <- function(class, dataset, score) {
 #' Returns pairwise component of ODE (penalized) log-likelihood scores. 
 #' In natural logarithms.  
 #' @keywords internal
-local_ode_score <- function(x, y, class, dataset) {  
+local_ode_score_contrib <- function(x, y, class, dataset) {  
   #   If x and y and class do not have length one stop
   stopifnot(length(x) == 1)
   stopifnot(length(y) == 1)
@@ -68,4 +67,4 @@ local_ode_score <- function(x, y, class, dataset) {
   aic <- N * cmi  - df 
   c(loglik = cmi, bic = bic, aic = aic)  
 }
-decomposed_ode_scores <- function() { c('loglik', 'bic', 'aic') }
+decomposable_ode_scores <- function() { c('loglik', 'bic', 'aic') }
