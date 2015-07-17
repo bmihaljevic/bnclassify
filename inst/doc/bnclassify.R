@@ -5,6 +5,8 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 library(bnclassify)
 data(car)
 summary(car)
+
+## ------------------------------------------------------------------------
 a <- nb('class', car)
 a
 
@@ -17,47 +19,58 @@ plot(a)
 
 ## ------------------------------------------------------------------------
 b <- lp(a, car, smooth = 1)
-params(b)
 
 ## ------------------------------------------------------------------------
+params(b)$class
+
+## ------------------------------------------------------------------------
+params(b)$class
+
+## ------------------------------------------------------------------------
+p <- predict(b, car, prob = TRUE)
+head(p)
 p <- predict(b, car)
 head(p)
 
 ## ------------------------------------------------------------------------
+accuracy(p, car$class)
+
+## ------------------------------------------------------------------------
+
 cv(b, car, k = 10, dag = FALSE)
 
 ## ------------------------------------------------------------------------
 t <- tan_cl(class = 'class', dataset = car)
-tb <- tan_cl(class = 'class', dataset = car, score = 'bic')
+ta <- tan_cl(class = 'class', dataset = car, score = 'aic')
 plot(t)
-plot(tb)
+plot(ta)
 
 ## ------------------------------------------------------------------------
 is_ode(t)
 is_nb(t)
-is_ode(tb)
-is_nb(tb)
+is_ode(ta)
+is_nb(ta)
 
 ## ------------------------------------------------------------------------
 set.seed(0)
 a <- tan_hc('class', car, k = 10, epsilon = 0, smooth = 1)
 b <- tan_hcsp('class', car, k = 10, epsilon = 0, smooth = 1)
-c <- bsej('class', car, k = 10, epsilon = 0, smooth = 1)
-d <- fssj('class', car, k = 10, epsilon = 0, smooth = 1)
+is_ode(a)
+is_ode(b)
+plot(a)
 
 ## ------------------------------------------------------------------------
 is_ode(a)
 is_ode(b)
+
+## ------------------------------------------------------------------------
+c <- bsej('class', car, k = 10, epsilon = 0, smooth = 1)
+d <- fssj('class', car, k = 10, epsilon = 0, smooth = 1)
 is_ode(c)
 is_ode(d)
-is_semi_naive(a)
-is_semi_naive(b)
 is_semi_naive(c)
 is_semi_naive(d)
-plot(a)
-plot(b)
 plot(c)
-plot(d)
 
 ## ------------------------------------------------------------------------
 a <- tan_cl('class', car, score = 'aic')
@@ -110,24 +123,29 @@ r <- cv(list(a, b, c), voting, k = 3, dag = FALSE)
 r
 
 ## ------------------------------------------------------------------------
-a <- lp(nb('class', car), car, smooth = 1)	
-b <- lp(nb('class', car[, 'class', drop = FALSE]), car, smooth = 1)
-d <- lp(nb('class', car[, c(sample(1:6, 4), 7), drop = FALSE]), car, smooth = 1)	
-set.seed(0)
-microbenchmark(r <- cv(a, car, k = 10, dag = FALSE, smooth = 1))
-r
-set.seed(0)
-microbenchmark(r <- cv(list(a, b, d), car, k = 10, dag = FALSE, smooth = 1))
-r
+a <- bnc('tan_cl', 'class', car, smooth = 0.01)
+b <- bnc('nb', 'class', car, smooth = 0.01)
+compute_ll(a, car)
+compute_ll(b, car)
+
+## ------------------------------------------------------------------------
+cmi('maint', 'buying', car)
+
+## ------------------------------------------------------------------------
+cmi('maint', 'buying', car, 'class')
 
 ## ------------------------------------------------------------------------
 library(mlr)
-ctrl = makeFeatSelControlSequential(alpha = 0, method = "sfs")
-rdesc = makeResampleDesc(method = "Holdout")
 ct <- mlr::makeClassifTask(id = "compare", data = car, target = 'class', 
                         fixup.data = "no", check.data = FALSE)  
+
+## ------------------------------------------------------------------------
 nf <- lp(nb('class', car), car, 1)
 bnl <- as_mlr(nf, dag = TRUE)
+
+## ------------------------------------------------------------------------
+ctrl = makeFeatSelControlSequential(alpha = 0, method = "sfs")
+rdesc = makeResampleDesc(method = "Holdout")
 sfeats = selectFeatures(learner = bnl, task = ct, resampling = rdesc,
                       control = ctrl, show.info = FALSE)
 sfeats$x
@@ -139,5 +157,15 @@ if (!requireNamespace("gRain", quietly = TRUE)) {
   }
 a <- lp(nb('class', car), car, smooth = 1)
 g <- as_grain(a)
-gRain::querygrain.grain(g)
+gRain::querygrain.grain(g)$buying
+
+## ------------------------------------------------------------------------
+a <- lp(nb('class', car), car, smooth = 1)	
+b <- lp(nb('class', car[, 'class', drop = FALSE]), car, smooth = 1)
+d <- lp(nb('class', car[, c(sample(1:6, 4), 7), drop = FALSE]), car, smooth = 1)	
+set.seed(0)
+microbenchmark(r <- cv(a, car, k = 10, dag = FALSE, smooth = 1))
+r
+set.seed(0)
+microbenchmark(r <- cv(list(a, b, d), car, k = 10, dag = FALSE, smooth = 1))
 
