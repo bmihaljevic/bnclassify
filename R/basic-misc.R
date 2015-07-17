@@ -48,6 +48,7 @@ fast_equal <- function(a, b) {
 #' 
 #' @param x A vector.
 #' @param y A vector.
+#' @export
 accuracy <- function(x, y) {
   stopifnot(length(x) == length(y))
   sum(x == y) / length(x)

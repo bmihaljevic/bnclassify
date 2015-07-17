@@ -10,6 +10,7 @@ compute_cp <- function(x, dataset) {
 #' 
 #'@param x A \code{\link{bnc_bn_object}} object.
 #'@param newdata A data frame.
+#'@export
 compute_ll <- function(x, dataset) {
   # Get log joint prob per class 
   log_joint_per_class <- compute_log_joint(x, dataset)
