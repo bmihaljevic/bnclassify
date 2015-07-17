@@ -9,7 +9,7 @@ compute_cp <- function(x, dataset) {
 #' Computes log-likelihood of the model on the provided data.
 #' 
 #'@param x A \code{\link{bnc_bn_object}} object.
-#'@param newdata A data frame.
+#'@param dataset A data frame.
 #'@export
 compute_ll <- function(x, dataset) {
   # Get log joint prob per class 

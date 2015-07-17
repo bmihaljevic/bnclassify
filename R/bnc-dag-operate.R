@@ -3,8 +3,12 @@
 narcs <- function(x) {
   num_arcs(as_graphNEL(x))
 }
+#' Plot the structure.
 #' @export 
-# @describeIn bnc_dag_object Plots the dag.  
+#' @param x The bnc_dag_object
+#' @param y Not used 
+#' @param layoutType Layout type
+#' @param ... Not used.
 plot.bnc_dag <- function(x, y, layoutType='dot', ...) {
   if (!requireNamespace("Rgraphviz", quietly = TRUE)) {
     stop("Rgraphviz needed ", call. = FALSE)
