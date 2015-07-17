@@ -47,6 +47,10 @@ do_bnc_call <- function(fargs, dataset) {
 add_dag_call_arg <- function(bnc_dag, call, env, force = FALSE) {
   add_call_arg(bnc_dag, call, env, arg = '.call_struct', force = force)
 }
+remove_dag_call_arg <- function(bnc_dag) {
+  bnc_dag[['.call_struct']] <- NULL
+  bnc_dag
+}
 add_params_call_arg <- function(bnc_bn, call, env, force = TRUE) {
   add_call_arg(bnc_bn, call, env, arg = '.call_bn', force = force)
 }

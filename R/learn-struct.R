@@ -16,6 +16,8 @@ nb <- function(class, dataset = NULL, features = NULL) {
 #' @rdname wrapper
 fssj <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {    
   just_class_nb <- nb(class = class)
+  # Use just the structure, not the call 
+  just_class_nb <- remove_dag_call_arg(just_class_nb)
   features <- get_features(class, dataset)
   x <- greedy_search(class = class, to_include = features, init = just_class_nb,
                 step = fssj_step, dataset = dataset, epsilon = epsilon, k = k,
@@ -26,6 +28,7 @@ fssj <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {
 #' @export
 bsej <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {    
   full_nb <- nb(class = class, dataset)
+  full_nb <- remove_dag_call_arg(full_nb)
   x <- greedy_search(class = class, to_include = NULL, init = full_nb,
                 step = bsej_step, dataset = dataset, epsilon = epsilon, k = k,
                 smooth = smooth)
@@ -35,6 +38,7 @@ bsej <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {
 #' @rdname wrapper
 tan_hc <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {    
   full_nb <- nb(class = class, dataset)
+  full_nb <- remove_dag_call_arg(full_nb)
   x <- greedy_search(class = class, to_include = NULL, init = full_nb,
                 step = augment_ode, dataset = dataset, epsilon = epsilon, k = k,
                 smooth = smooth)
@@ -44,6 +48,7 @@ tan_hc <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {
 #' @rdname wrapper
 tan_hcsp <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {    
   full_nb <- nb(class = class, dataset)
+  full_nb <- remove_dag_call_arg(full_nb)
   x <- greedy_search(class = class, to_include = NULL, init = full_nb,
                 step = augment_ode_sp, dataset = dataset, epsilon = epsilon, 
                 k = k, smooth = smooth)
