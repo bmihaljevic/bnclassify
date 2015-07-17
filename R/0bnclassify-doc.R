@@ -95,7 +95,7 @@ NULL
 #'   
 #' @inheritParams nb 
 #' @param blacklist A character matrix. Edges that may be blacklisted from the
-#'   resulting structure.
+#'   resulting structure. Note: currently ignored.
 #' @param root A character. The feature to be used as root of the augmenting 
 #'   tree. Only one feature can be supplied, even in case of an augmenting 
 #'   forest. This argument is optional.

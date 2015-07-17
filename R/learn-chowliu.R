@@ -9,10 +9,6 @@ chowliu <- function(class, dataset, score='loglik', blacklist = NULL,
   aug_forest <- direct_forest(aug_forest, root = root)    
 # TODO: Add blacklisting. 
   ode <- superimpose_node(dag =  aug_forest, node = class)  
-#   TODO: logging, input, and so on...
-#   input <- list(score = score, root = root)
-#   weights <- graph::edgeWeights(object = aug_forest)
-#   bnc_log(s, input = input, blacklisted=black$removed, ode_weights=weights)
   bnc_dag(dag = ode, class = class)
 }
 
