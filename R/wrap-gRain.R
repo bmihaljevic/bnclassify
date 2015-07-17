@@ -11,7 +11,7 @@ as_grain <- function(x) {
     x$.grain  
   }  
 }
-#' Computes the log joint probability of the observed features for each of the classes
+# Computes the log joint probability of the observed features for each of the classes
 compute_grain_log_joint <- function(grain, dataset, class) {
   if (!requireNamespace("gRain", quietly = TRUE)) {
     stop("gRain needed for this function to work. Please install it.",
@@ -32,7 +32,7 @@ compute_grain_log_joint <- function(grain, dataset, class) {
   rownames(cp) <- NULL
   cp
 }
-#' Computes the log joint probability of the observed features for each of the classes
+# Computes the log joint probability of the observed features for each of the classes
 compute_grain_log_joint_instance <- function(instance, grain, class) {
   if (!requireNamespace("gRain", quietly = TRUE)) {
     stop("gRain needed for this function to work. Please install it.",

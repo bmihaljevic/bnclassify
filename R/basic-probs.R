@@ -1,6 +1,6 @@
-#' Multiplies a set of factors by converting to log space and then summing. 
-#' 
-#' @return A numeric matrix. Multiplied in log space.
+# Multiplies a set of factors by converting to log space and then summing. 
+# 
+# @return A numeric matrix. Multiplied in log space.
 sum_log_factors <- function(factors) {
   # Must have at least on member 
   stopifnot(length(factors) > 0)
