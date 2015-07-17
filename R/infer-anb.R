@@ -48,13 +48,15 @@ compute_anb_log_joint <- function(x, dataset) {
 # Sum factors in log space
   sum_log_factors(factors)
 }
+# Returns a list of CPT entries per feature. Each features CPT entries are a matrix
+# of N rows and a column per class.
 get_ccx_factors <- function(cptsx, dataset, class, classes) {
   # Return empty list if no cpts
   if (length(cptsx) == 0) return( list() )
   # Get variables (1D of cpts)
   features <- vapply(cptsx, cpt_1d_var, FUN.VALUE = character(1))
   #   Get x CPT indices replicated for each class
-  # warning("check dataset levels not implemented.")    
+  # check_dataset_levels(cptsx, dataset)
   nclass <- length(classes)
   indscx <- make_xcpt_indices(features, class, nclass, dataset)
   # Fetch from CPTs
@@ -89,14 +91,21 @@ make_xcpt_indices <- function(features, class, nclass, dataset) {
   # Return indices
   indices
 }
-# #' Check that levels in dataset are identical to those in the CPTs
-# check_dataset_levels <- function(cpts, dataset) {  
+# Check that levels in dataset are identical to those in the CPTs. Need this to replace the factor values with their integer codes.
+# 
+# @param cptsx The feature cpts
+# @keywords internal 
+# check_dataset_levels <- function(cptsx, dataset) {  
+#   # One variable appears in many CPTs. Are levels consistent among them?
+#   names(cptsx) <- vapply(cptsx, cpt_1d_var, FUN.VALUE = character(1))
+#   # Get just one CPT per feature
+#   features <- unique(names(cptsx))
+#   ucptsx <- cptsx[features]
+#   cpt_levels <- lapply(cptsx, cpt_1d_values) 
 #   # Get feature levels in dataset
-#   features <- names(cpts)
 #   dataset <- trim_dataset(features, dataset)
 #   levels <- extract_var_levels(dataset)
-#   # Get the values of each feature. 
-#   values <- lapply(lapply(cpts, cpt_1d_values), function(v) v$values)
-#   # Check that they match the dataset. If not, put informative message   
-#   stopifnot(identical(values, levels))
+#   if (!identical(cpt_levels, levels)) {
+#     stop("The feature levels in data set must match those of values()")  
+#   }
 # }

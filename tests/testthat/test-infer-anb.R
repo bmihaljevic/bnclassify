@@ -66,6 +66,14 @@ test_that("correct result", {
   expect_equal(as.vector(true_log_prob), as.vector(b[1, ]))
 })
 
+# test_that("different levels", {
+#   nb <- nbcar()
+#   ce <- car
+#   levels(ce$buying) <-  rev(levels(ce$buying))
+#   expect_error(compute_anb_log_joint(nb, ce),
+#                "levels in data set must match those of values")
+# })
+
 test_that("fail with incomplete data", {
   v <- nbvote()
   expect_error(compute_anb_log_joint(v, voting), "anyNA")
