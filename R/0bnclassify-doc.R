@@ -19,6 +19,7 @@
 #' @docType package
 #' @name bnclassify
 #' @importFrom stats predict
+#' @importFrom graphics plot
 #' @references Bielza C and Larranaga P (2014), Discrete Bayesian network 
 #'   classifiers: A survey. \emph{ACM Computing Surveys}, \bold{47}(1), Article 
 #'   5.
@@ -45,7 +46,7 @@ NULL
 
 #' Congress Voting Data Set.
 #' 
-#' @source \url{http://sourceforge.net/projects/weka/files/datasets/UCI and StatLib/uci-20070111.tar.gz}
+#' @source \url{http://goo.gl/GTXrCz}
 #' @format A \code{data.frame} with 17 columns and 435 rows.
 #' @docType data
 #' @name voting
@@ -53,7 +54,7 @@ NULL
 
 #' Car Evaluation Data Set.
 #' 
-#' @source \url{http://sourceforge.net/projects/weka/files/datasets/UCI and StatLib/uci-20070111.tar.gz}
+#' @source \url{http://goo.gl/GTXrCz}
 #' @format A \code{data.frame} with 7 columns and 1728 rows.
 #' @docType data
 #' @name car

@@ -6,7 +6,7 @@
 \title{Congress Voting Data Set.}
 \format{A \code{data.frame} with 17 columns and 435 rows.}
 \source{
-\url{http://sourceforge.net/projects/weka/files/datasets/UCI and StatLib/uci-20070111.tar.gz}
+\url{http://goo.gl/GTXrCz}
 }
 \description{
 Congress Voting Data Set.

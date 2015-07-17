@@ -6,7 +6,7 @@
 \title{Car Evaluation Data Set.}
 \format{A \code{data.frame} with 7 columns and 1728 rows.}
 \source{
-\url{http://sourceforge.net/projects/weka/files/datasets/UCI and StatLib/uci-20070111.tar.gz}
+\url{http://goo.gl/GTXrCz}
 }
 \description{
 Car Evaluation Data Set.

@@ -4,7 +4,7 @@
 \alias{plot.bnc_dag}
 \title{Plot the structure.}
 \usage{
-plot.bnc_dag(x, y, layoutType = "dot", ...)
+\method{plot}{bnc_dag}(x, y, layoutType = "dot", ...)
 }
 \arguments{
 \item{x}{The bnc_dag_object}
