@@ -1,4 +1,3 @@
-<!-- README.md is generated from README.Rmd. Please edit that file -->
 bnclassify
 ==========
 
@@ -51,7 +50,7 @@ Estimate predictive accuracy with cross validation.
 
 ``` r
 cv(tn, car, k = 10, smooth = 0.01, dag = TRUE)
-#> [1] 0.861673
+#> [1] 0.8657653
 ```
 
 Install
@@ -64,13 +63,13 @@ source("http://bioconductor.org/biocLite.R")
 biocLite(c("graph", "RBGL", "Rgraphviz"))
 ```
 
-When you read this bnclassify may already be on CRAN so you can try:
+When you read this bnclassify may already be on CRAN. In that case, use:
 
 ``` r
 install.packages('bnclassify')
 ```
 
-If not, you can always install the current version from github:
+If not, you can install the current version from github:
 
 ``` r
 install.packages('devtools')

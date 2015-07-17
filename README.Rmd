@@ -4,8 +4,6 @@ output:
     variant: markdown_github
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -13,7 +11,6 @@ knitr::opts_chunk$set(
   fig.path = "README-"
 )
 ```
-
 # bnclassify
 
 [![Travis-CI Build Status](https://travis-ci.org/bmihaljevic/bnclassify.svg?branch=master)](https://travis-ci.org/bmihaljevic/bnclassify)
@@ -55,12 +52,12 @@ source("http://bioconductor.org/biocLite.R")
 biocLite(c("graph", "RBGL", "Rgraphviz"))
 ```
 
-When you read this bnclassify may already be on CRAN so you can try:
+When you read this bnclassify may already be on CRAN. In that case, use:
 ```{r, eval = FALSE}
 install.packages('bnclassify')
 ```
 
-If not, you can always install the current version from github:
+If not, you can install the current version from github:
 ```{r, eval = FALSE}
 install.packages('devtools')
 devtools::install_github('bmihaljevic/bnclassify', build_vignettes = TRUE)

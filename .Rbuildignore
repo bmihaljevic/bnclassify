@@ -9,3 +9,4 @@ design-and-manage
 ^\.travis\.yml$
 ^README\.Rmd$
 ^README-.*\.png$
+^NEWS\.md$
