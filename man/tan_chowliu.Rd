@@ -17,7 +17,7 @@ tan_cl(class, dataset, score = "loglik", blacklist = NULL, root = NULL)
   and maximum AIC tree/forest, respectively.}
 
 \item{blacklist}{A character matrix. Edges that may be blacklisted from the
-resulting structure.}
+resulting structure. Note: currently ignored.}
 
 \item{root}{A character. The feature to be used as root of the augmenting
 tree. Only one feature can be supplied, even in case of an augmenting
