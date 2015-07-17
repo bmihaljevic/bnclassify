@@ -18,8 +18,8 @@ predictLearner.bnc(.learner, .model, .newdata, ...)
 \arguments{
 \item{x}{A \code{\link{bnc_bn_object}} object.}
 
-\item{dag}{A logical. Whether to repeat structure learning on each fold or
-just parameter learning.}
+\item{dag}{A logical. Whether to learn structure on each training set.
+Parameters are always learned.}
 
 \item{id}{A character.}
 

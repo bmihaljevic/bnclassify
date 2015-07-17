@@ -13,8 +13,8 @@ cv(x, dataset, k, dag, smooth = NULL)
 
 \item{k}{An integer. The number of folds.}
 
-\item{dag}{A logical. Whether to repeat structure learning on each fold or
-just parameter learning.}
+\item{dag}{A logical. Whether to learn structure on each training set.
+Parameters are always learned.}
 
 \item{smooth}{A nonnegative numeric. The smoothing value for Bayesian
 parameter estimation.}

@@ -25,9 +25,9 @@ check_bnc_dag <- function(x) {
   # Check dag is a graphNEL.
   # stopifnot(inherits(as_graphNEL(x), "graphNEL"))
 } 
-# Accessor functions 
+#' To graphNEL. 
 #' @export 
-#' @describeIn  bnc_dag_object Returns the dag as a \code{graph::graphNEL} object.
+#' @param x a \code{\link{bnc_dag_object}} object. The Bayesian network structure.
 as_graphNEL <- function(x) {
   stopifnot(inherits(x, "bnc_dag"))
   x$.dag

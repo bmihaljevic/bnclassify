@@ -44,6 +44,10 @@ fast_equal <- function(a, b) {
   #   stopifnot(length(b) == 1) No check for efficiency
   abs(a - b) < .Machine$double.eps ^ 0.5
 }
+#' Computes the accuracy. 
+#' 
+#' @param x A vector.
+#' @param y A vector.
 accuracy <- function(x, y) {
   stopifnot(length(x) == length(y))
   sum(x == y) / length(x)

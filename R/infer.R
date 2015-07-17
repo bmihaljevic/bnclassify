@@ -6,7 +6,10 @@ compute_cp <- function(x, dataset) {
   stopifnot(are_pdists(p))
   p
 }
-# Computes log-likelihood
+#' Computes log-likelihood of the model on the provided data.
+#' 
+#'@param x A \code{\link{bnc_bn_object}} object.
+#'@param newdata A data frame.
 compute_ll <- function(x, dataset) {
   # Get log joint prob per class 
   log_joint_per_class <- compute_log_joint(x, dataset)

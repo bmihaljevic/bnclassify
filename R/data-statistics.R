@@ -1,4 +1,17 @@
-# Returns the (conditional) mutual information among (three) two sets of variables.
+#' Returns the (conditional) mutual information among two variables.
+#' 
+#' If \code{z} is not \code{NULL} then returns \eqn{I(X;Y|Z)}. Otherwise 
+#' \eqn{I(X;Y)}.
+#' 
+#' \eqn{I(X;Y|Z) = H(X|Z) + H(Y|Z) - H(X,Y,Z) - H(Z)}, where \eqn{H()} is
+#' Shannon's entropy. 
+#' 
+#' @param x A length one character.
+#' @param y A length one character.
+#' @param dataset A data frame. Must contain x, y and, optionally, z columns.
+#' @param z A character vector.
+#' @param unit A character. Logarithm base. See \code{entropy} package.
+#' @export
 cmi <- function(x, y, dataset, z = NULL, unit="log") {  
 # Check x,y,z have length 1. z may be NULL
   stopifnot(assertthat::is.string(x), assertthat::is.string(y))

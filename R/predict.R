@@ -46,8 +46,8 @@ map <- function(pred) {
 #' @param x List of \code{\link{bnc_bn_object}}. The classifiers to evaluate.
 #' @param dataset The data frame on which to evaluate the classifiers.
 #' @param k An integer. The number of folds.
-#' @param dag A logical. Whether to repeat structure learning on each fold or 
-#'   just parameter learning.
+#' @param dag A logical. Whether to learn structure on each training set.
+#'   Parameters are always learned.
 #' @inheritParams learn_params
 #' @export
 #' @return A numeric vector. The predictive accuracy of each classifier in 
