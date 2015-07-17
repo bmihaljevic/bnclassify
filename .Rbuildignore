@@ -7,3 +7,5 @@ develop
 vignettes\bnclassify-implementation.Rmd
 design-and-manage
 ^\.travis\.yml$
+^README\.Rmd$
+^README-.*\.png$

@@ -1,0 +1,81 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
+
+# bnclassify
+
+[![Travis-CI Build Status](https://travis-ci.org/bmihaljevic/bnclassify.svg?branch=master)](https://travis-ci.org/bmihaljevic/bnclassify)
+[![codecov.io](https://codecov.io/github/bmihaljevic/bnclassify/coverage.svg?branch=master)](https://codecov.io/github/bmihaljevic/bnclassify?branch=master)
+
+The bnclassify package implements algorithms for learning discrete Bayesian network classifiers from data and estimating their predictive accuracy.
+
+# Example 
+
+Let us load a data set and learn a tree-augmented naive Bayes by maximizing the BIC score.
+```{r}
+library(bnclassify)
+data(car)
+tn <- tan_cl('class', car, score = 'bic')
+tn
+plot(tn)
+```
+
+After we fit its parameters, we can use it to predict class labels. 
+```{r}
+tn <- lp(tn, car, smooth = 0.01)
+p <- predict(tn, car, prob = TRUE)
+head(p)
+p <- predict(tn, car, prob = FALSE)
+head(p)
+```
+
+Estimate predictive accuracy with cross validation.
+```{r}
+cv(tn, car, k = 10, smooth = 0.01, dag = TRUE)
+```
+
+# Install
+
+Make sure you have at least version 3.2.0 of R. You will need to install packages from Bioconductor.  
+
+```{r, eval = FALSE}
+source("http://bioconductor.org/biocLite.R")
+biocLite(c("graph", "RBGL", "Rgraphviz"))
+```
+
+When you read this bnclassify may already be on CRAN so you can try:
+```{r, eval = FALSE}
+install.packages('bnclassify')
+```
+
+If not, you can always install the current version from github:
+```{r, eval = FALSE}
+install.packages('devtools')
+devtools::install_github('bmihaljevic/bnclassify', build_vignettes = TRUE)
+#devtools::install_github('bmihaljevic/bnclassify')
+```
+
+# Overview
+
+See the list of implemented algorithms with 
+
+```{r, eval = FALSE}
+?bnclassify
+```
+
+Use the vignette to get started. 
+```{r, eval = FALSE}
+vignette('bnclassify')
+```
