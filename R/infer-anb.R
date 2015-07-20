@@ -1,34 +1,3 @@
-multi_compute_augnb_luccpx <- function(x, dataset) {
-  x <- ensure_multi_list(x)
-  class <- get_common_class(x)
-  ucpts <- get_unique_cpts(x)
-  names(ucpts) <- vapply(ucpts, get_cpt_id, FUN.VALUE = character(1))
-  ind_class <- which(class == names(ucpts))
-  stopifnot(assertthat::is.count(ind_class))
-  uxcpts <- ucpts[-ind_class]
-  cp <- ucpts[[ind_class]] 
-  rm(ucpts) # Not needed any more
-  factors <- get_ccx_factors(uxcpts, dataset, 
-                             class, classes = cpt_1d_values(cp))
-  factors[[class]] <- make_cp_factor(cp, dataset)
-  dag_fams_ids <- lapply(x, families_ids)
-  factors_list <- lapply(dag_fams_ids, function(cpt_ids) factors[cpt_ids] )
-  lapply(factors_list, sum_log_factors)
-}
-compute_augnb_lucp_multi <- function(class, xfams_id_dags, unique_xcpts, cp,
-                                     dataset) {
-  stopifnot(is_just(xfams_id_dags, "list"))
-  stopifnot(is_non_empty_complete(cp))
-  cp_factor <- make_cp_factor(cp, dataset)
-  # Now get the probabilities for each unique CPT. TODO: length 0 works?
-  xp <- get_ccx_factors(unique_xcpts, dataset, class, 
-                        classes = get_cpt_values(cp)[[1]])
-  # for each list_of_cpts (dag), get the correct factors
-  factors_list <- lapply(xfams_id_dags, function(fams_dag) {
-    append(list(class = cp_factor), xp[fams_dag])
-  })
-  lapply(factors_list, sum_log_factors)
-}
 # Computes the log joint probability of the observed features for each of the classes.
 #  This assumes that x is an augmented naive Bayes and that data is complete.
 compute_anb_log_joint <- function(x, dataset) {

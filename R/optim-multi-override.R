@@ -71,3 +71,20 @@ extract_params_cptpool <- function(x, cpt_pool) {
   cpts_ids <- make_families_ids(lapply(cpt_pool, cpt2family))
   cpt_pool[match(fams_ids, cpts_ids)]
 }
+multi_compute_augnb_luccpx <- function(x, dataset) {
+  x <- ensure_multi_list(x)
+  class <- get_common_class(x)
+  ucpts <- get_unique_cpts(x)
+  names(ucpts) <- vapply(ucpts, get_cpt_id, FUN.VALUE = character(1))
+  ind_class <- which(class == names(ucpts))
+  stopifnot(assertthat::is.count(ind_class))
+  uxcpts <- ucpts[-ind_class]
+  cp <- ucpts[[ind_class]] 
+  rm(ucpts) # Not needed any more
+  factors <- get_ccx_factors(uxcpts, dataset, 
+                             class, classes = cpt_1d_values(cp))
+  factors[[class]] <- make_cp_factor(cp, dataset)
+  dag_fams_ids <- lapply(x, families_ids)
+  factors_list <- lapply(dag_fams_ids, function(cpt_ids) factors[cpt_ids] )
+  lapply(factors_list, sum_log_factors)
+}
