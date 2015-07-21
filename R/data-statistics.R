@@ -60,13 +60,11 @@ cmi_table <- function(xyz_freqs, unit = "log") {
 extract_ctgt <- function(cols, dataset) {
   # check cols non empty unique characters 
   stopifnot(is_non_empty_complete(cols), is.character(cols), 
-            are_all_unique(cols))
-  # Check all cols in dataset
-  stopifnot(is_subset(cols, colnames(dataset)))
+            are_all_unique(cols), is_subset(cols, colnames(dataset)))
   #Trim dataset (do not use trim_dataset() cause it does not enforce cols order)
   dataset <- dataset[ , cols, drop = FALSE]
-  # Check all are factors
-  check_dataset(dataset)
+#   # Check all are factors
+  # check_dataset(dataset)
   #   Return table over cols
   table(dataset, dnn = cols)
 }

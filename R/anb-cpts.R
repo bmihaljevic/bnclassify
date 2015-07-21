@@ -2,29 +2,22 @@
 cpts2families <- function(cpts) {
   lapply(cpts, cpt2family) 
 }
-check_anb_cpts <- function(cpts, class) {
-  # Check families
-  fams <- cpts2families(cpts)
-  check_anb_families(fams, class)
-  # Not checking the actual values in the CPTs...
-}
-# check_anb_cpt <- function() {
-#   # check the family. that is, get the variables and that. 
-# }
 families2cpts <- function(families, dataset, smooth) {
   # Check dataset 
   check_dataset(dataset)
   lapply(families, extract_cpt, dataset, smooth = smooth)
 }
 extract_cpt <- function(vars, dataset, smooth) {
-  ctgt2cpt(extract_ctgt(vars, dataset), smooth = smooth)
+  ctgt <- extract_ctgt(vars, dataset)
+  ctgt2cpt(ctgt, smooth = smooth)
 }
 # Turns a contingency table into a conditional probability table  
 ctgt2cpt <- function(ctgt, smooth) {
   # Requiring ctgt be a table. That implies it is an array.
   stopifnot(smooth >= 0, is.table(ctgt), are_complete_dimnames(ctgt))
   # Add smooth to ctgt 
-  normalize_ctgt(ctgt + smooth)
+  ctgt <- ctgt + smooth
+  normalize_ctgt(ctgt)
 }
 # Normalizes the contigency table on the first dimension. Returns a table.
 normalize_ctgt <- function(ctgt) {

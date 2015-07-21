@@ -16,7 +16,7 @@ test_that("bnc_bn no class in dataset ", {
   tbdag <- nb_dag('class', 'buying')
   tb <- bnc_dag(tbdag, class = 'class')
   expect_error(bnc_bn(tb, car[ , 1, drop = FALSE], smooth = 0),
-               "disjoint")
+               "is_subset")
 })
 
 test_that("Just the class in dataset", {
