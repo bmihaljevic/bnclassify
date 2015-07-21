@@ -1,27 +1,22 @@
-# Returns families with the class as last node in each.
-graph2families <- function(dag, class) {
-  #   Check dag and class
-  #   Check class is length 1 character  
-  check_class(class)
-  #   Check dag is graphNEL (or graph adjm?)
+# Converts a graphnel DAG to anb families. 
+# Make sure class is last family. 
+# Make sure class last element in each family.
+graphNEL2families <- function(dag, class) {
+  check_class(class) # Remove?
   stopifnot(is_dag_graph(dag))
-  #   Check class is in nodes of dag  
-  stopifnot(class %in% graph::nodes(dag)) # TODO: call basic-dag here
-  #   Features = all nodes other than class
-  # TODO: call basic-dag here
-  features <- setdiff(graph::nodes(dag), class)
-  #  Save features and class in vars vector 
-  vars <- setNames(nm = c(features, class))
-  #  For each var, extract the family in the dag
-  families <- lapply(vars, family, dag)  
-  # Make class last element of each family 
-  families <- lapply(families, format_family, class)  
+  parents <- graphNEL_parents(dag)
+  families <- mapply(make_family, names(parents), parents, class, SIMPLIFY = FALSE)
+  # Make sure class is the last family
+  ordered_vars <- make_last(names(parents), class)
+  families <- families[ordered_vars]
+  check_anb_families(families, class)
   families
 }
-# Ensures class is last.
+# Make class last element of each family 
 # TODO: maybe should ensure an alphabetic ordering of non-class parents
-format_family <- function(family, class) {
-  make_last(family, class)
+make_family <- function(var, parents, class) {
+ family <- c(var, parents) 
+ make_last(family, class)
 }
 # Returns the variables whose families are these
 get_family_vars <- function(families) {
@@ -30,16 +25,16 @@ get_family_vars <- function(families) {
 # Check that the families correspond to an augmented naive Bayes. 
 check_anb_families <- function(families, class) {
   vars <- get_family_vars(families)
-  stopifnot(is_non_empty_complete(vars))
   # Class must be the last family so that it is also last in vars()
-  stopifnot(is_last(class, vars))
   #   Check that class has no parents
-  stopifnot(identical(families[[class]], class))
+  stopifnot(is_non_empty_complete(vars), is_last(class, vars),  
+            identical(families[[class]], class))
   # check each family
   fams_ok <- all( mapply(is_anb_family, families, vars, 
                     MoreArgs = list(class = class), SIMPLIFY = TRUE) )
-  #   Not checking for cycles though...
   stopifnot(fams_ok)
+  #   Check for cycles
+  stopifnot(is_dag_families(families))
 }
 # All elements are non empty characters
 # The var is the 1 element of the family, class is the last

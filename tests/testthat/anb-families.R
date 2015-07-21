@@ -7,18 +7,18 @@ test_dag <- function() {
 
 test_that("graph 2 families nominal", {
   g <- test_dag()
-  f <- graph2families(dag = g, class = 'A')
+  f <- graphNEL2families(dag = g, class = 'A')
   expect_equal(names(f), c('B', 'A'))
 })  
   
 test_that("graph 2 families class not in dag   ", {  
   g <- test_dag()
-  expect_error(graph2families(dag = g, class = 'C'), 'nodes')
+  expect_error(graphNEL2families(dag = g, class = 'C'), 'nodes')
 })
 
 test_that("graph 2 families class length > 1   ", {    
   g <- test_dag()
-  expect_error(graph2families(dag = g, class = LETTERS[1:2]), 
+  expect_error(graphNEL2families(dag = g, class = LETTERS[1:2]), 
                'string')
 })
 
@@ -26,7 +26,7 @@ test_that("graph 2 families  Undirected graph" , {
   e <- list(A = 'B', B = 'A')
   g <- graph::graphNEL(nodes = LETTERS[1:2], edgeL = e, edgemode = "directed")
   g <- graph::graphNEL(nodes = LETTERS[1:2], edgeL = e, edgemode = "undirected")
-  expect_error(graph2families(dag = g, class = LETTERS[1]), 'is_dag_graph')
+  expect_error(graphNEL2families(dag = g, class = LETTERS[1]), 'is_dag_graph')
 })
 
 test_that("check families", {

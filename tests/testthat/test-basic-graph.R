@@ -49,22 +49,24 @@ test_that("Direct forest", {
   expect_equivalent(graph::ugraph(f), af)
 })
 
-test_that("parents", {
-  set.seed(0)
-  g <- random_aug_nb_dag(class = 'A', V = letters[1:3], maxpar = 3, wgt = 0.5)
-# Nominal
-  input <- c('A', 'b', 'a')
-  output_expect <- list(character(), 'A', c('b', 'A'))
-  output <- lapply(input, parents, g)
-  expect_identical(output, output_expect)
-# Not a directed graph 
-   g <- graph::randomGraph(V = letters, M = 4, p = 0.4)
-   expect_error(parents('a', g), "directed")
-# Compare to gRbase::parents 
-  set.seed(0)
-  g <- random_aug_nb_dag(class = 'A', V = letters, maxpar = 15, wgt = 0.9)
-  expect_identical(parents('b', g), gRbase::parents('b', g))
-})
+# Function not used. 
+# test_that("parents", {
+#   skip_if_not_installed('gRbase')
+#   set.seed(0)
+#   g <- random_aug_nb_dag(class = 'A', V = letters[1:3], maxpar = 3, wgt = 0.5)
+# # Nominal
+#   input <- c('A', 'b', 'a')
+#   output_expect <- list(character(), 'A', c('b', 'A'))
+#   output <- lapply(input, parents, g)
+#   expect_identical(output, output_expect)
+# # Not a directed graph 
+#    g <- graph::randomGraph(V = letters, M = 4, p = 0.4)
+#    expect_error(parents('a', g), "directed")
+# # Compare to gRbase::parents 
+#   set.seed(0)
+#   g <- random_aug_nb_dag(class = 'A', V = letters, maxpar = 15, wgt = 0.9)
+#   expect_identical(parents('b', g), gRbase::parents('b', g))
+# })
 
 test_that("nb_dag", {
   # Nominal

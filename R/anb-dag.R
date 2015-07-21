@@ -1,10 +1,8 @@
 # Creates an augmented naive Bayes with structure but no parameters.
 bnc_dag <- function(dag, class) {
-  families <- graph2families(dag, class)  
+  families <- graphNEL2families(dag, class)  
 #   Save dag, class, features,and call 
-  obj <- make_bnc_dag(class = class, families = families, graphNEL = dag)
-  check_bnc_dag(obj)
-  obj
+  make_bnc_dag(class = class, families = families, graphNEL = dag)
 }
 make_bnc_dag <- function(class, families, graphNEL) {
   # Not checking families for efficiency; they are checked in bnc_dag anyway
@@ -14,15 +12,17 @@ make_bnc_dag <- function(class, families, graphNEL) {
 }
 # Checks it is a valid bnc_dag object 
 check_bnc_dag <- function(x) {
+  check_bnc_dag_basic(x)
+  # Check families
+  check_anb_families(families(x), class_var(x))  
+} 
+check_bnc_dag_basic <- function(x) {
   class <- class_var(x)
   features <- features(x)
   # This also checks for class.
   check_features(features = features, class = class)
   stopifnot(identical(vars(x), setNames(nm = c(features, class))))
-  # Check families
-  families <- families(x)
-  check_anb_families(families, class)  
-} 
+}
 #' To graphNEL. 
 #' @export 
 #' @param x a \code{\link{bnc_dag_object}} object. The Bayesian network structure.

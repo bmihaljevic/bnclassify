@@ -1,4 +1,5 @@
 # Gets the parents of a node in the graph
+# TODO: Not used. 
 parents <- function(x, g) {
   # Check x is character
   check_node(x)
@@ -17,6 +18,21 @@ parents <- function(x, g) {
   # Check all parents are unique   
   stopifnot(length(parents) == length(unique(parents)))
   # return parents
+  parents
+}
+# Eeach nodes' parents.
+# return Named list of characters.
+graphNEL_parents <- function(g) {
+  nnodes <- graph::numNodes(g)
+  if (nnodes == 0) return(list())
+  parents <- setNames(replicate(nnodes, character()), graph::nodes(g))
+  if (graph::numEdges(g) == 0) return(parents)
+  # There may be no edgemode if no edges. 
+  stopifnot(graph::edgemode(g) == "directed") 
+  edges <- named_edge_matrix(g) # Maybe the check should be in here?
+  have_parents <- tapply(unname(edges['from',]), unname(edges['to', ]),
+                         identity, simplify = FALSE)
+  parents[names(have_parents)] <- have_parents
   parents
 }
 #  Gets the parents of a node in the graph

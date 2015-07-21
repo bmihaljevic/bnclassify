@@ -28,6 +28,7 @@ test_that("bnc_dag", {
 
 test_that("Accessors", {
 # Nominal  
+  skip_if_not_installed('gRbase')
   set.seed(0)
   ran <- random_aug_nb_dag('z', letters[-26], maxpar = 5, wgt = 0.8)
   dg <- bnc_dag(ran, class = 'z')
