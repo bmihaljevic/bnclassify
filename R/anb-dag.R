@@ -16,14 +16,12 @@ make_bnc_dag <- function(class, families, graphNEL) {
 check_bnc_dag <- function(x) {
   class <- class_var(x)
   features <- features(x)
-  check_class(class)
+  # This also checks for class.
   check_features(features = features, class = class)
   stopifnot(identical(vars(x), setNames(nm = c(features, class))))
   # Check families
   families <- families(x)
   check_anb_families(families, class)  
-  # Check dag is a graphNEL.
-  # stopifnot(inherits(as_graphNEL(x), "graphNEL"))
 } 
 #' To graphNEL. 
 #' @export 

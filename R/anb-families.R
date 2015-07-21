@@ -27,7 +27,7 @@ format_family <- function(family, class) {
 get_family_vars <- function(families) {
   names(families)
 }
-# Check that the last family is class. I.e., families are ordered. 
+# Check that the families correspond to an augmented naive Bayes. 
 check_anb_families <- function(families, class) {
   vars <- get_family_vars(families)
   stopifnot(is_non_empty_complete(vars))
