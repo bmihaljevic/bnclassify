@@ -46,7 +46,7 @@ compute_log_joint <- function(x, dataset) {
 compute_log_joint_complete <- function(x, dataset) {
   # Check dataset complete
   stopifnot(!anyNA(dataset))  
-  compute_anb_log_joint(x, dataset)
+  compute_anb_log_joint_per_class(x, dataset)
 }
 compute_log_joint_incomplete <- function(x, dataset) {
   # Check all rows in dataset have missings 

@@ -34,7 +34,7 @@ multi_update <- function(x, dataset, dag, smooth = NULL) {
 multi_predict <- function(object, newdata, prob = FALSE) {
   #   if complete, then all one together
   if (!anyNA(newdata)) {
-    p <- multi_compute_augnb_luccpx(object, newdata)
+    p <- multi_compute_log_joint_per_class(object, newdata)
     p <- lapply(p, log_normalize)
     stopifnot(all(vapply(p, are_pdists, FUN.VALUE = logical(1))))
     if (prob) {
@@ -83,8 +83,46 @@ multi_compute_augnb_luccpx <- function(x, dataset) {
   rm(ucpts) # Not needed any more
   factors <- get_ccx_factors(uxcpts, dataset, 
                              class, classes = cpt_1d_values(cp))
-  factors[[class]] <- make_cp_factor(cp, dataset)
+  factors[[class]] <- make_cp_factor(cp, nrow(dataset))
   dag_fams_ids <- lapply(x, families_ids)
   factors_list <- lapply(dag_fams_ids, function(cpt_ids) factors[cpt_ids] )
   lapply(factors_list, sum_log_factors)
+}
+
+# Not checking whether the individual x are anbs. Nor whether the dataset is
+# complete.
+multi_compute_log_joint_per_class <- function(x, dataset) {
+  # Make sure x is a list 
+  x <- ensure_multi_list(x)
+  # Get feature cpts of each x 
+  all_x_cpts <- lapply(x, feature_params)
+  all_x_cpts_together <- unlist(all_x_cpts, recursive = FALSE, 
+                                use.names = FALSE)
+  stopifnot(is.list(all_x_cpts_together))
+  # ..Make sure the CPTs are named with their corresponding variable
+  cpt_names <- unlist(lapply(all_x_cpts, names), use.names = FALSE)
+  names(all_x_cpts_together) <- cpt_names
+  # Identify unique feature cpts
+  x_cpt_ids <- vapply(all_x_cpts_together, get_cpt_id, FUN.VALUE = character(1))
+  unique_x_cpt_ids <- unique(x_cpt_ids)
+  unique_inds <- match(unique_x_cpt_ids, x_cpt_ids)
+  unique_x_cpts <- all_x_cpts_together[unique_inds]
+  # Convert data to cpt indices 
+  class <- get_common_class(x)
+  cp <- params(x[[1]])[[class]]
+  cpt_inds <- x2cpt_inds(unique_x_cpts, dataset, class, length(cp))
+  # Get probs for unique feature cpts 
+  N <- nrow(dataset)
+  xgc_list <- lapply(all_x_cpts, get_xs_cpt_entries, cpt_inds, classes(x[[1]]), 
+                     N)
+  # For each dag, log_multiply P(C) with P(x | C)
+  lapply(xgc_list, log_multiply_cp_xgc, cp, N) 
+}
+# get_unique_ind <- function(x, name) {
+#   ind_class <- which(name == names(x))
+#   stopifnot(assertthat::is.count(ind_class))
+#   ind_class
+# }
+feature_params <- function(x) {
+  params(x)[features(x)]
 }

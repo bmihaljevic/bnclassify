@@ -52,7 +52,30 @@ test_that("learn and predict", {
   b$.call_bn <- x[[1]]$.call_bn <- NULL
   expect_identical(b, x[[1]])
   
-  c <- compute_anb_log_joint(b, car)
-  y <- multi_compute_augnb_luccpx(b, car)
+  c <- compute_anb_log_joint_per_class(b, car)
+  y <- multi_compute_log_joint_per_class(b, car)
   expect_equal(c, y[[1]])
+})
+
+test_that("multi class posterior nominal", {
+  a <- nbcar()  
+  b <- nbcarp(car[, 4:7])
+  cr <- multi_compute_log_joint_per_class(list(a, b), car)  
+  ar <- compute_anb_log_joint_per_class(a, car)
+  expect_equal(cr[[1]], ar)
+  br <- compute_anb_log_joint_per_class(b, car)
+  expect_equal(cr[[2]], br)
+})
+
+test_that("multi class posterior single bnc", {
+  a <- nbcar()  
+  b <- multi_compute_log_joint_per_class(a, car)  
+  c <- compute_anb_log_joint_per_class(a, car)
+  expect_equal(b[[1]], c)
+})
+
+test_that("multi class posterior 0 row db", {
+  a <- nbcar()  
+  b <- multi_compute_log_joint_per_class(a, car[FALSE, ])  
+  expect_equal(dim(b[[1]]), c(0L, 4L))
 })
