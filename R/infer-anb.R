@@ -19,7 +19,7 @@ compute_anb_log_joint_per_class <- function(x, dataset) {
   classes <- classes(x)
   cpt_inds <- x2cpt_inds(x_cpts, dataset, class, length(classes))
   xgc = get_xs_cpt_entries(x_cpts, cpt_inds, classes, N)
-  log_multiply_cp_xgc(xgc, cp, N)
+  compute_class_posterior(xgc, cp, N)
 }
 #' Maps observations of x to cpt indices. Replicates the indices to cover each
 #' class.
@@ -33,12 +33,12 @@ x2cpt_inds <- function(x_cpts, dataset, class, nclass) {
   #   as indices.
   dataset <- dataset[features]
   # here should probably check data set. 
-#   data_levels <- lapply(dataset, levels)
-# #   # [features] omits the class and puts in same order as data levels
-#   var_values <- cpt_vars_values2(x_cpts)[features]
-#   if (!isTRUE(all.equal(data_levels, var_values, check.attributes = FALSE))) {
-#     stop("Levels in data set must match those in the CPTs (values(x)).")  
-#   }
+  data_levels <- lapply(dataset, levels)
+#   # [features] omits the class and puts in same order as data levels
+  var_values <- cpt_vars_values2(x_cpts)[features]
+  if (!isTRUE(all.equal(data_levels, var_values, check.attributes = FALSE))) {
+    stop("Levels in data set must match those in the CPTs (values(x)).")  
+  }
   cpt_inds <- lapply(dataset, factor2cpt_inds, nclass)
   # Add class indices 
   cpt_inds[[class]] = rep(1:nclass, each = nrow(dataset))
@@ -75,16 +75,16 @@ cpt_entries <- function(cpt, cpt_inds) {
 	indices <- do.call('cbind', cpt_inds[vars])
 	cpt[indices]	
 }
-# Computes the product (in log space) of P(C) and P(x | c) for N instances.
-log_multiply_cp_xgc <- function(xgc, cp, N) {
+# Computes the product (in log space) of P(C) and P(x | C) for N instances.
+# @param xgc log P(x|C)
+# @param cp log P(C)
+compute_class_posterior <- function(xgc, cp, N) {
   # Make cp have dimensions N x cp 
   mcp <- matrix(rep(cp, each = N), ncol = length(cp), 
                 dimnames = list(NULL, names(cp)))
   factors <- xgc
   factors$class = mcp
-#   Pass everything to log space 
-#   Sum by Reduce. Here it is better if  I have matrices for conformity. 
-  sum_log_factors(factors)
+  sum_matrices(factors)
 }
 # Returns the variables in the cpts and their possible values. 
 # Because tapply returns an array (of mode list), this also returns an array.

@@ -103,7 +103,7 @@ multi_compute_log_joint_per_class <- function(x, dataset) {
   dag_cpt_inds <- lapply(feature_cpts_ids, match, unique_feat_cpts_ids)
   dag_cpts <- lapply(dag_cpt_inds, function(cpt_ids) u_feat_cpt_entries[cpt_ids])
   # For each dag, log_multiply P(C) with P(x | C)
-  lapply(dag_cpts, log_multiply_cp_xgc, cp, N) 
+  lapply(dag_cpts, compute_class_posterior, cp, N) 
 }
 make_cpts_ids <- function(cpts) {
   fams <- cpts2families(cpts)

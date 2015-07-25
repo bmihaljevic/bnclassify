@@ -1,22 +1,19 @@
-# Multiplies a set of factors by converting to log space and then summing. 
+# Adds a list of matrices. 
 # 
 # @return A numeric matrix. Multiplied in log space.
-sum_log_factors <- function(factors) {
+sum_matrices <- function(matrices) {
   # Must have at least on member 
-  stopifnot(length(factors) > 0)
-  # Check all factors are numeric matrices of same size with same colnames
-  n <- nrow(factors[[1]])
-  nobs <- ncol(factors[[1]])
-  values <- colnames(factors[[1]])
-  valid <- vapply(factors, valid_factor, n, nobs, values, FUN.VALUE = logical(1L))
-  if (!all(valid)) browser()
+  stopifnot(length(matrices) > 0)
+  # Check all are numeric matrices of same size with same colnames
+  n <- nrow(matrices[[1]])
+  nobs <- ncol(matrices[[1]])
+  values <- colnames(matrices[[1]])
+  valid <- vapply(matrices, valid_factor, n, nobs, values, 
+                  FUN.VALUE = logical(1L))
   stopifnot(all(valid))
-#   Apply log to all
-  # factors <- lapply(factors, log)
-#   Sum them 
-  log_sum <- Reduce('+', factors)
-  stopifnot(identical(colnames(log_sum), values))
-  log_sum
+  sum <- Reduce('+', matrices)
+  stopifnot(identical(colnames(sum), values))
+  sum
 }
 valid_factor <- function(x, nrow, ncol, colnames) {
   identical(dim(x), c(nrow, ncol)) && is.numeric(x) && identical(colnames, colnames(x))

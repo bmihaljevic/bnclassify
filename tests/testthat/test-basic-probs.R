@@ -10,18 +10,18 @@ make_factor <- function(n) {
 
 test_that("Multiply single factor", {
   td <- make_factor(1000)
-  a <- sum_log_factors(list(a=td))
-  expect_equal(td, exp(a))
+  a <- sum_matrices(list(a=td))
+  expect_equal(td, a)
 })  
 
 test_that("Multiply Two factors", {
   td <- make_factor(1000)
   td2 <- make_factor(1000)
-  a <- sum_log_factors(list(a=td, b=td2))
+  a <- sum_matrices(list(a=td, b=td2))
   expect_identical(colnames(a), letters[1:2])
   expect_identical(dim(td), dim(a))
-  fr <- td[1, ] * td2[1, ]
-  expect_equal(fr, exp(a[1, ]))
+  fr <- td[1, ] + td2[1, ]
+  expect_equal(fr, a[1, ])
 })
 
 
