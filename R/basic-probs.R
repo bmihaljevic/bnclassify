@@ -9,9 +9,10 @@ sum_log_factors <- function(factors) {
   nobs <- ncol(factors[[1]])
   values <- colnames(factors[[1]])
   valid <- vapply(factors, valid_factor, n, nobs, values, FUN.VALUE = logical(1L))
+  if (!all(valid)) browser()
   stopifnot(all(valid))
 #   Apply log to all
-  factors <- lapply(factors, log)
+  # factors <- lapply(factors, log)
 #   Sum them 
   log_sum <- Reduce('+', factors)
   stopifnot(identical(colnames(log_sum), values))

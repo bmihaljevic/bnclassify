@@ -71,58 +71,44 @@ extract_params_cptpool <- function(x, cpt_pool) {
   cpts_ids <- make_families_ids(lapply(cpt_pool, cpt2family))
   cpt_pool[match(fams_ids, cpts_ids)]
 }
-multi_compute_augnb_luccpx <- function(x, dataset) {
-  x <- ensure_multi_list(x)
-  class <- get_common_class(x)
-  ucpts <- get_unique_cpts(x)
-  names(ucpts) <- vapply(ucpts, get_cpt_id, FUN.VALUE = character(1))
-  ind_class <- which(class == names(ucpts))
-  stopifnot(assertthat::is.count(ind_class))
-  uxcpts <- ucpts[-ind_class]
-  cp <- ucpts[[ind_class]] 
-  rm(ucpts) # Not needed any more
-  factors <- get_ccx_factors(uxcpts, dataset, 
-                             class, classes = cpt_1d_values(cp))
-  factors[[class]] <- make_cp_factor(cp, nrow(dataset))
-  dag_fams_ids <- lapply(x, families_ids)
-  factors_list <- lapply(dag_fams_ids, function(cpt_ids) factors[cpt_ids] )
-  lapply(factors_list, sum_log_factors)
-}
-
-# Not checking whether the individual x are anbs. Nor whether the dataset is
-# complete.
 multi_compute_log_joint_per_class <- function(x, dataset) {
   # Make sure x is a list 
   x <- ensure_multi_list(x)
   # Get feature cpts of each x 
-  all_x_cpts <- lapply(x, feature_params)
-  all_x_cpts_together <- unlist(all_x_cpts, recursive = FALSE, 
-                                use.names = FALSE)
-  stopifnot(is.list(all_x_cpts_together))
+  feature_cpts <- lapply(x, feature_params)
+  feature_cpts_ids <- lapply(feature_cpts, make_cpts_ids)
+  # Flatten cpts and ids 
+  feature_cpts_flat <- unlist(feature_cpts, recursive = FALSE, use.names = FALSE)
   # ..Make sure the CPTs are named with their corresponding variable
-  cpt_names <- unlist(lapply(all_x_cpts, names), use.names = FALSE)
-  names(all_x_cpts_together) <- cpt_names
+  names(feature_cpts_flat) <- unlist(lapply(feature_cpts, names), use.names = FALSE)
+  stopifnot(is.list(feature_cpts_flat))
+  feature_cpts_ids_flat <- unlist(feature_cpts_ids, recursive = FALSE, 
+                                  use.names = FALSE)
+  stopifnot(is.character(feature_cpts_ids_flat))
   # Identify unique feature cpts
-  x_cpt_ids <- vapply(all_x_cpts_together, get_cpt_id, FUN.VALUE = character(1))
-  unique_x_cpt_ids <- unique(x_cpt_ids)
-  unique_inds <- match(unique_x_cpt_ids, x_cpt_ids)
-  unique_x_cpts <- all_x_cpts_together[unique_inds]
-  # Convert data to cpt indices 
+  unique_feat_cpt_ids_inds <- !duplicated(feature_cpts_ids_flat)
+  unique_feat_cpts_ids <- feature_cpts_ids_flat[unique_feat_cpt_ids_inds]
+  unique_feat_cpts <- feature_cpts_flat[unique_feat_cpt_ids_inds]
+  # Log class prior and x CPTs
   class <- get_common_class(x)
-  cp <- params(x[[1]])[[class]]
-  cpt_inds <- x2cpt_inds(unique_x_cpts, dataset, class, length(cp))
+  cp <- log(params(x[[1]])[[class]])
+  unique_feat_cpts[] <- lapply(unique_feat_cpts, log)
+  # Convert data to cpt indices 
+  cpt_inds <- x2cpt_inds(unique_feat_cpts, dataset, class, length(cp))
   # Get probs for unique feature cpts 
   N <- nrow(dataset)
-  xgc_list <- lapply(all_x_cpts, get_xs_cpt_entries, cpt_inds, classes(x[[1]]), 
-                     N)
+  u_feat_cpt_entries <- lapply(unique_feat_cpts, get_x_cpt_entries, cpt_inds,
+                               classes(x[[1]]), N)
+  # Map unique CPTs back to the dags.
+  dag_cpt_inds <- lapply(feature_cpts_ids, match, unique_feat_cpts_ids)
+  dag_cpts <- lapply(dag_cpt_inds, function(cpt_ids) u_feat_cpt_entries[cpt_ids])
   # For each dag, log_multiply P(C) with P(x | C)
-  lapply(xgc_list, log_multiply_cp_xgc, cp, N) 
+  lapply(dag_cpts, log_multiply_cp_xgc, cp, N) 
 }
-# get_unique_ind <- function(x, name) {
-#   ind_class <- which(name == names(x))
-#   stopifnot(assertthat::is.count(ind_class))
-#   ind_class
-# }
+make_cpts_ids <- function(cpts) {
+  fams <- cpts2families(cpts)
+  make_families_ids(fams)
+}
 feature_params <- function(x) {
   params(x)[features(x)]
 }
