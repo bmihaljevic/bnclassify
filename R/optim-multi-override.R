@@ -19,9 +19,9 @@ multi_update <- function(x, dataset, dag, smooth = NULL) {
   }
   else {
     lp_multi_args <- lapply(x, get_lp_multi_update_args)
-    if (are_all_equal(lp_multi_args)) {
-      # If all lp args are the same, then can call multi_bnc_bn
-      # TODO: use weights and awnb if needed.
+    # If all lp args contain just smooth, and the smooth value is identical, 
+    # then can call multi_bnc_bn to take advantage of shared CPTs
+    if (are_all_equal(lp_multi_args) && identical(names(lp_multi_args[[1]]), 'smooth')) {
       multi_bnc_bn(dags, dataset, smooth = lp_multi_args[[1]]$smooth)
     }
     else {
