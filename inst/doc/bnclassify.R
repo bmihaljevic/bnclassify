@@ -152,24 +152,21 @@ sfeats$x
 detach('package:mlr')
 
 ## ------------------------------------------------------------------------
-if (!requireNamespace("gRain", quietly = TRUE)) {
-    stop("gRain needed ", call. = FALSE)
-  }
 a <- lp(nb('class', car), car, smooth = 1)
 g <- as_grain(a)
 gRain::querygrain.grain(g)$buying
 
-## ---- cache=TRUE, eval = FALSE-------------------------------------------
+## ---- eval = FALSE-------------------------------------------------------
 #  microbenchmark::microbenchmark(
 #    bsej = {b <- bsej('class', car, k = 10, epsilon = 0)} ,
 #    tan_hc = {t <- b <- tan_hc('class', car, k = 10, epsilon = 0)},
 #    times = 10)
 
-## ---- cache=TRUE, eval=FALSE---------------------------------------------
+## ---- eval=FALSE---------------------------------------------------------
 #  microbenchmark::microbenchmark(
 #    cv(list(b, t), car, k = 10, dag = TRUE, smooth = 0.01), times = 10)
 
-## ---- cache=TRUE, eval=FALSE---------------------------------------------
+## ---- eval=FALSE---------------------------------------------------------
 #  nb <- nb('class', car)
 #  tcl <- tan_cl('class', car)
 #  microbenchmark::microbenchmark(

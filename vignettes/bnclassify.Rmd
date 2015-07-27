@@ -292,9 +292,6 @@ detach('package:mlr')
 
 Using `as_grain`:
 ```{r}
-if (!requireNamespace("gRain", quietly = TRUE)) {
-    stop("gRain needed ", call. = FALSE)
-  }
 a <- lp(nb('class', car), car, smooth = 1)
 g <- as_grain(a)
 gRain::querygrain.grain(g)$buying
@@ -304,7 +301,7 @@ gRain::querygrain.grain(g)$buying
 
 The wrapper algorithms can be computationlly intensive, especially with large data sets. I get the following times for `bsej` and `tan_hc` on my Windows 2.80 GHz, 16 GB RAM machine. 
 
-```{r, cache=TRUE, eval = FALSE}
+```{r, eval = FALSE}
 microbenchmark::microbenchmark(
   bsej = {b <- bsej('class', car, k = 10, epsilon = 0)} , 
   tan_hc = {t <- b <- tan_hc('class', car, k = 10, epsilon = 0)}, 
@@ -323,7 +320,7 @@ microbenchmark::microbenchmark(
 10-fold cross-validation of these two classifiers should take rougly 10 times more than learning them the full data set. 
 
 
-```{r, cache=TRUE, eval=FALSE}
+```{r, eval=FALSE}
 microbenchmark::microbenchmark(
   cv(list(b, t), car, k = 10, dag = TRUE, smooth = 0.01), times = 10)
 ```
@@ -341,7 +338,7 @@ Thus, it takes about a minute to cross-validate these two classifiers on the car
 
 Note that non-wrapper classifiers are much faster.
 
-```{r, cache=TRUE, eval=FALSE}
+```{r, eval=FALSE}
 nb <- nb('class', car)
 tcl <- tan_cl('class', car)
 microbenchmark::microbenchmark(
