@@ -49,25 +49,6 @@ test_that("Direct forest", {
   expect_equivalent(graph::ugraph(f), af)
 })
 
-# Function not used. 
-# test_that("parents", {
-#   skip_if_not_installed('gRbase')
-#   set.seed(0)
-#   g <- random_aug_nb_dag(class = 'A', V = letters[1:3], maxpar = 3, wgt = 0.5)
-# # Nominal
-#   input <- c('A', 'b', 'a')
-#   output_expect <- list(character(), 'A', c('b', 'A'))
-#   output <- lapply(input, parents, g)
-#   expect_identical(output, output_expect)
-# # Not a directed graph 
-#    g <- graph::randomGraph(V = letters, M = 4, p = 0.4)
-#    expect_error(parents('a', g), "directed")
-# # Compare to gRbase::parents 
-#   set.seed(0)
-#   g <- random_aug_nb_dag(class = 'A', V = letters, maxpar = 15, wgt = 0.9)
-#   expect_identical(parents('b', g), gRbase::parents('b', g))
-# })
-
 test_that("nb_dag", {
   # Nominal
   d <- nb_dag('f', letters[1:5])
@@ -91,19 +72,18 @@ test_that("graph union", {
 })
 
 test_that("Max weight forest", {  
-  # TODO: How many edges?
-#   g <- pairwise_ode_score_contribs(class = 'Class', voting, score = 'loglik')
-#   u <- max_weight_forest(g)
-#   expect_equal(graph::numEdges(u), )  
+  g <- pairwise_ode_score_contribs(class = 'Class', voting, score = 'loglik')
+  u <- max_weight_forest(g)
+  expect_equal(graph::numEdges(u), 15)  
   
-  g <- pairwise_ode_score_contribs(class = 'class', dataset = car, score = "loglik")
+  g <- pairwise_ode_score_contribs(class = 'class', dataset = car, 
+                                   score = "loglik")
   u <- max_weight_forest(g)
   expect_equal(graph::numEdges(u), 5)  
   
 # Forest
-#   features <- colnames(car)[-7]
-#   g <- blacklist(class='class', features=features, dataset=car, test = "mi",
-#                      alpha=0.05)$filtered  
-#   u <- max_weight_forest(g) # augmenting forest  
-#   expect_equal(graph::numEdges(u), 4)  
+  g <- pairwise_ode_score_contribs(class = 'class', dataset = car, 
+                                   score = "aic")
+  u <- max_weight_forest(g)
+  expect_equal(graph::numEdges(u), 3)  
 })

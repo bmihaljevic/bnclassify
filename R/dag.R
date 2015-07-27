@@ -1,25 +1,4 @@
 # Gets the parents of a node in the graph
-# TODO: Not used. 
-parents <- function(x, g) {
-  # Check x is character
-  check_node(x)
-  # If graph has no arcs, return empty character
-  if (graph::numEdges(g) == 0) return(character())
-  # Check g is directed 
-  stopifnot(graph::edgemode(g) == "directed")
-  # Check x is in g
-  stopifnot(x %in% graph::nodes(g))
-  # Get matrix of edges
-  edges <- named_edge_matrix(g)  
-  # Get index of edges to x 
-  ind_to <- edges['to', ] == x
-  # Get nodes pointing to x 
-  parents <- unname(edges['from', ind_to])
-  # Check all parents are unique   
-  stopifnot(length(parents) == length(unique(parents)))
-  # return parents
-  parents
-}
 # Eeach nodes' parents.
 # return Named list of characters.
 graphNEL_parents <- function(g) {
