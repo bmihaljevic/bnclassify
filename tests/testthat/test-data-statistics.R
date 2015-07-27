@@ -39,20 +39,15 @@ test_that("Contingency table", {
 	expect_identical(sum(t), 418L) 
 })
 
-# TODO: do something about this...
-# test_that("Degrees freedom", {
-#   tbl <- extract_ctgt(c('persons', 'doors', 'class'), car)
-#   df <- cmi_degrees_freedom(freqs_table = tbl)
-#   expect_equal(df, 24L)
-#   # dfb <- bnlearn::ci.test('persons', 'doors', 'class', car)$parameter
-#   expect_equivalent(df, dfb) 
-#   
-#   tbl <- extract_ctgt(c('doors', 'class', 'persons'), car)
-#   df <- cmi_degrees_freedom(freqs_table = tbl)
-#   expect_equal(df, 27L)
-#   # dfb <- bnlearn::ci.test('doors', 'class', 'persons', car)$parameter
-#   expect_equivalent(df, dfb) 
-# })
+test_that("Degrees freedom", {
+  tbl <- extract_ctgt(c('persons', 'doors', 'class'), car)
+  df <- cmi_degrees_freedom(freqs_table = tbl)
+  expect_equal(df, 24L)
+
+  tbl <- extract_ctgt(c('doors', 'class', 'persons'), car)
+  df <- cmi_degrees_freedom(freqs_table = tbl)
+  expect_equal(df, 27L)
+})
 
 test_that("Contingency table to CPT", {  
   # Nominal
