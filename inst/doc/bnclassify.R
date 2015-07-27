@@ -159,13 +159,32 @@ a <- lp(nb('class', car), car, smooth = 1)
 g <- as_grain(a)
 gRain::querygrain.grain(g)$buying
 
-## ------------------------------------------------------------------------
-a <- lp(nb('class', car), car, smooth = 1)	
-b <- lp(nb('class', car[, 'class', drop = FALSE]), car, smooth = 1)
-d <- lp(nb('class', car[, c(sample(1:6, 4), 7), drop = FALSE]), car, smooth = 1)	
-set.seed(0)
-microbenchmark(r <- cv(a, car, k = 10, dag = FALSE, smooth = 1))
-r
-set.seed(0)
-microbenchmark(r <- cv(list(a, b, d), car, k = 10, dag = FALSE, smooth = 1))
+## ---- cache=TRUE, eval = FALSE-------------------------------------------
+#  microbenchmark::microbenchmark(
+#    bsej = {b <- bsej('class', car, k = 10, epsilon = 0)} ,
+#    tan_hc = {t <- b <- tan_hc('class', car, k = 10, epsilon = 0)},
+#    times = 10)
+
+## ---- cache=TRUE, eval=FALSE---------------------------------------------
+#  microbenchmark::microbenchmark(
+#    cv(list(b, t), car, k = 10, dag = TRUE, smooth = 0.01), times = 10)
+
+## ---- cache=TRUE, eval=FALSE---------------------------------------------
+#  nb <- nb('class', car)
+#  tcl <- tan_cl('class', car)
+#  microbenchmark::microbenchmark(
+#    cv(list(nb, tcl), car, k = 10, dag = TRUE, smooth = 0.01), times = 10)
+
+## ---- eval=FALSE---------------------------------------------------------
+#  library(mlbench)
+#  data(Soybean)
+#  dim(Soybean)
+
+## ---- eval=FALSE---------------------------------------------------------
+#  soy_complete <- na.omit(Soybean)
+
+## ---- cache = TRUE, eval = FALSE-----------------------------------------
+#  microbenchmark::microbenchmark(
+#    b <- bsej('Class', soy_complete, k = 10, epsilon = 0),
+#    times = 1)
 

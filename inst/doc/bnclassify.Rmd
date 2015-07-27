@@ -300,24 +300,95 @@ g <- as_grain(a)
 gRain::querygrain.grain(g)$buying
 ```
 
-<!--
-# Implementation
-## Incomplete data
-**When estimating a CPT, all entries incomplete for the variables of the CPT are simply ignored. **
+# Runtime 
 
-Evaluating multiple classifiers can by only a little more costly than evaluating the largest among them, because `cv` takes advantage of local distributions shared among the classifiers, learning them from data only once.
+The wrapper algorithms can be computationlly intensive, especially with large data sets. I get the following times for `bsej` and `tan_hc` on my Windows 2.80 GHz, 16 GB RAM machine. 
 
-## Multiple cross-validation
-`bnclassify` cross-validation takes advantage of the shared local distributions among the compared classifiers. Namely, two networks over the some domain may have these distributions are only fitted from data and accessed onces when evaluating multiple structures.
-
-```{r}
-a <- lp(nb('class', car), car, smooth = 1)	
-b <- lp(nb('class', car[, 'class', drop = FALSE]), car, smooth = 1)
-d <- lp(nb('class', car[, c(sample(1:6, 4), 7), drop = FALSE]), car, smooth = 1)	
-set.seed(0)
-microbenchmark(r <- cv(a, car, k = 10, dag = FALSE, smooth = 1))
-r
-set.seed(0)
-microbenchmark(r <- cv(list(a, b, d), car, k = 10, dag = FALSE, smooth = 1))
+```{r, cache=TRUE, eval = FALSE}
+microbenchmark::microbenchmark(
+  bsej = {b <- bsej('class', car, k = 10, epsilon = 0)} , 
+  tan_hc = {t <- b <- tan_hc('class', car, k = 10, epsilon = 0)}, 
+  times = 10)
 ```
--->
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#> Unit: seconds}
+\CommentTok{#>    expr      min       lq     mean   median       uq      max neval}
+\CommentTok{#>    bsej 2.578518 2.720906 3.188944 3.341617 3.389287 3.677820    10}
+\CommentTok{#>  tan_hc 1.968562 2.201919 2.238606 2.246080 2.361516 2.420327    10}
+\end{Highlighting}
+\end{Shaded}
+
+
+10-fold cross-validation of these two classifiers should take rougly 10 times more than learning them the full data set. 
+
+
+```{r, cache=TRUE, eval=FALSE}
+microbenchmark::microbenchmark(
+  cv(list(b, t), car, k = 10, dag = TRUE, smooth = 0.01), times = 10)
+```
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#> Unit: seconds}
+\CommentTok{#>                                                    expr      min       lq}
+\CommentTok{#>  cv(list(b, t), car, k = 10, dag = TRUE, smooth = 0.01) 49.64341 50.63624}
+\CommentTok{#>      mean   median       uq      max neval}
+\CommentTok{#>  51.28273 51.45354 51.96889 52.28374    10}
+\end{Highlighting}
+\end{Shaded}
+
+Thus, it takes about a minute to cross-validate these two classifiers on the car data (6 features, 1728 instances). 
+
+Note that non-wrapper classifiers are much faster.
+
+```{r, cache=TRUE, eval=FALSE}
+nb <- nb('class', car)
+tcl <- tan_cl('class', car)
+microbenchmark::microbenchmark(
+  cv(list(nb, tcl), car, k = 10, dag = TRUE, smooth = 0.01), times = 10)
+```
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#> Unit: milliseconds}
+\CommentTok{#>                                                       expr      min}
+\CommentTok{#>  cv(list(nb, tcl), car, k = 10, dag = TRUE, smooth = 0.01) 709.4578}
+\CommentTok{#>        lq     mean   median       uq      max neval}
+\CommentTok{#>  712.8001 721.6526 720.6743 724.6895 737.8496    10}
+\end{Highlighting}
+\end{Shaded}
+Let us a look at a data set with 36 features. 
+
+```{r, eval=FALSE}
+library(mlbench)
+data(Soybean)
+dim(Soybean)
+```
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#> [1] 683  36}
+\end{Highlighting}
+\end{Shaded}
+
+Inference with incomplete data is slow. Thus, we remove incomplete instances.
+```{r, eval=FALSE}
+soy_complete <- na.omit(Soybean)
+```
+
+`bsej` takes almost 10 minutes. 
+
+```{r, cache = TRUE, eval = FALSE}
+microbenchmark::microbenchmark( 
+  b <- bsej('Class', soy_complete, k = 10, epsilon = 0), 
+  times = 1)
+```
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#> Unit: seconds}
+\CommentTok{#>                                                   expr      min       lq}
+\CommentTok{#>  b <- bsej("Class", soy_complete, k = 10, epsilon = 0) 569.6894 569.6894}
+\CommentTok{#>      mean   median       uq      max neval}
+\CommentTok{#>  569.6894 569.6894 569.6894 569.6894     1}
+\end{Highlighting}
+\end{Shaded}
+
+We could expect a 10-fold cross-validation to take around 100 minutes. Note that we have a nested 10 $\times$ 10 cross-validation, though. Decreasing $k$ would decrease runtime and increasing epsilon would likely do the same.
