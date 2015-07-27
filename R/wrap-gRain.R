@@ -87,7 +87,7 @@ is_grain_compiled <- function(g) {
     stop("gRain needed for this function to work. Please install it.",
          call. = FALSE)
   }
-  is(g, "grain") && g$isCompiled
+  inherits(g, "grain") && g$isCompiled
 }
 grain_nodes <- function(g) {
   gRain::nodeNames.grain(g)

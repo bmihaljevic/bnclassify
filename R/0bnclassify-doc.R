@@ -18,8 +18,10 @@
 #' 
 #' @docType package
 #' @name bnclassify
-#' @importFrom stats predict
+#' @importFrom stats predict as.formula complete.cases setNames 
 #' @importFrom graphics plot
+#' @importFrom utils combn 
+#' 
 #' @references Bielza C and Larranaga P (2014), Discrete Bayesian network 
 #'   classifiers: A survey. \emph{ACM Computing Surveys}, \bold{47}(1), Article 
 #'   5.
