@@ -43,11 +43,12 @@ compute_grain_log_joint_instance <- function(instance, grain, class) {
   # Get non-NA nodes in instance 
   instance <- instance[!is.na(instance)]
   vars <- intersect(names(instance), grain_nodes(grain))
+  instance <- instance[vars]
   # Check class is character and not in instance  
   check_class(class) 
   stopifnot(!(class %in% vars))
   # Set them as evidence if they are more than 0
-  if (length(vars) > 0) {  
+  if (length(instance) > 0) {  
 	  grain <- gRain::setEvidence(grain, nodes = vars, states = instance)
   }
   # gRain has a bug and cannot return unnormalized class. Therefore, using the workaround: P(C | x_evidence) * P(x_evidence)
