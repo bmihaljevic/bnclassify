@@ -77,6 +77,7 @@ test_that("correct cv result with missing data", {
 })
 
 test_that("cv with just-class classifier", {
+  skip_on_cran()
   a <- lp(nb('class', car), car, smooth = 1)	
   b <- lp(nb('class', car[, 'class', drop = FALSE]), car, smooth = 1)
   d <- lp(nb('class', car[, c(sample(1:6, 4), 7), drop = FALSE]), car, smooth = 1)	

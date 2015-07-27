@@ -52,7 +52,6 @@ test_that("tan_hc nominal", {
 
 test_that("tanhc sp nominal", {
   skip_on_cran()
-  skip_on_cran()
   set.seed(0)
   t <- tan_hcsp('class', dataset = car, k = 10, epsilon = 0)
   expect_equal(length(features(t)), 6)

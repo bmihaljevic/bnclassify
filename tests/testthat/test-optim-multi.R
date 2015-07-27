@@ -45,6 +45,7 @@ test_that("get unique cpts single dag" ,{
 })
 
 test_that("learn and predict", {
+  skip_on_cran()
   a <- nb('class', car)
   b <- lp(a, car, smooth = 0.01)
   x <- multi_bnc_bn(a, car, smooth = 0.01)
@@ -58,6 +59,7 @@ test_that("learn and predict", {
 })
 
 test_that("multi class posterior nominal", {
+  skip_on_cran()
   a <- nbcar()  
   b <- nbcarp(car[, 4:7])
   cr <- multi_compute_log_joint_per_class(list(a, b), car)  
