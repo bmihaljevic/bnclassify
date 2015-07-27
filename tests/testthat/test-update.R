@@ -1,8 +1,5 @@
 context("Update")
 
-# ==============================================================================
-# To delete
-
 test_that("bnc update bnc_dag", {
   dgcar <- nb('class', car)  
   # Currently, parameter fitting is required for updating; dag learning is not
@@ -25,8 +22,6 @@ test_that("bnc update bnc_bn with struct learning", {
   diff <- sum(abs(params(b)[['safety']]  - params(dgcar)[['safety']]))
   expect_equal(diff, 2.776258, tolerance = 1e-6)
 })
-
-# ==============================================================================
 
 identical_non_call <- function(x, y) {
   x$.call_struct <- y$.call_struct <- NULL
@@ -102,39 +97,3 @@ test_that("Multi-update bnc_dag", {
   b <- lp(a, car, smooth = 1)
   expect_error(cv(list(a, b), car, k = 10, dag = FALSE), "must inherit")
 })
-
-
-#  TODO: delete
-# test_that("multi learn predict nominal class values", {
-#   a <- nbcar()  
-#   b <- nbcarp(car[, 4:7])
-#   d <- multi_learn_predict(list(a, b), train = car, test = car, smooth = 1,
-#                            prob = FALSE)
-#   e <- predict(a, car)
-#   expect_equal(d[[1]], e)
-#   f <- predict(b, car)
-#   expect_equal(d[[2]], f)
-# })
-# 
-# test_that("multi learn predict single row test set", {
-#   a <- nbcar()  
-#   b <- nbcarp(car[, 4:7])
-#   t <- car[1, , drop = FALSE]
-#   d <- multi_learn_predict(list(a, b), train = car, test = t, smooth = 1,
-#                            prob = FALSE)
-#   e <- predict(a, t)
-#   expect_equal(d[[1]], e)
-#   f <- predict(b, t)
-#   expect_equal(d[[2]], f)
-# })
-# 
-# test_that("multi learn predict probs", {
-#   a <- nbcar()  
-#   b <- nbcarp(car[, 4:7])
-#   d <- multi_learn_predict(list(a, b), train = car, test = car, 
-#                            smooth = 1, prob = TRUE)
-#   e <- compute_anb_log_joint(a, car)
-#   expect_equal(d[[1]], e)
-#   f <- compute_anb_log_joint(b, car)
-#   expect_equal(d[[2]], f)
-# })
