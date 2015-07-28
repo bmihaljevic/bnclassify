@@ -9,8 +9,14 @@ test_that("nominal", {
   levs <- lapply(car, levels)
   expect_true(all(mapply(identical, levs, tvalues, SIMPLIFY = TRUE)))
   expect_identical(values(tbn)$buying, levels(car$buying))
+})
+
+test_that("nominal as grain", {
+  skip_if_not_installed('gRain')
+  tbn <- bnc('nb', 'class', car, smooth = 0)
   expect_is(as_grain(tbn), 'grain')
 })
+
 
 test_that("bnc_bn no class in dataset ", {     
   tbdag <- nb_dag('class', 'buying')

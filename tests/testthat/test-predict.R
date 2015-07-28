@@ -70,6 +70,7 @@ test_that("correct cv result", {
 
 test_that("correct cv result with missing data", {
   skip_on_cran()
+  skip_if_not_installed('gRain')
   nb <- nbvote()
   set.seed(0)
   s <- cv(nb, voting, k = 5, dag = TRUE)

@@ -83,6 +83,7 @@ test_that("Update dag", {
 
 test_that("Update with awnb param learning", {
   skip_on_cran()
+  skip_if_not_installed('gRain')
   a <- nb('Class', voting)
   set.seed(0)
   b <- lpawnb(a, voting, smooth = 1, trees = 1, bootstrap_size = 0.5)

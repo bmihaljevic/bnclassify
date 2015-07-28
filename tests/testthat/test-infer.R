@@ -1,4 +1,4 @@
-context("bnc_bn inference")
+context("inference")
 
 check_cp <- function(x, nrow, colnames) {
   expect_true(is.numeric(x))
@@ -89,6 +89,7 @@ test_that("Nominal log-likelihood two vars", {
 })
 
 test_that("log-likelihood with incomplete data", {
+  skip_if_not_installed('gRain')
   cb <- car[1, c(1, 7), drop = FALSE]
   nb <- nbcarp(cb)
   cb$buying[] <- NA_integer_
