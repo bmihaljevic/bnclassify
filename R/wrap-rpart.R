@@ -17,7 +17,7 @@ learn_unprunned_tree <- function(dataset, class) {
 identify_all_testing_depths <- function(tree) {
   stopifnot(inherits(x = tree, what = 'rpart'))
   #   Filter out leaves
-  vars <- subset(tree$frame, var != "<leaf>", select = 'var', drop = F)
+  vars <- tree$frame[tree$frame$var != "<leaf>" , 'var', drop = F]
   ordering <- as.integer(rownames(vars))
   # if there are no split in the tree - return
   if (length(ordering) == 0) return(NULL) 
