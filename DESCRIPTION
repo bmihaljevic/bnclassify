@@ -15,7 +15,6 @@ Imports:
     crossval(>= 1.0.2),
     graph(>= 1.42.0),
     matrixStats(>= 0.14.0),
-    pryr(>= 0.1.1),
     RBGL(>= 1.40.1),
     rpart(>= 4.1-8)
 Suggests:

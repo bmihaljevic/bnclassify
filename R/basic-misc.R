@@ -80,3 +80,7 @@ bootstrap_ss <- function(dataset, proportion) {
   subsample_size <- trunc(N * proportion)
   dataset[sample(N, replace = T, size = subsample_size), , drop = FALSE]
 }
+make_call <- function(f, args) {
+  f <- as.name(f)
+  as.call(c(f, args))
+}

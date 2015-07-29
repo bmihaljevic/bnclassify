@@ -41,7 +41,7 @@ save_bnc_call <- function(call, env) {
 }
 do_bnc_call <- function(fargs, dataset) {
   fargs$dataset <- dataset
-  call <- pryr::make_call(fargs[[1]], .args = fargs[-1])
+  call <- make_call(fargs[[1]], fargs[-1])
   eval(call)
 }
 add_dag_call_arg <- function(bnc_dag, call, env, force = FALSE) {
