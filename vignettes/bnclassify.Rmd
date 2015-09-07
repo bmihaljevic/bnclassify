@@ -65,7 +65,7 @@ We can get the CPT of each variable, including the class, with `params`. So, the
 params(b)$class
 ```
 
-where is the CPT for `buying` is 
+whereas the CPT for `buying` is 
 ```{r}
 params(b)$class
 ```
