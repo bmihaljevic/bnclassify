@@ -1,6 +1,6 @@
 # 0.3.0.9000
 
-* Improving the documentation of ...
+* Minor improvements in vignette 
 # 0.3.0
 
 * First released version of the package.

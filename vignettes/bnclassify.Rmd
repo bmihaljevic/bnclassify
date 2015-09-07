@@ -263,29 +263,36 @@ You can convert a `bnclassify` object to `bnlearn`, `gRain` and `mlr` objects an
 
 Some of the implemented algorithms, such as the `fssj` and `bsej` perform implicit feature selection. However, 'outer' loop of feature selection is not within the scope of `bnclassify` and best done with another package such as `mlr`. 
 
-Assuming you have mlr installed, call `as_mlr()` to convert a `bnc_bn` to an mlr *learner*. This allows you to use mlr functionalities: selecting features, benchmarking, etc.
+Assuming you have mlr installed, call `as_mlr()` to convert a `bnc_bn` to an mlr *learner*. This allows you to use mlr functionalities: selecting features, benchmarking, etc. Below, we use a naive Bayes to perform forward wrapper feature selection. 
 
-Set up a mlr task 
+Fist, we learn a naive Bayes and wrap it as an `mlr learner'.
+
 ```{r}
 library(mlr)
-ct <- mlr::makeClassifTask(id = "compare", data = car, target = 'class', 
-                        fixup.data = "no", check.data = FALSE)  
-```
-Learn a naive Bayes and convert to mlr learner
-```{r}
 nf <- lp(nb('class', car), car, 1)
 bnl <- as_mlr(nf, dag = TRUE)
 ```
-Then use wrapper feature selection
+
+Then we use the regular `mlr` code to set up and perform forward
+wrapper feature selection.
 ```{r}
 ctrl = makeFeatSelControlSequential(alpha = 0, method = "sfs")
 rdesc = makeResampleDesc(method = "Holdout")
+ct <- mlr::makeClassifTask(id = "compare", data = car, target = 'class', 
+                        fixup.data = "no", check.data = FALSE)  
+set.seed(1)
 sfeats = selectFeatures(learner = bnl, task = ct, resampling = rdesc,
                       control = ctrl, show.info = FALSE)
-sfeats$x
-detach('package:mlr')
 ```
 
+The above has selected just the buying price feature.
+```{r}
+sfeats$x
+```
+
+```{r, echo = FALSE}
+detach('package:mlr')
+```
 ## Operate with Bayesian networks with `gRain` and `bnlearn`
 
 `gRbase` and `bnlearn` provide multiple functionalities for querying and manipulating Bayesian networks. We can convert a `bnc_bn` to a `gRain` via `as_grain()`. From the `gRain` object you can then obtain a `bnlearn` one (see `bnlearn` docs).
