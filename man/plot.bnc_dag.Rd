@@ -4,7 +4,7 @@
 \alias{plot.bnc_dag}
 \title{Plot the structure.}
 \usage{
-\method{plot}{bnc_dag}(x, y, layoutType = "dot", ...)
+\method{plot}{bnc_dag}(x, y, layoutType = "dot", cex = NULL, ...)
 }
 \arguments{
 \item{x}{The bnc_dag_object}
@@ -12,6 +12,8 @@
 \item{y}{Not used}
 
 \item{layoutType}{Layout type}
+
+\item{cex}{cex for node labels.}
 
 \item{...}{Not used.}
 }

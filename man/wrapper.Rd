@@ -26,8 +26,8 @@ tan_hcsp(class, dataset, k, epsilon = 0.01, smooth = 0.01)
 \item{epsilon}{A numeric. Minimum absolute improvement required to keep
   searching.}
 
-\item{smooth}{A nonnegative numeric. The smoothing value for Bayesian
-parameter estimation.}
+\item{smooth}{A numeric. The smoothing value (\eqn{\alpha}) for Bayesian
+parameter estimation. Nonnegative.}
 }
 \description{
 Each candidate structure is evaluated according to the cross-validated

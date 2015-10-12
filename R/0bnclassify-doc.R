@@ -110,23 +110,48 @@ NULL
 #'   classifiers. \emph{Machine Learning}, \bold{29}, pp. 131--163.
 NULL
 
-#' Learn the parameters of a Bayesian network structure.
+#' Learn the parameters of a Bayesian network.
 #' 
+#' \code{lp} estimates parameters with maximum likelihood or Bayesian 
+#' estimation. \code{lpawnb} updates \code{lp} estimates according to the 
+#' attribute weighted naive Bayes (AWNB) method.
 #' 
-#' \code{lp} estimates parameters with maximum likelihood or Bayesian
-#' estimation.
+#' \code{lp} learns the parameters of each \eqn{P(X_i \mid \mathbf{Pa}(X_i) = 
+#' j)}{P(X[i] | Pa(X[i]) = j)} as \deqn{\theta_{ijk} = \frac{N_{ijk} + 
+#' \alpha}{N_{ \cdot j \cdot } + r_i \alpha},}{\theta[ijk] = (N[ijk] + \alpha) /
+#' (N[ . j . ] + r[i] \alpha),} where \eqn{N_{ijk}}{N[ijk]} is the number of 
+#' instances in \code{dataset} in which \eqn{X_i = k}{X[i] = k} and 
+#' \eqn{\mathbf{Pa}(X_i) = j}{Pa(X[i]) = j}, \eqn{N_{ \cdot j \cdot}}{N[ . j . 
+#' ]} the number of instances in which \eqn{\mathbf{Pa}(X_i) = j}{Pa(X[i]) = j},
+#' \eqn{r_i}{r[i]} is the cardinality of \eqn{X_i}{X[i]}, and all 
+#' hyperparameters of the Dirichlet prior equal to \eqn{\alpha}. \eqn{\alpha = 
+#' 0} corresponds to maximum likelihood estimation. Returns a uniform
+#' distribution when \eqn{N_{ \cdot j \cdot } + r_i \alpha = 0}{N[ . j . ] +
+#' r[i] \alpha = 0}. With partially observed data, the above amounts to
+#' \emph{available case analysis}.
 #' 
-#' \code{lpawnb} extends \code{lp} by weighting the features' CPTs according to
-#' the AWNB method.
+#' \code{lpawnb} updates the parameters learned with \code{lp} according to the 
+#' AWNB, as follows, \deqn{\theta_{ijk}^{AWNB} = 
+#' \frac{(\theta_{ijk})^{w_i}}{\sum_{k=1}^{r_i} 
+#' (\theta_{ijk})^{w_i}},}{\theta[ijk]^(AWNB) = ((\theta[ijk])^w[i]) / 
+#' (\sum[k=1]^(r[i]) (\theta[ijk])^(w[i])),} computing the weights 
+#' \eqn{\mathbf{w}}{w} as \deqn{w_i = \frac{1}{M}\sum_{t=1}^M 
+#' \sqrt{d_{ti}},}{w_i = (1 / M)\sum_[t=1]^M \sqrt{d[ti]},} where \eqn{M} is the
+#' number of bootstrap samples from \code{dataset} and \eqn{d_{ti}}{d[ti]} the 
+#' minimum testing depth of \eqn{X_i}{X[i]} in an unpruned classification tree 
+#' learned from the \eqn{t}-th subsample (\eqn{d_{ti} = 0}{d[ti] = 0} if 
+#' \eqn{X_i}{X_i} is omitted from \eqn{t}-th tree).
 #' 
 #' @name learn_params
 #'   
-#' @inheritParams nb   
-#' @param x a \code{\link{bnc_dag_object}} object. The Bayesian network structure.
+#' @inheritParams nb
+#' @param x a \code{\link{bnc_dag_object}} object. The Bayesian network 
+#'   structure.
 #' @param dataset The data frame from which to estimate network parameters.
-#' @param smooth A nonnegative numeric. The smoothing value for Bayesian 
-#'   parameter estimation.
-#' @param trees An integer. The number of bootstrap samples to generate.
+#' @param smooth A numeric. The smoothing value (\eqn{\alpha}) for Bayesian 
+#'   parameter estimation. Nonnegative.
+#' @param trees An integer. The number (\eqn{M}) of bootstrap samples to
+#'   generate.
 #' @param bootstrap_size A numeric. The size of the bootstrap subsample, 
 #'   relative to the size of \code{dataset} (given in [0,1]).
 #' @references Mark Hall (2004). A decision tree-based attribute weighting 

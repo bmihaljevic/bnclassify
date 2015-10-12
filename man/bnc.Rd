@@ -14,8 +14,8 @@ bnc(dag_learner, class, dataset, smooth, dag_args = NULL)
 \item{dataset}{The data frame from which to learn network structure and
 parameters.}
 
-\item{smooth}{A nonnegative numeric. The smoothing value for Bayesian
-parameter estimation.}
+\item{smooth}{A numeric. The smoothing value (\eqn{\alpha}) for Bayesian
+parameter estimation. Nonnegative.}
 
 \item{dag_args}{A list. Optional additional arguments to \code{dag_learner}.}
 }

@@ -25,7 +25,7 @@ lp <- function(x, dataset, smooth) {
 }
 #' @export
 #' @rdname learn_params
-lpawnb <- function(x, dataset, smooth, trees, bootstrap_size) {
+lpawnb <- function(x, dataset, smooth, trees = 10, bootstrap_size = 0.5) {
   bn <- bnc_bn(x, dataset, smooth)
   weights <- awnb(class_var(bn), dataset = dataset, trees = trees, 
                   bootstrap_size = bootstrap_size)

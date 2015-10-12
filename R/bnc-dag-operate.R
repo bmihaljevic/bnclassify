@@ -8,12 +8,18 @@ narcs <- function(x) {
 #' @param x The bnc_dag_object
 #' @param y Not used 
 #' @param layoutType Layout type
+#' @param cex cex for node labels.
 #' @param ... Not used.
-plot.bnc_dag <- function(x, y, layoutType='dot', ...) {
+plot.bnc_dag <- function(x, y, layoutType='dot', cex = NULL, ...) {
   if (!requireNamespace("Rgraphviz", quietly = TRUE)) {
     stop("Rgraphviz needed ", call. = FALSE)
   }
-  graph::plot(as_graphNEL(x))
+  g <- as_graphNEL(x)
+  if (!is.null(cex)) {
+    graph::nodeRenderInfo(g) <- list(cex = cex)
+  }
+  l <- Rgraphviz::layoutGraph(g, layoutType = layoutType)
+  Rgraphviz::renderGraph(l)
 }
 #' Print basic information about a classifier.
 #' @export

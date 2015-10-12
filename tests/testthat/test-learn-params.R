@@ -42,6 +42,17 @@ test_that('lawnb nominal', {
   expect_equal(a$.call_bn[[1]], "lpawnb")
 })
 
+test_that('lawnb default params', {
+  nb <- nbcar()
+  set.seed(0)
+  a <- lpawnb(nb, car, smooth = 1, trees = 10, bootstrap_size = 0.5) 
+  set.seed(0)
+  b <- lpawnb(nb, car, smooth = 1) 
+  a$.call_bn <- NULL
+  b$.call_bn <- NULL
+  expect_equal(a, b)
+})
+
 test_that('bnc function nominal', {
   a <- bnc('nb', 'class', car, smooth = 1)
   b <- lp(nb('class', car), car, smooth = 1)

@@ -1,5 +1,3 @@
-#' @export
-#' @rdname learn_params
 awnb <- function(class, dataset, trees = 10, bootstrap_size = 0.5) {
 # For each tree, get a bootstrap subsample 
   subsamples <- replicate(trees, bootstrap_ss(dataset, bootstrap_size), 

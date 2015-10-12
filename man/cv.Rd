@@ -16,8 +16,8 @@ cv(x, dataset, k, dag, smooth = NULL)
 \item{dag}{A logical. Whether to learn structure on each training set.
 Parameters are always learned.}
 
-\item{smooth}{A nonnegative numeric. The smoothing value for Bayesian
-parameter estimation.}
+\item{smooth}{A numeric. The smoothing value (\eqn{\alpha}) for Bayesian
+parameter estimation. Nonnegative.}
 }
 \value{
 A numeric vector. The predictive accuracy of each classifier in
