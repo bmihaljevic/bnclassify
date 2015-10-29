@@ -4,14 +4,7 @@
 * win-builder, R-devel
 
 ## R CMD check results
-There were no ERRORs or WARNINGs. 
-
-There was 1 NOTE:
-
-* checking package dependencies ... NOTE
-  No repository set, so cyclic dependency check skipped
-  
-  	This only occurs on win-builder, not locally. I believe it is due to a global option not being set on win-builder.  
+There were no ERRORs, WARNINGs or NOTES. 
 
 ## Downstream dependencies
 There are currently no downstream dependencies for this package.
