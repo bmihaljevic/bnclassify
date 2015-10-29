@@ -1,3 +1,6 @@
+# 0.3.1.9000
+* Fixed #2
+
 # 0.3.1
 * Minor improvements in vignette 
 * More detailed documentation for lp()
