@@ -8,6 +8,9 @@ awnb <- function(class, dataset, trees = 10, bootstrap_size = 0.5) {
   depths <- lapply(Wtrees, identify_min_testing_depths)
   depths <- unlist(depths, use.names = TRUE)
   if (length(depths) == 0) stop("Only empty trees have been learned.")
+  features <- get_features(class, dataset)
+  unused_features <- features[!(features %in% names(depths))]
+  depths[unused_features] <- Inf
 # Compute weights and average across the features
   tapply(depths, names(depths), 
          function(x) sum(x ^ -0.5), simplify = TRUE) / trees
