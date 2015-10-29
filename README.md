@@ -4,6 +4,8 @@ bnclassify
 [![Travis-CI Build Status](https://travis-ci.org/bmihaljevic/bnclassify.svg?branch=master)](https://travis-ci.org/bmihaljevic/bnclassify)
 [![codecov.io](https://codecov.io/github/bmihaljevic/bnclassify/coverage.svg?branch=master)](https://codecov.io/github/bmihaljevic/bnclassify?branch=master)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/bnclassify)](http://cran.r-project.org/package=bnclassify)
+![](http://cranlogs.r-pkg.org/badges/bnclassify?color=yellow)
+![](http://cranlogs.r-pkg.org/badges/grand-total/bnclassify?color=yellowgreen)
 
 The bnclassify package implements algorithms for learning discrete Bayesian network classifiers from data and estimating their predictive accuracy.
 
