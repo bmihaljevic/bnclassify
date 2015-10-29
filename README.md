@@ -63,7 +63,7 @@ source("http://bioconductor.org/biocLite.R")
 biocLite(c("graph", "RBGL", "Rgraphviz"))
 ```
 
-When running the above yoy may get asked whether you would like to update some packages. My approach is to say no in order to avoid any possible conflict with packages on CRAN (you can update those packages from CRAN if needed).
+When running the above you may get asked whether you would like to update some packages. My approach is to say no in order to avoid any possible conflict with packages on CRAN (you can update those packages from CRAN if needed).
 
 When you read this bnclassify may already be on CRAN. In that case, use:
 
