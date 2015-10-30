@@ -21,7 +21,7 @@ Hill-climbing super-parent tree augmented naive Bayes \code{\link{tan_hcsp}}
 }
 
 Parameter estimation \itemize{ \item Attribute-weighted naive Bayes
-\code{\link{lpawnb}} }
+\code{\link{lp}} }
 }
 \references{
 Bielza C and Larranaga P (2014), Discrete Bayesian network
