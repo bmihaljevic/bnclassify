@@ -16,15 +16,15 @@ structure.}
 \item{smooth}{A numeric. The smoothing value (\eqn{\alpha}) for Bayesian
 parameter estimation. Nonnegative.}
 
-\item{trees}{An integer. The number (\eqn{M}) of bootstrap samples to
+\item{awnb_trees}{An integer. The number (\eqn{M}) of bootstrap samples to
 generate.}
 
-\item{bootstrap_size}{A numeric. The size of the bootstrap subsample,
+\item{awnb_bootstrap}{A numeric. The size of the bootstrap subsample,
 relative to the size of \code{dataset} (given in [0,1]).}
 }
 \description{
 \code{lp} estimates parameters with maximum likelihood or Bayesian
-estimation. \code{lpawnb} updates \code{lp} estimates according to the
+estimation. Optionally, updates these estimates according to the
 attribute weighted naive Bayes (AWNB) method.
 }
 \details{

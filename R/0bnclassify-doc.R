@@ -14,7 +14,7 @@
 #' }
 #' 
 #' Parameter estimation \itemize{ \item Attribute-weighted naive Bayes 
-#' \code{\link{lpawnb}} }
+#' \code{\link{lp}} }
 #' 
 #' @docType package
 #' @name bnclassify

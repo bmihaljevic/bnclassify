@@ -162,14 +162,13 @@ identical(a, b)
 ```
 
 ## Parameter weighting
-For naive Bayes, one can combine maximum likelihood and Bayesian parameter estimation with posterior feature parameter weighting. This involves exponentiating the features' CPT entries by a value between 0 and 1 and can alleviate some of the negative effects of redundancy. See `?awnb` for more information.
+For naive Bayes, one can combine maximum likelihood and Bayesian parameter estimation with posterior feature parameter weighting. This involves exponentiating the features' CPT entries by a value between 0 and 1 and can alleviate some of the negative effects of redundancy. See `?lp` for more information.
 
-We use `lpawnb` instead of `lp`.
 
 ```{r}
 a <- nb('class', car)
 b <- lp(a, car, smooth = 1)
-c <- lpawnb(a, car, smooth = 1, trees = 20, bootstrap_size = 0.5)
+c <- lp(a, car, smooth = 1, awnb_trees = 20, awnb_bootstrap = 0.5)
 sum(abs(params(b)$safety - params(c)$safety))
 ```
 
@@ -177,7 +176,7 @@ While this is intented for naive Bayes you can use it with other classifiers.
 ```{r}
 t <- tan_cl('class', car)
 t <- lp(t, dataset = car, smooth = 1)
-ta <- lpawnb(t, car, smooth = 1, trees = 10, bootstrap_size = 0.5)
+ta <- lp(t, car, smooth = 1, awnb_trees = 10, awnb_bootstrap = 0.5)
 params(t)$buying
 params(ta)$buying
 ```
@@ -229,7 +228,7 @@ In the example below, we compare a naive Bayes, a weighted naive Bayes, and a on
 data(voting)
 dag <- nb('Class', voting)
 a <- lp(dag, voting, smooth = 1)
-b <- lpawnb(dag, voting, smooth = 1, trees = 40, bootstrap_size = 0.5)
+b <- lp(dag, voting, smooth = 1, awnb_trees = 40, awnb_bootstrap = 0.5)
 c <- bnc('tan_cl', 'Class', voting,  smooth = 1)
 r <- cv(list(a, b, c), voting, k = 3, dag = FALSE)
 r
