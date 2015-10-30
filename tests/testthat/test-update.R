@@ -23,12 +23,6 @@ test_that("bnc update bnc_bn with struct learning", {
   expect_equal(diff, 2.776258, tolerance = 1e-6)
 })
 
-identical_non_call <- function(x, y) {
-  x$.call_struct <- y$.call_struct <- NULL
-  x$.call_bn <- y$.call_bn <- NULL 
-  expect_identical(x, y)
-}
-
 test_that("Multi update single", {
   a <- lp(nb('class', car), car, smooth = 1e10)	  
   b <- multi_update(a, car, dag = FALSE)
@@ -86,8 +80,8 @@ test_that("Update with awnb param learning", {
   skip_if_not_installed('gRain')
   a <- nb('Class', voting)
   set.seed(0)
-  b <- lpawnb(a, voting, smooth = 1, trees = 1, bootstrap_size = 0.5)
-  c <- lpawnb(a, voting, smooth = 1, trees = 45, bootstrap_size = 1)
+  b <- lp(a, voting, smooth = 1, awnb_trees = 1, awnb_bootstrap = 0.5)
+  c <- lp(a, voting, smooth = 1, awnb_trees = 45, awnb_bootstrap = 1)
   d <- lp(b, voting, smooth = 1)
   r <- cv(list(b, c, d), voting, k = 2, dag = FALSE)
   # All three values are different

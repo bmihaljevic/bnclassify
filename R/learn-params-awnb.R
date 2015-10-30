@@ -1,4 +1,6 @@
-awnb <- function(class, dataset, trees = 10, bootstrap_size = 0.5) {
+awnb <- function(class, dataset, trees = NULL, bootstrap_size = NULL) {
+  if (is.null(trees)) trees <- 10
+  if (is.null(bootstrap_size)) bootstrap_size <- 0.5
 # For each tree, get a bootstrap subsample 
   subsamples <- replicate(trees, bootstrap_ss(dataset, bootstrap_size), 
                           simplify = FALSE)

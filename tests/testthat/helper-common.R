@@ -44,6 +44,12 @@ random_aug_nb_dag <- function(class, V, maxpar, wgt) {
   superimpose_node(dag = dg, class)
 }
 
+identical_non_call <- function(x, y) {
+  x$.call_struct <- y$.call_struct <- NULL
+  x$.call_bn <- y$.call_bn <- NULL 
+  expect_identical(x, y)
+}
+
 # Load data
 
 data(car)

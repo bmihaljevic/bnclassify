@@ -19,17 +19,15 @@ bnc <- function(dag_learner, class, dataset, smooth, dag_args = NULL) {
 }
 #' @export
 #' @rdname learn_params
-lp <- function(x, dataset, smooth) {
+lp <- function(x, dataset, smooth, awnb_trees = NULL, awnb_bootstrap = NULL) {
   bn <- bnc_bn(x, dataset, smooth)
-  add_params_call_arg(bn, call = match.call(), env = parent.frame(), force = TRUE)
-}
-#' @export
-#' @rdname learn_params
-lpawnb <- function(x, dataset, smooth, trees = 10, bootstrap_size = 0.5) {
-  bn <- bnc_bn(x, dataset, smooth)
-  weights <- awnb(class_var(bn), dataset = dataset, trees = trees, 
-                  bootstrap_size = bootstrap_size)
-  bn <- set_weights(bn, weights)
+  awnb <- (!is.null(awnb_trees) || !is.null(awnb_bootstrap))
+  # TODO: if manb && awnb stop("Either MANB or AWNB")
+  if (awnb) {
+    weights <- awnb(class_var(bn), dataset = dataset, trees = awnb_trees, 
+                    bootstrap_size = awnb_bootstrap)
+    bn <- set_weights(bn, weights)  
+  }
   add_params_call_arg(bn, call = match.call(), env = parent.frame(), force = TRUE)
 }
 set_weights <- function(bn, weights) {

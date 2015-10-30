@@ -3,12 +3,9 @@
 \name{learn_params}
 \alias{learn_params}
 \alias{lp}
-\alias{lpawnb}
 \title{Learn the parameters of a Bayesian network.}
 \usage{
-lp(x, dataset, smooth)
-
-lpawnb(x, dataset, smooth, trees = 10, bootstrap_size = 0.5)
+lp(x, dataset, smooth, awnb_trees = NULL, awnb_bootstrap = NULL)
 }
 \arguments{
 \item{x}{a \code{\link{bnc_dag_object}} object. The Bayesian network

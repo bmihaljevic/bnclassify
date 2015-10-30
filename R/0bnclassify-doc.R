@@ -113,7 +113,7 @@ NULL
 #' Learn the parameters of a Bayesian network.
 #' 
 #' \code{lp} estimates parameters with maximum likelihood or Bayesian 
-#' estimation. \code{lpawnb} updates \code{lp} estimates according to the 
+#' estimation. Optionally, updates these estimates according to the 
 #' attribute weighted naive Bayes (AWNB) method.
 #' 
 #' \code{lp} learns the parameters of each \eqn{P(X_i \mid \mathbf{Pa}(X_i) = 
@@ -150,9 +150,9 @@ NULL
 #' @param dataset The data frame from which to estimate network parameters.
 #' @param smooth A numeric. The smoothing value (\eqn{\alpha}) for Bayesian 
 #'   parameter estimation. Nonnegative.
-#' @param trees An integer. The number (\eqn{M}) of bootstrap samples to
+#' @param awnb_trees An integer. The number (\eqn{M}) of bootstrap samples to
 #'   generate.
-#' @param bootstrap_size A numeric. The size of the bootstrap subsample, 
+#' @param awnb_bootstrap A numeric. The size of the bootstrap subsample, 
 #'   relative to the size of \code{dataset} (given in [0,1]).
 #' @references Mark Hall (2004). A decision tree-based attribute weighting 
 #'   filter for naive Bayes. \emph{Knowledge-based Systems}, \bold{20}(2), 

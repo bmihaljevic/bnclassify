@@ -35,10 +35,3 @@ test_that("weights for features not in tree", {
   a
   expect_true(is_perm(names(a), colnames(car)[-7]))
 })
-
-test_that("Incomplete data" , {
-  a <- nb('Class', voting)
-  b <- lpawnb(a, voting, smooth = 1, trees = 1, bootstrap_size = 0.1)
-  c <- lp(a, voting, smooth = 1)
-  expect_equal(params(b), params(set_weights(c, b$.weights)))
-})

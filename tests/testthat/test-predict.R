@@ -70,6 +70,14 @@ test_that("correct cv result", {
   expect_equal(s, 0.9386712, tolerance = 1e-6)
 })
 
+test_that("cv with different parameter learning", {
+  a <- lp(nb('class', car), car, smooth = 1)	
+  set.seed(0)
+  b <- lp(nb('class', car), car, smooth = 1, awnb_trees = 10)	
+  r <- cv(list(a, b), car, k = 5, dag = FALSE)
+  expect_true(r[1] > r[2])
+})
+
 test_that("correct cv result with missing data", {
   skip_on_cran()
   skip_if_not_installed('gRain')

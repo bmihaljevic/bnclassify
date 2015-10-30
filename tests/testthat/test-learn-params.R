@@ -32,25 +32,40 @@ test_that('Set feature weights', {
   expect_true(are_pdists(t(params(f)$buying)))
 })
 
-test_that('lawnb nominal', {
+test_that('awnb nominal', {
   nb <- nbcar()
-  a <- lpawnb(nb, car, smooth = 1, trees = 1, bootstrap_size = 1) 
+  a <- lp(nb, car, smooth = 1, awnb_trees = 1, awnb_bootstrap = 1) 
   b <- lp(nb, car, smooth = 1)
   expect_equal(params(a)$class, params(b)$class)
   expect_true(all(params(a)$buying != params(b)$buying))
   expect_true(are_pdists(t(params(a)$buying)))
-  expect_equal(a$.call_bn[[1]], "lpawnb")
+  expect_equal(a$.call_bn[[1]], "lp")
 })
 
-test_that('lawnb default params', {
+test_that("awnb do not call", {
+  nb <- nbcar()
+  a <- lp(nb, car, smooth = 1, awnb_trees = NULL, awnb_bootstrap = NULL) 
+  b <- lp(nb, car, smooth = 1)
+  identical_non_call(a, b)
+})
+
+test_that('awnb default params', {
   nb <- nbcar()
   set.seed(0)
-  a <- lpawnb(nb, car, smooth = 1, trees = 10, bootstrap_size = 0.5) 
+  a <- lp(nb, car, smooth = 1, awnb_trees = 10, awnb_bootstrap = 0.5) 
   set.seed(0)
-  b <- lpawnb(nb, car, smooth = 1) 
-  a$.call_bn <- NULL
-  b$.call_bn <- NULL
-  expect_equal(a, b)
+  b <- lp(nb, car, smooth = 1, awnb_trees = 10) 
+  identical_non_call(a, b)
+  set.seed(0)
+  b <- lp(nb, car, smooth = 1, awnb_bootstrap = 0.5) 
+  identical_non_call(a, b)
+})
+
+test_that("awnb Incomplete data" , {
+  a <- nb('Class', voting)
+  b <- lp(a, voting, smooth = 1, awnb_trees = 1, awnb_bootstrap = 0.1)
+  c <- lp(a, voting, smooth = 1)
+  expect_equal(params(b), params(set_weights(c, b$.weights)))
 })
 
 test_that('bnc function nominal', {
