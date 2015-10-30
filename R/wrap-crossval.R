@@ -18,7 +18,6 @@ crossval_callback <- function(train.x, train.y, test.x, test.y, x, dag, smooth,
   names(dataset)[ncol(dataset)] <- class
   ux <- multi_update(x, dataset, dag = dag, smooth = smooth)
   # Predict for each x 
-  # predictions <- multi_predict(ux, test.x, prob = FALSE)
   predictions <- lapply(ux, predict, test.x,  prob = FALSE)
   # Compute accuracy
   vapply(predictions, accuracy, test.y, FUN.VALUE = numeric(1))
