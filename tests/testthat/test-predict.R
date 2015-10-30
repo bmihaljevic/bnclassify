@@ -58,7 +58,7 @@ test_that("CV a wrapper", {
   t <- lp(t, car, smooth = 0.01)
   r <- cv(t, car, k = 2, dag = TRUE)
   expect_true(is_positive(r))
-  expect_equal(r, 0.9386574)
+  expect_equal(r, 0.9293981, tolerance = 1e-7)
 })
 
 test_that("correct cv result", {
@@ -67,7 +67,7 @@ test_that("correct cv result", {
   t <- lp(t, car, smooth = 0.01)
   set.seed(0)
   s <- cv(t, car, k = 5, dag = TRUE)
-  expect_equal(s, 0.9386712, tolerance = 1e-6)
+  expect_equal(s, 0.9386678, tolerance = 1e-6)
 })
 
 test_that("cv with different parameter learning", {
