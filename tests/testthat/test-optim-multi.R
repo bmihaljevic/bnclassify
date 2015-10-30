@@ -2,17 +2,17 @@ context("Multi")
 
 test_that("Multi bnc bn single dag", {
   n <- nb('class', car) 
-  nb <- bnc_bn(n, car, smooth = 0.1)
+  nb <- lp(n, car, smooth = 0.1)
   nm <- multi_bnc_bn(n, car, smooth = 0.1)
-  expect_identical(nb, nm[[1]])
+  identical_non_call(nb, nm[[1]])
 })
 
 test_that("Multi bnc bn two dags", {
   n <- nb('class', car)
-  nb <- bnc_bn(n, car, smooth = 0.1)
+  nb <- lp(n, car, smooth = 0.1)
   nm <- multi_bnc_bn(list(n, n), car, smooth = 0.1)
-  expect_identical(nb, nm[[1]])
-  expect_identical(nb, nm[[2]])
+  identical_non_call(nb, nm[[1]])
+  identical_non_call(nb, nm[[2]])
 })
 
 test_that("Multi bnc bn different class vars dags", {

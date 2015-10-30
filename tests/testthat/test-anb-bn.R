@@ -21,24 +21,24 @@ test_that("nominal as grain", {
 test_that("bnc_bn no class in dataset ", {     
   tbdag <- nb_dag('class', 'buying')
   tb <- bnc_dag(tbdag, class = 'class')
-  expect_error(bnc_bn(tb, car[ , 1, drop = FALSE], smooth = 0),
+  expect_error(lp(tb, car[ , 1, drop = FALSE], smooth = 0),
                "is_subset")
 })
 
 test_that("Just the class in dataset", {
   tbdag <- nb_dag('class', character())
   tbdag <- bnc_dag(tbdag, class = 'class')
-  tbn <- bnc_bn(tbdag, car, smooth = 0)    
+  tbn <- lp(tbdag, car, smooth = 0)    
   expect_equal(class_var(tbn), 'class')
 })  
 
 test_that(" Wrong data set", {
   tbdag <- nb_dag('class', colnames(car)[-7])
   tbdag <- bnc_dag(tbdag, class = 'class')
-  expect_error(bnc_bn(tbdag, voting, smooth = 0)   , "colnames")
+  expect_error(lp(tbdag, voting, smooth = 0)   , "colnames")
 })
 
 test_that(" Classes", {
-  a <- bnc_bn(nb('class', car), car, smooth = 0)   
+  a <- lp(nb('class', car), car, smooth = 0)   
   expect_equal(classes(a), levels(car$class))
 })

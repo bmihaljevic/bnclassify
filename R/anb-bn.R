@@ -1,11 +1,3 @@
-# Produces a list of CPTs for the families in the DAG
-bnc_bn <- function(x, dataset, smooth) {   
-    # Get a CPT table for each family
-  params <- families2cpts(families(x), dataset, smooth)
-  bnc_bn <- make_bnc_bn(x, params = params)
-  check_bnc_bn(bnc_bn) 
-  bnc_bn
-}
 make_bnc_bn <- function(bnc_dag, params) {
   bnc_dag$.params <- params
   class(bnc_dag) <- c('bnc_bn', class(bnc_dag))
