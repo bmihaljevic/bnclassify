@@ -8,7 +8,7 @@ greedy_search <- function(class, to_include, init, step, dataset, epsilon, k,
   current_score <- -Inf 
   candidate_dags <- list(init)
   #   Get indices of training sets 
-  test_folds <- make_cv_test_folds(dataset, class, k)
+  test_folds <- partition_dataset(dataset, class, k)
   train <- lapply(test_folds, function(x) dataset[-x, , drop = FALSE])
   test <- lapply(test_folds, function(x) dataset[x, , drop = FALSE])
   #   Start caches for training sets 
