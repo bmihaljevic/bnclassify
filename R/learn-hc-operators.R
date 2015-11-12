@@ -140,8 +140,7 @@ augment_ode_sp <- function(bnc_dag, features_to_include, train, test, smooth) {
   # Select best superparent (could be skipped if there is just one)
   sp_dags <- mapply(add_feature_parents, names(sp_children), sp_children, 
                 MoreArgs = list(x = bnc_dag), SIMPLIFY = FALSE)
-  scores <- cv_fixed_partition(sp_dags, train = train, test = test, 
-                               smooth = smooth)
+  scores <- cv_lp_partition(sp_dags, train = train, test = test)
   best_ind <- max_random(scores)  
   # Form a dag for each possible child of the superparent
   superparent <- names(sp_children)[best_ind]

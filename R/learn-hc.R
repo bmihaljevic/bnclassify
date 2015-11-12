@@ -21,7 +21,7 @@ greedy_search <- function(class, to_include, init, step, dataset, epsilon, k,
     #     Update each candidate dag on the correct cache 
     #     Get the prediction for each ddag
     #     evaluate 
-    scores <- cv_fixed_partition(candidate_dags, train, test, smooth = smooth)
+    scores <- cv_lp_partition(candidate_dags, train, test)
     #     Stop if it is not better than current_score 
     if (!is_improvement(scores, current_score, epsilon)) break         
     #     Make the best dag the current one

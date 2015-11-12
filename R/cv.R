@@ -45,19 +45,19 @@ update_assess_fold <- function(train, test, x, dag, class) {
   vapply(predictions, accuracy, test[[class]], FUN.VALUE = numeric(1))
 }
 # This works for a single partition.
-cv_fixed_partition <- function(x, train, test, smooth) {
+cv_lp_partition <- function(x, train, test) {
   ux <- ensure_multi_list(x)
   stopifnot(is_just(train, "list"), is_just(test, "list"), 
             length(train) > 1, length(train) == length(test))
-  p <- mapply(learn_and_assess, train, test, 
-              MoreArgs = list(x = ux, smooth = smooth), SIMPLIFY = TRUE)
+  p <- mapply(learn_and_assess, train, test, MoreArgs = list(x = ux), 
+              SIMPLIFY = TRUE)
   p <- format_cv_output(p, ensure_list(x))
   colMeans(p)
 }
-learn_and_assess <- function(train, test, x, smooth) {
+learn_and_assess <- function(mem_cpts, test, x) {
   x <- ensure_multi_list(x)
   class <- get_common_class(x)
-  x <- lapply(x, lp_implement, .mem_cpts = train)
+  x <- lapply(x, lp_implement, .mem_cpts = mem_cpts)
   predictions <- lapply(x, predict, test,  prob = FALSE)
   vapply(predictions, accuracy, test[, class], FUN.VALUE = numeric(1))
 }
