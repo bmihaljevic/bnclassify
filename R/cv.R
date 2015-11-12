@@ -10,7 +10,7 @@
 #' @return A numeric vector. The predictive accuracy of each classifier in 
 #'   \code{x}.
 cv <- function(x, dataset, k, dag, means = TRUE) {
-  xs <- ensure_multi_list(x)
+  xs <- ensure_multi_list(x, type = "bnc_bn")
   class <- get_common_class(xs)
   cnames <- colnames(dataset)
   stopifnot(!are_disjoint(class, cnames))
@@ -38,7 +38,7 @@ format_cv_output <- function(p, x) {
 }
 # Do a cross validation instance with the cross val package
 update_assess_fold <- function(train, test, x, dag, class) {
-  ux <- multi_update(x, train, dag = dag, smooth = NULL)
+  ux <- lapply(x, update, dataset = train, dag = dag)
   # Predict for each x 
   predictions <- lapply(ux, predict, test,  prob = FALSE)
   # Compute accuracy
