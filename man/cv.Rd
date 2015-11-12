@@ -15,12 +15,17 @@ cv(x, dataset, k, dag, means = TRUE)
 
 \item{dag}{A logical. Whether to learn structure on each training set.
 Parameters are always learned.}
+
+\item{means}{A logical. Whether to return mean accuracy for each classifier
+or to return a k-row matrix with accuracies per fold.}
 }
 \value{
 A numeric vector. The predictive accuracy of each classifier in
-  \code{x}.
+  \code{x}. If \code{means = TRUE} then a matrix with k rows.
 }
 \description{
-Stratified cross validation estimate of predictive accuracy.
+It may relearn only the parameters on each set of training folds, or relearn
+the structure, too. The options used to relearn parameters and, optionally,
+structure, are those used to learn the objects in \code{x}.
 }
 

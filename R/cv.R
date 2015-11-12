@@ -1,14 +1,20 @@
 #' Stratified cross validation estimate of predictive accuracy.
 #' 
+#' It may relearn only the parameters on each set of training folds, or relearn 
+#' the structure, too. The options used to relearn parameters and, optionally,
+#' structure, are those used to learn the objects in \code{x}.
+#' 
 #' @param x List of \code{\link{bnc_bn_object}}. The classifiers to evaluate.
 #' @param dataset The data frame on which to evaluate the classifiers.
 #' @param k An integer. The number of folds.
-#' @param dag A logical. Whether to learn structure on each training set.
+#' @param dag A logical. Whether to learn structure on each training set. 
 #'   Parameters are always learned.
+#' @param means A logical. Whether to return mean accuracy for each classifier 
+#'   or to return a k-row matrix with accuracies per fold.
 #' @inheritParams learn_params
 #' @export
 #' @return A numeric vector. The predictive accuracy of each classifier in 
-#'   \code{x}.
+#'   \code{x}. If \code{means = TRUE} then a matrix with k rows.
 cv <- function(x, dataset, k, dag, means = TRUE) {
   xs <- ensure_multi_list(x, type = "bnc_bn")
   class <- get_common_class(xs)

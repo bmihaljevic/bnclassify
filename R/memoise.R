@@ -4,6 +4,7 @@
 #'   memoise.
 #'   
 #'   Memoise assumes that argument to f is a character vector. 
+#'   @param f a function 
 memoise_char <- memoize <- function(f) {
   cache <- new_cache()
   memo_f <- function(x) {
