@@ -26,8 +26,9 @@ lp <- function(x, dataset, smooth, awnb_trees = NULL, awnb_bootstrap = NULL) {
   add_params_call_arg(bn, call = match.call(), env = parent.frame(), force = TRUE)
 }
 lp_implement <- function(x, dataset, smooth, awnb_trees = NULL,
-                         awnb_bootstrap = NULL) {
-  params <- families2cpts(families(x), dataset, smooth)
+                         awnb_bootstrap = NULL, .mem_cpts = NULL) {
+  params <- families2cpts(families(x), dataset = dataset, smooth = smooth,
+                          .mem_cpts = .mem_cpts)
   bn <- make_bnc_bn(x, params = params)
   awnb <- (!is.null(awnb_trees) || !is.null(awnb_bootstrap))
   # TODO: if manb && awnb stop("Either MANB or AWNB")

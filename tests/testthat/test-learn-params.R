@@ -79,3 +79,11 @@ test_that('bnc with args', {
   b <- lp(tan_cl('class', car, root = 'safety'), car, smooth = 1)
   expect_identical(a, b)
 })
+
+test_that('lp_implement with cache nominal', {
+  n <- nb('class', car)
+  a <- make_cpts_cache(car, smooth = 0.04)
+  e <- lp_implement(n, .mem_cpts = a)
+  b <- lp_implement(n, car, smooth = 0.04)
+  expect_identical(e, b)
+})

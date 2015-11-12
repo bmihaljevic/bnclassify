@@ -18,7 +18,7 @@ get_unique_cpts <- function(x) {
 }
 extract_unique_cpts <- function(x, dataset, smooth) {
   ufams <- unique_families(lapply(x, families))
-  families2cpts(ufams, dataset = dataset, smooth = smooth)
+  families2cpts(ufams, dataset = dataset, smooth = smooth, .mem_cpts = NULL)
 }
 ensure_list <- function(x, type = NULL) {
   if (!is_just(x, "list")) {

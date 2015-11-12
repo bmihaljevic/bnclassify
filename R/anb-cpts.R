@@ -2,10 +2,14 @@
 cpts2families <- function(cpts) {
   lapply(cpts, cpt2family) 
 }
-families2cpts <- function(families, dataset, smooth) {
-  # Check dataset 
-  check_dataset(dataset)
-  lapply(families, extract_cpt, dataset, smooth = smooth)
+families2cpts <- function(families, dataset, smooth, .mem_cpts) {
+  if (!is.null(.mem_cpts)) {
+    lapply(families, call_memoised_char, cache = .mem_cpts)
+  }
+  else {
+    check_dataset(dataset)
+    lapply(families, extract_cpt, dataset, smooth = smooth)
+  }
 }
 extract_cpt <- function(vars, dataset, smooth) {
   ctgt <- extract_ctgt(vars, dataset)
