@@ -85,7 +85,7 @@ test_that("Update with awnb param learning", {
   d <- lp(b, voting, smooth = 1)
   r <- cv(list(b, c, d), voting, k = 2, dag = FALSE)
   # All three values are different
-  expect_equal(r, c(0.9563269, 0.9494356, 0.9011225), tolerance = 1e-6)
+  expect_equal(r, c(0.9517397, 0.9494462, 0.8988606), tolerance = 1e-6)
 })
 
 test_that("Multi-update bnc_dag", {

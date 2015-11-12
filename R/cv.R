@@ -9,19 +9,51 @@
 #' @export
 #' @return A numeric vector. The predictive accuracy of each classifier in 
 #'   \code{x}.
-cv <- function(x, dataset, k, dag, smooth = NULL) {
-  multi_crossval(x, dataset = dataset, k = k, dag = dag, smooth = smooth)
+cv <- function(x, dataset, k, dag, means = TRUE) {
+  xs <- ensure_multi_list(x)
+  class <- get_common_class(xs)
+  cnames <- colnames(dataset)
+  stopifnot(!are_disjoint(class, cnames))
+  test_folds <- partition_dataset(dataset, class, k)
+  train <- lapply(test_folds, function(x) dataset[-x, , drop = FALSE])
+  test <- lapply(test_folds, function(x) dataset[x, , drop = FALSE])
+  p <- mapply(update_assess_fold, train, test, 
+              MoreArgs = list(x = xs, dag = dag, class = class), SIMPLIFY = TRUE)
+  p <- format_cv_output(p, ensure_list(x))
+  if (means) {
+    p <- colMeans(p)  
+  }
+  p
+}
+format_cv_output <- function(p, x) {
+  if (is.null(dim(p)) || length(dim(p)) < 2) {
+    stopifnot(length(x) == 1)
+    # convert to a matrix 
+    p <- t(p)
+  }
+  p <- t(p)
+  stopifnot(ncol(p) == length(x))
+  colnames(p) <- names(x)
+  p
+}
+# Do a cross validation instance with the cross val package
+update_assess_fold <- function(train, test, x, dag, class) {
+  ux <- multi_update(x, train, dag = dag, smooth = NULL)
+  # Predict for each x 
+  predictions <- lapply(ux, predict, test,  prob = FALSE)
+  # Compute accuracy
+  vapply(predictions, accuracy, test[[class]], FUN.VALUE = numeric(1))
 }
 # This works for a single partition.
 cv_fixed_partition <- function(x, train, test, smooth) {
   # need > 1 because if result is 1 dimensional I assume that there is only one x 
-  stopifnot(length(train) > 1, length(train) == length(test))
+  ux <- ensure_multi_list(x)
+  stopifnot(is_just(train, "list"), is_just(test, "list"), 
+            length(train) > 1, length(train) == length(test))
   p <- mapply(learn_and_assess, train, test, 
-              MoreArgs = list(x = x, smooth = smooth), SIMPLIFY = TRUE)
-  if (is.null(dim(p)) || length(dim(p)) < 2) {
-    p <- t(p)
-  }
-  rowMeans(p)
+              MoreArgs = list(x = ux, smooth = smooth), SIMPLIFY = TRUE)
+  p <- format_cv_output(p, ensure_list(x))
+  colMeans(p)
 }
 learn_and_assess <- function(train, test, x, smooth) {
   x <- ensure_multi_list(x)
@@ -46,6 +78,7 @@ make_stratified_folds <- function(class, k) {
 # Distribute instances of a class over the k folds in approximately uniform
 # fashion.
 distribute_class_over_folds <- function(n, k) {
+  if (n == 0) return(integer())
   stopifnot(n >= 1 && k > 1)
   # shuffle the folds, to try to fill them equally when k is not a multiple of n
   fold_ids <- sample(seq_len(k), k)

@@ -16,8 +16,18 @@ test_that("CV two bnc_bns for fitting", {
   m <- lp(nb('class', car[, c(1, 3, 7)]), car, 1)
   a <- cv(list(n, m), car, k = 5, dag = FALSE)
   expect_equal(length(a), 2L)
-  expect_true(all(a > 0.5))  
+  expect_true(all(a > 0.5))
 })
+
+test_that("CV means = FALSE", {
+  n <- lp(nb('class', car), car, 1)
+  m <- lp(nb('class', car[, c(1, 3, 7)]), car, 1)
+  a <- cv(list(n, m), car, k = 5, dag = FALSE, means = FALSE)
+  expect_equal(ncol(a), 2L)
+  expect_equal(nrow(a), 5L)
+  expect_true(all(colMeans(a) > 0.5))  
+})
+          
 
 test_that("CV two bnc_bns to repeat learning", {
   n <- lp(nb('class', car), car, 1)
@@ -31,12 +41,19 @@ test_that("CV two bnc_bns to repeat learning", {
   expect_error(cv(list(n, m), car[ , c(1, 7)], k = 5, dag = FALSE), "cols")
 })
 
+test_that("CV classifier names", {
+  n <- lp(nb('class', car), car, 1)
+  m <- lp(nb('class', car[, c(1, 3, 7)]), car, 1)
+  a <- cv(list(a = n, b = m), car[ , c(1, 7)], k = 5, dag = TRUE)
+  expect_equal(names(a), letters[1:2])
+})
+
 test_that("Fast structure fitting with smooth", {
   a <- lp(nb('class', car), car, smooth = 1)	
   b <- lp(nb('class', car[, 7, drop = FALSE]), car, smooth = 1)	
   set.seed(0)
-  r <- cv(list(a, b), car, k = 10, dag = FALSE, smooth = 1)
-  expect_equal(r, c(0.8541235, 0.7002352), tolerance = 1e-7)
+  r <- cv(list(a, b), car, k = 10, dag = FALSE)
+  expect_equal(r, c(0.8582183, 0.7002446), tolerance = 1e-7)
   set.seed(0)
   s <- cv(list(a, b), car, k = 10, dag = FALSE)
   expect_equal(s, r)
@@ -48,7 +65,7 @@ test_that("CV a wrapper", {
   t <- tan_hc('class', car, k = 2, epsilon = 0, smooth = 0.01)
   t <- lp(t, car, smooth = 0.01)
   r <- cv(t, car, k = 2, dag = TRUE)
-  expect_equal(r, 0.9322917, tolerance = 1e-7)
+  expect_equal(r, 0.9346065, tolerance = 1e-7)
 })
 
 test_that("correct cv result", {
@@ -57,7 +74,7 @@ test_that("correct cv result", {
   t <- lp(t, car, smooth = 0.01)
   set.seed(0)
   s <- cv(t, car, k = 5, dag = TRUE)
-  expect_equal(s, 0.9398205, tolerance = 1e-6)
+  expect_equal(s, 0.9415345, tolerance = 1e-6)
 })
 
 test_that("cv with different parameter learning", {
@@ -74,16 +91,16 @@ test_that("correct cv result with missing data", {
   nb <- nbvote()
   set.seed(0)
   s <- cv(nb, voting, k = 5, dag = TRUE)
-  expect_equal(s, 0.9034483, tolerance = 1e-6)
+  expect_equal(s, 0.9014301, tolerance = 1e-6)
 })
 
 test_that("cv with just-class classifier", {
   skip_on_cran()
   a <- lp(nb('class', car), car, smooth = 1)	
   b <- lp(nb('class', car[, 'class', drop = FALSE]), car, smooth = 1)
-  d <- lp(nb('class', car[, c(sample(1:6, 4), 7), drop = FALSE]), car, smooth = 1)	
+  d <- lp(nb('class', car[, c(sample(1:6, 4), 7), drop=FALSE]), car, smooth=1)
   set.seed(0)
-  r <- cv(list(a, b, d), car, k = 10, dag = TRUE, smooth = 1)
+  r <- cv(list(a, b, d), car, k = 10, dag = TRUE)
 })
 
 test_that("learn and asses nominal", {
@@ -121,6 +138,14 @@ test_that("make folds nominal", {
   replicate(10, test_make_stratified)
 })
 
+test_that("make folds empty class", {
+  car_cv <- car[1:300, ]
+  f <- make_stratified_folds(car_cv$class, 2)
+  a <- table(car$class[f[[1]]])
+  b <- table(car$class[f[[2]]])
+  expect_equal(sum(abs(a - b)), 0)
+})
+
 test_that("distribute accross folds nominal", {
   set.seed(4)
   f <- distribute_class_over_folds(1210, 3)
@@ -132,4 +157,6 @@ test_that("distribute accross folds nominal", {
   expect_equal(f, 1)
   f <- distribute_class_over_folds(4, 1200)
   expect_equal(f, c(733, 485, 899, 857))
+  f <- distribute_class_over_folds(0, 2)
+  expect_equal(f, integer())
 })

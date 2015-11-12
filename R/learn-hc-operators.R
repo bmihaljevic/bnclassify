@@ -132,8 +132,7 @@ discard_reversed <- function(matrix) {
   matrix
 }
 
-augment_ode_sp <- function(bnc_dag, features_to_include, dataset, 
-                           smooth, k) {
+augment_ode_sp <- function(bnc_dag, features_to_include, train, test, smooth) {
   rm(features_to_include) # ignored
   # Select superparent:
   sp_children <- superparent_children(bnc_dag)
@@ -141,7 +140,8 @@ augment_ode_sp <- function(bnc_dag, features_to_include, dataset,
   # Select best superparent (could be skipped if there is just one)
   sp_dags <- mapply(add_feature_parents, names(sp_children), sp_children, 
                 MoreArgs = list(x = bnc_dag), SIMPLIFY = FALSE)
-  scores <- cv(sp_dags, dataset = dataset, k = k, dag = FALSE, smooth = smooth)
+  scores <- cv_fixed_partition(sp_dags, train = train, test = test, 
+                               smooth = smooth)
   best_ind <- max_random(scores)  
   # Form a dag for each possible child of the superparent
   superparent <- names(sp_children)[best_ind]
