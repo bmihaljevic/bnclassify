@@ -35,7 +35,7 @@ is_nb(x)
 is_ode(x)
 }
 \arguments{
-\item{x}{The bnc_dag_object}
+\item{x}{The \code{bnc_dag} object.}
 }
 \description{
 You can query this object using the following functions.

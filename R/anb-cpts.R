@@ -97,3 +97,8 @@ exponentiate_cpt <- function(cpt, value) {
 get_cpt_id <- function(cpt) {
   make_family_id(cpt2family(cpt))
 }
+count_cpt_free_params <- function(cpt) {
+  d <- dim(cpt)
+  stopifnot(length(d) >= 1)
+  (d[1] - 1) * prod(d[-1])
+}

@@ -18,7 +18,7 @@
 #' 
 #' @docType package
 #' @name bnclassify
-#' @importFrom stats predict as.formula complete.cases setNames 
+#' @importFrom stats predict as.formula complete.cases setNames logLik AIC BIC
 #' @importFrom graphics plot
 #' @importFrom utils combn 
 #' 
@@ -163,7 +163,7 @@ NULL
 #' 
 #' You can query this object using the following functions.
 #' 
-#' @param x The bnc_dag_object
+#' @param x The \code{bnc_dag} object.
 #' 
 #' @name bnc_dag_object
 NULL
@@ -172,7 +172,7 @@ NULL
 #' 
 #' You can query this object using the following functions, in addition to all the functions that can be applied to a \code{\link{bnc_dag_object}}. 
 #' 
-#' @param x The bnc_bn_object
+#' @param x The \code{bnc_bn} object.
 #' 
 #' @name bnc_bn_object
 NULL

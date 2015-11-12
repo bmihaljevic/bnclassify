@@ -70,6 +70,11 @@ whereas the CPT for `buying` is
 params(b)$class
 ```
 
+Also, we can compute several network scores, such as its log-likelihood: 
+```{r}
+logLik(b, car)
+```
+
 For more functions that can be called on a `bnc_bn` object see `?bnc_bn_object`
 
 Once we have fit parameters, we can predict the class or class posterior of unseen data (although in this example it is the data we used to learn the model).
