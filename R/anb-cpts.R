@@ -11,6 +11,14 @@ extract_cpt <- function(vars, dataset, smooth) {
   ctgt <- extract_ctgt(vars, dataset)
   ctgt2cpt(ctgt, smooth = smooth)
 }
+make_cpts_cache <- function(dataset, smooth) {
+  check_dataset(dataset)
+  extract_cpt <- function(vars) {
+    ctgt <- extract_ctgt(vars, dataset)
+    ctgt2cpt(ctgt, smooth = smooth)
+  }
+  memoise_char(extract_cpt)
+}
 # Turns a contingency table into a conditional probability table  
 ctgt2cpt <- function(ctgt, smooth) {
   # Requiring ctgt be a table. That implies it is an array.

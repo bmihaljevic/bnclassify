@@ -12,4 +12,9 @@ test_that("subset_cpt 1D cpt", {
   expect_error(p <- subset_cpt(cp, obs), "vars")
 })
 
-
+test_that("cpt cache nominal", {
+  cache <- make_cpts_cache(car, smooth = 1)
+  expect_identical(cache('class'), extract_cpt('class', car, smooth = 1))
+  expect_identical(cache(c('buying', 'class')),
+                   extract_cpt(c('buying', 'class'), car, smooth = 1))
+})
