@@ -60,7 +60,9 @@ cv(tn, car, k = 10, smooth = 0.01, dag = TRUE)
 Install
 =======
 
-Make sure you have at least version 3.2.0 of R. You will need to install packages from Bioconductor.
+Make sure you have at least version 3.2.0 of R. 
+
+You will need to install packages from Bioconductor.
 
 ``` r
 source("http://bioconductor.org/biocLite.R")
@@ -69,13 +71,13 @@ biocLite(c("graph", "RBGL", "Rgraphviz"))
 
 When running the above you may get asked whether you would like to update some packages. My approach is to say no in order to avoid any possible conflict with packages on CRAN (you can update those packages from CRAN if needed).
 
-When you read this bnclassify may already be on CRAN. In that case, use:
+You can install `bnclassify` from CRAN:
 
 ``` r
 install.packages('bnclassify')
 ```
 
-If not, you can install the current version from github:
+Or get the current development version from github:
 
 ``` r
 install.packages('devtools')
