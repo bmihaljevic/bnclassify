@@ -132,7 +132,7 @@ discard_reversed <- function(matrix) {
   matrix
 }
 
-augment_ode_sp <- function(bnc_dag, features_to_include, train, test, smooth) {
+augment_ode_sp <- function(bnc_dag, features_to_include, train, test) {
   rm(features_to_include) # ignored
   # Select superparent:
   sp_children <- superparent_children(bnc_dag)
