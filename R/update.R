@@ -86,3 +86,16 @@ update_lp <- function(dag, lp_fargs, dataset) {
   lp_fargs$x <- dag
   do_bnc_call(lp_fargs, dataset)
 }
+# Optionally updates the dag prior to updating the parameters.
+update <- function(x, dataset, dag) {
+  stopifnot(is.logical(dag))
+  dg <- NULL
+  if (dag) {
+    dg <- update_dag(x, dataset)
+  }
+  else {
+    dg <- bn2dag(x)
+  }
+  lp_args <- get_lp_update_args(x)
+  update_lp(dag = dg, lp_fargs = lp_args, dataset = dataset)
+}

@@ -41,17 +41,3 @@ map <- function(pred) {
   #   Return a factor with the levels of the class variable
   factor(predicted, levels = classes)
 }
-#' Stratified cross validation estimate of predictive accuracy.
-#' 
-#' @param x List of \code{\link{bnc_bn_object}}. The classifiers to evaluate.
-#' @param dataset The data frame on which to evaluate the classifiers.
-#' @param k An integer. The number of folds.
-#' @param dag A logical. Whether to learn structure on each training set.
-#'   Parameters are always learned.
-#' @inheritParams learn_params
-#' @export
-#' @return A numeric vector. The predictive accuracy of each classifier in 
-#'   \code{x}.
-cv <- function(x, dataset, k, dag, smooth = NULL) {
-  multi_crossval(x, dataset = dataset, k = k, dag = dag, smooth = smooth)
-}

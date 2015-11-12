@@ -12,7 +12,6 @@ Depends:
 Imports:
     assertthat (>= 0.1),
     entropy(>= 1.2.0),
-    crossval(>= 1.0.2),
     graph(>= 1.42.0),
     matrixStats(>= 0.14.0),
     RBGL(>= 1.40.1),

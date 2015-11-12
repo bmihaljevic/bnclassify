@@ -22,7 +22,7 @@ test_that("Incomplete data set", {
 
 test_that("Just the class with incomplete data set", {
   skip_if_not_installed('gRain')
-  nb <- bnc_bn(nb('Class', voting[, 17, drop = FALSE]), voting,smooth = 0)
+  nb <- lp(nb('Class', voting[, 17, drop = FALSE]), voting,smooth = 0)
   a <- compute_cp(x = nb, voting)
   check_cp(a, nrow(voting), levels(voting$Class))
   cp <- as.vector(params(nb)[[class_var(nb)]])

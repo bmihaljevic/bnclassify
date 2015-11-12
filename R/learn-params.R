@@ -20,7 +20,16 @@ bnc <- function(dag_learner, class, dataset, smooth, dag_args = NULL) {
 #' @export
 #' @rdname learn_params
 lp <- function(x, dataset, smooth, awnb_trees = NULL, awnb_bootstrap = NULL) {
-  bn <- bnc_bn(x, dataset, smooth)
+  bn <- lp_implement(x = x, dataset = dataset, smooth = smooth, 
+                     awnb_trees = awnb_trees, awnb_bootstrap = awnb_bootstrap)
+  check_bnc_bn(bn) 
+  add_params_call_arg(bn, call = match.call(), env = parent.frame(), force = TRUE)
+}
+lp_implement <- function(x, dataset, smooth, awnb_trees = NULL,
+                         awnb_bootstrap = NULL, .mem_cpts = NULL) {
+  params <- families2cpts(families(x), dataset = dataset, smooth = smooth,
+                          .mem_cpts = .mem_cpts)
+  bn <- make_bnc_bn(x, params = params)
   awnb <- (!is.null(awnb_trees) || !is.null(awnb_bootstrap))
   # TODO: if manb && awnb stop("Either MANB or AWNB")
   if (awnb) {
@@ -28,7 +37,7 @@ lp <- function(x, dataset, smooth, awnb_trees = NULL, awnb_bootstrap = NULL) {
                     bootstrap_size = awnb_bootstrap)
     bn <- set_weights(bn, weights)  
   }
-  add_params_call_arg(bn, call = match.call(), env = parent.frame(), force = TRUE)
+  bn
 }
 set_weights <- function(bn, weights) {
   # Currently only expecting weights that can decrease the importance of a feature

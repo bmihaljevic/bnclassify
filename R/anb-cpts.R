@@ -2,14 +2,26 @@
 cpts2families <- function(cpts) {
   lapply(cpts, cpt2family) 
 }
-families2cpts <- function(families, dataset, smooth) {
-  # Check dataset 
-  check_dataset(dataset)
-  lapply(families, extract_cpt, dataset, smooth = smooth)
+families2cpts <- function(families, dataset, smooth, .mem_cpts) {
+  if (!is.null(.mem_cpts)) {
+    lapply(families, call_memoised_char, cache = .mem_cpts)
+  }
+  else {
+    check_dataset(dataset)
+    lapply(families, extract_cpt, dataset, smooth = smooth)
+  }
 }
 extract_cpt <- function(vars, dataset, smooth) {
   ctgt <- extract_ctgt(vars, dataset)
   ctgt2cpt(ctgt, smooth = smooth)
+}
+make_cpts_cache <- function(dataset, smooth) {
+  check_dataset(dataset)
+  extract_cpt <- function(vars) {
+    ctgt <- extract_ctgt(vars, dataset)
+    ctgt2cpt(ctgt, smooth = smooth)
+  }
+  memoise_char(extract_cpt)
 }
 # Turns a contingency table into a conditional probability table  
 ctgt2cpt <- function(ctgt, smooth) {

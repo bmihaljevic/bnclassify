@@ -13,7 +13,7 @@ test_that("Missing features", {
 })
 
 test_that("Single predictor", {
-  tn <- bnc_bn(nb('class', car[, c(1,7)]), car, smooth = 0)
+  tn <- lp(nb('class', car[, c(1,7)]), car, smooth = 0)
   pt <- compute_anb_log_joint_per_class(tn, car[, 1:2])
   expect_identical(dim(pt), c(nrow(car), 4L))
 })
@@ -26,7 +26,7 @@ test_that("0 rows dataset", {
 
 test_that("No features", {
   nb <- bnc_dag(nb_dag('class', NULL), 'class')
-  nb <- bnc_bn(nb, car, smooth = 1)
+  nb <- lp(nb, car, smooth = 1)
   pt <- compute_anb_log_joint_per_class(nb, car)
   expect_equal(as.vector(pt[1, ]), as.vector(log(params(nb)[['class']])))
   
@@ -35,7 +35,7 @@ test_that("No features", {
 })
 
 test_that("make cpt inds nominal", {
-  tn <- bnc_bn(nb('class', car), car, smooth = 0)
+  tn <- lp(nb('class', car), car, smooth = 0)
   # Nominal
   xc <- params(tn)[features(tn)]
   tinds <- x2cpt_inds(xc, car, class_var(tn), 4L)
@@ -47,7 +47,7 @@ test_that("make cpt inds nominal", {
 
 test_that("make cpt inds 0 features", {
   # 0 vars
-  tn <- bnc_bn(nb('class', car), car, smooth = 0)
+  tn <- lp(nb('class', car), car, smooth = 0)
   # Nominal
   xc <- params(tn)[features(tn)]
   expect_equal(x2cpt_inds(list(), car, 'class', 4L), list())
