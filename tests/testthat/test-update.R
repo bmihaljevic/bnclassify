@@ -23,49 +23,32 @@ test_that("bnc update bnc_bn with struct learning", {
   expect_equal(diff, 2.776258, tolerance = 1e-6)
 })
 
-test_that("Multi update single", {
+test_that("update nominal", {
   a <- lp(nb('class', car), car, smooth = 1e10)	  
-  b <- multi_update(a, car, dag = FALSE)
-  identical_non_call(a, b[[1]]) 
+  b <- update(a, car, dag = FALSE)
+  identical_non_call(a, b) 
 })
 
-test_that("Multi update data subset", {
+test_that("update data subset", {
   a <- lp(nb('class', car), car, smooth = 1)
-  b <- multi_update(a, car[1:5, ], dag = FALSE)
-  diff <- sum(abs(params(a)[[2]]  - params(b[[1]])[[2]]))
+  b <- update(a, car[1:5, ], dag = FALSE)
+  diff <- sum(abs(params(a)[[2]]  - params(b)[[2]]))
   expect_equal(diff, 2.393358, tolerance = 1e-7)
 })
 
-test_that("Multi update with dag", {
+test_that("update with dag", {
   t <- lp(tan_cl('class', car), car, smooth = 0.02)
-  b <- multi_update(t, car[1:5, ], dag = TRUE)
-  expect_equal(narcs(b[[1]]), narcs(t))
-  expect_true(!isTRUE(all.equal(families(b[[1]]), families(t))))
+  b <- update(t, car[1:5, ], dag = TRUE)
+  expect_equal(narcs(b), narcs(t))
+  expect_true(!isTRUE(all.equal(families(b), families(t))))
 })
 
-test_that("Multi update with dag 2", {
+test_that("update with dag 2", {
   a <- lp(nb('class', car), car, smooth = 1)	
-  b <- multi_update(a, car[1:5, 6:7], dag = TRUE)
-  expect_identical(features(b[[1]]), "safety")
-  diff <- sum(abs(params(b[[1]])[['safety']]  - params(a)[['safety']]))
+  b <- update(a, car[1:5, 6:7], dag = TRUE)
+  expect_identical(features(b), "safety")
+  diff <- sum(abs(params(b)[['safety']]  - params(a)[['safety']]))
   expect_equal(diff, 2.776258, tolerance = 1e-6)
-})
-
-test_that("Multi update with dag with different lp args", {
-  a <- lp(nb('class', car), car, smooth = 1)	
-  b <- lp(nb('class', car), car, smooth = 2)	
-  c <- multi_update(list(a, b), car, dag = TRUE)
-  identical_non_call(c[[1]], a)
-  identical_non_call(c[[2]], b)
-})
-
-test_that("Multi update with dag two", {
-  a <- lp(tan_cl('class', car), car, smooth = 1e-20)
-  b <- lp(nb('class', car), car, smooth = 1e-20)
-  c <- multi_update(list(a, b), car[1:5, ], dag = TRUE)
-  expect_equal(narcs(c[[1]]), narcs(a))
-  expect_true(!isTRUE(all.equal(families(c[[1]]), families(a))))
-  expect_equal(families(c[[2]]), families(b))
 })
 
 test_that("Update dag", {
