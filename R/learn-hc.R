@@ -10,6 +10,7 @@ greedy_search <- function(class, to_include, init, step, dataset, epsilon, k,
   #   Get indices of training sets 
   test_folds <- partition_dataset(dataset, class, k)
   train <- lapply(test_folds, function(x) dataset[-x, , drop = FALSE])
+  train <- lapply(train, make_cpts_cache, smooth = smooth)
   test <- lapply(test_folds, function(x) dataset[x, , drop = FALSE])
   #   Start caches for training sets 
   # TODO: smooth goes directly to cache. 

@@ -105,19 +105,23 @@ test_that("cv with just-class classifier", {
 
 test_that("learn and asses nominal", {
   n <- nbcar()
-  a <- learn_and_assess(car, car, n, smooth = 1)
+  mem_cpt <- make_cpts_cache(car, smooth = 1)
+  a <- learn_and_assess(mem_cpt, car, n, smooth = 1)
   p <- accuracy(predict(n, car), car$class)
   expect_equal(a, p)
 })
 
 test_that("cv fixed partition", {
   n <- nbcar()
-  a <- cv_fixed_partition(n, list(car, car), list(car, car), smooth = 1)
+  mem_cpt <- make_cpts_cache(car, smooth = 1)
+  a <- cv_fixed_partition(n, list(mem_cpt, mem_cpt), list(car, car), 
+                          smooth = 1)
   p <- accuracy(predict(n, car), car$class)
   expect_equal(a, p)
   
   d <- tan_cl('class', car)
-  a <- cv_fixed_partition(list(n, d), list(car, car), list(car, car), smooth = 1)
+  a <- cv_fixed_partition(list(n, d), list(mem_cpt, mem_cpt), list(car, car),
+                          smooth = 1)
   p <- accuracy(predict(n, car), car$class)
   g <- accuracy(predict(lp(d, car, smooth = 1), car), car$class)
   expect_equal(a, c(p, g))

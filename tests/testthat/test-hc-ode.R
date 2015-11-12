@@ -143,7 +143,8 @@ test_that("Superparents no orphans", {
 
 test_that("augment ode hc nominal", {
   nb <- nbcar()
-  a <- augment_ode_sp(nb, NULL, train = list(car, car), test = list(car, car),
+  mem <- make_cpts_cache(car, smooth = 0.01)
+  a <- augment_ode_sp(nb, NULL, train = list(mem, mem), test = list(car, car),
                       smooth = 0.01)
   expect_equal(length(a), 5)  
 })

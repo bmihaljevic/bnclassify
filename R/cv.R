@@ -46,7 +46,6 @@ update_assess_fold <- function(train, test, x, dag, class) {
 }
 # This works for a single partition.
 cv_fixed_partition <- function(x, train, test, smooth) {
-  # need > 1 because if result is 1 dimensional I assume that there is only one x 
   ux <- ensure_multi_list(x)
   stopifnot(is_just(train, "list"), is_just(test, "list"), 
             length(train) > 1, length(train) == length(test))
@@ -58,7 +57,7 @@ cv_fixed_partition <- function(x, train, test, smooth) {
 learn_and_assess <- function(train, test, x, smooth) {
   x <- ensure_multi_list(x)
   class <- get_common_class(x)
-  x <- lapply(x, lp, dataset = train, smooth = smooth)
+  x <- lapply(x, lp_implement, .mem_cpts = train)
   predictions <- lapply(x, predict, test,  prob = FALSE)
   vapply(predictions, accuracy, test[, class], FUN.VALUE = numeric(1))
 }
