@@ -160,7 +160,7 @@ NULL
 #'   generate.
 #' @param awnb_bootstrap A numeric. The size of the bootstrap subsample, 
 #'   relative to the size of \code{dataset} (given in [0,1]).
-#' @param manb_prior. A numeric. The prior probability for an arc between the
+#' @param manb_prior A numeric. The prior probability for an arc between the
 #'   class and any feature.
 #' @references Hall M (2004). A decision tree-based attribute weighting filter 
 #'   for naive Bayes. \emph{Knowledge-based Systems}, \bold{20}(2), 120-126.

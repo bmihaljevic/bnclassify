@@ -23,7 +23,7 @@ generate.}
 \item{awnb_bootstrap}{A numeric. The size of the bootstrap subsample,
 relative to the size of \code{dataset} (given in [0,1]).}
 
-\item{manb_prior.}{A numeric. The prior probability for an arc between the
+\item{manb_prior}{A numeric. The prior probability for an arc between the
 class and any feature.}
 }
 \description{
