@@ -6,8 +6,7 @@
 compute_manb_arc_posteriors <- function(x, ctgts, smooth, prior = 0.5) {
   if (!is_nb(x)) stop("MANB can only be applied to naive Bayes.")
   stopifnot(smooth > 0)
-  stopifnot(is_subset(names(ctgts), features(x)))
-  ctgts <- ctgts[features(x)]
+  stopifnot(identical(features(x), names(ctgts)))
   vapply(ctgts, compute_manb_arc_posterior, smooth = smooth, prior = prior, 
          FUN.VALUE = numeric(1))
 }
@@ -45,3 +44,21 @@ compute_manb_arc_posterior <- function(nijk, smooth, prior) {
   exp(lpa_post) + exp(lpna_post)
   exp(lpa_post)
 }
+# @param nijk A contingency table of X and C
+compute_manb_cpt <- function(nijk, prob_arc, smooth) {
+  stopifnot(length(dim(nijk)) == 2, are_probs(prob_arc), length(prob_arc) == 1)
+  lnijk <- log(ctgt2cpt(nijk, smooth = smooth))
+  lp_arc <- log(prob_arc)
+  arc <- lp_arc +  lnijk
+  # no arc
+  lni <- rowSums(nijk)
+  lni[] <- log(normalize(lni + smooth)) 
+  lp_noarc <- log(1 - prob_arc)
+  no_arc <- lp_noarc + lni
+  rt <- ncol(nijk)
+  no_arc <- rep(no_arc, rt)
+  entries <- matrix(c(as.numeric(arc), as.numeric(no_arc)), ncol = 2)
+  arc[] <- matrixStats::rowLogSumExps(entries)
+  stopifnot(identical(dimnames(arc), dimnames(nijk)))
+  exp(arc)
+}	

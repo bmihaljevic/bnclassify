@@ -87,3 +87,40 @@ test_that('lp_implement with cache nominal', {
   b <- lp_implement(n, car, smooth = 0.04)
   expect_identical(e, b)
 })
+
+test_that('either awnb or manb', {
+  n <- nb('class', car)
+  expect_error(lp(n, car, smooth = 1, awnb_trees = 2, manb_prior = 0.3),
+               "Either MANB or AWNB can be applied, not both.")
+  expect_error(lp(n, car, smooth = 1, awnb_bootstrap = 1, manb_prior = 0.3),
+               "Either MANB or AWNB can be applied, not both.")
+})
+
+test_that("manb nominal", {
+  nb <- nbcar()
+  manb <- lp(nb, car, smooth = 1, manb_prior = 0.5)
+  expect_equivalent(manb$.manb, c(1, 1, 0.000026294701543, 1, 1, 1)) 
+  expect_equal(names(manb$.params), names(nb$.params))
+  expect_equal(sum(abs(manb$.params[['doors']] - nb$.params[['doors']])), 
+               0.3950593, tolerance = 1e-7)
+  
+  nb <- nbcar()
+  manb <- lp(nb, car, smooth = 1)
+  expect_null(manb$.manb)
+  expect_identical(manb$.params, nb$.params)
+})
+
+test_that("check manb predictions match wei java implementation", {
+  nb <- lp(nb('class', car), car, smooth = 1)
+  manb <- lp(nb, car, smooth = 1, manb_prior = 0.5)
+  p <- predict(manb, car, prob = TRUE)
+  expect_equal(as.vector(p[12, 2]), 0.301507, tolerance = 0.0000002)
+  expect_equal(as.vector(p[1646, 2]), 0.307484, tolerance = 0.000002)
+  expect_equal(as.vector(p[1728, 2]), 0.209418, tolerance = 0.000002)
+  
+  nb <- lp(nb('class', car), car, smooth = 1)
+  manb <- lp(nb, car, smooth = 1, manb_prior = 0.00001)
+  p <- predict(manb, car, prob = TRUE)
+  expect_equal(as.vector(p[12, 2]), 0.301510, tolerance = 0.000002)
+  expect_equal(as.vector(p[18, 2]), 0.418681, tolerance = 0.000002)
+})

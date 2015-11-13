@@ -80,9 +80,12 @@ test_that("correct cv result", {
 test_that("cv with different parameter learning", {
   a <- lp(nb('class', car), car, smooth = 1)	
   set.seed(0)
-  b <- lp(nb('class', car), car, smooth = 1, awnb_trees = 10)	
-  r <- cv(list(a, b), car, k = 5, dag = FALSE)
+  b <- lp(nb('class', car), car, smooth = 1, awnb_trees = 10)
+  d <- lp(nb('class', car), car, smooth = 1, manb_prior = 0.1)	
+  r <- cv(list(a, b, d), car, k = 5, dag = FALSE)
   expect_true(r[1] > r[2])
+  expect_true(r[3] > r[2])
+  expect_true(r[1] > r[3])
 })
 
 test_that("correct cv result with missing data", {

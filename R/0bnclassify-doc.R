@@ -112,9 +112,9 @@ NULL
 
 #' Learn the parameters of a Bayesian network.
 #' 
-#' Estimates parameters with maximum likelihood or Bayesian estimation.
+#' Estimates parameters with maximum likelihood or Bayesian estimation. 
 #' Optionally, updates these estimates according to the attribute weighted naive
-#' Bayes (AWNB) method.
+#' Bayes (AWNB) method or the model averaged naive Bayes (MANB) method.
 #' 
 #' \code{lp} learns the parameters of each \eqn{P(X_i \mid \mathbf{Pa}(X_i) = 
 #' j)}{P(X[i] | Pa(X[i]) = j)} as \deqn{\theta_{ijk} = \frac{N_{ijk} + 
@@ -131,7 +131,7 @@ NULL
 #' \emph{available case analysis}.
 #' 
 #' Providing \code{awnb_bootstrap} and/or \code{awnb_trees} argument updated the
-#' Bayesian/maximum likelihood parameters according according to the AWNB
+#' Bayesian/maximum likelihood parameters according according to the AWNB 
 #' method, as follows, \deqn{\theta_{ijk}^{AWNB} = 
 #' \frac{(\theta_{ijk})^{w_i}}{\sum_{k=1}^{r_i} 
 #' (\theta_{ijk})^{w_i}},}{\theta[ijk]^(AWNB) = ((\theta[ijk])^w[i]) / 
@@ -142,6 +142,11 @@ NULL
 #' minimum testing depth of \eqn{X_i}{X[i]} in an unpruned classification tree 
 #' learned from the \eqn{t}-th subsample (\eqn{d_{ti} = 0}{d[ti] = 0} if 
 #' \eqn{X_i}{X_i} is omitted from \eqn{t}-th tree).
+#' 
+#' The MANB methods corresponds to Bayesian model averaging over the naive Bayes
+#' models obtained from all $2^n$ subsets of the $n$ features. To use this 
+#' method, specify a prior probability for an arc between the class and any 
+#' feature via the argument \code{manb_prior}.
 #' 
 #' @name learn_params
 #'   
@@ -155,9 +160,14 @@ NULL
 #'   generate.
 #' @param awnb_bootstrap A numeric. The size of the bootstrap subsample, 
 #'   relative to the size of \code{dataset} (given in [0,1]).
-#' @references Mark Hall (2004). A decision tree-based attribute weighting 
-#'   filter for naive Bayes. \emph{Knowledge-based Systems}, \bold{20}(2), 
-#'   120-126.
+#' @param manb_prior. A numeric. The prior probability for an arc between the
+#'   class and any feature.
+#' @references Hall M (2004). A decision tree-based attribute weighting filter 
+#'   for naive Bayes. \emph{Knowledge-based Systems}, \bold{20}(2), 120-126.
+#'   
+#'   Dash D and Cooper GF (2002). Exact model averaging with naive Bayesian 
+#'   classifiers. \emph{19th International Conference on Machine Learning 
+#'   (ICML-2002)}, 91-98.
 NULL
 
 #' A Bayesian network classifier structure.

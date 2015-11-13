@@ -5,7 +5,8 @@
 \alias{lp}
 \title{Learn the parameters of a Bayesian network.}
 \usage{
-lp(x, dataset, smooth, awnb_trees = NULL, awnb_bootstrap = NULL)
+lp(x, dataset, smooth, awnb_trees = NULL, awnb_bootstrap = NULL,
+  manb_prior = NULL)
 }
 \arguments{
 \item{x}{a \code{\link{bnc_dag_object}} object. The Bayesian network
@@ -21,11 +22,14 @@ generate.}
 
 \item{awnb_bootstrap}{A numeric. The size of the bootstrap subsample,
 relative to the size of \code{dataset} (given in [0,1]).}
+
+\item{manb_prior.}{A numeric. The prior probability for an arc between the
+class and any feature.}
 }
 \description{
 Estimates parameters with maximum likelihood or Bayesian estimation.
 Optionally, updates these estimates according to the attribute weighted naive
-Bayes (AWNB) method.
+Bayes (AWNB) method or the model averaged naive Bayes (MANB) method.
 }
 \details{
 \code{lp} learns the parameters of each \eqn{P(X_i \mid \mathbf{Pa}(X_i) =
@@ -54,10 +58,18 @@ number of bootstrap samples from \code{dataset} and \eqn{d_{ti}}{d[ti]} the
 minimum testing depth of \eqn{X_i}{X[i]} in an unpruned classification tree
 learned from the \eqn{t}-th subsample (\eqn{d_{ti} = 0}{d[ti] = 0} if
 \eqn{X_i}{X_i} is omitted from \eqn{t}-th tree).
+
+The MANB methods corresponds to Bayesian model averaging over the naive Bayes
+models obtained from all $2^n$ subsets of the $n$ features. To use this
+method, specify a prior probability for an arc between the class and any
+feature via the argument \code{manb_prior}.
 }
 \references{
-Mark Hall (2004). A decision tree-based attribute weighting
-  filter for naive Bayes. \emph{Knowledge-based Systems}, \bold{20}(2),
-  120-126.
+Hall M (2004). A decision tree-based attribute weighting filter
+  for naive Bayes. \emph{Knowledge-based Systems}, \bold{20}(2), 120-126.
+
+  Dash D and Cooper GF (2002). Exact model averaging with naive Bayesian
+  classifiers. \emph{19th International Conference on Machine Learning
+  (ICML-2002)}, 91-98.
 }
 

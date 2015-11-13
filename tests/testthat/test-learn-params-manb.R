@@ -4,10 +4,7 @@ context("learn params manb")
 
 test_that("compute manb nominal", {
   nb <- nbcar()
-  a <- extract_ctgt(c('doors', 'class'), car)
-  vars <- lapply(features(nb), c, 'class')
-  u <- lapply(vars, extract_ctgt, car)
-  names(u) <- features(nb)
+  u <- lapply(families(nb), extract_ctgt, car)[features(nb)]
   d <- compute_manb_arc_posteriors(nb, u, smooth = 1)
   expect_named(d, features(nb))
   d <- as.vector(d)
@@ -16,10 +13,14 @@ test_that("compute manb nominal", {
 
 test_that("compute manb no features", {
   nb <- nbcarclass()
-  expect_equal(compute_manb_arc_posteriors(nb, list(), smooth = 1), numeric())
+  a <- list()
+  names(a) <- character()
+  expect_equivalent(compute_manb_arc_posteriors(nb, a, smooth = 1), numeric())
 })
 
 test_that("compute manb prior", {
+  nb <- nbcar()
+  u <- lapply(families(nb), extract_ctgt, car)[features(nb)]
   d <- compute_manb_arc_posteriors(nb, u, smooth = 1, prior = 0.00001)
   expect_named(d, features(nb))
   d <- as.vector(d)
@@ -38,11 +39,7 @@ test_that("compute manb prior", {
 
 test_that("compute manb smooth", {
   nb <- nbcar()
-  nb <- nbcar()
-  a <- extract_ctgt(c('doors', 'class'), car)
-  vars <- lapply(features(nb), c, 'class')
-  u <- lapply(vars, extract_ctgt, car)
-  names(u) <- features(nb)
+  u <- lapply(families(nb), extract_ctgt, car)[features(nb)]
   # No error for smooth not being integer. It is close to when smooth = 1
   d <- compute_manb_arc_posteriors(nb, u, smooth = 0.99)
   d1 <- compute_manb_arc_posteriors(nb, u, smooth = 1)
@@ -53,7 +50,33 @@ test_that("compute manb smooth", {
 
 test_that("compute manb not nb", {
   tn <- tan_cl('class', car)
-  ctgts <- families2ctgts(families(tn), car)[features(tn)]
-  expect_error(compute_manb(tn, ctgts, smooth = 1), 
+  ctgts <- lapply(families(tn), extract_ctgt, car)[features(tn)]
+  expect_error(compute_manb_arc_posteriors(tn, ctgts, smooth = 1), 
                "MANB can only be applied to naive Bayes")
+})
+
+test_that("compute cpt", {
+  a <- extract_ctgt(c('doors', 'class'), car)
+  b <- compute_manb_cpt(a, 1, smooth = 0)
+  a <- ctgt2cpt(a, 0)
+  expect_equal(b, a)
+  
+  a <- extract_ctgt(c('doors', 'class'), car)
+  b <- compute_manb_cpt(a, 1, smooth = 1)
+  a <- ctgt2cpt(a, 1)
+  expect_equal(b, a)
+  
+  p <- extract_ctgt(c('buying', 'class'), car)
+  u <- compute_manb_cpt(p, 0, smooth = 1)
+  t <- ctgt2cpt(p, smooth = 1)
+  t[] <- ctgt2cpt(extract_ctgt(c('buying'), car), smooth = 1)
+  expect_equal(u, t)
+  
+  p <- extract_ctgt(c('buying', 'class'), car)
+  u <- compute_manb_cpt(p, 0.5, smooth = 1)
+  t <- ctgt2cpt(p, smooth = 1)
+  pt <- t
+  pt[] <- ctgt2cpt(extract_ctgt(c('buying'), car), smooth = 1)
+  pt[] <- (pt + t) / 2
+  expect_equal(u, pt)
 })

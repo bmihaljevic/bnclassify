@@ -19,11 +19,34 @@ bnc <- function(dag_learner, class, dataset, smooth, dag_args = NULL) {
 }
 #' @export
 #' @rdname learn_params
-lp <- function(x, dataset, smooth, awnb_trees = NULL, awnb_bootstrap = NULL) {
+lp <- function(x, dataset, smooth, awnb_trees = NULL, awnb_bootstrap = NULL,
+               manb_prior = NULL) {
   bn <- lp_implement(x = x, dataset = dataset, smooth = smooth, 
-                     awnb_trees = awnb_trees, awnb_bootstrap = awnb_bootstrap)
+                     awnb_trees = awnb_trees, awnb_bootstrap = awnb_bootstrap,
+                     manb_prior = manb_prior)
   check_bnc_bn(bn) 
   add_params_call_arg(bn, call = match.call(), env = parent.frame(), force = TRUE)
+}
+lp_implement <- function(x, dataset, smooth, awnb_trees = NULL, 
+                         awnb_bootstrap = NULL, manb_prior = NULL, .mem_cpts=NULL) {
+  params <- families2cpts(families(x), dataset = dataset, smooth = smooth,
+                          .mem_cpts = .mem_cpts)
+  bn <- make_bnc_bn(x, params = params)
+  awnb <- (!is.null(awnb_trees) || !is.null(awnb_bootstrap))
+  manb <- !is.null(manb_prior)
+  if (awnb && manb) stop("Either MANB or AWNB can be applied, not both.")
+  if (awnb) {
+    weights <- awnb(class_var(bn), dataset = dataset, trees = awnb_trees, 
+                    bootstrap_size = awnb_bootstrap)
+    bn <- set_weights(bn, weights)  
+  }
+  if (manb) {
+    ctgts <- lapply(families(x), extract_ctgt, dataset)[features(x)]
+    arc_probs <- compute_manb_arc_posteriors(x, ctgts = ctgts, smooth = smooth,
+                                             prior = manb_prior)
+    bn <- include_manb_probs(bn, arc_probs, ctgts = ctgts, smooth = smooth)
+  }
+  bn
 }
 #' AWNB weights. 
 #' 
@@ -40,21 +63,8 @@ lpawnb <- function(x, dataset, smooth, trees, bootstrap_size) {
   .Deprecated("lp")
   lp(x, dataset, smooth, awnb_trees = trees, awnb_bootstrap = bootstrap_size)  
 }
-lp_implement <- function(x, dataset, smooth, awnb_trees = NULL,
-                         awnb_bootstrap = NULL, .mem_cpts = NULL) {
-  params <- families2cpts(families(x), dataset = dataset, smooth = smooth,
-                          .mem_cpts = .mem_cpts)
-  bn <- make_bnc_bn(x, params = params)
-  awnb <- (!is.null(awnb_trees) || !is.null(awnb_bootstrap))
-  # TODO: if manb && awnb stop("Either MANB or AWNB")
-  if (awnb) {
-    weights <- awnb(class_var(bn), dataset = dataset, trees = awnb_trees, 
-                    bootstrap_size = awnb_bootstrap)
-    bn <- set_weights(bn, weights)  
-  }
-  bn
-}
 set_weights <- function(bn, weights) {
+  stopifnot(inherits(bn, "bnc_bn"))  
   # Currently only expecting weights that can decrease the importance of a feature
   stopifnot(is_non_empty_complete(weights))
   stopifnot(all(weights >= 0 & weights <= 1))
@@ -66,5 +76,16 @@ set_weights <- function(bn, weights) {
     mapply(exponentiate_cpt, bn$.params[feats], weights, SIMPLIFY = FALSE)
   # register weights
   bn$.weights <- weights
+  bn
+}
+include_manb_probs <- function(bn, arc_probs, ctgts, smooth) {
+  feats <- names(arc_probs)
+  stopifnot(inherits(bn, "bnc_bn"), identical(feats, features(bn)),
+            identical(feats, names(ctgts)))  
+  # modify cpts 
+  bn$.params[feats] <- mapply(compute_manb_cpt, ctgts, arc_probs, 
+                         MoreArgs = list(smooth = smooth), SIMPLIFY = FALSE)
+  # register arc probs
+  bn$.manb <- arc_probs
   bn
 }
