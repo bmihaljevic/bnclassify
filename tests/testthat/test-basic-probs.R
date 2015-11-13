@@ -56,6 +56,8 @@ test_that("log gamma", {
   expect_equal(a, lgamma(1:11))
   a <- log_gamma(0.5, 10)
   expect_equal(a, lgamma(0.5 + 0:10))
+  a <- log_gamma(0.0001, 10)
+  expect_equal(a, lgamma(0.0001 + 0:10))
   expect_error(log_gamma(-5, -5))
 })
 
