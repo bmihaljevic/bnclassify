@@ -8,6 +8,9 @@
 #' This function must be passed a data frame argument - does not matter how it 
 #' is named - in addition to the model (\code{object}). \code{object} must have
 #' its structure and parameters specified.
+#' 
+#' @param object A \code{bnc_bn} object. 
+#' @param ... A data frame. 
 #' @export
 AIC.bnc_bn <- function(object, ...) {
   ll <- logLik(object, ...)
@@ -25,13 +28,13 @@ AIC.bnc_bn <- function(object, ...) {
 #' This function must be passed a data frame argument - does not matter how it 
 #' is named - in addition to the model (\code{object}). \code{object} must have
 #' its structure and parameters specified.
+#' 
+#' @param object A \code{bnc_bn} object.
+#' @param ... A data frame.  
 #' @export
 BIC.bnc_bn <- function(object, ...) {
   ll <- logLik(object, ...)
   penalize_loglik(ll, k = log(nobs(ll)) / 2)
-}
-penalize_loglik <- function(ll, k) {
-  as.numeric(ll) - k * attr(ll, "df")
 }
 #' Compute log-likelihood of the Bayesian network classifier.
 #' 
@@ -39,7 +42,8 @@ penalize_loglik <- function(ll, k) {
 #' is named - in addition to the model (\code{object}). \code{object} must have
 #' its structure and parameters specified.
 #' 
-#' @param x A \code{bnc_bn} object.
+#' @param object A \code{bnc_bn} object.
+#' @param ... A data frame. 
 #' @seealso \code{\link{logLik}}.
 #' @export
 #' @examples
@@ -54,6 +58,9 @@ logLik.bnc_bn <- function(object, ...) {
   if (inherits(object, "bnc_bn")) attr(loglik, "df") <- nparams(object)
   class(loglik) <- "logLik"
   loglik
+}
+penalize_loglik <- function(ll, k) {
+  as.numeric(ll) - k * attr(ll, "df")
 }
 #' @export 
 #' @describeIn bnc_bn_object Returns the number of free parameters in the model.

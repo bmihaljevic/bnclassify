@@ -7,7 +7,9 @@
 \method{logLik}{bnc_bn}(object, ...)
 }
 \arguments{
-\item{x}{A \code{bnc_bn} object.}
+\item{object}{A \code{bnc_bn} object.}
+
+\item{...}{A data frame.}
 }
 \description{
 This function must be passed a data frame argument - does not matter how it

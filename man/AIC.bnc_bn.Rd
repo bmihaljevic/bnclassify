@@ -6,6 +6,11 @@
 \usage{
 \method{AIC}{bnc_bn}(object, ...)
 }
+\arguments{
+\item{object}{A \code{bnc_bn} object.}
+
+\item{...}{A data frame.}
+}
 \description{
 The Akaike information criterion (AIC) score:
 }

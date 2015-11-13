@@ -6,6 +6,11 @@
 \usage{
 \method{BIC}{bnc_bn}(object, ...)
 }
+\arguments{
+\item{object}{A \code{bnc_bn} object.}
+
+\item{...}{A data frame.}
+}
 \description{
 The Bayesian information criterion (BIC) score:
 }
