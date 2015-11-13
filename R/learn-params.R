@@ -25,6 +25,21 @@ lp <- function(x, dataset, smooth, awnb_trees = NULL, awnb_bootstrap = NULL) {
   check_bnc_bn(bn) 
   add_params_call_arg(bn, call = match.call(), env = parent.frame(), force = TRUE)
 }
+#' AWNB weights. 
+#' 
+#' Deprecated. Use \code{lp} instead.
+#' 
+#' @export
+#' @inheritParams nb 
+#' @inheritParams learn_params
+#' @param trees An integer. The number (\eqn{M}) of bootstrap samples to 
+#'   generate.
+#' @param bootstrap_size A numeric. The size of the bootstrap subsample, 
+#'   relative to the size of \code{dataset} (given in [0,1]).
+lpawnb <- function(x, dataset, smooth, trees, bootstrap_size) {
+  .Deprecated("lp")
+  lp(x, dataset, smooth, awnb_trees = trees, awnb_bootstrap = bootstrap_size)  
+}
 lp_implement <- function(x, dataset, smooth, awnb_trees = NULL,
                          awnb_bootstrap = NULL, .mem_cpts = NULL) {
   params <- families2cpts(families(x), dataset = dataset, smooth = smooth,
