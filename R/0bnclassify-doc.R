@@ -112,9 +112,9 @@ NULL
 
 #' Learn the parameters of a Bayesian network.
 #' 
-#' \code{lp} estimates parameters with maximum likelihood or Bayesian 
-#' estimation. Optionally, updates these estimates according to the 
-#' attribute weighted naive Bayes (AWNB) method.
+#' Estimates parameters with maximum likelihood or Bayesian estimation.
+#' Optionally, updates these estimates according to the attribute weighted naive
+#' Bayes (AWNB) method.
 #' 
 #' \code{lp} learns the parameters of each \eqn{P(X_i \mid \mathbf{Pa}(X_i) = 
 #' j)}{P(X[i] | Pa(X[i]) = j)} as \deqn{\theta_{ijk} = \frac{N_{ijk} + 
@@ -125,13 +125,14 @@ NULL
 #' ]} the number of instances in which \eqn{\mathbf{Pa}(X_i) = j}{Pa(X[i]) = j},
 #' \eqn{r_i}{r[i]} is the cardinality of \eqn{X_i}{X[i]}, and all 
 #' hyperparameters of the Dirichlet prior equal to \eqn{\alpha}. \eqn{\alpha = 
-#' 0} corresponds to maximum likelihood estimation. Returns a uniform
-#' distribution when \eqn{N_{ \cdot j \cdot } + r_i \alpha = 0}{N[ . j . ] +
-#' r[i] \alpha = 0}. With partially observed data, the above amounts to
+#' 0} corresponds to maximum likelihood estimation. Returns a uniform 
+#' distribution when \eqn{N_{ \cdot j \cdot } + r_i \alpha = 0}{N[ . j . ] + 
+#' r[i] \alpha = 0}. With partially observed data, the above amounts to 
 #' \emph{available case analysis}.
 #' 
-#' \code{lpawnb} updates the parameters learned with \code{lp} according to the 
-#' AWNB, as follows, \deqn{\theta_{ijk}^{AWNB} = 
+#' Providing \code{awnb_bootstrap} and/or \code{awnb_trees} argument updated the
+#' Bayesian/maximum likelihood parameters according according to the AWNB
+#' method, as follows, \deqn{\theta_{ijk}^{AWNB} = 
 #' \frac{(\theta_{ijk})^{w_i}}{\sum_{k=1}^{r_i} 
 #' (\theta_{ijk})^{w_i}},}{\theta[ijk]^(AWNB) = ((\theta[ijk])^w[i]) / 
 #' (\sum[k=1]^(r[i]) (\theta[ijk])^(w[i])),} computing the weights 
@@ -150,7 +151,7 @@ NULL
 #' @param dataset The data frame from which to estimate network parameters.
 #' @param smooth A numeric. The smoothing value (\eqn{\alpha}) for Bayesian 
 #'   parameter estimation. Nonnegative.
-#' @param awnb_trees An integer. The number (\eqn{M}) of bootstrap samples to
+#' @param awnb_trees An integer. The number (\eqn{M}) of bootstrap samples to 
 #'   generate.
 #' @param awnb_bootstrap A numeric. The size of the bootstrap subsample, 
 #'   relative to the size of \code{dataset} (given in [0,1]).

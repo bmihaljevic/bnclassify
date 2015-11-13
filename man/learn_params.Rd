@@ -23,9 +23,9 @@ generate.}
 relative to the size of \code{dataset} (given in [0,1]).}
 }
 \description{
-\code{lp} estimates parameters with maximum likelihood or Bayesian
-estimation. Optionally, updates these estimates according to the
-attribute weighted naive Bayes (AWNB) method.
+Estimates parameters with maximum likelihood or Bayesian estimation.
+Optionally, updates these estimates according to the attribute weighted naive
+Bayes (AWNB) method.
 }
 \details{
 \code{lp} learns the parameters of each \eqn{P(X_i \mid \mathbf{Pa}(X_i) =
@@ -42,8 +42,9 @@ distribution when \eqn{N_{ \cdot j \cdot } + r_i \alpha = 0}{N[ . j . ] +
 r[i] \alpha = 0}. With partially observed data, the above amounts to
 \emph{available case analysis}.
 
-\code{lpawnb} updates the parameters learned with \code{lp} according to the
-AWNB, as follows, \deqn{\theta_{ijk}^{AWNB} =
+Providing \code{awnb_bootstrap} and/or \code{awnb_trees} argument updated the
+Bayesian/maximum likelihood parameters according according to the AWNB
+method, as follows, \deqn{\theta_{ijk}^{AWNB} =
 \frac{(\theta_{ijk})^{w_i}}{\sum_{k=1}^{r_i}
 (\theta_{ijk})^{w_i}},}{\theta[ijk]^(AWNB) = ((\theta[ijk])^w[i]) /
 (\sum[k=1]^(r[i]) (\theta[ijk])^(w[i])),} computing the weights
