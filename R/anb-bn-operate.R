@@ -67,3 +67,22 @@ penalize_loglik <- function(ll, k) {
 nparams <- function(x) {      
   sum(vapply(params(x), count_cpt_free_params, FUN.VALUE = numeric(1)))
 }
+
+#' Returns the posterior of each arc from the class according to the MANB
+#' method.
+#'
+#' The posterior must have already been computed for \code{x}. 
+#' 
+#' @export
+#' @inheritParams bnc_bn_object
+#' @references Dash D and Cooper GF (2002). Exact model averaging with naive
+#'   Bayesian classifiers. \emph{19th International Conference on Machine
+#'   Learning (ICML-2002)}, 91-98.
+arc_posterior <- function(x) {
+  stopifnot(inherits(x, "bnc_bn"))  
+  if (!is.null(x$.manb)) {
+    return(x$.manb)
+  }
+  warning("MANB arc posterior probabilities have not been computed for x.")
+  NULL
+}

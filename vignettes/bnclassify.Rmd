@@ -186,6 +186,15 @@ params(t)$buying
 params(ta)$buying
 ```
 
+## Exact model averaging for naive Bayes
+
+We can use the model averaged naive Bayes method. 
+```{r}
+d <- lp(a, car, smooth = 1, manb_prior = 0.3)
+arc_posterior(d)
+```
+
+
 # Predicting 
 
 ## 0 probabilities
