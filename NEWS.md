@@ -1,5 +1,7 @@
 # 0.3.1.9000
 * Fixed #2
+* Memoized cpt extraction during greedy search 
+* Deprecated lpawnb() (use lp() instead)
 
 # 0.3.1
 * Minor improvements in vignette 
