@@ -50,3 +50,39 @@ test_that("Legal prob. distribution", {
   expect_true(!are_pdists(matrix(c(-1, 1), nrow=1, byrow = TRUE)))
   expect_true(are_pdists(matrix(1:5 / 15, nrow=1, byrow = TRUE)))
 })
+
+test_that("log gamma", {
+  a <- log_gamma(1, 10)
+  expect_equal(a, lgamma(1:11))
+  a <- log_gamma(0.5, 10)
+  expect_equal(a, lgamma(0.5 + 0:10))
+  expect_error(log_gamma(-5, -5))
+})
+
+test_that("log gammas", {
+  feats <- colnames(car)[-7]
+  vars <- lapply(feats, c, 'class')
+  ctgts <- lapply(vars, extract_ctgt, car)
+  a <- log_gammas(ctgts, smooth = 1)
+  expect_equal(names(a), as.character(c(1, 3, 4)))
+  expect_equal(a[[1]], lgamma(1 + 0:1728))
+  expect_equal(a[[2]], lgamma(3 + 0:1728))
+  expect_equal(a[[3]], lgamma(4 + 0:1728))
+  a <- log_gammas(ctgts, smooth = 0.01)
+  expect_equal(names(a), as.character(c(1, 3, 4)))
+  expect_equal(a[[1]], lgamma(0.01 + 0:1728))
+  expect_equal(a[[2]], lgamma(3 * 0.01 + 0:1728))
+  expect_equal(a[[3]], lgamma(4 * 0.01 + 0:1728))
+})
+
+test_that("log gamma fun", {
+  feats <- colnames(car)[-7]
+  vars <- lapply(feats, c, 'class')
+  ctgts <- lapply(vars, extract_ctgt, car)
+  lf <- log_gammas_fun(ctgts, smooth = 1)
+  expect_equal(exp(lf(1, 5)), factorial(5))
+  expect_equal(exp(lf(1, 2)), factorial(2))
+  expect_equal(exp(lf(1, 1)), factorial(1))
+  expect_true(is.numeric(lf(1, nrow(car) + 5)))
+  expect_true(is.na(lf(1, nrow(car) + 6)))
+})
