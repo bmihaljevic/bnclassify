@@ -4,7 +4,7 @@
 \alias{cv}
 \title{Stratified cross validation estimate of predictive accuracy.}
 \usage{
-cv(x, dataset, k, dag, means = TRUE)
+cv(x, dataset, k, dag = TRUE, mean = TRUE)
 }
 \arguments{
 \item{x}{List of \code{\link{bnc_bn_object}}. The classifiers to evaluate.}
@@ -16,12 +16,12 @@ cv(x, dataset, k, dag, means = TRUE)
 \item{dag}{A logical. Whether to learn structure on each training set.
 Parameters are always learned.}
 
-\item{means}{A logical. Whether to return mean accuracy for each classifier
+\item{mean}{A logical. Whether to return mean accuracy for each classifier
 or to return a k-row matrix with accuracies per fold.}
 }
 \value{
 A numeric vector. The predictive accuracy of each classifier in
-  \code{x}. If \code{means = TRUE} then a matrix with k rows.
+  \code{x}. If \code{mean = TRUE} then a matrix with k rows.
 }
 \description{
 It may relearn only the parameters on each set of training folds, or relearn

@@ -9,13 +9,13 @@
 #' @param k An integer. The number of folds.
 #' @param dag A logical. Whether to learn structure on each training set. 
 #'   Parameters are always learned.
-#' @param means A logical. Whether to return mean accuracy for each classifier 
+#' @param mean A logical. Whether to return mean accuracy for each classifier 
 #'   or to return a k-row matrix with accuracies per fold.
 #' @inheritParams learn_params
 #' @export
 #' @return A numeric vector. The predictive accuracy of each classifier in 
-#'   \code{x}. If \code{means = TRUE} then a matrix with k rows.
-cv <- function(x, dataset, k, dag = TRUE, means = TRUE) {
+#'   \code{x}. If \code{mean = TRUE} then a matrix with k rows.
+cv <- function(x, dataset, k, dag = TRUE, mean = TRUE) {
   xs <- ensure_multi_list(x, type = "bnc_bn")
   class <- get_common_class(xs)
   cnames <- colnames(dataset)
@@ -26,7 +26,7 @@ cv <- function(x, dataset, k, dag = TRUE, means = TRUE) {
   p <- mapply(update_assess_fold, train, test, 
               MoreArgs = list(x = xs, dag = dag, class = class), SIMPLIFY = TRUE)
   p <- format_cv_output(p, ensure_list(x))
-  if (means) {
+  if (mean) {
     p <- colMeans(p)  
   }
   p
