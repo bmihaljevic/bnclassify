@@ -15,7 +15,7 @@
 #' @export
 #' @return A numeric vector. The predictive accuracy of each classifier in 
 #'   \code{x}. If \code{means = TRUE} then a matrix with k rows.
-cv <- function(x, dataset, k, dag, means = TRUE) {
+cv <- function(x, dataset, k, dag = TRUE, means = TRUE) {
   xs <- ensure_multi_list(x, type = "bnc_bn")
   class <- get_common_class(xs)
   cnames <- colnames(dataset)
