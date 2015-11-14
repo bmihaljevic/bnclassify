@@ -61,11 +61,20 @@ test_that("logLik AIC BIC as bnlearn", {
   expect_equal( bic, bic.bn)
 })
 
-test_that("arc_posterior", {
+test_that("manb_arc_posterior", {
   a <- nbcar()  
-  expect_warning(arc_posterior(a), "MANB arc posterior probabilities have not been computed for x.")
+  expect_warning(manb_arc_posterior(a), "MANB arc posterior probabilities have not been computed for x.")
   a <- lp(a, car, smooth = 1, manb_prior = 0.1)  
-  b <- arc_posterior(a)
+  b <- manb_arc_posterior(a)
   expect_equal(names(b), features(a))
   expect_equal(as.vector(b[3]), 2.921702e-06, tolerance = 1e-7)
+})
+
+test_that("awnb weights", {
+  a <- nbcar()  
+  expect_warning(awnb_weights(a), "AWNB weights have not been computed for x.")
+  a <- lp(a, car, smooth = 1, awnb_trees = 10)  
+  b <- awnb_weights(a)
+  # expect_equal(names(b), features(a))
+  expect_true(are_probs(b))
 })
