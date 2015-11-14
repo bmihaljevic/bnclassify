@@ -13,7 +13,7 @@ nb <- function(class, dataset = NULL, features = NULL) {
   add_dag_call_arg(nb, call = match.call(), env = parent.frame())
 }
 #' @export
-#' @rdname wrapper
+#' @rdname greedy_wrapper
 fssj <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {    
   just_class_nb <- nb(class = class)
   # Use just the structure, not the call 
@@ -24,7 +24,7 @@ fssj <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {
                 smooth = smooth)
   add_dag_call_arg(x, call = match.call(), env = parent.frame(), force = TRUE)
 }
-#' @rdname wrapper
+#' @rdname greedy_wrapper
 #' @export
 bsej <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {    
   full_nb <- nb(class = class, dataset)
@@ -35,7 +35,7 @@ bsej <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {
   add_dag_call_arg(x, call = match.call(), env = parent.frame())
 }
 #' @export
-#' @rdname wrapper
+#' @rdname greedy_wrapper
 tan_hc <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {    
   full_nb <- nb(class = class, dataset)
   full_nb <- remove_dag_call_arg(full_nb)
@@ -45,7 +45,7 @@ tan_hc <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {
   add_dag_call_arg(x, call = match.call(), env = parent.frame(), force = TRUE)
 }
 #' @export
-#' @rdname wrapper
+#' @rdname greedy_wrapper
 tan_hcsp <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {    
   full_nb <- nb(class = class, dataset)
   full_nb <- remove_dag_call_arg(full_nb)

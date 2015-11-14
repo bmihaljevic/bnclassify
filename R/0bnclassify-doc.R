@@ -62,12 +62,12 @@ NULL
 #' @name car
 NULL
 
-#' Learns Bayesian network classifiers in a wrapper fashion.
+#' Learns Bayesian network classifiers in a a greedy wrapper fashion.
 #' 
 #' Each candidate structure is evaluated according to the cross-validated
 #' estimate of predictive accuracy.
 #' 
-#' @name wrapper
+#' @name greedy_wrapper
 #'   
 #' @inheritParams nb
 #' @inheritParams cv
