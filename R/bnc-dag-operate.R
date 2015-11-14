@@ -41,10 +41,18 @@ plot.bnc_dag <- function(x, y, layoutType='dot', fontsize = NULL, ...) {
 #' @export
 #' @keywords internal
 print.bnc_dag <- function(x, ...) {  
-  cat("\n  Bayesian network classifier\n\n")  
+  cat("\n  Bayesian network classifier")  
+  is_bnc_bn <- inherits(x, "bnc_bn")
+  if (!is_bnc_bn) {
+    cat(" (only structure, no parameters)")
+  }
+  cat("\n\n")
   cat("  class variable:       ", class_var(x), "\n")
   cat("  num. features:  ", length(features(x)), "\n")
   cat("  arcs:  ", narcs(x), "\n")
+  if (is_bnc_bn) {
+    cat("  free parameters:  ", nparams(x), "\n")
+  }
   if (!is.null(x$.call_struct)) {
     cat("  learning algorithm:   ", as.character(x$.call_struct[[1]]), "\n")
   }
