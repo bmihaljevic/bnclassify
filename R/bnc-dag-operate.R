@@ -14,7 +14,8 @@ narcs <- function(x) {
 #' @param layoutType Layout type. Optional.
 #' @param fontsize integer Font size for node labels. Optional.
 #' @param ... Not used.
-#' @example 
+#' @examples  
+#' 
 #' data(car)
 #' nb <- nb('class', car)
 #' nb <- nb('class', car)
@@ -49,7 +50,7 @@ print.bnc_dag <- function(x, ...) {
   cat("\n\n")
   cat("  class variable:       ", class_var(x), "\n")
   cat("  num. features:  ", length(features(x)), "\n")
-  cat("  arcs:  ", narcs(x), "\n")
+  cat("  num. arcs:  ", narcs(x), "\n")
   if (is_bnc_bn) {
     cat("  free parameters:  ", nparams(x), "\n")
   }
