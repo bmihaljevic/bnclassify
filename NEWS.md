@@ -2,6 +2,8 @@
 * Fixed #2
 * Memoized cpt extraction during greedy search 
 * Deprecated lpawnb() (use lp() instead)
+* Added logLik, AIC, and BIC
+* Updated and re-organized tutorial vignette 
 
 # 0.3.1
 * Minor improvements in vignette 
