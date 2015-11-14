@@ -75,6 +75,6 @@ test_that("awnb weights", {
   expect_warning(awnb_weights(a), "AWNB weights have not been computed for x.")
   a <- lp(a, car, smooth = 1, awnb_trees = 10)  
   b <- awnb_weights(a)
-  # expect_equal(names(b), features(a))
+  expect_equal(names(b), features(a))
   expect_true(are_probs(b))
 })

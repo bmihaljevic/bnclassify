@@ -70,12 +70,12 @@ set_weights <- function(bn, weights) {
   stopifnot(all(weights >= 0 & weights <= 1))
   # Check weights correspond to features
   feats <- names(weights)
-  stopifnot(is_non_empty_complete(feats), all(feats %in% features(bn)))
+  stopifnot(is_non_empty_complete(feats), identical(sort(feats), sort(features(bn))))
   # modify cpts directly
   bn$.params[feats] <- 
     mapply(exponentiate_cpt, bn$.params[feats], weights, SIMPLIFY = FALSE)
-  # register weights
-  bn$.weights <- weights
+  # register weights. ensure they are in the same order as features(bn)
+  bn$.weights <- weights[features(bn)]
   bn
 }
 include_manb_probs <- function(bn, arc_probs, ctgts, smooth) {
