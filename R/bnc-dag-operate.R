@@ -4,22 +4,38 @@ narcs <- function(x) {
   num_arcs(as_graphNEL(x))
 }
 #' Plot the structure.
-#' @export 
-#' @param x The bnc_dag_object
-#' @param y Not used 
-#' @param layoutType Layout type
-#' @param cex cex for node labels.
+#' 
+#' If node labels are to small to be viewed properly, you may fix label fontsize
+#' with argument fontsize. Also, you may try multiple different layouts.
+#' 
+#' @export
+#' @param x The \code{bnc_dag}
+#' @param y Not used
+#' @param layoutType Layout type. Optional.
+#' @param fontsize integer Font size for node labels. Optional.
 #' @param ... Not used.
-plot.bnc_dag <- function(x, y, layoutType='dot', cex = NULL, ...) {
+#' @example 
+#' data(car)
+#' nb <- nb('class', car)
+#' nb <- nb('class', car)
+#' plot(nb)
+#' plot(nb, fontsize = 20)
+#' plot(nb, layoutType = 'circo')
+#' plot(nb, layoutType = 'fdp')
+#' plot(nb, layoutType = 'osage')
+#' plot(nb, layoutType = 'twopi')
+#' plot(nb, layoutType = 'neato')
+plot.bnc_dag <- function(x, y, layoutType='dot', fontsize = NULL, ...) {
   if (!requireNamespace("Rgraphviz", quietly = TRUE)) {
     stop("Rgraphviz needed ", call. = FALSE)
   }
   g <- as_graphNEL(x)
-  if (!is.null(cex)) {
-    graph::nodeRenderInfo(g) <- list(cex = cex)
+  node_pars <- list(col = "green", textCol = "blue",  lty = "longdash", lwd = 1)
+  if (!is.null(fontsize)) {
+    node_pars$fontsize <- fontsize
   }
   l <- Rgraphviz::layoutGraph(g, layoutType = layoutType)
-  Rgraphviz::renderGraph(l)
+  Rgraphviz::renderGraph(l, graph.pars = list(nodes = node_pars))
 }
 #' Print basic information about a classifier.
 #' @export
