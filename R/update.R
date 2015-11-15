@@ -62,15 +62,6 @@ add_call_arg <- function(bnc_dag, call, env, arg, force) {
   bnc_dag[[arg]] <- save_bnc_call(call, env)
   bnc_dag
 }
-# Strip the function name and the graph.  Function must be lp.
-get_lp_multi_update_args <- function(x) {
-  args <- x$.call_bn
-  stopifnot(!is.null(args))
-  stopifnot(as.character(args[[1]]) %in% c('lp'))
-  args <- args[-1]
-  args$x <- NULL
-  args
-}
 get_lp_update_args <- function(x) {
   stopifnot(!is.null(x$.call_bn))
   x$.call_bn
