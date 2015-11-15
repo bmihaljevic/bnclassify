@@ -4,7 +4,7 @@
 * Added logLik, AIC, and BIC
 * Updated and re-organized tutorial vignette 
 * Fixed #2
-* Fix a bug when cross-validation AWNB (#3) 
+* Fix a bug when cross-validating AWNB (#3) 
 
 
 # 0.3.1
