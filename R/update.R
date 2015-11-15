@@ -10,14 +10,6 @@ bnc_get_update_args <- function(x, dag) {
   }
   args
 }
-# Updates the dag in the lp_args.
-# No function name is passed here.
-make_daglp_updateable <- function(x, lp_args) {
-  stopifnot(is.list(lp_args))
-  lcall <- list('lp', x = x)
-  lcall <- append(lcall, lp_args)
-  list(.call_bn = lcall)
-}
 bnc_update <- function(args, dataset) {
   bnc_update_args(args$lp_fargs, dataset, args$dag_fargs)
 }
