@@ -3,7 +3,7 @@ context("Update")
 test_that("bnc update bnc_dag", {
   dgcar <- nb('class', car)  
   # Currently, parameter fitting is required for updating; dag learning is not
-  expect_error(bnc_get_update_args(dgcar, dag = FALSE), "lp")
+  expect_error(bnc_get_update_args(dgcar, dag = FALSE), "lp_fargs")
 })
 
 test_that("bnc update bnc_bn", {
@@ -75,4 +75,13 @@ test_that("Multi-update bnc_dag", {
   a <- nb('class', car)
   b <- lp(a, car, smooth = 1)
   expect_error(cv(list(a, b), car, k = 10, dag = FALSE), "must inherit")
+})
+
+test_that("Update with non-name function", {
+  dgcar <- lp(nb('class', car), car, smooth = 1)	
+  e <- lapply(list(dgcar), lp, car, smooth = 1)
+  ua <- bnc_get_update_args(e[[1]], dag = FALSE)
+  b <- bnc_update(ua, car[1:5, ])  
+  diff <- sum(abs(params(b)[[2]]  - params(dgcar)[[2]]))
+  expect_equal(diff, 2.393358, tolerance = 1e-7)
 })

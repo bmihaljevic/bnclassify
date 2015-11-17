@@ -22,7 +22,7 @@ test_that("CV two bnc_bns for fitting", {
 test_that("CV means = FALSE", {
   n <- lp(nb('class', car), car, 1)
   m <- lp(nb('class', car[, c(1, 3, 7)]), car, 1)
-  a <- cv(list(n, m), car, k = 5, dag = FALSE, means = FALSE)
+  a <- cv(list(n, m), car, k = 5, dag = FALSE, mean = FALSE)
   expect_equal(ncol(a), 2L)
   expect_equal(nrow(a), 5L)
   expect_true(all(colMeans(a) > 0.5))  

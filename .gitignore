@@ -8,5 +8,6 @@
 vignettes/bnclassify_cache/
 .theory/
 .paper
+inst/doc/
 
 

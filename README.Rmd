@@ -15,12 +15,16 @@ knitr::opts_chunk$set(
 
 [![Travis-CI Build Status](https://travis-ci.org/bmihaljevic/bnclassify.svg?branch=master)](https://travis-ci.org/bmihaljevic/bnclassify)
 [![codecov.io](https://codecov.io/github/bmihaljevic/bnclassify/coverage.svg?branch=master)](https://codecov.io/github/bmihaljevic/bnclassify?branch=master)
+[![License](http://img.shields.io/badge/license-GPL%20%28%3E=%202%29-brightgreen.svg?style=flat)](http://www.gnu.org/licenses/gpl-2.0.html)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/bnclassify)](http://cran.r-project.org/package=bnclassify)
+![](http://cranlogs.r-pkg.org/badges/bnclassify?color=yellow)
+![](http://cranlogs.r-pkg.org/badges/grand-total/bnclassify?color=yellowgreen)
 
-The bnclassify package implements algorithms for learning discrete Bayesian network classifiers from data and estimating their predictive accuracy.
+Implements algorithms for learning discrete Bayesian network classifiers from data, as well as functions for using these classifiers for prediction, assessing their predictive performance, and inspecting and analyzing their properties.
 
 # Example 
 
-Let us load a data set and learn a tree-augmented naive Bayes by maximizing the BIC score.
+Load a data set and learn a one-dependence estimator by maximizing the Bayesian information criterion (BIC) score.
 ```{r}
 library(bnclassify)
 data(car)
@@ -29,7 +33,7 @@ tn
 plot(tn)
 ```
 
-After we fit its parameters, we can use it to predict class labels. 
+After learning the network's parameters, you can use it to classify data. 
 ```{r}
 tn <- lp(tn, car, smooth = 0.01)
 p <- predict(tn, car, prob = TRUE)
@@ -40,7 +44,12 @@ head(p)
 
 Estimate predictive accuracy with cross validation.
 ```{r}
-cv(tn, car, k = 10, smooth = 0.01, dag = TRUE)
+cv(tn, car, k = 10)
+```
+
+Or compute the log-likelihood 
+```{r}
+logLik(tn, car)
 ```
 
 # Install
@@ -52,27 +61,33 @@ source("http://bioconductor.org/biocLite.R")
 biocLite(c("graph", "RBGL", "Rgraphviz"))
 ```
 
-When you read this bnclassify may already be on CRAN. In that case, use:
+You can install `bnclassify` from CRAN:
 ```{r, eval = FALSE}
 install.packages('bnclassify')
 ```
 
-If not, you can install the current version from github:
+Or get the current development version from Github:
 ```{r, eval = FALSE}
-install.packages('devtools')
+# install.packages('devtools')
 devtools::install_github('bmihaljevic/bnclassify', build_vignettes = TRUE)
-#devtools::install_github('bmihaljevic/bnclassify')
 ```
 
 # Overview
 
-See the list of implemented algorithms with 
+See the list of implemented functionalities.
 
 ```{r, eval = FALSE}
 ?bnclassify
 ```
 
-Use the vignette to get started. 
-```{r, eval = FALSE}
-vignette('bnclassify')
+Use the introduction vignette to get started.
+
+``` r
+vignette('introduction', package = 'bnclassify')
+```
+
+Then have a look at the remaining vignettes.
+
+``` r
+browseVignettes("bnclassify")
 ```

@@ -10,14 +10,6 @@ bnc_get_update_args <- function(x, dag) {
   }
   args
 }
-# Updates the dag in the lp_args.
-# No function name is passed here.
-make_daglp_updateable <- function(x, lp_args) {
-  stopifnot(is.list(lp_args))
-  lcall <- list('lp', x = x)
-  lcall <- append(lcall, lp_args)
-  list(.call_bn = lcall)
-}
 bnc_update <- function(args, dataset) {
   bnc_update_args(args$lp_fargs, dataset, args$dag_fargs)
 }
@@ -33,8 +25,22 @@ bnc_update_args <- function(lp_fargs, dataset, dag_fargs = NULL) {
   # bnc_wrap(res) TODO
   res
 }
-save_bnc_call <- function(call, env) {
-  call[[1]] <- as.character(call[[1]])
+# Optionally updates the dag prior to updating the parameters.
+update <- function(x, dataset, dag) {
+  stopifnot(is.logical(dag))
+  dg <- NULL
+  if (dag) {
+    dg <- update_dag(x, dataset)
+  }
+  else {
+    dg <- bn2dag(x)
+  }
+  lp_args <- get_lp_update_args(x)
+  update_lp(dag = dg, lp_fargs = lp_args, dataset = dataset)
+}
+save_bnc_call <- function(fun_name, call, env) {
+  stopifnot(is.character(fun_name))
+  call[[1]] <- fun_name
   # To make sure that this dataset is not accidentaly used on updates.
   call['dataset'] <- NULL
   lapply(call, eval, envir = env)
@@ -44,32 +50,23 @@ do_bnc_call <- function(fargs, dataset) {
   call <- make_call(fargs[[1]], fargs[-1])
   eval(call)
 }
-add_dag_call_arg <- function(bnc_dag, call, env, force = FALSE) {
-  add_call_arg(bnc_dag, call, env, arg = '.call_struct', force = force)
+add_dag_call_arg <- function(bnc_dag, fun_name, call, env, force = FALSE) {
+  add_call_arg(bnc_dag, fun_name, call, env, arg = '.call_struct', force = force)
 }
 remove_dag_call_arg <- function(bnc_dag) {
   bnc_dag[['.call_struct']] <- NULL
   bnc_dag
 }
 add_params_call_arg <- function(bnc_bn, call, env, force = TRUE) {
-  add_call_arg(bnc_bn, call, env, arg = '.call_bn', force = force)
+  add_call_arg(bnc_bn, 'lp', call, env, arg = '.call_bn', force = force)
 }
-add_call_arg <- function(bnc_dag, call, env, arg, force) {
+add_call_arg <- function(bnc_dag, fun_name, call, env, arg, force) {
   stopifnot(inherits(bnc_dag, "bnc_dag"))
   if (!force) { 
     stopifnot(is.null(bnc_dag[[arg]]))
   }
-  bnc_dag[[arg]] <- save_bnc_call(call, env)
+  bnc_dag[[arg]] <- save_bnc_call(fun_name, call, env)
   bnc_dag
-}
-# Strip the function name and the graph.  Function must be lp.
-get_lp_multi_update_args <- function(x) {
-  args <- x$.call_bn
-  stopifnot(!is.null(args))
-  stopifnot(as.character(args[[1]]) %in% c('lp'))
-  args <- args[-1]
-  args$x <- NULL
-  args
 }
 get_lp_update_args <- function(x) {
   stopifnot(!is.null(x$.call_bn))
@@ -85,17 +82,4 @@ update_dag <- function(x, dataset)  {
 update_lp <- function(dag, lp_fargs, dataset) {
   lp_fargs$x <- dag
   do_bnc_call(lp_fargs, dataset)
-}
-# Optionally updates the dag prior to updating the parameters.
-update <- function(x, dataset, dag) {
-  stopifnot(is.logical(dag))
-  dg <- NULL
-  if (dag) {
-    dg <- update_dag(x, dataset)
-  }
-  else {
-    dg <- bn2dag(x)
-  }
-  lp_args <- get_lp_update_args(x)
-  update_lp(dag = dg, lp_fargs = lp_args, dataset = dataset)
 }

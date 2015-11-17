@@ -1,18 +1,14 @@
 bnclassify
 ==========
 
-[![Travis-CI Build Status](https://travis-ci.org/bmihaljevic/bnclassify.svg?branch=master)](https://travis-ci.org/bmihaljevic/bnclassify)
-[![codecov.io](https://codecov.io/github/bmihaljevic/bnclassify/coverage.svg?branch=master)](https://codecov.io/github/bmihaljevic/bnclassify?branch=master)
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/bnclassify)](http://cran.r-project.org/package=bnclassify)
-![](http://cranlogs.r-pkg.org/badges/bnclassify?color=yellow)
-![](http://cranlogs.r-pkg.org/badges/grand-total/bnclassify?color=yellowgreen)
+[![Travis-CI Build Status](https://travis-ci.org/bmihaljevic/bnclassify.svg?branch=master)](https://travis-ci.org/bmihaljevic/bnclassify) [![codecov.io](https://codecov.io/github/bmihaljevic/bnclassify/coverage.svg?branch=master)](https://codecov.io/github/bmihaljevic/bnclassify?branch=master) [![License](http://img.shields.io/badge/license-GPL%20%28%3E=%202%29-brightgreen.svg?style=flat)](http://www.gnu.org/licenses/gpl-2.0.html) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/bnclassify)](http://cran.r-project.org/package=bnclassify) ![](http://cranlogs.r-pkg.org/badges/bnclassify?color=yellow) ![](http://cranlogs.r-pkg.org/badges/grand-total/bnclassify?color=yellowgreen)
 
-The bnclassify package implements algorithms for learning discrete Bayesian network classifiers from data and estimating their predictive accuracy.
+Implements algorithms for learning discrete Bayesian network classifiers from data, as well as functions for using these classifiers for prediction, assessing their predictive performance, and inspecting and analyzing their properties.
 
 Example
 =======
 
-Let us load a data set and learn a tree-augmented naive Bayes by maximizing the BIC score.
+Load a data set and learn a one-dependence estimator by maximizing the Bayesian information criterion (BIC) score.
 
 ``` r
 library(bnclassify)
@@ -20,18 +16,18 @@ data(car)
 tn <- tan_cl('class', car, score = 'bic')
 tn
 #> 
-#>   Bayesian network classifier
+#>   Bayesian network classifier (only structure, no parameters)
 #> 
 #>   class variable:        class 
 #>   num. features:   6 
-#>   arcs:   6 
+#>   num. arcs:   6 
 #>   learning algorithm:    tan_cl
 plot(tn)
 ```
 
 ![](README-unnamed-chunk-2-1.png)
 
-After we fit its parameters, we can use it to predict class labels.
+After learning the network's parameters, you can use it to classify data.
 
 ``` r
 tn <- lp(tn, car, smooth = 0.01)
@@ -53,23 +49,26 @@ head(p)
 Estimate predictive accuracy with cross validation.
 
 ``` r
-cv(tn, car, k = 10, smooth = 0.01, dag = TRUE)
-#> [1] 0.8657653
+cv(tn, car, k = 10)
+#> [1] 0.8599223
+```
+
+Or compute the log-likelihood
+
+``` r
+logLik(tn, car)
+#> 'log Lik.' -13503.84 (df=63)
 ```
 
 Install
 =======
 
-Make sure you have at least version 3.2.0 of R. 
-
-You will need to install packages from Bioconductor.
+Make sure you have at least version 3.2.0 of R. You will need to install packages from Bioconductor.
 
 ``` r
 source("http://bioconductor.org/biocLite.R")
 biocLite(c("graph", "RBGL", "Rgraphviz"))
 ```
-
-When running the above you may get asked whether you would like to update some packages. My approach is to say no in order to avoid any possible conflict with packages on CRAN (you can update those packages from CRAN if needed).
 
 You can install `bnclassify` from CRAN:
 
@@ -77,25 +76,30 @@ You can install `bnclassify` from CRAN:
 install.packages('bnclassify')
 ```
 
-Or get the current development version from github:
+Or get the current development version from Github:
 
 ``` r
-install.packages('devtools')
+# install.packages('devtools')
 devtools::install_github('bmihaljevic/bnclassify', build_vignettes = TRUE)
-#devtools::install_github('bmihaljevic/bnclassify')
 ```
 
 Overview
 ========
 
-See the list of implemented algorithms with
+See the list of implemented functionalities.
 
 ``` r
 ?bnclassify
 ```
 
-Use the vignette to get started.
+Use the introduction vignette to get started.
 
 ``` r
-vignette('bnclassify')
+vignette('introduction', package = 'bnclassify')
+```
+
+Then have a look at the remaining vignettes.
+
+``` r
+browseVignettes("bnclassify")
 ```

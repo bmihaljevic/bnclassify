@@ -65,7 +65,7 @@ test_that("awnb Incomplete data" , {
   a <- nb('Class', voting)
   b <- lp(a, voting, smooth = 1, awnb_trees = 1, awnb_bootstrap = 0.1)
   c <- lp(a, voting, smooth = 1)
-  expect_equal(params(b), params(set_weights(c, b$.weights)))
+  expect_equal(params(b), params(set_weights(c, awnb_weights(b))))
 })
 
 test_that('bnc function nominal', {

@@ -4,20 +4,33 @@
 \alias{plot.bnc_dag}
 \title{Plot the structure.}
 \usage{
-\method{plot}{bnc_dag}(x, y, layoutType = "dot", cex = NULL, ...)
+\method{plot}{bnc_dag}(x, y, layoutType = "dot", fontsize = NULL, ...)
 }
 \arguments{
-\item{x}{The bnc_dag_object}
+\item{x}{The \code{bnc_dag}}
 
 \item{y}{Not used}
 
-\item{layoutType}{Layout type}
+\item{layoutType}{Layout type. Optional.}
 
-\item{cex}{cex for node labels.}
+\item{fontsize}{integer Font size for node labels. Optional.}
 
 \item{...}{Not used.}
 }
 \description{
-Plot the structure.
+If node labels are to small to be viewed properly, you may fix label fontsize
+with argument fontsize. Also, you may try multiple different layouts.
+}
+\examples{
+data(car)
+nb <- nb('class', car)
+nb <- nb('class', car)
+plot(nb)
+plot(nb, fontsize = 20)
+plot(nb, layoutType = 'circo')
+plot(nb, layoutType = 'fdp')
+plot(nb, layoutType = 'osage')
+plot(nb, layoutType = 'twopi')
+plot(nb, layoutType = 'neato')
 }
 

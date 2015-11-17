@@ -9,6 +9,7 @@
 \url{http://goo.gl/GTXrCz}
 }
 \description{
-Congress Voting Data Set.
+Data set from the UCI repository
+\url{https://archive.ics.uci.edu/ml/datasets/Congressional+Voting+Records}.
 }
 
