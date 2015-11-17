@@ -7,6 +7,7 @@ release_questions <- function() {
     "Does cran_comments.md specify the correct versions of R where tested?",
     "Is dont_run set for long-running examples?",
     "Did you build vignettes?",
-    "Have you checked spelling in vignettes and help files?"
+    "Have you checked spelling in vignettes and help files?",
+    "Did you update news? Look at the commits since last version"
   )
 }
