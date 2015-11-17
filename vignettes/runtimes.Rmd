@@ -23,7 +23,7 @@ knitr::opts_chunk$set(cache = FALSE, autodep = TRUE, collapse = TRUE, comment = 
 
 # Prediction  
 
-`bnclassify` implements fast prediction for augmented naive Bayes models with complete data. On the car evaluation data set (see `vignette("bnclassify-introduction")`) it is roughly 100 times faster than  prediction with the `gRain` [@Hojsgaard2012] package. 
+`bnclassify` implements fast prediction for augmented naive Bayes models with complete data. On the car evaluation data set (see `vignette("introduction", package="bnclassify")`) it is roughly 100 times faster than  prediction with the `gRain` [@Hojsgaard2012] package. 
 
 
 ```{r complete}

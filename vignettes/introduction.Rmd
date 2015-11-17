@@ -27,8 +27,8 @@ The `bnclassify` package implements state-of-the art algorithms for learning dis
 This vignette introduces the available functionalities. Other resources provide additional information:
 
 - `?bnclassify` lists main functionalities.
-- `vignette("bnclassify-technical")` provides details on the implemented methods.
-- `vignette("bnclassify-runtimes")` discusses runtimes of different algorithms.
+- `vignette("technical", package="bnclassify")` provides details on the implemented methods.
+- `vignette("runtimes", package="bnclassify")` discusses some issues affecting algorithms' runtimes.
 
 # Data
 Throughout the vignette we will use the car evaluation data set. It has six discrete features, describing car properties such as buying price or the number of doors, and 1728 instances assigned to four different classes (unacc, acc, good, vgood). See `?car` for more details.
