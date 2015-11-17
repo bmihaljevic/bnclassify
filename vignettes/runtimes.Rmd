@@ -63,20 +63,15 @@ microbenchmark(tan_hc = {set.seed(0); cv(tan_hc5, car, k = 5)},
 
 With the Soybean data set, which has 36 features, and 562 instances after removing the incomplete ones, `tan_hc` takes about six minutes on the above mentioned Windows 7 machine. 
 
-```{r}
+```{r, eval = FALSE}
 library(mlbench)
 data(Soybean)
 soy_complete <- na.omit(Soybean)
 dim(soy_complete)
-```
-
-Commented out for the sake of vignette building time.
-
-```{r}
-# microbenchmark::microbenchmark( 
-#   bsej = {set.seed(0); tan_hc('Class', soy_complete, k = 5, 
-#                                   epsilon = 0)}, 
-#   times = 1)
+microbenchmark::microbenchmark( 
+  bsej = {set.seed(0); tan_hc('Class', soy_complete, k = 5, 
+                                  epsilon = 0)}, 
+  times = 1)
 ```
 
 
