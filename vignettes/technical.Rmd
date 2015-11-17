@@ -1,0 +1,465 @@
+\documentclass[11pt]{article}
+
+\usepackage{natbib}
+\usepackage{url}
+\usepackage{fullpage}
+
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{{#1}}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{{#1}}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{{#1}}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{{#1}}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{{#1}}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{{#1}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{{#1}}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
+\newcommand{\RegionMarkerTok}[1]{{#1}}
+\newcommand{\ErrorTok}[1]{\textbf{{#1}}}
+\newcommand{\NormalTok}[1]{{#1}}
+\usepackage{longtable,booktabs}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\setcounter{secnumdepth}{5}
+
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{centernot}
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+\newcommand{\bigCI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}}
+\newcommand{\nbigCI}{\centernot{\bigCI}}
+
+\newcommand{\CI}{\mathrel{\perp\mspace{-10mu}\perp}}
+\newcommand{\nCI}{\centernot{\CI}}
+
+\newcommand{\code}[1]{\texttt{#1}}
+
+%\VignetteIndexEntry{Techical information}
+
+\author{Bojan Mihaljevi\'c, Concha Bielza, Pedro Larra\~{n}aga\\}
+\title{Technical details for the \texttt{bnclassify} package}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Many algorithms for learning discrete Bayesian network classifiers from data have been developed so far. Yet, only a handful are available for the \texttt{R} statistical environment. The \texttt{bnclassify} package helps filling this gap by providing such learning algorithms. Besides the naive Bayes, it implements a well-known adaptation of the Chow-Liu algorithm and multiple variants of the greedy hill-climbing search, producing one-dependence estimators and semi-naive Bayes models. These algorithms can maximize either data-intrinsic or wrapper network scores. \code{bnclassify} also implements fast prediction for complete data and cross-validation. This vignette provides details on the implemented functionalities and serves as a reference for understanding them.
+\end{abstract}
+
+{
+\setcounter{tocdepth}{2}
+\tableofcontents
+}
+
+\section{Introduction}\label{introduction}
+ 
+Many algorithms for learning Bayesian network classifiers \citep{Friedman1997} from data have been developed over the last 40 years \citep{Bielza14}. However, only a handful are available in the R environment for statistical computing \citep{RCore2015}. The \code{bnclassify} package helps filling this gap by implementing state-of-the art algorithms for learning discrete Bayesian network classifiers, including both structure and parameter learning methods, as well as functions for using these classifiers for prediction, assessing their predictive performance, and inspecting and analyzing their properties. 
+
+\section{Package overview}
+
+Structure learning algorithms:
+\begin{itemize}
+\item Naive Bayes \citep{Minsky1961}
+\item Chow-Liu's algorithm for one-dependence estimators (CL-ODE)  \citep{Friedman1997}
+\item Forward sequential selection and joining (FSSJ) \citep{Pazzani1996}
+\item Backward sequential elimination and joining (BSEJ)  \citep{Pazzani1996}
+\item Hill-climbing tree augmented naive Bayes (TAN-HC)  \citep{Keogh2002}
+\item Hill-climbing super-parent tree augmented naive Bayes (TAN-HCSP) \citep{Keogh2002}
+\end{itemize}
+
+Parameter learning methods:
+
+\begin{itemize}
+\item Bayesian and maximum likelihood estimation
+\item Attribute-weighted naive Bayes (AWNB)  \citep{Hall2007}
+\item Model averaged naive Bayes (MANB) \citep{Dash2002}
+\end{itemize}
+
+Model evaluating:
+
+\begin{itemize}
+ \item Cross-validated estimate of accuracy 
+ \item Log likelihood
+ \item Akaike information criterion (AIC) \citep{Akaike74}
+ \item Bayesian information criterion (BIC) \citep{Schwarz1978}
+\end{itemize}
+
+Predicting: 
+\begin{itemize}
+\item Fast prediction for augmented naive Bayes models with complete data
+\end{itemize}
+
+In addition, it implements functions for querying models properties, enables network structure plotting through the \texttt{Rgraphviz} package \citep{Hansen}, uses \code{gRain} for inference with incomplete data, and provides additional utility functions.
+
+\section{Background}\label{background}
+
+\label{sec:bcground}
+
+\subsection{Bayesian networks}\label{bayesian-networks}
+
+A Bayesian network is a pair \(\mathcal{B} = (\mathcal{G}, \mathbf{\theta})\) which encodes a joint distribution over a random vector $\mathbf{X} = (X_1,\ldots,X_m)$. The directed acyclic graph \(\mathcal{G}\) (its structure), which has a node per each variable in $\mathbf{X}$, encodes conditional independences among triplets of variables (e.g., \(X_1\) is independent of \(X_3\) given \(X_2\)), breaking the joint distribution into multiple smaller, local ones, over subsets of variables. The parameters \(\mathbf{\theta}\) specify the local distributions. The joint probability distribution is factorized as
+
+\[P(\mathbf{X}) = \prod_{i=1}^{m} P(X_i \mid \mathbf{Pa}(X_i)),\]
+
+where \(\mathbf{Pa}(X_i)\) is the set of parents of \(X_i\) in
+\(\mathcal{G}\) and \(m\) is the number of variables.
+
+When learning a Bayesian network from data we are given a data set
+\(\mathcal{D} = \{ \mathbf{x}^{1}, \ldots, \mathbf{x}^{N} \}\) of \(N\) observations of \(\mathbf{X}\) from which we
+aim to learn \(\mathcal{G}\) and \(\mathbf{\theta}\). Learning \(\mathbf{\theta}\) is generally straightforward given a structure. To learn the structure, \(\mathcal{G}\), there are basically two methods: by testing for conditional independence among triplets of variables (e.g., is \(X_1\) independent of \(X_3\) given \(X_2\)?) and by searching in the space of structures guided by a network quality score. In general, learning Bayesian networks by searching in the structure space is NP-hard \citep{Chickering2004} and thus a plethora of algorithms exist for the task, both specific for Bayesian networks, such as the K2 \citep{Cooper1992}, and general purpose search algorithms, such as genetic algorithms.
+
+Learning the parameters \(\mathbf{\theta}\) of a local conditional
+distribution \(\theta_{ijk} = P(X_i = k \mid \mathbf{Pa}(X_i) = j)\) is relatively straightforward. Assuming a Dirichlet prior over \(\mathbf{\theta}\) with all hyperparameters equal to \(\alpha\), and fully observed data, we get the Bayesian parameter estimates in closed form,
+
+\begin{equation}
+\theta_{ijk} = \frac{N_{ijk} + \alpha}{N_{ \cdot j \cdot } + r_i \alpha},
+\label{eq:disparams}
+\end{equation}
+
+where \(N_{ijk}\) is the number of instances in \(\mathcal{D}\) in which
+\(X_i = k\) and \(\mathbf{Pa}(X_i) = j\), \(N_{\cdot j \cdot}\) is the number of instances in which \(\mathbf{Pa}(X_i) = j\), while \(r_i\) is the cardinality of \(X_i\). When \(\alpha = 0\), Equation~(\ref{eq:disparams}) yields the maximum likelihood estimate of \(\theta_{ijk}\).
+
+\subsection{Bayesian network
+classifiers}\label{bayesian-network-classifiers}
+
+A Bayesian network classifier is a Bayesian network that is used for
+classifying instances into classes (e.g., classifying images as tumor or
+not tumor). Thus, we distinguish between predictor variables (or features), which
+describe the objects to classify, and which we label as \(\mathbf{X}\), and a
+discrete class variable \(C\). In this setting we are learning from a supervised data set \(\mathcal{D} = \{ (\mathbf{x}^{1}, c^{1}), \ldots, (\mathbf{x}^{N}, c^{N}) \}\).
+
+A Bayesian network classifiers encodes the joint over \(\mathbf{X}\) and \(C\) as
+
+\[P(\mathbf{X}, C) = P(C \mid \mathbf{Pa}(C)) \prod_{i=1}^{n} P(X_i \mid \mathbf{Pa}(X_i)),\]
+
+where \(n = m - 1 \) is the number of predictors. The classifier assigns an instance
+\(\mathbf{x}\) to the most probable class:
+
+\[ c^* = \argmax_c P(c \mid \mathbf{x}) = \argmax_c P(\mathbf{x}, c).\]
+
+Many search algorithms that produce Bayesian network classifiers
+traverse a restricted search space, considering only structures where
+the class node is a root node and parent of each feature. These are augmented
+naive Bayes \citep{Friedman1997} models and all structures in
+Figure \ref{fig:structures} are examples of it. The best known example is the naive Bayes \citep{Minsky1961} (Figure \ref{fig:nb}), a special case with no augmenting arcs (i.e., arcs between the features). Thus, the augmented naive Bayes factorizes the joint distribution as
+
+\begin{equation}
+P(\mathbf{X}, C) = P(C) \prod_{i=1}^{n} P(X_i \mid \mathbf{Pa}(X_i)), \label{eq:augnb}
+\end{equation}
+
+where \(C \in \mathbf{Pa}(X_i)\) for all \(X_i\).
+
+\section{Structure learning}\label{structure-learning}
+
+\label{sec:structure}
+
+\subsection{Models}\label{models}
+
+All models produced by \texttt{bnclassify} are augmented naive Bayes models. These can be organized hierarchically according to their complexity.
+
+The simplest is the naive Bayes, which assumes that the predictors are
+independent given the class (Figure \ref{fig:nb}). One-dependence
+estimators (ODE) allow each predictor to depend on at most one other
+predictor. A well-known example is the tree augmented naive Bayes (TAN)
+\citep{Friedman1997}, which has \(n-1\) augmenting arcs, forming a
+tree in the predictors' subgraph (Figure \ref{fig:tan}). Another variant
+is the forest augmented naive Bayes (FAN), with possibly less than
+\(n-1\) augmenting arcs (Figure \ref{fig:fan}). The semi-naive model
+(Semi) \citep{Pazzani1996} allows for more complex dependencies
+among features. It partitions the predictor set into subsets that are fully dependent within them but mutually independent among them given the class. In other words, it forms a complete directed graph across each feature subset, with no arcs among the different subsets (Figure~\ref{fig:semi}).\footnote{Note that, equivalently to this formulation, the original paper proposes forming `supernodes' by joining features by means of the Cartesian product of their domains; these supernodes correspond to the complete subgraphs across predictor nodes in our formulation. There are two such supernodes in Figure~\ref{fig:semi}: (\(X_1,X_2)\) and (\(X_4,X_5,X_6)\).} 
+The semi-naive Bayes model does not necessarily include all features (\(X_3\) is omitted from the model in Figure~\ref{fig:semi}), i.e., it allows for feature selection \citep{Liu2007} embedded in the process of model construction.
+
+\begin{figure}[h]
+\begin{subfigure}[b]{0.5\textwidth}
+  \begin{tikzpicture}[scale=(.9)]
+  \tikzset{vertex/.style = {shape=circle,draw,minimum size=1.5em}}
+  \tikzset{edge/.style = {->,> = latex'}}
+  % vertices
+  \node[vertex] (c) at  (4,2) {$C$};
+  \node[vertex] (x1) at  (0,0) {$X_1$};
+  \node[vertex] (x2) at (1.5,0) {$X_2$};
+  \node[vertex] (x3) at (3,0) {$X_3$};
+  \node[vertex] (x4) at (4.5,0) {$X_4$};
+  \node[vertex] (x5) at (6,0) {$X_5$};
+  \node[vertex] (x6) at  (7.5,0) {$X_6$};
+  %edges
+  \draw[edge] (c) to (x1);
+  \draw[edge] (c) to (x2);
+  \draw[edge] (c) to (x3);
+  \draw[edge] (c) to (x4);
+  \draw[edge] (c) to (x5);
+  \draw[edge] (c) to (x6);
+  \end{tikzpicture}
+  \caption{$p(c, \mathbf{x}) = p(c)p(x_1 \vert c)p(x_2 \vert c)p(x_3 \vert c)p(x_4 \vert c)$\\$p(x_5 \vert c)p(x_6 \vert c)$}
+  \label{fig:nb}
+\end{subfigure}
+\begin{subfigure}[b]{0.5\textwidth}
+  \begin{tikzpicture}[scale=(.9)]
+  \tikzset{vertex/.style = {shape=circle,draw,minimum size=1.5em}}
+  \tikzset{edge/.style = {->,> = latex'}}
+  % vertices
+  \node[vertex] (c) at  (4,2) {$C$};
+  \node[vertex] (x1) at  (0,0) {$X_1$};
+  \node[vertex] (x2) at (1.5,0) {$X_2$};
+  \node[vertex] (x3) at (3,0) {$X_3$};
+  \node[vertex] (x4) at (4.5,0) {$X_4$};
+  \node[vertex] (x5) at (6,0) {$X_5$};
+  \node[vertex] (x6) at  (7.5,0) {$X_6$};
+  %edges
+  \draw[edge] (c) to (x1);
+  \draw[edge] (c) to (x2);
+  \draw[edge] (c) to (x3);
+  \draw[edge] (c) to (x4);
+  \draw[edge] (c) to (x5);
+  \draw[edge] (c) to (x6);
+  %augmenting
+  \draw[edge] (x4) to (x5);
+  \draw[edge] (x5) to (x6);
+  \draw[edge] (x4) to (x3);
+  \draw[edge] (x3) to (x2);
+  \draw[edge] (x2) to (x1);
+  \end{tikzpicture}
+  \caption{$p(c, \mathbf{x}) = p(c)p(x_1 \vert c, x_2)p(x_2 \vert c, x_3)p(x_3 \vert c, x_4)p(x_4 \vert c)$\\$p(x_5 \vert c, x_4)p(x_6 \vert c, x_5)$}
+  \label{fig:tan}
+\end{subfigure}
+\begin{subfigure}[b]{0.5\textwidth}
+  \begin{tikzpicture}[scale=(.9)]
+  \tikzset{vertex/.style = {shape=circle,draw,minimum size=1.5em}}
+  \tikzset{edge/.style = {->,> = latex'}}
+  % vertices
+  \node[vertex] (c) at  (4,2) {$C$};
+  \node[vertex] (x1) at  (0,0) {$X_1$};
+  \node[vertex] (x2) at (1.5,0) {$X_2$};
+  \node[vertex] (x3) at (3,0) {$X_3$};
+  \node[vertex] (x4) at (4.5,0) {$X_4$};
+  \node[vertex] (x5) at (6,0) {$X_5$};
+  \node[vertex] (x6) at  (7.5,0) {$X_6$};
+  %edges
+  \draw[edge] (c) to (x1);
+  \draw[edge] (c) to (x2);
+  \draw[edge] (c) to (x3);
+  \draw[edge] (c) to (x4);
+  \draw[edge] (c) to (x5);
+  \draw[edge] (c) to (x6);
+  %augmenting
+  \draw[edge] (x4) to (x5);
+  \draw[edge] (x5) to (x6);
+  \draw[edge] (x2) to (x1);
+  \end{tikzpicture}
+  \caption{$p(c, \mathbf{x}) = p(c)p(x_1 \vert c, x_2)p(x_2 \vert c)p(x_3 \vert c)p(x_4 \vert c)$ \\$p(x_5 \vert c, x_4)p(x_6 \vert c, x_5)$}
+  \label{fig:fan}
+\end{subfigure}
+\begin{subfigure}[b]{0.5\textwidth}
+  \begin{tikzpicture}[scale=(.9)]
+  \tikzset{vertex/.style = {shape=circle,draw,minimum size=1.5em}}
+  \tikzset{edge/.style = {->,> = latex'}}
+  % vertices
+  \node[vertex] (c) at  (4,2) {$C$};
+  \node[vertex] (x1) at  (0,0) {$X_1$};
+  \node[vertex] (x2) at (1.5,0) {$X_2$};
+  \node[vertex, dashed] (x3) at (3,0) {$X_3$};
+  \node[vertex] (x4) at (4.5,0) {$X_4$};
+  \node[vertex] (x5) at (6,0) {$X_5$};
+  \node[vertex] (x6) at  (7.5,0) {$X_6$};
+  %edges
+  \draw[edge] (c) to (x1);
+  \draw[edge] (c) to (x2);
+  \draw[edge] (c) to (x4);
+  \draw[edge] (c) to (x5);
+  \draw[edge] (c) to (x6);
+  %augmenting
+  \draw[edge] (x4) to (x5);
+  \draw[edge] (x5) to (x6);
+  \draw[edge] (x4) to[bend right] (x6);
+  \draw[edge] (x2) to (x1);
+  \end{tikzpicture}
+  \caption{$p(c, \mathbf{x}) = p(c)p(x_1 \vert c, x_2)p(x_2 \vert c)p(x_4 \vert c)$ \\ $p(x_5 \vert c, x_4)p(x_6 \vert c, x_4, x_5)$}
+  \label{fig:semi}
+\end{subfigure}
+\caption{Augmented naive Bayes models of different complexity produced by the \texttt{bnclassify} package. (a) A naive Bayes; (b) a tree augmented naive Bayes; (c) a forest augmented naive Bayes; (d) a semi-naive Bayes. Here $X_3$ is omitted from the model.}
+\label{fig:structures}
+\end{figure}
+
+\subsection{Fixed structure}\label{fixed-structure}
+
+The naive Bayes has a fixed structure and its learning amounts to
+estimating its parameters.
+
+\subsection{Chow-Liu for one-dependence estimators}\label{chow-liu-for-one-dependence-estimators}
+
+The CL-ODE algorithm by \citep{Friedman1997} adapts the Chow-Liu \citep{Chow1968} algorithm in order to find the maximum likelihood TAN model in time quadratic in \(n\). Since the same method can be used to find ODE models which maximize decomposable penalized log-likelihood scores, \texttt{bnclassify} uses it to maximize Akaike's information criterion (AIC) \citep{Akaike74} and BIC \citep{Schwarz1978}. While maximizing likelihood will always render a TAN, i.e., a network with \(n-1\) augmenting arcs, maximizing penalized log-likelihood may render a FAN, since the inclusion of some arcs might degrade the penalized log-likelihood score.
+
+Note that when data is incomplete \code{bnclassify} does not necessarily return the optimal (with respect to penalized log-likelihood) ODE. Namely, that requires the computationally expensive calculation of the sufficient statistics \(N_{ijk}\) which maximize parameter likelihood; instead, \code{bnclassify} approximates these statistics with the \emph{available case analysis} heuristic (see Section \ref{sec:params}).   
+
+\subsection{Greedy hill-climbing}\label{greedy-hill-climbing}
+
+\texttt{bnclassify} implements four greedy hill-climbing algorithms for learning Bayesian network classifiers.
+
+The following produce a TAN model:
+
+\begin{itemize}
+\itemsep1pt\parskip0pt\parsep0pt
+\item TAN-HC
+\item TAN-HCSP
+\end{itemize}
+
+Both algorithms start from a naive Bayes structure and add arcs until there is no improvement in network score. TAN-HCSP uses a reduced search space and should be less time-consuming.
+
+The following algorithms produce a semi-naive Bayes model:
+
+\begin{itemize}
+\itemsep1pt\parskip0pt\parsep0pt
+\item BSEJ
+\item FSSJ
+\end{itemize}
+
+BSEJ starts from a naive Bayes structure and adds augmenting arcs and removes features from the model until no improvement in network score. On the contrary, FSSJ starts from a structure containing just the class node and proceedes by incorporating features features and augmenting arcs. 
+
+All greedy algorithms maximize the cross-validated estimate of accuracy as objective function, i.e., they are wrapper algorithms. 
+
+\section{Parameter learning}\label{parameter-learning}
+
+\label{sec:params}
+
+\subsection{Bayesian parameter estimation}
+
+With fully observed data, \texttt{bnclassify} estimates parameters with
+maximum likelihood or Bayesian estimation, according to Equation~(\ref{eq:disparams}), with all prior hyperparameters \(\alpha = a\) for a specified \(a\) (provided by the user). When \(N_{\cdot j \cdot} = 0\) and \(a = 0\), that is, when the model's probability of observing $ \mathbf{Pa}(X_i) = j$ is 0, \texttt{bnclassify} assigns a uniform distribution to \(P(X_i \mid \mathbf{Pa}(X_i) = j)\).
+
+When data is incomplete, the parameters of local distributions are no
+longer independent and we cannot separately maximize the likelihood of
+each one as in Equation \ref{eq:disparams}. Optimizing (heuristically)
+the likelihood would require a time-consuming algorithm like expectation
+maximization \citep{Dempster1977}. Instead, we use \emph{available
+case analysis} \citep{Pigott2001} and estimate the parameters independently, substituting \(N_{\cdot j \cdot}\) in Equation \ref{eq:disparams} with \(N_{i j \cdot} = \sum_{k = 1}^{r_i} N_{i j k}\), i.e., with the count of instances in which \(\mathbf{Pa}(X_i) = j\) and \(X_i\) is observed, regardless of the observation of other variables. That is,
+
+\begin{equation}
+\theta_{ijk} = \frac{N_{ijk} + \alpha}{N_{ i j \cdot } + r_i \alpha}.
+\label{eq:incp_params}
+\end{equation}
+
+Thus, the parameter estimates are not maximum likelihood nor Bayesian when data is incomplete.
+
+\subsection{Attribute-weighted naive Bayes}
+
+The AWNB parameter estimation method is intended for the naive Bayes but in \code{bnclassify} it can be applied to any model. It exponentiates the conditional probability of a predictor,
+
+\begin{equation*}
+P(\mathbf{X}, C) \propto P(C) \prod_{i=1}^{n} P(X_i \mid \mathbf{Pa}(X_i))^{w_i},
+\label{eq:awnb}
+\end{equation*}
+
+\noindent reducing or maintaining its effect on the class posterior, since \(w_i \in [0,1]\) (note that a weight \(w_i = 0\) omits \(X_i\) from the model, rendering it independent from the class.). This is equivalent to updating parameters of $\theta_{ijk}$ given by Equation~(\ref{eq:incp_params}) as 
+
+\begin{equation*}
+  \theta_{ijk}^{AWNB} = \frac{\theta_{ijk}^{w_i}}{\sum_{k=1}^{r_i} \theta_{ijk}^{w_i}},
+\end{equation*}
+
+and plugging those estimates into Equation~(\ref{eq:augnb}). Weights $w_i$ are computed as
+
+\[w_i = \frac{1}{M}\sum_{t=1}^M \frac{1}{\sqrt{d_{ti}}},\]
+
+where \(M\) is the number of bootstrap \citep{Efron1979} subsamples
+from \(\mathcal{D}\) and \(d_{ti}\) is the minimum testing depth of \(X_i\)
+in an unpruned classification tree learned from the \(t\)-th subsample
+(\(d_{ti} = 0\) if \(X_i\) is omitted from \(t\)-th tree). 
+
+\subsection{Exact model averaging for naive Bayes}
+
+The MANB parameter estimation method corresponds to exact Bayesian model averaging over the naive Bayes models obtained from all $2^n$ subsets of the $n$ features, yet it is computed in time linear in $n$. The implementaiton in \code{bnclassify} follows the online appendix of \cite{Wei2011}, extending it to the cases where $\alpha \neq 1$ in Equation~(\ref{eq:incp_params}).
+
+The estimate for a particular parameter $\theta_{ijk}^{MANB}$ is: 
+
+\begin{equation*}
+\theta_{ijk}^{MANB} = \theta_{ijk} P(\mathcal{G}_{C \nbigCI X_i} \mid \mathcal{D}) + \theta_{ik} P(\mathcal{G}_{C \bigCI X_i}),
+\end{equation*}
+
+where $P(\mathcal{G}_{C \nbigCI X_i} \mid \mathcal{D})$ is the local posterior probability of an arc from $C$ to $X_i$, whereas $P(\mathcal{G}_{C \bigCI X_i}) = 1 - P(\mathcal{G}_{C \nbigCI X_i} \mid \mathcal{D})$ is that of the absence of such an arc (which is equivalent to omitting $X_i$ from the model), while $\theta_{ijk}$ and $\theta_{ik}$ are the Bayesian parameter estimates obtained with Equation~(\ref{eq:incp_params}) given the corresponding structures (i.e., with and without the arc from $C$ to $X_i$).
+
+Using Bayes' theorem, 
+
+\begin{equation*}
+P(\mathcal{G}_{C \nbigCI X_i} \mid \mathcal{D}) = \frac{P(\mathcal{G}_{C \nbigCI X_i}) P(\mathcal{D} \mid \mathcal{G}_{C \nbigCI X_i})}{P(\mathcal{G}_{C \nbigCI X_i}) P(\mathcal{D} \mid \mathcal{G}_{C \nbigCI X_i}) + P(\mathcal{G}_{C \bigCI X_i}) P(\mathcal{D} \mid \mathcal{G}_{C \bigCI X_i})}. 
+\end{equation*}
+
+Assuming a Dirichlet prior with hyperparameter $\alpha = 1$ in Equation~\ref{eq:incp_params}, Equation~(6) and Equation~(7) in the online appendix of \cite{Wei2011} give formulas for $P(\mathcal{D} \mid \mathcal{G}_{C \nbigCI X_i})$ and $P(\mathcal{D} \mid \mathcal{G}_{C \bigCI X_i})$:
+
+\begin{equation*}
+P(\mathcal{D} \mid \mathcal{G}_{C \nbigCI X_i}) = \prod_{j=1}^{r_C} \frac{(r_i - 1)!}{(N_{ij \cdot} + r_i - 1)!} \prod_{k=1}^{r_i} N_{ijk}!,
+\end{equation*}
+
+\begin{equation*}
+P(\mathcal{D} \mid \mathcal{G}_{C \bigCI X_i}) = \frac{(r_i - 1)!}{(N_{i} + r_i - 1)!} \prod_{k=1}^{r_i} N_{i \cdot k}!,
+\end{equation*}
+
+\noindent where $N_{i \cdot k} = \sum_{j=1}^{r_C} N_{ijk}$. Noting that the above are special cases of Equation~(8) in \cite{Dash2002}, we can generalize this for any hyperparameter $\alpha > 0$ as follows:
+
+\begin{equation*}
+P(\mathcal{D} \mid \mathcal{G}_{C \nbigCI X_i}) = \prod_{j=1}^{r_C} \frac{\Gamma(r_i \alpha )}{\Gamma(N_{ij} + r_i \alpha)} \prod_{k=1}^{r_i} \frac{\Gamma(N_{ijk}+ \alpha)}{\Gamma(\alpha)},
+\end{equation*}
+
+and
+
+\begin{equation*}
+P(\mathcal{D} \mid \mathcal{G}_{C \nbigCI X_i}) = \frac{\Gamma(r_i \alpha )}{\Gamma(N_{i} + r_i \alpha)} \prod_{k=1}^{r_i} \frac{\Gamma(N_{ik} + \alpha)}{\Gamma(\alpha)}.
+\end{equation*}
+
+Following \cite{Wei2011}, \code{bnclassify} asumes that the local prior probability of an arc from the class to a feature $X_i$, $P(\mathcal{G}_{C \nbigCI X_i})$, is given by the user. The prior of a naive Bayes structure $\mathcal{G}$, with arcs from the class to $a$ out of $n$, features and no arcs to the remaining $n-a$ features is, then, 
+
+\begin{equation}
+P(\mathcal{G}) = P(\mathcal{G}_{C \nbigCI X_i})^a (1-P(\mathcal{G}_{C \nbigCI X_i}))^{(n-a)}.
+\end{equation}
+
+Note that \code{bnclassify} computes the above in logarithmic space to reduce numerical errors. 
+
+\section{Cross-validation}
+\label{sec:eval}
+
+\texttt{bnclassify} implements stratified cross-validation. It is possible to
+cross-validate the entire two-step learning process --learning the structure and the parameters-- or parameter learning alone, keeping the structure fixed across the different subsamples.
+
+\section{Prediction}\label{implementation}
+
+\label{sec:pred}
+
+\texttt{bnclassify} implements prediction for augmented naive Bayes
+models with complete data. This amounts to multiplying the corresponding entries in the local distributions and is performed efficiently, with computations done in logarithmic space to reduce numerical error. 
+
+With incomplete data this cannot be done and therefore \code{bnclassify} uses the \texttt{gRain} package \citep{Hojsgaard2012} to perform exact inference. Such inference is time-consuming and, therefore, wrapper algorithms can be very slow when applied on incomplete data sets.
+
+\section{Future work}
+\label{sec:future}
+
+Future work involves handling real-valued data, via, for example, conditional Gaussian models. Straightforward extensions include additional variants of the greedy hill-climbing algorithm, such as the k-DB \citep{Sahami1996} algorithm, or adding more flexibility to the hill-climbing algorithm, such as enabling the choice of the initial structure (e.g., whether a naive Bayes or a model with no arcs), when applicable. Useful parameter learning methods to implement include \cite{Zaidi2013}.
+
+\bibliographystyle{abbrvnat}
+\bibliography{bnclassify}
+
+\end{document}
