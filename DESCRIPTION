@@ -1,6 +1,6 @@
 Package: bnclassify
 Title: Learning Discrete Bayesian Network Classifiers from Data
-Description: Implementation of different algorithms for learning discrete Bayesian network classifiers from data, including wrapper algorithms and those based on Chow-Liu's algorithm. 
+Description: Implements state-of-the art algorithms for learning discrete Bayesian network classifiers from data, as well as functions for using these classifiers for prediction, assessing their predictive performance, and inspecting and analyzing their properties.
 Version: 0.3.1.9000
 Authors@R: c(person("Mihaljevic","Bojan",email="bmihaljevic@fi.upm.es",role=c("aut","cre")),
     person("Bielza","Concha",email="mcbielza@fi.upm.es",role="aut"),

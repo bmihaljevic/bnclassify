@@ -1,20 +1,53 @@
 #' Algorithms for learning Bayesian network classifiers from data.
 #' 
-#' The bnclassify package implements algorithms for learning discrete Bayesian 
-#' network classifiers from data. Learning can be performed on both complete and
-#' incomplete data whereas prediction is much slower in the latter case and thus
-#' wrapper learners are not recommended in that case.
+#' bnclassify implements state-of-the art algorithms for
+#' learning discrete Bayesian network classifiers from data, as well
+#' as functions for using these classifiers for prediction, assessing
+#' their predictive performance, and inspecting and analyzing their
+#' properties.
 #' 
-#' Structure learning algorithms \itemize{ \item Naive Bayes \code{\link{nb}} 
-#' \item Tree augmented naive Bayes \code{\link{tan_cl}} \item Backward 
-#' sequential elimination and joining \code{\link{bsej}} (Pazzani, 1996) \item 
-#' Forward sequential selection and joining (Pazzani, 1996) \code{\link{fssj}} 
-#' \item Hill-climbing tree augmented naive Bayes \code{\link{tan_hc}} \item 
-#' Hill-climbing super-parent tree augmented naive Bayes \code{\link{tan_hcsp}} 
+#' The learn more about the package, start with the vignettes:
+#'  \code{browseVignettes(package = "bnclassify")}.
+#' 
+#' Structure learning algorithms:
+#'   \itemize{
+#'     \item \code{\link{nb}} Naive Bayes (Minsky, 1961)
+#'     \item \code{\link{tan_cl}} Chow-Liu's algorithm for one-dependence estimators (CL-ODE)  (Friedman et al., 1997)
+#' \item \code{\link{fssj}} Forward sequential selection and joining (FSSJ) (Pazzani, 1996)
+#' \item \code{\link{bsej}} Backward sequential elimination and joining (BSEJ)  (Pazzani, 1996)
+#' \item \code{\link{tan_hc}} Hill-climbing tree augmented naive Bayes (TAN-HC)  (Keogh and Pazzani, 2002)
+#' \item \code{\link{tan_hcsp}} Hill-climbing super-parent tree augmented naive Bayes (TAN-HCSP) (Keogh and Pazzani, 2002)
 #' }
 #' 
-#' Parameter estimation \itemize{ \item Attribute-weighted naive Bayes 
-#' \code{\link{lp}} }
+#' Parameter learning methods (\code{\link{lp}}):
+#' 
+#' \itemize{
+#' \item Bayesian and maximum likelihood estimation
+#' \item Attribute-weighted naive Bayes (AWNB)  (Hall, 2007)
+#' \item Model averaged naive Bayes (MANB) (Dash and Cooper, 2002)
+#' }
+#' 
+#' Model evaluating:
+#' 
+#' \itemize{
+#'  \item \code{\link{cv}} Cross-validated estimate of accuracy 
+#'  \item \code{\link{logLik}} Log likelihood
+#'  \item \code{\link{AIC}} Akaike information criterion (AIC) 
+#'  \item \code{\link{BIC}} Bayesian information criterion (BIC) 
+#' }
+#' 
+#' Predicting: 
+#' \itemize{
+#' \item \code{\link{predict}} Inference for complete and/or incomplete data (the latter through \code{gRain})}
+#' 
+#' Inspecting models:
+#'  \itemize{ 
+#'  \item \code{\link{plot}} Structure plotting (through \code{Rgraphviz})
+#'  \item \code{\link{print}} Summary 
+#'  \item \code{\link{params}} Access conditional probability tables 
+#'  \item \code{\link{nparams}} Number of free parameters 
+#'  \item ...
+#'  } 
 #' 
 #' @docType package
 #' @name bnclassify
@@ -26,24 +59,26 @@
 #'   classifiers: A survey. \emph{ACM Computing Surveys}, \bold{47}(1), Article 
 #'   5.
 #'   
+#'   Dash D and Cooper GF (2002). Exact model averaging with naive Bayesian 
+#'   classifiers. \emph{19th International Conference on Machine Learning 
+#'   (ICML-2002)}, 91-98.
+#'   
 #'   Friedman N, Geiger D and Goldszmidt M (1997). Bayesian network classifiers.
 #'   \emph{Machine Learning}, \bold{29}, pp. 131--163.
 #'   
 #'   Hall M (2007). A decision tree-based attribute weighting filter for naive 
 #'   Bayes. \emph{Knowledge-Based Systems}, \bold{20}(2), pp. 120-126.
 #'   
-#'   Pazzani M (1996). Constructive induction of Cartesian product attributes. 
-#'   In \emph{Proceedings of the Information, Statistics and Induction in 
-#'   Science Conference (ISIS-1996)}, pp. 66-77
-#'   
 #'   Koegh E and Pazzani M (2002).Learning the structure of augmented Bayesian 
 #'   classifiers. In \emph{International Journal on Artificial Intelligence 
 #'   Tools}, \bold{11}(4), pp. 587-601.
 #'   
-#'   Blanco R and Inza I and Merino M and Quiroga J and Larranaga P (2005), 
-#'   Feature selection in Bayesian classifiers for the prognosis of survival of 
-#'   cirrhotic patients treated with TIPS. \emph{Journal of Biomedical 
-#'   Informatics}, \bold{38}(5), pp. 376--388.
+#'   Koller D, Friedman N (2009). Probabilistic Graphical Models: Principles and
+#'   Techniques. MIT Press.
+#'   
+#'   Pazzani M (1996). Constructive induction of Cartesian product attributes. 
+#'   In \emph{Proceedings of the Information, Statistics and Induction in 
+#'   Science Conference (ISIS-1996)}, pp. 66-77
 NULL
 
 #' Congress Voting Data Set.
