@@ -425,7 +425,7 @@ benchmark(ode_cl_aic_mlr_prob, t, rdesc, show.info = FALSE,
 
 With `mlr` you can compare the predictive performance of `bnclassify` models to those of different classification paradigms, such as random forests. 
 
-```{r}
+```{r, eval = FALSE}
 rf <- makeLearner("classif.randomForest", id = "rf")
 classifiers <- list(ode_cl_aic_mlr, rf)
 set.seed(0)
