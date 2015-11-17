@@ -44,8 +44,6 @@
 
 \usepackage{caption}
 \usepackage{subcaption}
-\usepackage{tikz}
-\usetikzlibrary{arrows}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
@@ -198,108 +196,22 @@ The semi-naive Bayes model does not necessarily include all features (\(X_3\) is
 
 \begin{figure}[h]
 \begin{subfigure}[b]{0.5\textwidth}
-  \begin{tikzpicture}[scale=(.9)]
-  \tikzset{vertex/.style = {shape=circle,draw,minimum size=1.5em}}
-  \tikzset{edge/.style = {->,> = latex'}}
-  % vertices
-  \node[vertex] (c) at  (4,2) {$C$};
-  \node[vertex] (x1) at  (0,0) {$X_1$};
-  \node[vertex] (x2) at (1.5,0) {$X_2$};
-  \node[vertex] (x3) at (3,0) {$X_3$};
-  \node[vertex] (x4) at (4.5,0) {$X_4$};
-  \node[vertex] (x5) at (6,0) {$X_5$};
-  \node[vertex] (x6) at  (7.5,0) {$X_6$};
-  %edges
-  \draw[edge] (c) to (x1);
-  \draw[edge] (c) to (x2);
-  \draw[edge] (c) to (x3);
-  \draw[edge] (c) to (x4);
-  \draw[edge] (c) to (x5);
-  \draw[edge] (c) to (x6);
-  \end{tikzpicture}
+  \includegraphics{nb}
   \caption{$p(c, \mathbf{x}) = p(c)p(x_1 \vert c)p(x_2 \vert c)p(x_3 \vert c)p(x_4 \vert c)$\\$p(x_5 \vert c)p(x_6 \vert c)$}
   \label{fig:nb}
 \end{subfigure}
 \begin{subfigure}[b]{0.5\textwidth}
-  \begin{tikzpicture}[scale=(.9)]
-  \tikzset{vertex/.style = {shape=circle,draw,minimum size=1.5em}}
-  \tikzset{edge/.style = {->,> = latex'}}
-  % vertices
-  \node[vertex] (c) at  (4,2) {$C$};
-  \node[vertex] (x1) at  (0,0) {$X_1$};
-  \node[vertex] (x2) at (1.5,0) {$X_2$};
-  \node[vertex] (x3) at (3,0) {$X_3$};
-  \node[vertex] (x4) at (4.5,0) {$X_4$};
-  \node[vertex] (x5) at (6,0) {$X_5$};
-  \node[vertex] (x6) at  (7.5,0) {$X_6$};
-  %edges
-  \draw[edge] (c) to (x1);
-  \draw[edge] (c) to (x2);
-  \draw[edge] (c) to (x3);
-  \draw[edge] (c) to (x4);
-  \draw[edge] (c) to (x5);
-  \draw[edge] (c) to (x6);
-  %augmenting
-  \draw[edge] (x4) to (x5);
-  \draw[edge] (x5) to (x6);
-  \draw[edge] (x4) to (x3);
-  \draw[edge] (x3) to (x2);
-  \draw[edge] (x2) to (x1);
-  \end{tikzpicture}
+  \includegraphics{tan}
   \caption{$p(c, \mathbf{x}) = p(c)p(x_1 \vert c, x_2)p(x_2 \vert c, x_3)p(x_3 \vert c, x_4)p(x_4 \vert c)$\\$p(x_5 \vert c, x_4)p(x_6 \vert c, x_5)$}
   \label{fig:tan}
 \end{subfigure}
 \begin{subfigure}[b]{0.5\textwidth}
-  \begin{tikzpicture}[scale=(.9)]
-  \tikzset{vertex/.style = {shape=circle,draw,minimum size=1.5em}}
-  \tikzset{edge/.style = {->,> = latex'}}
-  % vertices
-  \node[vertex] (c) at  (4,2) {$C$};
-  \node[vertex] (x1) at  (0,0) {$X_1$};
-  \node[vertex] (x2) at (1.5,0) {$X_2$};
-  \node[vertex] (x3) at (3,0) {$X_3$};
-  \node[vertex] (x4) at (4.5,0) {$X_4$};
-  \node[vertex] (x5) at (6,0) {$X_5$};
-  \node[vertex] (x6) at  (7.5,0) {$X_6$};
-  %edges
-  \draw[edge] (c) to (x1);
-  \draw[edge] (c) to (x2);
-  \draw[edge] (c) to (x3);
-  \draw[edge] (c) to (x4);
-  \draw[edge] (c) to (x5);
-  \draw[edge] (c) to (x6);
-  %augmenting
-  \draw[edge] (x4) to (x5);
-  \draw[edge] (x5) to (x6);
-  \draw[edge] (x2) to (x1);
-  \end{tikzpicture}
+  \includegraphics{fan}
   \caption{$p(c, \mathbf{x}) = p(c)p(x_1 \vert c, x_2)p(x_2 \vert c)p(x_3 \vert c)p(x_4 \vert c)$ \\$p(x_5 \vert c, x_4)p(x_6 \vert c, x_5)$}
   \label{fig:fan}
 \end{subfigure}
 \begin{subfigure}[b]{0.5\textwidth}
-  \begin{tikzpicture}[scale=(.9)]
-  \tikzset{vertex/.style = {shape=circle,draw,minimum size=1.5em}}
-  \tikzset{edge/.style = {->,> = latex'}}
-  % vertices
-  \node[vertex] (c) at  (4,2) {$C$};
-  \node[vertex] (x1) at  (0,0) {$X_1$};
-  \node[vertex] (x2) at (1.5,0) {$X_2$};
-  \node[vertex, dashed] (x3) at (3,0) {$X_3$};
-  \node[vertex] (x4) at (4.5,0) {$X_4$};
-  \node[vertex] (x5) at (6,0) {$X_5$};
-  \node[vertex] (x6) at  (7.5,0) {$X_6$};
-  %edges
-  \draw[edge] (c) to (x1);
-  \draw[edge] (c) to (x2);
-  \draw[edge] (c) to (x4);
-  \draw[edge] (c) to (x5);
-  \draw[edge] (c) to (x6);
-  %augmenting
-  \draw[edge] (x4) to (x5);
-  \draw[edge] (x5) to (x6);
-  \draw[edge] (x4) to[bend right] (x6);
-  \draw[edge] (x2) to (x1);
-  \end{tikzpicture}
+  \includegraphics{sn}
   \caption{$p(c, \mathbf{x}) = p(c)p(x_1 \vert c, x_2)p(x_2 \vert c)p(x_4 \vert c)$ \\ $p(x_5 \vert c, x_4)p(x_6 \vert c, x_4, x_5)$}
   \label{fig:semi}
 \end{subfigure}
