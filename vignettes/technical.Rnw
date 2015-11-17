@@ -80,7 +80,7 @@ Many algorithms for learning discrete Bayesian network classifiers from data hav
 
 \section{Introduction}\label{introduction}
  
-Many algorithms for learning Bayesian network classifiers \citep{Friedman1997} from data have been developed over the last 40 years \citep{Bielza14}. However, only a handful are available in the R environment for statistical computing \citep{RCore2015}. The \code{bnclassify} package helps filling this gap by implementing state-of-the art algorithms for learning discrete Bayesian network classifiers, including both structure and parameter learning methods, as well as functions for using these classifiers for prediction, assessing their predictive performance, and inspecting and analyzing their properties. 
+Many algorithms for learning Bayesian network classifiers \citep{Friedman1997} from data have been developed over the last 40 years \citep{Bielza14}. However, only a handful are available in the R environment for statistical computing \citep{RCore2015}. The \code{bnclassify} package helps filling this gap by implementing state-of-the-art algorithms for learning discrete Bayesian network classifiers, including both structure and parameter learning methods, as well as functions for using these classifiers for prediction, assessing their predictive performance, and inspecting and analyzing their properties. 
 
 \section{Package overview}
 
@@ -340,7 +340,7 @@ The following algorithms produce a semi-naive Bayes model:
 \item FSSJ
 \end{itemize}
 
-BSEJ starts from a naive Bayes structure and adds augmenting arcs and removes features from the model until no improvement in network score. On the contrary, FSSJ starts from a structure containing just the class node and proceedes by incorporating features features and augmenting arcs. 
+BSEJ starts from a naive Bayes structure and adds augmenting arcs and removes features from the model until no improvement in network score. On the contrary, FSSJ starts from a structure containing just the class node and proceeds by incorporating features features and augmenting arcs. 
 
 All greedy algorithms maximize the cross-validated estimate of accuracy as objective function, i.e., they are wrapper algorithms. 
 
@@ -393,7 +393,7 @@ in an unpruned classification tree learned from the \(t\)-th subsample
 
 \subsection{Exact model averaging for naive Bayes}
 
-The MANB parameter estimation method corresponds to exact Bayesian model averaging over the naive Bayes models obtained from all $2^n$ subsets of the $n$ features, yet it is computed in time linear in $n$. The implementaiton in \code{bnclassify} follows the online appendix of \cite{Wei2011}, extending it to the cases where $\alpha \neq 1$ in Equation~(\ref{eq:incp_params}).
+The MANB parameter estimation method corresponds to exact Bayesian model averaging over the naive Bayes models obtained from all $2^n$ subsets of the $n$ features, yet it is computed in time linear in $n$. The implementation in \code{bnclassify} follows the online appendix of \cite{Wei2011}, extending it to the cases where $\alpha \neq 1$ in Equation~(\ref{eq:incp_params}).
 
 The estimate for a particular parameter $\theta_{ijk}^{MANB}$ is: 
 

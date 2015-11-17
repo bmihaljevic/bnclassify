@@ -1,6 +1,6 @@
 #' Algorithms for learning Bayesian network classifiers from data.
 #' 
-#' bnclassify implements state-of-the art algorithms for
+#' Implements state-of-the-art algorithms for
 #' learning discrete Bayesian network classifiers from data, as well
 #' as functions for using these classifiers for prediction, assessing
 #' their predictive performance, and inspecting and analyzing their

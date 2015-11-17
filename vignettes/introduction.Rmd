@@ -22,7 +22,7 @@ knitr::opts_chunk$set(cache = FALSE, autodep = TRUE, collapse = TRUE, comment = 
 ```
 
 # Introduction
-The `bnclassify` package implements state-of-the art algorithms for learning discrete Bayesian network classifiers from data, as well as functions for using these classifiers for prediction, assessing their predictive performance, and inspecting and analyzing their properties. 
+The `bnclassify` package implements state-of-the-art algorithms for learning discrete Bayesian network classifiers from data, as well as functions for using these classifiers for prediction, assessing their predictive performance, and inspecting and analyzing their properties. 
 
 This vignette introduces the available functionalities. Other resources provide additional information:
 
@@ -120,7 +120,7 @@ Plotting network structure can reveal probabilistic relationships among the vari
 plot(ode_cl_aic)
 ```
 
-If the network is not displaying properly, e.g., with node names overlapping in large networks, you may try different layout types and font sizes. 
+If the network is not displaying properly, e.g., with node names overlapping in large networks, you may try different layout types and font sizes (see `?plot.bnc_dag`). 
 ```{r, fig.height=4}
 plot(ode_cl_aic, layoutType = 'twopi', fontsize = 15)
 ```
@@ -312,7 +312,7 @@ set.seed(0)
 cv(ode_cl_aic, car, k = 10, dag = FALSE, mean = FALSE)
 ```
 
-Finally, to cross-validatate multiple classifiers at once pass a list of `bnc_bn` objects to `cv`. 
+Finally, to cross-validate multiple classifiers at once pass a list of `bnc_bn` objects to `cv`. 
 
 ```{r}
 set.seed(0)
