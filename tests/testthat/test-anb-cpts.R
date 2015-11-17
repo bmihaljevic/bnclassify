@@ -18,3 +18,14 @@ test_that("cpt cache nominal", {
   expect_identical(cache(c('buying', 'class')),
                    extract_cpt(c('buying', 'class'), car, smooth = 1))
 })
+
+test_that("cpt cache forget", {
+  cache <- make_cpts_cache(car, smooth = 1)
+  expect_identical(cache('class'), extract_cpt('class', car, smooth = 1))
+  expect_identical(cache(c('buying', 'class')),
+                   extract_cpt(c('buying', 'class'), car, smooth = 1))
+  expect_true(forget(cache))
+  expect_identical(cache('class'), extract_cpt('class', car, smooth = 1))
+  expect_identical(cache(c('buying', 'class')),
+                   extract_cpt(c('buying', 'class'), car, smooth = 1))
+})
