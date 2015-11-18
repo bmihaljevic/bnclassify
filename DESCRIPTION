@@ -29,8 +29,5 @@ Suggests:
     rmarkdown(>= 0.7),
     covr
 License: GPL (>= 2)
-Author: Mihaljevic Bojan [aut, cre],
-    Bielza Concha [aut],
-    Larranaga Pedro [aut]
 Maintainer: Mihaljevic Bojan <bmihaljevic@fi.upm.es>
 VignetteBuilder: knitr
