@@ -248,12 +248,26 @@ NULL
 #' 
 #' @name loglik
 #'   
-#' @param object A \code{bnc_bn} object.
+#' @inheritParams predict.bnc_bn 
 #' @param ... A data frame (\eqn{\mathcal{D}}{D}).
 #' @examples 
 #' data(car)
 #' nb <- bnc('nb', 'class', car, smooth = 1)
-#' logLik(nb.car, car)   
+#' logLik(nb, car)   
 #' AIC(nb, car)
 #' BIC(nb, car)
+NULL
+
+#' Convert to graph and gRain.
+#' 
+#' Convert a \code{\link{bnc_dag_object}} to \code{\link[graph]{graphNEL}} and
+#' \code{\link[gRain]{grain}} objects.
+#' 
+#' @name grain_and_graph
+#' @inheritParams bnc_bn_object   
+#' @examples 
+#' data(car)
+#' nb <- bnc('nb', 'class', car, smooth = 1)
+#' g <- as_grain(nb)
+#' gRain::querygrain.grain(g)$buying
 NULL

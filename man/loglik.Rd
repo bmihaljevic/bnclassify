@@ -14,7 +14,7 @@
 \method{logLik}{bnc_bn}(object, ...)
 }
 \arguments{
-\item{object}{A \code{bnc_bn} object.}
+\item{object}{A \code{\link{bnc_bn_object}} object.}
 
 \item{...}{A data frame (\eqn{\mathcal{D}}{D}).}
 }
@@ -38,7 +38,7 @@ where \eqn{|\theta|} is the number of free parameters in \code{object},
 \examples{
 data(car)
 nb <- bnc('nb', 'class', car, smooth = 1)
-logLik(nb.car, car)
+logLik(nb, car)
 AIC(nb, car)
 BIC(nb, car)
 }

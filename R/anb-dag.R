@@ -23,9 +23,9 @@ check_bnc_dag_basic <- function(x) {
   check_features(features = features, class = class)
   stopifnot(identical(vars(x), setNames(nm = c(features, class))))
 }
-#' To graphNEL. 
+
 #' @export 
-#' @param x a \code{\link{bnc_dag_object}} object. The Bayesian network structure.
+#' @describeIn grain_and_graph Convert to a graphNEL.
 as_graphNEL <- function(x) {
   stopifnot(inherits(x, "bnc_dag"))
   x$.dag
