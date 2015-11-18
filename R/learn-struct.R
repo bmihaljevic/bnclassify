@@ -67,9 +67,8 @@ tan_hcsp <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {
 }
 #' @export
 #' @rdname tan_chowliu
-tan_cl <- function(class, dataset, score='loglik', blacklist = NULL, 
-                    root = NULL) {
-  x <- chowliu(class, dataset, score = score, blacklist = blacklist, 
+tan_cl <- function(class, dataset, score='loglik', root = NULL) {
+  x <- chowliu(class, dataset, score = score, blacklist = NULL, 
           root = root)
   add_dag_call_arg(x, fun_name = 'tan_cl', call = match.call(), 
                    env = parent.frame(), force = TRUE)
