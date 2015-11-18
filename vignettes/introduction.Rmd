@@ -390,7 +390,7 @@ t <- makeClassifTask(id = "car", data = car,
 ```
 
 Select features:
-```{r wrapper_fss}
+```{r wrapper_fss, eval = FALSE}
 set.seed(0)
 # Select features
 mod <- train(ode_cl_aic_mlr_fs, task = t) 
