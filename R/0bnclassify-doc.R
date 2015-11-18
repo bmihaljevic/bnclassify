@@ -51,7 +51,7 @@
 #' 
 #' @docType package
 #' @name bnclassify
-#' @importFrom stats predict as.formula complete.cases setNames logLik AIC BIC
+#' @importFrom stats predict as.formula complete.cases setNames logLik AIC BIC nobs
 #' @importFrom graphics plot
 #' @importFrom utils combn 
 #' 
