@@ -1,10 +1,15 @@
-#' Memoise.
-#' @author Based on Hadley Wickham's memoise package. memoise function slightly
-#'   modified to avoid the use of digest; the rest functions copied as is from
-#'   memoise.
-#'   
-#'   Memoise assumes that argument to f is a character vector. 
-#'   @param f a function 
+#' Memoise a function.
+#' 
+#' Based on Hadley Wickham's memoise package. Assumes that argument to f is a
+#' character vector.
+#' 
+#' This function is a slightly modified version of
+#' \code{\link[memoise]{memoise}} to avoid the use of digest. The rest functions
+#' copied as is from memoise.
+#' 
+#' @keywords internal
+#' @author Hadley Wickham, Bojan Mihaljevic
+#' @param f a function
 memoise_char <- memoize <- function(f) {
   cache <- new_cache()
   memo_f <- function(x) {
@@ -21,11 +26,13 @@ memoise_char <- memoize <- function(f) {
   attr(memo_f, "memoised") <- TRUE
   return(memo_f)
 }
-
 call_memoised_char <- function(x, cache) {
   do.call(cache, list(x = x))
 }
-
+#' Forget a memoized function. 
+#' 
+#' @keywords internal
+#' @author Hadley Wickham
 forget <- function(f) {
   if (!is.function(f)) return(FALSE)
   
@@ -37,11 +44,17 @@ forget <- function(f) {
   
   TRUE
 }
-
+#' Is it memoized?
+#' 
+#' @keywords internal
+#' @author Hadley Wickham
 is.memoised <- is.memoized <- function(f) {
   identical(attr(f, "memoised"), TRUE)
 }
-
+#' Make a new cache.
+#' 
+#' @keywords internal
+#' @author Hadley Wickham
 new_cache <- function() {
   
   cache <- NULL
