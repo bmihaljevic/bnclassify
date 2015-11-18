@@ -2,7 +2,7 @@
 % Please edit documentation in R/learn-params.R
 \name{lpawnb}
 \alias{lpawnb}
-\title{AWNB weights.}
+\title{Learn AWNB parameters.}
 \usage{
 lpawnb(x, dataset, smooth, trees, bootstrap_size)
 }

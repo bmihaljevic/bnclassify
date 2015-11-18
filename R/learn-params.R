@@ -57,7 +57,7 @@ lp_implement <- function(x, dataset, smooth, awnb_trees = NULL,
   }
   bn
 }
-#' AWNB weights. 
+#' Learn AWNB parameters. 
 #' 
 #' Deprecated. Use \code{lp} instead.
 #' 
