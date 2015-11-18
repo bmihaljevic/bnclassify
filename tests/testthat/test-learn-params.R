@@ -70,13 +70,25 @@ test_that("awnb Incomplete data" , {
 
 test_that('bnc function nominal', {
   a <- bnc('nb', 'class', car, smooth = 1)
-  b <- lp(nb('class', car), car, smooth = 1)
+  b <- lp(nb('class', car), car, smooth = 1, awnb_trees = NULL, 
+          awnb_bootstrap = NULL, manb_prior = NULL)
   expect_identical(a, b)
 })
 
 test_that('bnc with args', {
   a <- bnc('tan_cl', 'class', car, smooth = 1, dag_args = list(root = 'safety'))
-  b <- lp(tan_cl('class', car, root = 'safety'), car, smooth = 1)
+  b <- lp(tan_cl('class', car, root = 'safety'), car, smooth = 1, 
+          awnb_trees = NULL, awnb_bootstrap = NULL, manb_prior = NULL)
+  expect_identical(a, b)
+})
+
+test_that('bnc with args and awnb', {
+  set.seed(0)
+  a <- bnc('tan_cl', 'class', car, smooth = 1, dag_args = list(root = 'safety'),
+           awnb_trees = 10)
+  set.seed(0)
+  b <- lp(tan_cl('class', car, root = 'safety'), car, smooth = 1, 
+          awnb_trees = 10, awnb_bootstrap = NULL, manb_prior = NULL)
   expect_identical(a, b)
 })
 

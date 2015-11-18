@@ -2,13 +2,13 @@
 % Please edit documentation in R/learn-params.R
 \name{lpawnb}
 \alias{lpawnb}
-\title{AWNB weights.}
+\title{Learn AWNB parameters.}
 \usage{
 lpawnb(x, dataset, smooth, trees, bootstrap_size)
 }
 \arguments{
-\item{x}{a \code{\link{bnc_dag_object}} object. The Bayesian network
-structure.}
+\item{x}{The \code{\link{bnc_dag}} object. The Bayesian network classifier
+  structure.}
 
 \item{dataset}{The data frame from which to learn the classifier.}
 

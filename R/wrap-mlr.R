@@ -1,19 +1,29 @@
-#' Bridge to \code{mlr}
+#' Convert to \code{mlr}.
 #' 
-#' Only \code{as_mlr} should be called by the user.
-#' 
-#' @name as_mlr
-#' 
+#' Convert a \code{\link{bnc_bn}} to a \code{\link[mlr]{Learner}}
+#' object. 
+#'   
 #' @inheritParams cv
-#' @param x A \code{\link{bnc_bn_object}} object.
+#' @param x A \code{\link{bnc_bn}} object.
 #' @param id A character.
-#' @param .learner,.task,.subset,.weights,.model,.newdata Internal.
-#' @param ... Internal.
 #' @export
-NULL
-
+#' @examples 
+#' data(car)
+#' nb <- bnc('nb', 'class', car, smooth = 1)
+#' nb_mlr <- as_mlr(nb, dag = FALSE, id = "ode_cl_aic") 
+#' nb_mlr
+as_mlr <- function(x, dag, id = "1") {
+  if (!requireNamespace("mlr", quietly = TRUE)) {
+    stop("Package mlr required for this functionality.")
+  }
+  check_bnc_bn(x)
+  args <- bnc_get_update_args(x, dag)
+  # Call make learner with the arguments
+  mlr::makeLearner("bnc", id = id, par.vals = list(args=args))
+}
+#' makeRLearner. Auxiliary mlr function. 
 #' @export
-#' @rdname as_mlr
+#' @keywords internal
 makeRLearner.bnc <- function() {
   if (!requireNamespace("mlr", quietly = TRUE)) {
     stop("Package mlr required for this functionality.")
@@ -27,19 +37,11 @@ makeRLearner.bnc <- function() {
     properties = retrieve_bnc_properties()
   )
 }
-#' @export
-#' @rdname as_mlr
-as_mlr <- function(x, dag, id = "1") {
-  if (!requireNamespace("mlr", quietly = TRUE)) {
-    stop("Package mlr required for this functionality.")
-  }
-  check_bnc_bn(x)
-  args <- bnc_get_update_args(x, dag)
-  # Call make learner with the arguments
-  mlr::makeLearner("bnc", id = id, par.vals = list(args=args))
-}
+#' trainLearner. Auxiliary mlr function. 
 #' @export 
-#' @rdname as_mlr
+#' @keywords internal
+#' @param .learner,.task,.subset,.weights Internal.
+#' @param ... Internal.
 trainLearner.bnc = function(.learner, .task, .subset, .weights, ...) {
   if (!requireNamespace("mlr", quietly = TRUE)) {
     stop("Package mlr required for this functionality.")
@@ -49,8 +51,11 @@ trainLearner.bnc = function(.learner, .task, .subset, .weights, ...) {
   dataset <- mlr::getTaskData(.task, .subset)
   bnc_update(args, dataset)
 }
+#' predictLearner. Auxiliary mlr function. 
 #' @export 
-#' @rdname as_mlr
+#' @keywords internal
+#' @param .learner,.model,.newdata Internal.
+#' @param ... Internal.
 predictLearner.bnc = function(.learner, .model, .newdata, ...) {
   if (!requireNamespace("mlr", quietly = TRUE)) {
     stop("Package mlr required for this functionality.")

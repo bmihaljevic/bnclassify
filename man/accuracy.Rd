@@ -2,16 +2,16 @@
 % Please edit documentation in R/basic-misc.R
 \name{accuracy}
 \alias{accuracy}
-\title{Computes the accuracy.}
+\title{Compute predictive accuracy.}
 \usage{
 accuracy(x, y)
 }
 \arguments{
-\item{x}{A vector.}
+\item{x}{A vector of predicted labels.}
 
-\item{y}{A vector.}
+\item{y}{A vector of true labels.}
 }
 \description{
-Computes the accuracy.
+Compute predictive accuracy.
 }
 

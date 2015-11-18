@@ -2,9 +2,10 @@
 % Please edit documentation in R/learn-params.R
 \name{bnc}
 \alias{bnc}
-\title{Learn a structure and parameters.}
+\title{Learn network structure and parameters.}
 \usage{
-bnc(dag_learner, class, dataset, smooth, dag_args = NULL)
+bnc(dag_learner, class, dataset, smooth, dag_args = NULL, awnb_trees = NULL,
+  awnb_bootstrap = NULL, manb_prior = NULL)
 }
 \arguments{
 \item{dag_learner}{A character. Name of the structure learning function.}
@@ -18,9 +19,25 @@ parameters.}
 parameter estimation. Nonnegative.}
 
 \item{dag_args}{A list. Optional additional arguments to \code{dag_learner}.}
+
+\item{awnb_trees}{An integer. The number (\eqn{M}) of bootstrap samples to
+generate.}
+
+\item{awnb_bootstrap}{A numeric. The size of the bootstrap subsample,
+relative to the size of \code{dataset} (given in [0,1]).}
+
+\item{manb_prior}{A numeric. The prior probability for an arc between the
+class and any feature.}
 }
 \description{
 A convenience function to learn the structure and parameters in a single
-call.
+call. Must provide the name of the structure learning algorithm function;
+see \code{\link{bnclassify}} for the list.
+}
+\examples{
+data(car)
+nb <- bnc('nb', 'class', car, smooth = 1)
+nb_manb <- bnc('nb', 'class', car, smooth = 1, manb_prior = 0.3)
+ode_cl_aic <- bnc('tan_cl', 'class', car, smooth = 1, dag_args = list(score = 'aic'))
 }
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/memoise.R
 \name{memoise_char}
 \alias{memoise_char}
-\title{Memoise.}
+\title{Memoise a function.}
 \usage{
 memoise_char(f)
 }
@@ -10,13 +10,16 @@ memoise_char(f)
 \item{f}{a function}
 }
 \description{
-Memoise.
+Based on Hadley Wickham's memoise package. Assumes that argument to f is a
+character vector.
+}
+\details{
+This function is a slightly modified version of
+\code{\link[memoise]{memoise}} to avoid the use of digest. The rest functions
+copied as is from memoise.
 }
 \author{
-Based on Hadley Wickham's memoise package. memoise function slightly
-  modified to avoid the use of digest; the rest functions copied as is from
-  memoise.
-
-  Memoise assumes that argument to f is a character vector.
+Hadley Wickham, Bojan Mihaljevic
 }
+\keyword{internal}
 

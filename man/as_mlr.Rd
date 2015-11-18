@@ -2,32 +2,26 @@
 % Please edit documentation in R/wrap-mlr.R
 \name{as_mlr}
 \alias{as_mlr}
-\alias{makeRLearner.bnc}
-\alias{predictLearner.bnc}
-\alias{trainLearner.bnc}
-\title{Bridge to \code{mlr}}
+\title{Convert to \code{mlr}.}
 \usage{
-makeRLearner.bnc()
-
 as_mlr(x, dag, id = "1")
-
-trainLearner.bnc(.learner, .task, .subset, .weights, ...)
-
-predictLearner.bnc(.learner, .model, .newdata, ...)
 }
 \arguments{
-\item{x}{A \code{\link{bnc_bn_object}} object.}
+\item{x}{A \code{\link{bnc_bn}} object.}
 
-\item{dag}{A logical. Whether to learn structure on each training set.
+\item{dag}{A logical. Whether to learn structure on each training subsample.
 Parameters are always learned.}
 
 \item{id}{A character.}
-
-\item{.learner,.task,.subset,.weights,.model,.newdata}{Internal.}
-
-\item{...}{Internal.}
 }
 \description{
-Only \code{as_mlr} should be called by the user.
+Convert a \code{\link{bnc_bn}} to a \code{\link[mlr]{Learner}}
+object.
+}
+\examples{
+data(car)
+nb <- bnc('nb', 'class', car, smooth = 1)
+nb_mlr <- as_mlr(nb, dag = FALSE, id = "ode_cl_aic")
+nb_mlr
 }
 

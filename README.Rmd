@@ -24,11 +24,11 @@ Implements algorithms for learning discrete Bayesian network classifiers from da
 
 # Example 
 
-Load a data set and learn a one-dependence estimator by maximizing the Bayesian information criterion (BIC) score.
+Load a data set and learn a one-dependence estimator by maximizing Akaike's information criterion (AIC) score.
 ```{r}
 library(bnclassify)
 data(car)
-tn <- tan_cl('class', car, score = 'bic')
+tn <- tan_cl('class', car, score = 'aic')
 tn
 plot(tn)
 ```

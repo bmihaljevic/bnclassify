@@ -23,18 +23,18 @@ check_bnc_bn <- function(x) {
 # Accessors 
 
 #' @export 
-#' @describeIn bnc_bn_object Returns the list of CPTs, in the same order as \code{\link{vars}}.
+#' @describeIn inspect_bnc_bn Returns the list of CPTs, in the same order as \code{\link{vars}}.
 params <- function(x) {
   stopifnot(inherits(x, "bnc_bn"))  
   x$.params
 }
 #' @export 
-#' @describeIn bnc_bn_object Returns the possible values of each variable, in the same order as \code{\link{vars}}.
+#' @describeIn inspect_bnc_bn Returns the possible values of each variable, in the same order as \code{\link{vars}}.
 values <- function(x) {
   cpt_vars_values(params(x))
 }
 #' @export 
-#' @describeIn bnc_bn_object Returns the possible values of the class variable.
+#' @describeIn inspect_bnc_bn Returns the possible values of the class variable.
 classes <- function(x) {
   values(x)[[class_var(x)]]
 }

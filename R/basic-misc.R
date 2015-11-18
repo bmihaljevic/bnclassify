@@ -44,10 +44,10 @@ fast_equal <- function(a, b) {
   #   stopifnot(length(b) == 1) No check for efficiency
   abs(a - b) < .Machine$double.eps ^ 0.5
 }
-#' Computes the accuracy. 
+#' Compute predictive accuracy. 
 #' 
-#' @param x A vector.
-#' @param y A vector.
+#' @param x A vector of predicted labels.
+#' @param y A vector of true labels.
 #' @export
 accuracy <- function(x, y) {
   stopifnot(length(x) == length(y))

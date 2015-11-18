@@ -69,7 +69,7 @@ data(Soybean)
 soy_complete <- na.omit(Soybean)
 dim(soy_complete)
 microbenchmark::microbenchmark( 
-  bsej = {set.seed(0); tan_hc('Class', soy_complete, k = 5, 
+  tan_hc = {set.seed(0); tan_hc('Class', soy_complete, k = 5, 
                                   epsilon = 0)}, 
   times = 1)
 ```
