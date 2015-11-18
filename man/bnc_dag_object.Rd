@@ -12,7 +12,7 @@
 \alias{is_semi_naive}
 \alias{narcs}
 \alias{vars}
-\title{A Bayesian network classifier structure.}
+\title{Inspect a Bayesian network classifier structure.}
 \usage{
 class_var(x)
 
@@ -38,7 +38,7 @@ is_ode(x)
 \item{x}{The \code{bnc_dag} object.}
 }
 \description{
-You can query this object using the following functions.
+Functions for inspecting a \code{bnc_dag} object.
 }
 \section{Functions}{
 \itemize{
@@ -62,4 +62,10 @@ You can query this object using the following functions.
 
 \item \code{is_ode}: Returns TRUE if \code{x} is a one-dependence estimator.
 }}
+\examples{
+data(car)
+nb <- bnc('nb', 'class', car, smooth = 1)
+narcs(nb)
+is_ode(nb)
+}
 

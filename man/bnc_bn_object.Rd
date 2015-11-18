@@ -22,6 +22,9 @@ values(x)
 
 classes(x)
 }
+\arguments{
+\item{x}{The \code{bnc_bn} object.}
+}
 \description{
 Functions for inspecting a \code{bnc_bn} object. In addition, you can query
 this object with the functions that can be applied to a \code{bnc_dag}. See

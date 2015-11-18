@@ -211,13 +211,18 @@ NULL
 #'   (ICML-2002)}, 91-98.
 NULL
 
-#' A Bayesian network classifier structure.
+#' Inspect a Bayesian network classifier structure.
 #' 
-#' You can query this object using the following functions.
+#' Functions for inspecting a \code{bnc_dag} object. 
 #' 
 #' @param x The \code{bnc_dag} object.
 #' 
 #' @name bnc_dag_object
+#' @examples 
+#' data(car)
+#' nb <- bnc('nb', 'class', car, smooth = 1)
+#' narcs(nb)
+#' is_ode(nb)
 NULL
 
 #' Inspect a Bayesian network classifier with structure and parameters.
@@ -226,7 +231,7 @@ NULL
 #' this object with the functions that can be applied to a \code{bnc_dag}. See
 #' \code{\link{bnc_dag_object}}.
 #' 
-#' @inheritParams nb
+#' @param x The \code{bnc_bn} object.
 #'   
 #' @name bnc_bn_object
 #' @examples  
