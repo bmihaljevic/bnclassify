@@ -3,7 +3,7 @@
 \name{learn_params}
 \alias{learn_params}
 \alias{lp}
-\title{Learn the parameters of a Bayesian network.}
+\title{Learn the parameters of a Bayesian network structure.}
 \usage{
 lp(x, dataset, smooth, awnb_trees = NULL, awnb_bootstrap = NULL,
   manb_prior = NULL)
@@ -12,7 +12,7 @@ lp(x, dataset, smooth, awnb_trees = NULL, awnb_bootstrap = NULL,
 \item{x}{a \code{\link{bnc_dag_object}} object. The Bayesian network
 structure.}
 
-\item{dataset}{The data frame from which to estimate network parameters.}
+\item{dataset}{The data frame from which to learn network parameters.}
 
 \item{smooth}{A numeric. The smoothing value (\eqn{\alpha}) for Bayesian
 parameter estimation. Nonnegative.}
@@ -26,43 +26,56 @@ relative to the size of \code{dataset} (given in [0,1]).}
 \item{manb_prior}{A numeric. The prior probability for an arc between the
 class and any feature.}
 }
+\value{
+A \code{\link{bnc_bn_object}}.
+}
 \description{
-Estimates parameters with maximum likelihood or Bayesian estimation.
-Optionally, updates these estimates according to the attribute weighted naive
-Bayes (AWNB) method or the model averaged naive Bayes (MANB) method.
+Learn parameters with maximum likelihood or Bayesian estimation, the
+attribute weighted naive Bayes (AWNB), or the model averaged naive Bayes
+(MANB) methods. Returns a \code{\link{bnc_bn_object}}.
 }
 \details{
-\code{lp} learns the parameters of each \eqn{P(X_i \mid \mathbf{Pa}(X_i) =
-j)}{P(X[i] | Pa(X[i]) = j)} as \deqn{\theta_{ijk} = \frac{N_{ijk} +
-\alpha}{N_{ \cdot j \cdot } + r_i \alpha},}{\theta[ijk] = (N[ijk] + \alpha) /
-(N[ . j . ] + r[i] \alpha),} where \eqn{N_{ijk}}{N[ijk]} is the number of
-instances in \code{dataset} in which \eqn{X_i = k}{X[i] = k} and
-\eqn{\mathbf{Pa}(X_i) = j}{Pa(X[i]) = j}, \eqn{N_{ \cdot j \cdot}}{N[ . j .
-]} the number of instances in which \eqn{\mathbf{Pa}(X_i) = j}{Pa(X[i]) = j},
-\eqn{r_i}{r[i]} is the cardinality of \eqn{X_i}{X[i]}, and all
+\code{lp} learns the parameters of each local distribution \eqn{\theta_{ijk}
+= P(X_i = k \mid \mathbf{Pa}(X_i) = j)}{\theta[ijk] = P(X[i] = k | Pa(X[i]) =
+j)} as \deqn{\theta_{ijk} = \frac{N_{ijk} + \alpha}{N_{ ij \cdot } + r_i
+\alpha},}{\theta[ijk] = (N[ijk] + \alpha) / (N[ ij . ] + r[i] \alpha),} where
+\eqn{N_{ijk}}{N[ijk]} is the number of instances in \code{dataset} in which
+\eqn{X_i = k}{X[i] = k} and \eqn{\mathbf{Pa}(X_i) = j}{Pa(X[i]) = j},
+\eqn{N_{ ij \cdot} = \sum_{k=1}^{r_i} N_{ijk}}{N[ ij . ] = \sum[k=1]^(r[i])
+N[ijk]}, \eqn{r_i}{r[i]} is the cardinality of \eqn{X_i}{X[i]}, and all
 hyperparameters of the Dirichlet prior equal to \eqn{\alpha}. \eqn{\alpha =
 0} corresponds to maximum likelihood estimation. Returns a uniform
-distribution when \eqn{N_{ \cdot j \cdot } + r_i \alpha = 0}{N[ . j . ] +
-r[i] \alpha = 0}. With partially observed data, the above amounts to
+distribution when \eqn{N_{ i j \cdot } + r_i \alpha = 0}{N[ ij . ] + r[i]
+\alpha = 0}. With partially observed data, the above amounts to
 \emph{available case analysis}.
 
-Providing \code{awnb_bootstrap} and/or \code{awnb_trees} argument updated the
-Bayesian/maximum likelihood parameters according according to the AWNB
-method, as follows, \deqn{\theta_{ijk}^{AWNB} =
-\frac{(\theta_{ijk})^{w_i}}{\sum_{k=1}^{r_i}
-(\theta_{ijk})^{w_i}},}{\theta[ijk]^(AWNB) = ((\theta[ijk])^w[i]) /
-(\sum[k=1]^(r[i]) (\theta[ijk])^(w[i])),} computing the weights
-\eqn{\mathbf{w}}{w} as \deqn{w_i = \frac{1}{M}\sum_{t=1}^M
-\sqrt{d_{ti}},}{w_i = (1 / M)\sum_[t=1]^M \sqrt{d[ti]},} where \eqn{M} is the
-number of bootstrap samples from \code{dataset} and \eqn{d_{ti}}{d[ti]} the
-minimum testing depth of \eqn{X_i}{X[i]} in an unpruned classification tree
-learned from the \eqn{t}-th subsample (\eqn{d_{ti} = 0}{d[ti] = 0} if
-\eqn{X_i}{X_i} is omitted from \eqn{t}-th tree).
+In order to get the AWNB parameter estimate, provide either the
+\code{awnb_bootstrap} and/or the \code{awnb_trees} argument. The estimate is:
+\deqn{\theta_{ijk}^{AWNB} = \frac{\theta_{ijk}^{w_i}}{\sum_{k=1}^{r_i}
+\theta_{ijk}^{w_i}},}{\theta[ijk]^(AWNB) = (\theta[ijk])^w[i] /
+\sum[k=1]^(r[i]) (\theta[ijk])^(w[i]),} while the weights \eqn{w_i}{w[i]} are
+computed as \deqn{w_i = \frac{1}{M}\sum_{t=1}^M \sqrt{\frac{1}{d_{ti}}},}{w_i
+= (1 / M)\sum_[t=1]^M \sqrt{1 / d[ti]},} where \eqn{M} is the number of
+bootstrap samples from \code{dataset} and \eqn{d_{ti}}{d[ti]} the minimum
+testing depth of \eqn{X_i}{X[i]} in an unpruned classification tree learned
+from the \eqn{t}-th subsample (\eqn{d_{ti} = 0}{d[ti] = 0} if \eqn{X_i}{X_i}
+is omitted from \eqn{t}-th tree).
 
-The MANB methods corresponds to Bayesian model averaging over the naive Bayes
-models obtained from all $2^n$ subsets of the $n$ features. To use this
-method, specify a prior probability for an arc between the class and any
-feature via the argument \code{manb_prior}.
+The MANB parameters correspond to Bayesian model averaging over the naive
+Bayes models obtained from all \eqn{2^n}{2^n} subsets over the \eqn{n}
+features. To get MANB parameters, provide the \code{manb_prior} argument.
+}
+\examples{
+data(car)
+nb <- nb('class', car)
+# Maximum likelihood estimation
+mle <- lp(nb, car, smooth = 0)
+# Bayesian estimaion
+bayes <- lp(nb, car, smooth = 0.5)
+# MANB
+manb <- lp(nb, car, smooth = 0.5, manb_prior = 0.5)
+# AWNB
+awnb <- lp(nb, car, smooth = 0.5, awnb_trees = 10)
 }
 \references{
 Hall M (2004). A decision tree-based attribute weighting filter
@@ -71,5 +84,8 @@ Hall M (2004). A decision tree-based attribute weighting filter
   Dash D and Cooper GF (2002). Exact model averaging with naive Bayesian
   classifiers. \emph{19th International Conference on Machine Learning
   (ICML-2002)}, 91-98.
+
+  Pigott T D (2001) A review of methods for missing data. \emph{Educational
+  research and evaluation}, \bold{7}(4), 353-383.
 }
 

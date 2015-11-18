@@ -6,7 +6,7 @@
 \alias{greedy_wrapper}
 \alias{tan_hc}
 \alias{tan_hcsp}
-\title{Learns Bayesian network classifiers in a a greedy wrapper fashion.}
+\title{Learn Bayesian network classifiers in a a greedy wrapper fashion.}
 \usage{
 fssj(class, dataset, k, epsilon = 0.01, smooth = 0.01)
 
@@ -23,15 +23,16 @@ tan_hcsp(class, dataset, k, epsilon = 0.01, smooth = 0.01)
 
 \item{k}{An integer. The number of folds.}
 
-\item{epsilon}{A numeric. Minimum absolute improvement required to keep
-  searching.}
+\item{epsilon}{A numeric. Minimum absolute improvement in accuracy required
+  to keep searching.}
 
 \item{smooth}{A numeric. The smoothing value (\eqn{\alpha}) for Bayesian
 parameter estimation. Nonnegative.}
 }
 \description{
-Each candidate structure is evaluated according to the cross-validated
-estimate of predictive accuracy.
+Greedy wrapper algorithms for learning Bayesian network classifiers. Uses
+cross-validated estimate of predictive accuracy to evaluate candidate
+structures.
 }
 \references{
 Pazzani M (1996). Constructive induction of Cartesian product
