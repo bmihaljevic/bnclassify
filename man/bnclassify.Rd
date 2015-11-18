@@ -4,26 +4,26 @@
 \name{bnclassify}
 \alias{bnclassify}
 \alias{bnclassify-package}
-\title{Algorithms for learning Bayesian network classifiers from data.}
+\title{Learn discrete Bayesian network classifiers from data.}
 \description{
-Implements state-of-the-art algorithms for
-learning discrete Bayesian network classifiers from data, as well
-as functions for using these classifiers for prediction, assessing
-their predictive performance, and inspecting and analyzing their
+Implements state-of-the-art algorithms for learning discrete Bayesian network
+classifiers from data, as well as functions for using these classifiers for
+prediction, assessing their predictive performance, and inspecting their
 properties.
 }
 \details{
 The learn more about the package, start with the vignettes:
- \code{browseVignettes(package = "bnclassify")}.
+ \code{browseVignettes(package = "bnclassify")}. The following is a list of available
+  functionalities:
 
 Structure learning algorithms:
   \itemize{
-    \item \code{\link{nb}} Naive Bayes (Minsky, 1961)
-    \item \code{\link{tan_cl}} Chow-Liu's algorithm for one-dependence estimators (CL-ODE)  (Friedman et al., 1997)
-\item \code{\link{fssj}} Forward sequential selection and joining (FSSJ) (Pazzani, 1996)
-\item \code{\link{bsej}} Backward sequential elimination and joining (BSEJ)  (Pazzani, 1996)
-\item \code{\link{tan_hc}} Hill-climbing tree augmented naive Bayes (TAN-HC)  (Keogh and Pazzani, 2002)
-\item \code{\link{tan_hcsp}} Hill-climbing super-parent tree augmented naive Bayes (TAN-HCSP) (Keogh and Pazzani, 2002)
+    \item \code{\link{nb}}: Naive Bayes (Minsky, 1961)
+    \item \code{\link{tan_cl}}: Chow-Liu's algorithm for one-dependence estimators (CL-ODE)  (Friedman et al., 1997)
+\item \code{\link{fssj}}: Forward sequential selection and joining (FSSJ) (Pazzani, 1996)
+\item \code{\link{bsej}}: Backward sequential elimination and joining (BSEJ)  (Pazzani, 1996)
+\item \code{\link{tan_hc}}: Hill-climbing tree augmented naive Bayes (TAN-HC)  (Keogh and Pazzani, 2002)
+\item \code{\link{tan_hcsp}}: Hill-climbing super-parent tree augmented naive Bayes (TAN-HCSP) (Keogh and Pazzani, 2002)
 }
 
 Parameter learning methods (\code{\link{lp}}):
@@ -37,23 +37,23 @@ Parameter learning methods (\code{\link{lp}}):
 Model evaluating:
 
 \itemize{
- \item \code{\link{cv}} Cross-validated estimate of accuracy
- \item \code{\link{logLik}} Log likelihood
- \item \code{\link{AIC}} Akaike information criterion (AIC)
- \item \code{\link{BIC}} Bayesian information criterion (BIC)
+ \item \code{\link{cv}}: Cross-validated estimate of accuracy
+ \item \code{\link[=logLik.bnc_bn]{logLik}}: Log-likelihood
+ \item \code{\link[=AIC.bnc_bn]{AIC}}: Akaike's information criterion (AIC)
+ \item \code{\link[=BIC.bnc_bn]{BIC}}: Bayesian information criterion (BIC)
 }
 
 Predicting:
 \itemize{
-\item \code{\link{predict}} Inference for complete and/or incomplete data (the latter through \code{gRain})}
+\item \code{\link[=predict.bnc_bn]{predict}}: Inference for complete and/or incomplete data (the latter through \code{gRain})}
 
 Inspecting models:
  \itemize{
- \item \code{\link{plot}} Structure plotting (through \code{Rgraphviz})
- \item \code{\link{print}} Summary
- \item \code{\link{params}} Access conditional probability tables
- \item \code{\link{nparams}} Number of free parameters
- \item ...
+ \item \code{\link[=plot.bnc_dag]{plot}}: Structure plotting (through \code{Rgraphviz})
+ \item \code{\link[=print.bnc_dag]{print}}: Summary
+ \item \code{\link{params}}: Access conditional probability tables
+ \item \code{\link{nparams}}: Number of free parameters
+ \item and more. See \code{\link{bnc_dag_object}} and \code{\link{bnc_bn_object}}.
  }
 }
 \references{

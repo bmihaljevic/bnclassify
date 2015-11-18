@@ -1,15 +1,21 @@
-#' Learn a structure and parameters.
+#' Learn network structure and parameters.
 #' 
-#' A convenience function to learn the structure and parameters in a single
-#' call.
+#' A convenience function to learn the structure and parameters in a single 
+#' call. Must provide the name of the structure learning algorithm functions;
+#' see \code{\link{bnclassify}} for the list.
 #' 
 #' @inheritParams nb
 #' @inheritParams learn_params
 #' @param dag_learner A character. Name of the structure learning function.
 #' @param dag_args A list. Optional additional arguments to \code{dag_learner}.
-#' @param dataset The data frame from which to learn network structure and
+#' @param dataset The data frame from which to learn network structure and 
 #'   parameters.
 #' @export
+#' @examples 
+#' data(car)
+#' nb <- bnc('nb', 'class', car, smooth = 1)
+#' nb_manb <- bnc('nb', 'class', car, smooth = 1, manb_prior = 0.3)
+#' ode_cl_aic <- bnc('tan_cl', 'class', car, smooth = 1, dag_args = list(score = 'aic'))
 bnc <- function(dag_learner, class, dataset, smooth, dag_args = NULL, 
                 awnb_trees = NULL, awnb_bootstrap = NULL,
                 manb_prior = NULL) {
