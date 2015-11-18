@@ -228,3 +228,32 @@ NULL
 #' 
 #' @name bnc_bn_object
 NULL
+
+#' Compute (penalized) log-likelihood.
+#' 
+#' Compute (penalized) log-likelihood score of a \code{bnc_bn} object on a data 
+#' set. Requires a data frame argument in addition to \code{object}.
+#' 
+#' log-likelihood =  \eqn{log P(\mathcal{D} \mid \theta)}{log P(D | \theta)},
+#' 
+#' Akaike's information criterion (AIC) = \eqn{log P(\mathcal{D} \mid \theta) - 
+#' \frac{1}{2} |\theta|}{log P(D | \theta) - |\theta| / 2},
+#' 
+#' The Bayesian information criterion (BIC) score: = \eqn{log P(\mathcal{D} \mid
+#' \theta) - \frac{\log N}{2} |\theta|}{log P(D | \theta) - N |\theta| / 2},
+#' 
+#' where \eqn{|\theta|} is the number of free parameters in \code{object},
+#' \eqn{\mathcal{D}}{D} is the data set and N is the number of instances in
+#' \eqn{\mathcal{D}}{D}.
+#' 
+#' @name loglik
+#'   
+#' @param object A \code{bnc_bn} object.
+#' @param ... A data frame (\eqn{\mathcal{D}}{D}).
+#' @examples 
+#' data(car)
+#' nb <- bnc('nb', 'class', car, smooth = 1)
+#' logLik(nb.car, car)   
+#' AIC(nb, car)
+#' BIC(nb, car)
+NULL
