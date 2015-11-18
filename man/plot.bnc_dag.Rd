@@ -7,11 +7,12 @@
 \method{plot}{bnc_dag}(x, y, layoutType = "dot", fontsize = NULL, ...)
 }
 \arguments{
-\item{x}{The \code{bnc_dag}}
+\item{x}{The \code{\link{bnc_dag}} object. The Bayesian network classifier
+  structure.}
 
 \item{y}{Not used}
 
-\item{layoutType}{Layout type. Optional.}
+\item{layoutType}{a character. Optional.}
 
 \item{fontsize}{integer Font size for node labels. Optional.}
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/data-statistics.R
 \name{cmi}
 \alias{cmi}
-\title{Returns the (conditional) mutual information among two variables.}
+\title{Compute the (conditional) mutual information between two variables.}
 \usage{
 cmi(x, y, dataset, z = NULL, unit = "log")
 }
@@ -18,11 +18,16 @@ cmi(x, y, dataset, z = NULL, unit = "log")
 \item{unit}{A character. Logarithm base. See \code{entropy} package.}
 }
 \description{
-If \code{z} is not \code{NULL} then returns \eqn{I(X;Y|Z)}. Otherwise
-\eqn{I(X;Y)}.
+Computes the (conditional) mutual information between two variables. If
+\code{z} is not \code{NULL} then returns the conditional mutual information,
+\eqn{I(X;Y|Z)}. Otherwise, returns mutual information, \eqn{I(X;Y)}.
 }
 \details{
 \eqn{I(X;Y|Z) = H(X|Z) + H(Y|Z) - H(X,Y,Z) - H(Z)}, where \eqn{H()} is
 Shannon's entropy.
+}
+\examples{
+data(car)
+cmi('maint', 'class', car)
 }
 

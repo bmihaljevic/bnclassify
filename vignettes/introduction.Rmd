@@ -141,7 +141,7 @@ is_ode(ode_cl_aic)
 is_semi_naive(ode_cl_aic)
 ```
 
-For more functions to query a network structure, see `?bnc_dag_object`.
+For more functions to query a network structure, see `?inspect_bnc_dag`.
 
 # Network parameters
 
@@ -202,7 +202,7 @@ params(manb)$buying
 nparams(nb)
 ```
 
-For more functions for querying a `bnc_bn` object, see `?bnc_bn_object`
+For more functions for querying a `bnc_bn` object, see `?inspect_bnc_bn`
 
 ## Interface to `bnlearn`, `gRain`, and `graph`
 You can convert a `bnc_bn` object to `bnlearn` [@scutari2009learning], `gRain` [@Hojsgaard2012] and `graph` [@Gentleman2015] objects to leverage functionalities from those packages, such as Bayesian network querying or inference.  
@@ -390,7 +390,7 @@ t <- makeClassifTask(id = "car", data = car,
 ```
 
 Select features:
-```{r wrapper_fss}
+```{r wrapper_fss, eval = FALSE}
 set.seed(0)
 # Select features
 mod <- train(ode_cl_aic_mlr_fs, task = t) 

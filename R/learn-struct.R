@@ -1,9 +1,18 @@
-#' Returns a naive Bayes network structure.
+#' Learn a naive Bayes network structure.
+#' 
+#' Learn a naive Bayes network structure.
 #' 
 #' @export
 #' @param class A character. Name of the class variable.
 #' @param dataset The data frame from which to learn the classifier.
-#' @param features  A character vector. The names of the features. This argument is ignored if \code{dataset} is provided. 
+#' @param features  A character vector. The names of the features. This argument
+#'   is ignored if \code{dataset} is provided.
+#' @return A \code{\link{bnc_dag}} object.
+#' @examples  
+#' data(car)
+#' nb <- nb('class', car)   
+#' nb2 <- nb('class', features = letters[1:10])
+#' plot(nb2)
 nb <- function(class, dataset = NULL, features = NULL) {
   #   # if dataset is provided features is ignored
   if (!is.null(dataset)) {
@@ -59,9 +68,8 @@ tan_hcsp <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {
 }
 #' @export
 #' @rdname tan_chowliu
-tan_cl <- function(class, dataset, score='loglik', blacklist = NULL, 
-                    root = NULL) {
-  x <- chowliu(class, dataset, score = score, blacklist = blacklist, 
+tan_cl <- function(class, dataset, score='loglik', root = NULL) {
+  x <- chowliu(class, dataset, score = score, blacklist = NULL, 
           root = root)
   add_dag_call_arg(x, fun_name = 'tan_cl', call = match.call(), 
                    env = parent.frame(), force = TRUE)

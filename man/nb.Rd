@@ -2,7 +2,7 @@
 % Please edit documentation in R/learn-struct.R
 \name{nb}
 \alias{nb}
-\title{Returns a naive Bayes network structure.}
+\title{Learn a naive Bayes network structure.}
 \usage{
 nb(class, dataset = NULL, features = NULL)
 }
@@ -11,9 +11,19 @@ nb(class, dataset = NULL, features = NULL)
 
 \item{dataset}{The data frame from which to learn the classifier.}
 
-\item{features}{A character vector. The names of the features. This argument is ignored if \code{dataset} is provided.}
+\item{features}{A character vector. The names of the features. This argument
+is ignored if \code{dataset} is provided.}
+}
+\value{
+A \code{\link{bnc_dag}} object.
 }
 \description{
-Returns a naive Bayes network structure.
+Learn a naive Bayes network structure.
+}
+\examples{
+data(car)
+nb <- nb('class', car)
+nb2 <- nb('class', features = letters[1:10])
+plot(nb2)
 }
 

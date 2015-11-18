@@ -7,11 +7,12 @@
 compute_ll(x, dataset)
 }
 \arguments{
-\item{x}{A \code{\link{bnc_bn_object}} object.}
+\item{x}{A \code{\link{bnc_bn}} object.}
 
 \item{dataset}{A data frame.}
 }
 \description{
 Computes log-likelihood of the model on the provided data.
 }
+\keyword{internal}
 

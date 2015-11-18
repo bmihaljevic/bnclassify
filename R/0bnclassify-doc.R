@@ -1,22 +1,22 @@
-#' Algorithms for learning Bayesian network classifiers from data.
+#' Learn discrete Bayesian network classifiers from data.
 #' 
-#' Implements state-of-the-art algorithms for
-#' learning discrete Bayesian network classifiers from data, as well
-#' as functions for using these classifiers for prediction, assessing
-#' their predictive performance, and inspecting and analyzing their
+#' Implements state-of-the-art algorithms for learning discrete Bayesian network 
+#' classifiers from data, as well as functions for using these classifiers for
+#' prediction, assessing their predictive performance, and inspecting their
 #' properties.
 #' 
 #' The learn more about the package, start with the vignettes:
-#'  \code{browseVignettes(package = "bnclassify")}.
+#'  \code{browseVignettes(package = "bnclassify")}. The following is a list of available
+#'   functionalities: 
 #' 
 #' Structure learning algorithms:
 #'   \itemize{
-#'     \item \code{\link{nb}} Naive Bayes (Minsky, 1961)
-#'     \item \code{\link{tan_cl}} Chow-Liu's algorithm for one-dependence estimators (CL-ODE)  (Friedman et al., 1997)
-#' \item \code{\link{fssj}} Forward sequential selection and joining (FSSJ) (Pazzani, 1996)
-#' \item \code{\link{bsej}} Backward sequential elimination and joining (BSEJ)  (Pazzani, 1996)
-#' \item \code{\link{tan_hc}} Hill-climbing tree augmented naive Bayes (TAN-HC)  (Keogh and Pazzani, 2002)
-#' \item \code{\link{tan_hcsp}} Hill-climbing super-parent tree augmented naive Bayes (TAN-HCSP) (Keogh and Pazzani, 2002)
+#'     \item \code{\link{nb}}: Naive Bayes (Minsky, 1961)
+#'     \item \code{\link{tan_cl}}: Chow-Liu's algorithm for one-dependence estimators (CL-ODE)  (Friedman et al., 1997)
+#' \item \code{\link{fssj}}: Forward sequential selection and joining (FSSJ) (Pazzani, 1996)
+#' \item \code{\link{bsej}}: Backward sequential elimination and joining (BSEJ)  (Pazzani, 1996)
+#' \item \code{\link{tan_hc}}: Hill-climbing tree augmented naive Bayes (TAN-HC)  (Keogh and Pazzani, 2002)
+#' \item \code{\link{tan_hcsp}}: Hill-climbing super-parent tree augmented naive Bayes (TAN-HCSP) (Keogh and Pazzani, 2002)
 #' }
 #' 
 #' Parameter learning methods (\code{\link{lp}}):
@@ -30,23 +30,23 @@
 #' Model evaluating:
 #' 
 #' \itemize{
-#'  \item \code{\link{cv}} Cross-validated estimate of accuracy 
-#'  \item \code{\link{logLik}} Log likelihood
-#'  \item \code{\link{AIC}} Akaike information criterion (AIC) 
-#'  \item \code{\link{BIC}} Bayesian information criterion (BIC) 
+#'  \item \code{\link{cv}}: Cross-validated estimate of accuracy 
+#'  \item \code{\link[=logLik.bnc_bn]{logLik}}: Log-likelihood
+#'  \item \code{\link[=AIC.bnc_bn]{AIC}}: Akaike's information criterion (AIC) 
+#'  \item \code{\link[=BIC.bnc_bn]{BIC}}: Bayesian information criterion (BIC) 
 #' }
 #' 
 #' Predicting: 
 #' \itemize{
-#' \item \code{\link{predict}} Inference for complete and/or incomplete data (the latter through \code{gRain})}
+#' \item \code{\link[=predict.bnc_bn]{predict}}: Inference for complete and/or incomplete data (the latter through \code{gRain})}
 #' 
 #' Inspecting models:
 #'  \itemize{ 
-#'  \item \code{\link{plot}} Structure plotting (through \code{Rgraphviz})
-#'  \item \code{\link{print}} Summary 
-#'  \item \code{\link{params}} Access conditional probability tables 
-#'  \item \code{\link{nparams}} Number of free parameters 
-#'  \item ...
+#'  \item \code{\link[=plot.bnc_dag]{plot}}: Structure plotting (through \code{Rgraphviz})
+#'  \item \code{\link[=print.bnc_dag]{print}}: Summary 
+#'  \item \code{\link{params}}: Access conditional probability tables 
+#'  \item \code{\link{nparams}}: Number of free parameters 
+#'  \item and more. See \code{\link{inspect_bnc_dag}} and \code{\link{inspect_bnc_bn}}.
 #'  } 
 #' 
 #' @docType package
@@ -81,6 +81,34 @@
 #'   Science Conference (ISIS-1996)}, pp. 66-77
 NULL
 
+
+#' Bayesian network classifier with structure and parameters.
+#' 
+#' A Bayesian network classifier with structure and parameters. Returned by 
+#' \code{\link{lp}} and \code{\link{bnc}} functions. You can use it to classify
+#' data (with \code{\link[=predict.bnc_bn]{predict}}). Can estimate its
+#' predictive accuracy with \code{\link{cv}}, plot its structure (with 
+#' \code{\link[=plot.bnc_dag]{plot}}), print a summary to console 
+#' (\code{\link[=print.bnc_dag]{print}}), inspect it with functions documented 
+#' in \code{\link{inspect_bnc_bn}} and \code{\link{inspect_bnc_dag}}, and
+#' convert it to mlr, grain, and graph objects --see \code{\link{as_mlr}} and 
+#' \code{\link{grain_and_graph}}.
+#' 
+#' @name bnc_bn
+NULL
+
+#' Bayesian network classifier structure.
+#' 
+#' A Bayesian network classifier structure, returned by functions such as 
+#' \code{\link{nb}} and \code{\link{tan_cl}}. You can plot its structure (with 
+#' \code{\link[=plot.bnc_dag]{plot}}), print a summary to console 
+#' (\code{\link[=print.bnc_dag]{print}}), inspect it with functions documented
+#' in \code{\link{inspect_bnc_dag}}, and convert it to a graph object; see
+#' \code{\link{grain_and_graph}}.
+#' 
+#' @name bnc_dag
+NULL
+
 #' Congress Voting Data Set.
 #' 
 #' Data set from the UCI repository
@@ -103,18 +131,20 @@ NULL
 #' @name car
 NULL
 
-#' Learns Bayesian network classifiers in a a greedy wrapper fashion.
+#' Learn Bayesian network classifiers in a a greedy wrapper fashion.
 #' 
-#' Each candidate structure is evaluated according to the cross-validated
-#' estimate of predictive accuracy.
+#' Greedy wrapper algorithms for learning Bayesian network classifiers. All
+#' algorithms use cross-validated estimate of predictive accuracy to evaluate
+#' candidate structures.
 #' 
 #' @name greedy_wrapper
 #'   
 #' @inheritParams nb
 #' @inheritParams cv
 #' @inheritParams learn_params
-#' @param epsilon A numeric. Minimum absolute improvement required to keep 
-#'   searching.
+#' @param epsilon A numeric. Minimum absolute improvement in accuracy required 
+#'   to keep searching.
+#' @return A \code{\link{bnc_dag}} object.
 #'   
 #' @references Pazzani M (1996). Constructive induction of Cartesian product 
 #'   attributes. In \emph{Proceedings of the Information, Statistics and 
@@ -125,106 +155,182 @@ NULL
 #'   Tools}, \bold{11}(4), pp. 587-601.
 NULL
 
-#' Learns a tree augmented naive Bayes classifier (TAN).
+#' Learns a one-dependence estimator using Chow-Liu's algorithm.
 #' 
-#' Learns a one-dependence Bayesian classifier using Chow-Liu's algorithm. The 
-#' structure is learned so that either likelihood, the BIC or AIC scores are 
-#' maximized; the first option corresponds to the well-known tree augmented 
-#' naive Bayes (Friedman et al., 1997).
-#' 
-#' Edges with negative BIC or AIC weights are blacklisted from the final 
-#' structure. The structure thus might be a forest rather than a tree.
+#' Learns a one-dependence Bayesian classifier using Chow-Liu's algorithm, by 
+#' maximizing either log-likelihood, the AIC or BIC scores; maximizing 
+#' log-likelihood corresponds to the well-known tree augmented naive Bayes 
+#' (Friedman et al., 1997). When maximizing AIC or BIC the output might be a
+#' forest-augmented rather than a tree-augmented naive Bayes.
 #' 
 #' @name tan_chowliu
 #'   
-#' @inheritParams nb 
-#' @param blacklist A character matrix. Edges that may be blacklisted from the
-#'   resulting structure. Note: currently ignored.
+#' @inheritParams nb
 #' @param root A character. The feature to be used as root of the augmenting 
 #'   tree. Only one feature can be supplied, even in case of an augmenting 
 #'   forest. This argument is optional.
-#' @param score A character. The score to be maximized. \code{'loglik'},
-#'   \code{'bic'}, and \code{'aic'} return the maximum likelihood, maximum BIC
+#' @param score A character. The score to be maximized. \code{'loglik'}, 
+#'   \code{'bic'}, and \code{'aic'} return the maximum likelihood, maximum BIC 
 #'   and maximum AIC tree/forest, respectively.
+#' @return A \code{\link{bnc_dag}} object.
 #'   
 #' @references Friedman N, Geiger D and Goldszmidt M (1997). Bayesian network 
 #'   classifiers. \emph{Machine Learning}, \bold{29}, pp. 131--163.
+#' @examples 
+#' data(car)
+#' ll <- tan_cl('class', car, score = 'loglik')   
+#' plot(ll)
+#' ll <- tan_cl('class', car, score = 'loglik', root = 'maint')   
+#' plot(ll)
+#' aic <- tan_cl('class', car, score = 'aic')   
+#' bic <- tan_cl('class', car, score = 'bic')   
 NULL
 
-#' Learn the parameters of a Bayesian network.
+#' Learn the parameters of a Bayesian network structure.
 #' 
-#' Estimates parameters with maximum likelihood or Bayesian estimation. 
-#' Optionally, updates these estimates according to the attribute weighted naive
-#' Bayes (AWNB) method or the model averaged naive Bayes (MANB) method.
+#' Learn parameters with maximum likelihood or Bayesian estimation, the 
+#' attribute weighted naive Bayes (AWNB), or the model averaged naive Bayes 
+#' (MANB) methods. Returns a \code{\link{bnc_bn}}.
 #' 
-#' \code{lp} learns the parameters of each \eqn{P(X_i \mid \mathbf{Pa}(X_i) = 
-#' j)}{P(X[i] | Pa(X[i]) = j)} as \deqn{\theta_{ijk} = \frac{N_{ijk} + 
-#' \alpha}{N_{ \cdot j \cdot } + r_i \alpha},}{\theta[ijk] = (N[ijk] + \alpha) /
-#' (N[ . j . ] + r[i] \alpha),} where \eqn{N_{ijk}}{N[ijk]} is the number of 
-#' instances in \code{dataset} in which \eqn{X_i = k}{X[i] = k} and 
-#' \eqn{\mathbf{Pa}(X_i) = j}{Pa(X[i]) = j}, \eqn{N_{ \cdot j \cdot}}{N[ . j . 
-#' ]} the number of instances in which \eqn{\mathbf{Pa}(X_i) = j}{Pa(X[i]) = j},
-#' \eqn{r_i}{r[i]} is the cardinality of \eqn{X_i}{X[i]}, and all 
+#' \code{lp} learns the parameters of each local distribution \eqn{\theta_{ijk} 
+#' = P(X_i = k \mid \mathbf{Pa}(X_i) = j)}{\theta[ijk] = P(X[i] = k | Pa(X[i]) =
+#' j)} as \deqn{\theta_{ijk} = \frac{N_{ijk} + \alpha}{N_{ ij \cdot } + r_i 
+#' \alpha},}{\theta[ijk] = (N[ijk] + \alpha) / (N[ ij . ] + r[i] \alpha),} where
+#' \eqn{N_{ijk}}{N[ijk]} is the number of instances in \code{dataset} in which 
+#' \eqn{X_i = k}{X[i] = k} and \eqn{\mathbf{Pa}(X_i) = j}{Pa(X[i]) = j}, 
+#' \eqn{N_{ ij \cdot} = \sum_{k=1}^{r_i} N_{ijk}}{N[ ij . ] = \sum[k=1]^(r[i])
+#' N[ijk]}, \eqn{r_i}{r[i]} is the cardinality of \eqn{X_i}{X[i]}, and all 
 #' hyperparameters of the Dirichlet prior equal to \eqn{\alpha}. \eqn{\alpha = 
 #' 0} corresponds to maximum likelihood estimation. Returns a uniform 
-#' distribution when \eqn{N_{ \cdot j \cdot } + r_i \alpha = 0}{N[ . j . ] + 
-#' r[i] \alpha = 0}. With partially observed data, the above amounts to 
+#' distribution when \eqn{N_{ i j \cdot } + r_i \alpha = 0}{N[ ij . ] + r[i] 
+#' \alpha = 0}. With partially observed data, the above amounts to 
 #' \emph{available case analysis}.
 #' 
-#' Providing \code{awnb_bootstrap} and/or \code{awnb_trees} argument updated the
-#' Bayesian/maximum likelihood parameters according according to the AWNB 
-#' method, as follows, \deqn{\theta_{ijk}^{AWNB} = 
-#' \frac{(\theta_{ijk})^{w_i}}{\sum_{k=1}^{r_i} 
-#' (\theta_{ijk})^{w_i}},}{\theta[ijk]^(AWNB) = ((\theta[ijk])^w[i]) / 
-#' (\sum[k=1]^(r[i]) (\theta[ijk])^(w[i])),} computing the weights 
-#' \eqn{\mathbf{w}}{w} as \deqn{w_i = \frac{1}{M}\sum_{t=1}^M 
-#' \sqrt{d_{ti}},}{w_i = (1 / M)\sum_[t=1]^M \sqrt{d[ti]},} where \eqn{M} is the
-#' number of bootstrap samples from \code{dataset} and \eqn{d_{ti}}{d[ti]} the 
-#' minimum testing depth of \eqn{X_i}{X[i]} in an unpruned classification tree 
-#' learned from the \eqn{t}-th subsample (\eqn{d_{ti} = 0}{d[ti] = 0} if 
-#' \eqn{X_i}{X_i} is omitted from \eqn{t}-th tree).
+#' In order to get the AWNB parameter estimate, provide either the 
+#' \code{awnb_bootstrap} and/or the \code{awnb_trees} argument. The estimate is:
+#' \deqn{\theta_{ijk}^{AWNB} = \frac{\theta_{ijk}^{w_i}}{\sum_{k=1}^{r_i} 
+#' \theta_{ijk}^{w_i}},}{\theta[ijk]^(AWNB) = (\theta[ijk])^w[i] / 
+#' \sum[k=1]^(r[i]) (\theta[ijk])^(w[i]),} while the weights \eqn{w_i}{w[i]} are
+#' computed as \deqn{w_i = \frac{1}{M}\sum_{t=1}^M \sqrt{\frac{1}{d_{ti}}},}{w_i
+#' = (1 / M)\sum_[t=1]^M \sqrt{1 / d[ti]},} where \eqn{M} is the number of
+#' bootstrap samples from \code{dataset} and \eqn{d_{ti}}{d[ti]} the minimum
+#' testing depth of \eqn{X_i}{X[i]} in an unpruned classification tree learned
+#' from the \eqn{t}-th subsample (\eqn{d_{ti} = 0}{d[ti] = 0} if \eqn{X_i}{X_i}
+#' is omitted from \eqn{t}-th tree).
 #' 
-#' The MANB methods corresponds to Bayesian model averaging over the naive Bayes
-#' models obtained from all $2^n$ subsets of the $n$ features. To use this 
-#' method, specify a prior probability for an arc between the class and any 
-#' feature via the argument \code{manb_prior}.
+#' The MANB parameters correspond to Bayesian model averaging over the naive 
+#' Bayes models obtained from all \eqn{2^n}{2^n} subsets over the \eqn{n} 
+#' features. To get MANB parameters, provide the \code{manb_prior} argument.
 #' 
 #' @name learn_params
 #'   
 #' @inheritParams nb
-#' @param x a \code{\link{bnc_dag_object}} object. The Bayesian network 
-#'   structure.
-#' @param dataset The data frame from which to estimate network parameters.
+#' @inheritParams inspect_bnc_dag
+#' @param dataset The data frame from which to learn network parameters.
 #' @param smooth A numeric. The smoothing value (\eqn{\alpha}) for Bayesian 
 #'   parameter estimation. Nonnegative.
 #' @param awnb_trees An integer. The number (\eqn{M}) of bootstrap samples to 
 #'   generate.
 #' @param awnb_bootstrap A numeric. The size of the bootstrap subsample, 
 #'   relative to the size of \code{dataset} (given in [0,1]).
-#' @param manb_prior A numeric. The prior probability for an arc between the
+#' @param manb_prior A numeric. The prior probability for an arc between the 
 #'   class and any feature.
+#' @return A \code{\link{bnc_bn}} object.
 #' @references Hall M (2004). A decision tree-based attribute weighting filter 
 #'   for naive Bayes. \emph{Knowledge-based Systems}, \bold{20}(2), 120-126.
 #'   
 #'   Dash D and Cooper GF (2002). Exact model averaging with naive Bayesian 
 #'   classifiers. \emph{19th International Conference on Machine Learning 
 #'   (ICML-2002)}, 91-98.
+#'   
+#'   Pigott T D (2001) A review of methods for missing data. \emph{Educational 
+#'   research and evaluation}, \bold{7}(4), 353-383.
+#' @examples 
+#' data(car)
+#' nb <- nb('class', car)
+#' # Maximum likelihood estimation
+#' mle <- lp(nb, car, smooth = 0)
+#' # Bayesian estimaion
+#' bayes <- lp(nb, car, smooth = 0.5)
+#' # MANB
+#' manb <- lp(nb, car, smooth = 0.5, manb_prior = 0.5)
+#' # AWNB
+#' awnb <- lp(nb, car, smooth = 0.5, awnb_trees = 10)
 NULL
 
-#' A Bayesian network classifier structure.
+#' Inspect a Bayesian network classifier structure.
 #' 
-#' You can query this object using the following functions.
+#' Functions for inspecting a \code{\link{bnc_dag}} object.
 #' 
-#' @param x The \code{bnc_dag} object.
-#' 
-#' @name bnc_dag_object
+#' @param x The \code{\link{bnc_dag}} object. The Bayesian network classifier
+#'   structure.
+#'   
+#' @name inspect_bnc_dag
+#' @examples 
+#' data(car)
+#' nb <- bnc('nb', 'class', car, smooth = 1)
+#' narcs(nb)
+#' is_ode(nb)
 NULL
 
-#' A Bayesian network classifier with structure and parameters.
+#' Inspect a Bayesian network classifier (with structure and parameters).
 #' 
-#' You can query this object using the following functions, in addition to all the functions that can be applied to a \code{\link{bnc_dag_object}}. 
+#' Functions for inspecting a \code{\link{bnc_bn}} object. In addition, you can 
+#' query this object with the functions documented in 
+#' \code{\link{inspect_bnc_dag}}.
 #' 
-#' @param x The \code{bnc_bn} object.
+#' @param x The \code{\link{bnc_bn}} object. The Bayesian network classifier.
+#'   
+#' @name inspect_bnc_bn
+#' @examples  
+#' data(car)
+#' nb <- bnc('nb', 'class', car, smooth = 1)
+#' nparams(nb)
+#' nb <- bnc('nb', 'class', car, smooth = 1, manb_prior = 0.5)
+#' manb_arc_posterior(nb)
+#' nb <- bnc('nb', 'class', car, smooth = 1, awnb_bootstrap = 0.5)
+#' awnb_weights(nb)
+NULL
+
+#' Compute (penalized) log-likelihood.
 #' 
-#' @name bnc_bn_object
+#' Compute (penalized) log-likelihood score of a \code{\link{bnc_bn}} object on
+#' a data set. Requires a data frame argument in addition to \code{object}.
+#' 
+#' log-likelihood =  \eqn{log P(\mathcal{D} \mid \theta)}{log P(D | \theta)},
+#' 
+#' Akaike's information criterion (AIC) = \eqn{log P(\mathcal{D} \mid \theta) - 
+#' \frac{1}{2} |\theta|}{log P(D | \theta) - |\theta| / 2},
+#' 
+#' The Bayesian information criterion (BIC) score: = \eqn{log P(\mathcal{D} \mid
+#' \theta) - \frac{\log N}{2} |\theta|}{log P(D | \theta) - N |\theta| / 2},
+#' 
+#' where \eqn{|\theta|} is the number of free parameters in \code{object}, 
+#' \eqn{\mathcal{D}}{D} is the data set and N is the number of instances in 
+#' \eqn{\mathcal{D}}{D}.
+#' 
+#' @name loglik
+#'   
+#' @inheritParams predict.bnc_bn
+#' @param ... A data frame (\eqn{\mathcal{D}}{D}).
+#' @examples 
+#' data(car)
+#' nb <- bnc('nb', 'class', car, smooth = 1)
+#' logLik(nb, car)   
+#' AIC(nb, car)
+#' BIC(nb, car)
+NULL
+
+#' Convert to graph and gRain.
+#' 
+#' Convert a \code{\link{bnc_dag}} to \code{\link[graph]{graphNEL}} and
+#' \code{\link[gRain]{grain}} objects.
+#' 
+#' @name grain_and_graph
+#' @inheritParams inspect_bnc_bn   
+#' @examples 
+#' data(car)
+#' nb <- bnc('nb', 'class', car, smooth = 1)
+#' g <- as_grain(nb)
+#' gRain::querygrain.grain(g)$buying
 NULL

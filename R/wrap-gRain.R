@@ -1,7 +1,6 @@
 # Accessors 
-#' To grain
-#' @param x A \code{\link{bnc_bn_object}}.
 #' @export
+#' @describeIn grain_and_graph Convert to a grain.
 as_grain <- function(x) {
   stopifnot(inherits(x, "bnc_bn"))  
   if (is.null(x$.grain))  {
