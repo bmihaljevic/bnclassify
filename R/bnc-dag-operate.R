@@ -1,5 +1,5 @@
 #' @export 
-#' @describeIn bnc_dag_object  Returns the number of arcs.
+#' @describeIn inspect_bnc_dag  Returns the number of arcs.
 narcs <- function(x) {
   num_arcs(as_graphNEL(x))
 }
@@ -9,7 +9,7 @@ narcs <- function(x) {
 #' with argument fontsize. Also, you may try multiple different layouts.
 #' 
 #' @export
-#' @inheritParams bnc_dag_object
+#' @inheritParams inspect_bnc_dag
 #' @param y Not used
 #' @param layoutType a character. Optional.
 #' @param fontsize integer Font size for node labels. Optional.
@@ -59,14 +59,14 @@ print.bnc_dag <- function(x, ...) {
   }
 }
 #' @export 
-#' @describeIn bnc_dag_object Returns TRUE if \code{x} is a semi-naive Bayes.
+#' @describeIn inspect_bnc_dag Returns TRUE if \code{x} is a semi-naive Bayes.
 is_semi_naive <- function(x) {
   if (!is_anb(x)) return(FALSE)
   nc <- not_cci(x)
   all(vapply(nc, is_supernode, x, FUN.VALUE = logical(1)))
 }
 #' @export 
-#' @describeIn bnc_dag_object Returns TRUE if \code{x} is an augmented naive Bayes.
+#' @describeIn inspect_bnc_dag Returns TRUE if \code{x} is an augmented naive Bayes.
 is_anb <- function(x) {
   if (!is_dag_graph(as_graphNEL(x))) return(FALSE)
   # Check call has no parents and class is in all families. This
@@ -75,12 +75,12 @@ is_anb <- function(x) {
   identical(last, class_var(x))
 }
 #' @export 
-#' @describeIn bnc_dag_object Returns TRUE if \code{x} is a naive Bayes.
+#' @describeIn inspect_bnc_dag Returns TRUE if \code{x} is a naive Bayes.
 is_nb <- function(x) {
   is_kde(x, 0)
 }
 #' @export 
-#' @describeIn bnc_dag_object Returns TRUE if \code{x} is a one-dependence estimator.
+#' @describeIn inspect_bnc_dag Returns TRUE if \code{x} is a one-dependence estimator.
 is_ode <- function(x) {
   is_kde(x, 1)
 }

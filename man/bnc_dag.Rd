@@ -8,7 +8,7 @@ A Bayesian network classifier structure, returned by functions such as
 \code{\link{nb}} and \code{\link{tan_cl}}. You can plot its structure (with
 \code{\link[=plot.bnc_dag]{plot}}), print a summary to console
 (\code{\link[=print.bnc_dag]{print}}), and inspect it with functions
-documented in \code{\link{bnc_dag_object}}. Can convert it to a graph object;
+documented in \code{\link{inspect_bnc_dag}}. Can convert it to a graph object;
 see \code{\link{grain_and_graph}}.
 }
 

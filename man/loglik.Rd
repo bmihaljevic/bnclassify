@@ -14,13 +14,13 @@
 \method{logLik}{bnc_bn}(object, ...)
 }
 \arguments{
-\item{object}{A \code{\link{bnc_bn_object}} object.}
+\item{object}{A \code{\link{bnc_bn}} object.}
 
 \item{...}{A data frame (\eqn{\mathcal{D}}{D}).}
 }
 \description{
-Compute (penalized) log-likelihood score of a \code{bnc_bn} object on a data
-set. Requires a data frame argument in addition to \code{object}.
+Compute (penalized) log-likelihood score of a \code{\link{bnc_bn}} object on
+a data set. Requires a data frame argument in addition to \code{object}.
 }
 \details{
 log-likelihood =  \eqn{log P(\mathcal{D} \mid \theta)}{log P(D | \theta)},

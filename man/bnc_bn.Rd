@@ -10,7 +10,7 @@ A Bayesian network classifier with structure and parameters. Returned by
 accuracy with \code{\link{cv}}. Can plot its structure (with
 \code{\link[=plot.bnc_dag]{plot}}), print a summary to console
 (\code{\link[=print.bnc_dag]{print}}), inspect it with functions documented
-in \code{\link{bnc_bn_object}} and \code{\link{bnc_dag_object}}. Can convert
+in \code{\link{inspect_bnc_bn}} and \code{\link{inspect_bnc_dag}}. Can convert
 it to mlr, grain, and graph objects; see \code{\link{as_mlr}} and
 \code{\link{grain_and_graph}}.
 }

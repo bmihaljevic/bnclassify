@@ -1,10 +1,10 @@
 #' Convert to \code{mlr}.
 #' 
-#' Convert a \code{\link{bnc_dag_object}} to a \code{\link[mlr]{Learner}}
+#' Convert a \code{\link{bnc_bn}} to a \code{\link[mlr]{Learner}}
 #' object. 
 #'   
 #' @inheritParams cv
-#' @param x A \code{\link{bnc_bn_object}} object.
+#' @param x A \code{\link{bnc_bn}} object.
 #' @param id A character.
 #' @export
 #' @examples 

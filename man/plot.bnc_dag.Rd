@@ -7,7 +7,8 @@
 \method{plot}{bnc_dag}(x, y, layoutType = "dot", fontsize = NULL, ...)
 }
 \arguments{
-\item{x}{The \code{bnc_dag} object. The Bayesian network structure.}
+\item{x}{The \code{\link{bnc_dag}} object. The Bayesian network classifier
+  structure.}
 
 \item{y}{Not used}
 

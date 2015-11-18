@@ -7,8 +7,8 @@
 cv(x, dataset, k, dag = TRUE, mean = TRUE)
 }
 \arguments{
-\item{x}{List of \code{\link{bnc_bn_object}} or a single
-\code{\link{bnc_bn_object}}. The classifiers to evaluate.}
+\item{x}{List of \code{\link{bnc_bn}} or a single
+\code{\link{bnc_bn}}. The classifiers to evaluate.}
 
 \item{dataset}{The data frame on which to evaluate the classifiers.}
 

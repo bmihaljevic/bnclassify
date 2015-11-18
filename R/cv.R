@@ -6,8 +6,8 @@
 #' structure fixed and re-learn only the parameters, or re-learn both structure 
 #' and parameters.
 #' 
-#' @param x List of \code{\link{bnc_bn_object}} or a single 
-#'   \code{\link{bnc_bn_object}}. The classifiers to evaluate.
+#' @param x List of \code{\link{bnc_bn}} or a single 
+#'   \code{\link{bnc_bn}}. The classifiers to evaluate.
 #' @param dataset The data frame on which to evaluate the classifiers.
 #' @param k An integer. The number of folds.
 #' @param dag A logical. Whether to learn structure on each training subsample. 

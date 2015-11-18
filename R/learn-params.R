@@ -64,6 +64,7 @@ lp_implement <- function(x, dataset, smooth, awnb_trees = NULL,
 #' @export
 #' @inheritParams nb 
 #' @inheritParams learn_params
+#' @inheritParams inspect_bnc_dag
 #' @param trees An integer. The number (\eqn{M}) of bootstrap samples to 
 #'   generate.
 #' @param bootstrap_size A numeric. The size of the bootstrap subsample, 

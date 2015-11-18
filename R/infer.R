@@ -8,7 +8,7 @@ compute_cp <- function(x, dataset) {
 }
 #' Computes log-likelihood of the model on the provided data.
 #' 
-#' @param x A \code{\link{bnc_bn_object}} object.
+#' @param x A \code{\link{bnc_bn}} object.
 #' @param dataset A data frame.
 #' @keywords internal
 compute_ll <- function(x, dataset) {

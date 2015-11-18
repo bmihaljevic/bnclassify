@@ -46,7 +46,7 @@
 #'  \item \code{\link[=print.bnc_dag]{print}}: Summary 
 #'  \item \code{\link{params}}: Access conditional probability tables 
 #'  \item \code{\link{nparams}}: Number of free parameters 
-#'  \item and more. See \code{\link{bnc_dag_object}} and \code{\link{bnc_bn_object}}.
+#'  \item and more. See \code{\link{inspect_bnc_dag}} and \code{\link{inspect_bnc_bn}}.
 #'  } 
 #' 
 #' @docType package
@@ -90,7 +90,7 @@ NULL
 #' accuracy with \code{\link{cv}}. Can plot its structure (with 
 #' \code{\link[=plot.bnc_dag]{plot}}), print a summary to console 
 #' (\code{\link[=print.bnc_dag]{print}}), inspect it with functions documented 
-#' in \code{\link{bnc_bn_object}} and \code{\link{bnc_dag_object}}. Can convert
+#' in \code{\link{inspect_bnc_bn}} and \code{\link{inspect_bnc_dag}}. Can convert
 #' it to mlr, grain, and graph objects; see \code{\link{as_mlr}} and 
 #' \code{\link{grain_and_graph}}.
 #' 
@@ -103,7 +103,7 @@ NULL
 #' \code{\link{nb}} and \code{\link{tan_cl}}. You can plot its structure (with 
 #' \code{\link[=plot.bnc_dag]{plot}}), print a summary to console 
 #' (\code{\link[=print.bnc_dag]{print}}), and inspect it with functions 
-#' documented in \code{\link{bnc_dag_object}}. Can convert it to a graph object;
+#' documented in \code{\link{inspect_bnc_dag}}. Can convert it to a graph object;
 #' see \code{\link{grain_and_graph}}.
 #' 
 #' @name bnc_dag
@@ -188,7 +188,7 @@ NULL
 #' 
 #' Learn parameters with maximum likelihood or Bayesian estimation, the 
 #' attribute weighted naive Bayes (AWNB), or the model averaged naive Bayes 
-#' (MANB) methods. Returns a \code{\link{bnc_bn_object}}.
+#' (MANB) methods. Returns a \code{\link{bnc_bn}}.
 #' 
 #' \code{lp} learns the parameters of each local distribution \eqn{\theta_{ijk} 
 #' = P(X_i = k \mid \mathbf{Pa}(X_i) = j)}{\theta[ijk] = P(X[i] = k | Pa(X[i]) =
@@ -223,8 +223,7 @@ NULL
 #' @name learn_params
 #'   
 #' @inheritParams nb
-#' @param x a \code{\link{bnc_dag_object}} object. The Bayesian network 
-#'   structure.
+#' @inheritParams inspect_bnc_dag
 #' @param dataset The data frame from which to learn network parameters.
 #' @param smooth A numeric. The smoothing value (\eqn{\alpha}) for Bayesian 
 #'   parameter estimation. Nonnegative.
@@ -234,7 +233,7 @@ NULL
 #'   relative to the size of \code{dataset} (given in [0,1]).
 #' @param manb_prior A numeric. The prior probability for an arc between the 
 #'   class and any feature.
-#' @return A \code{\link{bnc_bn_object}}.
+#' @return A \code{\link{bnc_bn}}.
 #' @references Hall M (2004). A decision tree-based attribute weighting filter 
 #'   for naive Bayes. \emph{Knowledge-based Systems}, \bold{20}(2), 120-126.
 #'   
@@ -259,11 +258,12 @@ NULL
 
 #' Inspect a Bayesian network classifier structure.
 #' 
-#' Functions for inspecting a \code{bnc_dag} object. 
+#' Functions for inspecting a \code{\link{bnc_dag}} object.
 #' 
-#' @param x The \code{bnc_dag} object. The Bayesian network structure.
-#' 
-#' @name bnc_dag_object
+#' @param x The \code{\link{bnc_dag}} object. The Bayesian network classifier
+#'   structure.
+#'   
+#' @name inspect_bnc_dag
 #' @examples 
 #' data(car)
 #' nb <- bnc('nb', 'class', car, smooth = 1)
@@ -271,15 +271,15 @@ NULL
 #' is_ode(nb)
 NULL
 
-#' Inspect a Bayesian network classifier with structure and parameters.
+#' Inspect a Bayesian network classifier (with structure and parameters).
 #' 
-#' Functions for inspecting a \code{bnc_bn} object. In addition, you can query 
-#' this object with the functions that can be applied to a \code{bnc_dag}. See
-#' \code{\link{bnc_dag_object}}.
+#' Functions for inspecting a \code{\link{bnc_bn}} object. In addition, you can
+#' query this object with the functions that can be applied to a 
+#' \code{\link{bnc_dag}}. See \code{\link{inspect_bnc_dag}}.
 #' 
-#' @param x The \code{bnc_bn} object.
+#' @param x The \code{\link{bnc_bn}} object. The Bayesian network classifier.
 #'   
-#' @name bnc_bn_object
+#' @name inspect_bnc_bn
 #' @examples  
 #' data(car)
 #' nb <- bnc('nb', 'class', car, smooth = 1)
@@ -292,8 +292,8 @@ NULL
 
 #' Compute (penalized) log-likelihood.
 #' 
-#' Compute (penalized) log-likelihood score of a \code{bnc_bn} object on a data 
-#' set. Requires a data frame argument in addition to \code{object}.
+#' Compute (penalized) log-likelihood score of a \code{\link{bnc_bn}} object on
+#' a data set. Requires a data frame argument in addition to \code{object}.
 #' 
 #' log-likelihood =  \eqn{log P(\mathcal{D} \mid \theta)}{log P(D | \theta)},
 #' 
@@ -303,13 +303,13 @@ NULL
 #' The Bayesian information criterion (BIC) score: = \eqn{log P(\mathcal{D} \mid
 #' \theta) - \frac{\log N}{2} |\theta|}{log P(D | \theta) - N |\theta| / 2},
 #' 
-#' where \eqn{|\theta|} is the number of free parameters in \code{object},
-#' \eqn{\mathcal{D}}{D} is the data set and N is the number of instances in
+#' where \eqn{|\theta|} is the number of free parameters in \code{object}, 
+#' \eqn{\mathcal{D}}{D} is the data set and N is the number of instances in 
 #' \eqn{\mathcal{D}}{D}.
 #' 
 #' @name loglik
 #'   
-#' @inheritParams predict.bnc_bn 
+#' @inheritParams predict.bnc_bn
 #' @param ... A data frame (\eqn{\mathcal{D}}{D}).
 #' @examples 
 #' data(car)
@@ -321,11 +321,11 @@ NULL
 
 #' Convert to graph and gRain.
 #' 
-#' Convert a \code{\link{bnc_dag_object}} to \code{\link[graph]{graphNEL}} and
+#' Convert a \code{\link{bnc_dag}} to \code{\link[graph]{graphNEL}} and
 #' \code{\link[gRain]{grain}} objects.
 #' 
 #' @name grain_and_graph
-#' @inheritParams bnc_bn_object   
+#' @inheritParams inspect_bnc_bn   
 #' @examples 
 #' data(car)
 #' nb <- bnc('nb', 'class', car, smooth = 1)

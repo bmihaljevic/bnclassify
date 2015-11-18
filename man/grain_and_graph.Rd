@@ -11,10 +11,10 @@ as_graphNEL(x)
 as_grain(x)
 }
 \arguments{
-\item{x}{The \code{bnc_bn} object.}
+\item{x}{The \code{\link{bnc_bn}} object. The Bayesian network classifier.}
 }
 \description{
-Convert a \code{\link{bnc_dag_object}} to \code{\link[graph]{graphNEL}} and
+Convert a \code{\link{bnc_dag}} to \code{\link[graph]{graphNEL}} and
 \code{\link[gRain]{grain}} objects.
 }
 \section{Functions}{

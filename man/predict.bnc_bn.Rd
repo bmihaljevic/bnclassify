@@ -7,7 +7,7 @@
 \method{predict}{bnc_bn}(object, newdata, prob = FALSE, ...)
 }
 \arguments{
-\item{object}{A \code{\link{bnc_bn_object}} object.}
+\item{object}{A \code{\link{bnc_bn}} object.}
 
 \item{newdata}{A data frame containing observations whose class has to be
 predicted.}

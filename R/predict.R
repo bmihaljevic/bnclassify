@@ -5,7 +5,7 @@
 #'
 #'@export
 #'
-#'@param object A \code{\link{bnc_bn_object}} object.
+#'@param object A \code{\link{bnc_bn}} object.
 #'@param newdata A data frame containing observations whose class has to be 
 #'  predicted.
 #'@param prob A logical. Whether class posterior probability should be returned.

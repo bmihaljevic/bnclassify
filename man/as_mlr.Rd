@@ -7,7 +7,7 @@
 as_mlr(x, dag, id = "1")
 }
 \arguments{
-\item{x}{A \code{\link{bnc_bn_object}} object.}
+\item{x}{A \code{\link{bnc_bn}} object.}
 
 \item{dag}{A logical. Whether to learn structure on each training subsample.
 Parameters are always learned.}
@@ -15,7 +15,7 @@ Parameters are always learned.}
 \item{id}{A character.}
 }
 \description{
-Convert a \code{\link{bnc_dag_object}} to a \code{\link[mlr]{Learner}}
+Convert a \code{\link{bnc_bn}} to a \code{\link[mlr]{Learner}}
 object.
 }
 \examples{

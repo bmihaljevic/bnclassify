@@ -53,7 +53,7 @@ Inspecting models:
  \item \code{\link[=print.bnc_dag]{print}}: Summary
  \item \code{\link{params}}: Access conditional probability tables
  \item \code{\link{nparams}}: Number of free parameters
- \item and more. See \code{\link{bnc_dag_object}} and \code{\link{bnc_bn_object}}.
+ \item and more. See \code{\link{inspect_bnc_dag}} and \code{\link{inspect_bnc_bn}}.
  }
 }
 \references{

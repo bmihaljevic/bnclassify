@@ -9,8 +9,8 @@ lp(x, dataset, smooth, awnb_trees = NULL, awnb_bootstrap = NULL,
   manb_prior = NULL)
 }
 \arguments{
-\item{x}{a \code{\link{bnc_dag_object}} object. The Bayesian network
-structure.}
+\item{x}{The \code{\link{bnc_dag}} object. The Bayesian network classifier
+  structure.}
 
 \item{dataset}{The data frame from which to learn network parameters.}
 
@@ -27,12 +27,12 @@ relative to the size of \code{dataset} (given in [0,1]).}
 class and any feature.}
 }
 \value{
-A \code{\link{bnc_bn_object}}.
+A \code{\link{bnc_bn}}.
 }
 \description{
 Learn parameters with maximum likelihood or Bayesian estimation, the
 attribute weighted naive Bayes (AWNB), or the model averaged naive Bayes
-(MANB) methods. Returns a \code{\link{bnc_bn_object}}.
+(MANB) methods. Returns a \code{\link{bnc_bn}}.
 }
 \details{
 \code{lp} learns the parameters of each local distribution \eqn{\theta_{ijk}

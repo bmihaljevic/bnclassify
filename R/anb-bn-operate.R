@@ -25,12 +25,12 @@ penalize_loglik <- function(ll, k) {
   as.numeric(ll) - k * attr(ll, "df")
 }
 #' @export 
-#' @describeIn bnc_bn_object Returns the number of free parameters in the model.
+#' @describeIn inspect_bnc_bn Returns the number of free parameters in the model.
 nparams <- function(x) {      
   sum(vapply(params(x), count_cpt_free_params, FUN.VALUE = numeric(1)))
 }
 #' @export
-#' @describeIn bnc_bn_object Returns the posterior of each arc from the class
+#' @describeIn inspect_bnc_bn Returns the posterior of each arc from the class
 #'   according to the MANB method.
 manb_arc_posterior <- function(x) {
   stopifnot(inherits(x, "bnc_bn"))  
@@ -41,7 +41,7 @@ manb_arc_posterior <- function(x) {
   NULL
 }
 #' @export 
-#' @describeIn bnc_bn_object Returns the AWNB feature weights.
+#' @describeIn inspect_bnc_bn Returns the AWNB feature weights.
 awnb_weights <- function(x) {
   stopifnot(inherits(x, "bnc_bn"))  
   if (!is.null(x$.weights)) {
