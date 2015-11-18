@@ -9,9 +9,9 @@ narcs <- function(x) {
 #' with argument fontsize. Also, you may try multiple different layouts.
 #' 
 #' @export
-#' @param x The \code{bnc_dag}
+#' @inheritParams bnc_dag_object
 #' @param y Not used
-#' @param layoutType Layout type. Optional.
+#' @param layoutType a character. Optional.
 #' @param fontsize integer Font size for node labels. Optional.
 #' @param ... Not used.
 #' @examples  

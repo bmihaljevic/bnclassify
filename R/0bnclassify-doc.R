@@ -229,7 +229,7 @@ NULL
 #' 
 #' Functions for inspecting a \code{bnc_dag} object. 
 #' 
-#' @param x The \code{bnc_dag} object.
+#' @param x The \code{bnc_dag} object. The Bayesian network structure.
 #' 
 #' @name bnc_dag_object
 #' @examples 

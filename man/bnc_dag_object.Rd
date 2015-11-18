@@ -35,7 +35,7 @@ is_nb(x)
 is_ode(x)
 }
 \arguments{
-\item{x}{The \code{bnc_dag} object.}
+\item{x}{The \code{bnc_dag} object. The Bayesian network structure.}
 }
 \description{
 Functions for inspecting a \code{bnc_dag} object.
