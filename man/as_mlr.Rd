@@ -9,7 +9,7 @@ as_mlr(x, dag, id = "1")
 \arguments{
 \item{x}{A \code{\link{bnc_bn_object}} object.}
 
-\item{dag}{A logical. Whether to learn structure on each training set.
+\item{dag}{A logical. Whether to learn structure on each training subsample.
 Parameters are always learned.}
 
 \item{id}{A character.}

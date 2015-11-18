@@ -1,20 +1,36 @@
-#' Stratified cross validation estimate of predictive accuracy.
+#' Estimate predictive accuracy with stratified cross validation.
 #' 
-#' It may relearn only the parameters on each set of training folds, or relearn 
-#' the structure, too. The options used to relearn parameters and, optionally,
-#' structure, are those used to learn the objects in \code{x}.
+#' Estimate predictive accuracy of a classifier with stratified cross 
+#' validation. It learns the models from the training subsamples by repeating 
+#' the learning procedures used to obtain \code{x}. It can keep the network 
+#' structure fixed and re-learn only the parameters, or re-learn both structure 
+#' and parameters.
 #' 
-#' @param x List of \code{\link{bnc_bn_object}}. The classifiers to evaluate.
+#' @param x List of \code{\link{bnc_bn_object}} or a single 
+#'   \code{\link{bnc_bn_object}}. The classifiers to evaluate.
 #' @param dataset The data frame on which to evaluate the classifiers.
 #' @param k An integer. The number of folds.
-#' @param dag A logical. Whether to learn structure on each training set. 
+#' @param dag A logical. Whether to learn structure on each training subsample. 
 #'   Parameters are always learned.
-#' @param mean A logical. Whether to return mean accuracy for each classifier 
-#'   or to return a k-row matrix with accuracies per fold.
+#' @param mean A logical. Whether to return mean accuracy for each classifier or
+#'   to return a k-row matrix with accuracies per fold.
 #' @inheritParams learn_params
 #' @export
-#' @return A numeric vector. The predictive accuracy of each classifier in 
-#'   \code{x}. If \code{mean = TRUE} then a matrix with k rows.
+#' @return A numeric vector of same lenght as \code{x}, giving the predictive
+#'   accuracy of each classifier. If \code{mean = FALSE} then a matrix with k
+#'   rows and a column per each classifier in \code{x}.
+#'   @examples 
+#'   data(car)
+#'   nb <- bnc('nb', 'class', car, smooth = 1) 
+#'   # CV a single classifier
+#'   cv(nb, car, k = 10) 
+#'   nb_manb <- bnc('nb', 'class', car, smooth = 1, manb_prior = 0.5) 
+#'   cv(list(nb=nb, manb=nb_manb), car, k = 10)
+#'   # Get accuracies on each fold
+#'   cv(list(nb=nb, manb=nb_manb), car, k = 10, mean = FALSE)
+#'   ode <- bnc('tan_cl', 'class', car, smooth = 1, dag_args = list(score = 'aic')) 
+#'   # keep structure fixed accross training subsamples
+#'   cv(ode, car, k = 10, dag = FALSE)
 cv <- function(x, dataset, k, dag = TRUE, mean = TRUE) {
   xs <- ensure_multi_list(x, type = "bnc_bn")
   class <- get_common_class(xs)
