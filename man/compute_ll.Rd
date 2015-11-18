@@ -14,4 +14,5 @@ compute_ll(x, dataset)
 \description{
 Computes log-likelihood of the model on the provided data.
 }
+\keyword{internal}
 
