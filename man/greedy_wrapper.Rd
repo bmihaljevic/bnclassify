@@ -24,15 +24,18 @@ tan_hcsp(class, dataset, k, epsilon = 0.01, smooth = 0.01)
 \item{k}{An integer. The number of folds.}
 
 \item{epsilon}{A numeric. Minimum absolute improvement in accuracy required
-  to keep searching.}
+to keep searching.}
 
 \item{smooth}{A numeric. The smoothing value (\eqn{\alpha}) for Bayesian
 parameter estimation. Nonnegative.}
 }
+\value{
+A \code{\link{bnc_dag}} object.
+}
 \description{
-Greedy wrapper algorithms for learning Bayesian network classifiers. Uses
-cross-validated estimate of predictive accuracy to evaluate candidate
-structures.
+Greedy wrapper algorithms for learning Bayesian network classifiers. All
+algorithms use cross-validated estimate of predictive accuracy to evaluate
+candidate structures.
 }
 \references{
 Pazzani M (1996). Constructive induction of Cartesian product

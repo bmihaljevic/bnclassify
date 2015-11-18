@@ -27,7 +27,7 @@ relative to the size of \code{dataset} (given in [0,1]).}
 class and any feature.}
 }
 \value{
-A \code{\link{bnc_bn}}.
+A \code{\link{bnc_bn}} object.
 }
 \description{
 Learn parameters with maximum likelihood or Bayesian estimation, the

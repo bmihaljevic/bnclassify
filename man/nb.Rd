@@ -14,6 +14,9 @@ nb(class, dataset = NULL, features = NULL)
 \item{features}{A character vector. The names of the features. This argument
 is ignored if \code{dataset} is provided.}
 }
+\value{
+A \code{\link{bnc_dag}} object.
+}
 \description{
 Learn a naive Bayes network structure.
 }

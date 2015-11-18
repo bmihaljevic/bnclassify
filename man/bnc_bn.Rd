@@ -5,13 +5,13 @@
 \title{Bayesian network classifier with structure and parameters.}
 \description{
 A Bayesian network classifier with structure and parameters. Returned by
-\code{\link{lp}} and \code{\link{bnc}}. You can use it to classify data (with
-\code{\link[=predict.bnc_bn]{predict}}), and can estimate its predictive
-accuracy with \code{\link{cv}}. Can plot its structure (with
+\code{\link{lp}} and \code{\link{bnc}} functions. You can use it to classify
+data (with \code{\link[=predict.bnc_bn]{predict}}). Can estimate its
+predictive accuracy with \code{\link{cv}}, plot its structure (with
 \code{\link[=plot.bnc_dag]{plot}}), print a summary to console
 (\code{\link[=print.bnc_dag]{print}}), inspect it with functions documented
-in \code{\link{inspect_bnc_bn}} and \code{\link{inspect_bnc_dag}}. Can convert
-it to mlr, grain, and graph objects; see \code{\link{as_mlr}} and
+in \code{\link{inspect_bnc_bn}} and \code{\link{inspect_bnc_dag}}, and
+convert it to mlr, grain, and graph objects --see \code{\link{as_mlr}} and
 \code{\link{grain_and_graph}}.
 }
 

@@ -27,8 +27,8 @@ classes(x)
 }
 \description{
 Functions for inspecting a \code{\link{bnc_bn}} object. In addition, you can
-query this object with the functions that can be applied to a
-\code{\link{bnc_dag}}. See \code{\link{inspect_bnc_dag}}.
+query this object with the functions documented in
+\code{\link{inspect_bnc_dag}}.
 }
 \section{Functions}{
 \itemize{

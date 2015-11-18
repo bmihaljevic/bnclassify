@@ -13,12 +13,15 @@ tan_cl(class, dataset, score = "loglik", root = NULL)
 \item{dataset}{The data frame from which to learn the classifier.}
 
 \item{score}{A character. The score to be maximized. \code{'loglik'},
-  \code{'bic'}, and \code{'aic'} return the maximum likelihood, maximum BIC
-  and maximum AIC tree/forest, respectively.}
+\code{'bic'}, and \code{'aic'} return the maximum likelihood, maximum BIC
+and maximum AIC tree/forest, respectively.}
 
 \item{root}{A character. The feature to be used as root of the augmenting
 tree. Only one feature can be supplied, even in case of an augmenting
 forest. This argument is optional.}
+}
+\value{
+A \code{\link{bnc_dag}} object.
 }
 \description{
 Learns a one-dependence Bayesian classifier using Chow-Liu's algorithm, by

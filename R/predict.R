@@ -1,4 +1,4 @@
-#'Predicts class label or class posterior probability distributions.
+#'Predicts class labels or class posterior probability distributions.
 #'
 #'@details Ties are resolved randomly. Inference is much slower if
 #'\code{newdata} contains \code{NA}s.

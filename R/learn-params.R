@@ -1,7 +1,7 @@
 #' Learn network structure and parameters.
 #' 
 #' A convenience function to learn the structure and parameters in a single 
-#' call. Must provide the name of the structure learning algorithm functions;
+#' call. Must provide the name of the structure learning algorithm function;
 #' see \code{\link{bnclassify}} for the list.
 #' 
 #' @inheritParams nb

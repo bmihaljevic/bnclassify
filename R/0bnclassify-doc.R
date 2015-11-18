@@ -85,13 +85,13 @@ NULL
 #' Bayesian network classifier with structure and parameters.
 #' 
 #' A Bayesian network classifier with structure and parameters. Returned by 
-#' \code{\link{lp}} and \code{\link{bnc}}. You can use it to classify data (with
-#' \code{\link[=predict.bnc_bn]{predict}}), and can estimate its predictive 
-#' accuracy with \code{\link{cv}}. Can plot its structure (with 
+#' \code{\link{lp}} and \code{\link{bnc}} functions. You can use it to classify
+#' data (with \code{\link[=predict.bnc_bn]{predict}}). Can estimate its
+#' predictive accuracy with \code{\link{cv}}, plot its structure (with 
 #' \code{\link[=plot.bnc_dag]{plot}}), print a summary to console 
 #' (\code{\link[=print.bnc_dag]{print}}), inspect it with functions documented 
-#' in \code{\link{inspect_bnc_bn}} and \code{\link{inspect_bnc_dag}}. Can convert
-#' it to mlr, grain, and graph objects; see \code{\link{as_mlr}} and 
+#' in \code{\link{inspect_bnc_bn}} and \code{\link{inspect_bnc_dag}}, and
+#' convert it to mlr, grain, and graph objects --see \code{\link{as_mlr}} and 
 #' \code{\link{grain_and_graph}}.
 #' 
 #' @name bnc_bn
@@ -102,9 +102,9 @@ NULL
 #' A Bayesian network classifier structure, returned by functions such as 
 #' \code{\link{nb}} and \code{\link{tan_cl}}. You can plot its structure (with 
 #' \code{\link[=plot.bnc_dag]{plot}}), print a summary to console 
-#' (\code{\link[=print.bnc_dag]{print}}), and inspect it with functions 
-#' documented in \code{\link{inspect_bnc_dag}}. Can convert it to a graph object;
-#' see \code{\link{grain_and_graph}}.
+#' (\code{\link[=print.bnc_dag]{print}}), inspect it with functions documented
+#' in \code{\link{inspect_bnc_dag}}, and convert it to a graph object; see
+#' \code{\link{grain_and_graph}}.
 #' 
 #' @name bnc_dag
 NULL
@@ -133,17 +133,18 @@ NULL
 
 #' Learn Bayesian network classifiers in a a greedy wrapper fashion.
 #' 
-#' Greedy wrapper algorithms for learning Bayesian network classifiers. Uses 
-#' cross-validated estimate of predictive accuracy to evaluate candidate 
-#' structures.
+#' Greedy wrapper algorithms for learning Bayesian network classifiers. All
+#' algorithms use cross-validated estimate of predictive accuracy to evaluate
+#' candidate structures.
 #' 
 #' @name greedy_wrapper
 #'   
 #' @inheritParams nb
 #' @inheritParams cv
 #' @inheritParams learn_params
-#' @param epsilon A numeric. Minimum absolute improvement in accuracy required
+#' @param epsilon A numeric. Minimum absolute improvement in accuracy required 
 #'   to keep searching.
+#' @return A \code{\link{bnc_dag}} object.
 #'   
 #' @references Pazzani M (1996). Constructive induction of Cartesian product 
 #'   attributes. In \emph{Proceedings of the Information, Statistics and 
@@ -171,6 +172,7 @@ NULL
 #' @param score A character. The score to be maximized. \code{'loglik'}, 
 #'   \code{'bic'}, and \code{'aic'} return the maximum likelihood, maximum BIC 
 #'   and maximum AIC tree/forest, respectively.
+#' @return A \code{\link{bnc_dag}} object.
 #'   
 #' @references Friedman N, Geiger D and Goldszmidt M (1997). Bayesian network 
 #'   classifiers. \emph{Machine Learning}, \bold{29}, pp. 131--163.
@@ -233,7 +235,7 @@ NULL
 #'   relative to the size of \code{dataset} (given in [0,1]).
 #' @param manb_prior A numeric. The prior probability for an arc between the 
 #'   class and any feature.
-#' @return A \code{\link{bnc_bn}}.
+#' @return A \code{\link{bnc_bn}} object.
 #' @references Hall M (2004). A decision tree-based attribute weighting filter 
 #'   for naive Bayes. \emph{Knowledge-based Systems}, \bold{20}(2), 120-126.
 #'   
@@ -273,9 +275,9 @@ NULL
 
 #' Inspect a Bayesian network classifier (with structure and parameters).
 #' 
-#' Functions for inspecting a \code{\link{bnc_bn}} object. In addition, you can
-#' query this object with the functions that can be applied to a 
-#' \code{\link{bnc_dag}}. See \code{\link{inspect_bnc_dag}}.
+#' Functions for inspecting a \code{\link{bnc_bn}} object. In addition, you can 
+#' query this object with the functions documented in 
+#' \code{\link{inspect_bnc_dag}}.
 #' 
 #' @param x The \code{\link{bnc_bn}} object. The Bayesian network classifier.
 #'   

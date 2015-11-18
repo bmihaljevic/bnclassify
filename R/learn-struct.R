@@ -7,6 +7,7 @@
 #' @param dataset The data frame from which to learn the classifier.
 #' @param features  A character vector. The names of the features. This argument
 #'   is ignored if \code{dataset} is provided.
+#' @return A \code{\link{bnc_dag}} object.
 #' @examples  
 #' data(car)
 #' nb <- nb('class', car)   

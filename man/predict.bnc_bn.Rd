@@ -2,7 +2,7 @@
 % Please edit documentation in R/predict.R
 \name{predict.bnc_bn}
 \alias{predict.bnc_bn}
-\title{Predicts class label or class posterior probability distributions.}
+\title{Predicts class labels or class posterior probability distributions.}
 \usage{
 \method{predict}{bnc_bn}(object, newdata, prob = FALSE, ...)
 }
@@ -25,7 +25,7 @@ If \code{prob=FALSE}, then returns a length-\eqn{N} factor with the
  classes; each row corresponds to the class posterior of the instance.
 }
 \description{
-Predicts class label or class posterior probability distributions.
+Predicts class labels or class posterior probability distributions.
 }
 \details{
 Ties are resolved randomly. Inference is much slower if
