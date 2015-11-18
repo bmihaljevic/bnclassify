@@ -81,6 +81,34 @@
 #'   Science Conference (ISIS-1996)}, pp. 66-77
 NULL
 
+
+#' Bayesian network classifier with structure and parameters.
+#' 
+#' A Bayesian network classifier with structure and parameters. Returned by 
+#' \code{\link{lp}} and \code{\link{bnc}}. You can use it to classify data (with
+#' \code{\link[=predict.bnc_bn]{predict}}), and can estimate its predictive 
+#' accuracy with \code{\link{cv}}. Can plot its structure (with 
+#' \code{\link[=plot.bnc_dag]{plot}}), print a summary to console 
+#' (\code{\link[=print.bnc_dag]{print}}), inspect it with functions documented 
+#' in \code{\link{bnc_bn_object}} and \code{\link{bnc_dag_object}}. Can convert
+#' it to mlr, grain, and graph objects; see \code{\link{as_mlr}} and 
+#' \code{\link{grain_and_graph}}.
+#' 
+#' @name bnc_bn
+NULL
+
+#' Bayesian network classifier structure.
+#' 
+#' A Bayesian network classifier structure, returned by functions such as 
+#' \code{\link{nb}} and \code{\link{tan_cl}}. You can plot its structure (with 
+#' \code{\link[=plot.bnc_dag]{plot}}), print a summary to console 
+#' (\code{\link[=print.bnc_dag]{print}}), and inspect it with functions 
+#' documented in \code{\link{bnc_dag_object}}. Can convert it to a graph object;
+#' see \code{\link{grain_and_graph}}.
+#' 
+#' @name bnc_dag
+NULL
+
 #' Congress Voting Data Set.
 #' 
 #' Data set from the UCI repository
