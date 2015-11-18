@@ -220,13 +220,23 @@ NULL
 #' @name bnc_dag_object
 NULL
 
-#' A Bayesian network classifier with structure and parameters.
+#' Inspect a Bayesian network classifier with structure and parameters.
 #' 
-#' You can query this object using the following functions, in addition to all the functions that can be applied to a \code{\link{bnc_dag_object}}. 
+#' Functions for inspecting a \code{bnc_bn} object. In addition, you can query 
+#' this object with the functions that can be applied to a \code{bnc_dag}. See
+#' \code{\link{bnc_dag_object}}.
 #' 
-#' @param x The \code{bnc_bn} object.
-#' 
+#' @inheritParams nb
+#'   
 #' @name bnc_bn_object
+#' @examples  
+#' data(car)
+#' nb <- bnc('nb', 'class', car, smooth = 1)
+#' nparams(nb)
+#' nb <- bnc('nb', 'class', car, smooth = 1, manb_prior = 0.5)
+#' manb_arc_posterior(nb)
+#' nb <- bnc('nb', 'class', car, smooth = 1, awnb_bootstrap = 0.5)
+#' awnb_weights(nb)
 NULL
 
 #' Compute (penalized) log-likelihood.

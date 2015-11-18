@@ -8,7 +8,7 @@
 \alias{nparams}
 \alias{params}
 \alias{values}
-\title{A Bayesian network classifier with structure and parameters.}
+\title{Inspect a Bayesian network classifier with structure and parameters.}
 \usage{
 nparams(x)
 
@@ -22,11 +22,10 @@ values(x)
 
 classes(x)
 }
-\arguments{
-\item{x}{The \code{bnc_bn} object.}
-}
 \description{
-You can query this object using the following functions, in addition to all the functions that can be applied to a \code{\link{bnc_dag_object}}.
+Functions for inspecting a \code{bnc_bn} object. In addition, you can query
+this object with the functions that can be applied to a \code{bnc_dag}. See
+\code{\link{bnc_dag_object}}.
 }
 \section{Functions}{
 \itemize{
@@ -43,4 +42,13 @@ according to the MANB method.
 
 \item \code{classes}: Returns the possible values of the class variable.
 }}
+\examples{
+data(car)
+nb <- bnc('nb', 'class', car, smooth = 1)
+nparams(nb)
+nb <- bnc('nb', 'class', car, smooth = 1, manb_prior = 0.5)
+manb_arc_posterior(nb)
+nb <- bnc('nb', 'class', car, smooth = 1, awnb_bootstrap = 0.5)
+awnb_weights(nb)
+}
 

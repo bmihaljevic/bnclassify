@@ -10,9 +10,6 @@ as_graphNEL(x)
 
 as_grain(x)
 }
-\arguments{
-\item{x}{The \code{bnc_bn} object.}
-}
 \description{
 Convert a \code{\link{bnc_dag_object}} to \code{\link[graph]{graphNEL}} and
 \code{\link[gRain]{grain}} objects.
