@@ -23,7 +23,7 @@ nb <- function(class, dataset = NULL, features = NULL) {
 }
 #' @export
 #' @rdname greedy_wrapper
-fssj <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {    
+fssj <- function(class, dataset, k, epsilon = 0.01, smooth = 0) {    
   just_class_nb <- nb(class = class)
   # Use just the structure, not the call 
   just_class_nb <- remove_dag_call_arg(just_class_nb)
@@ -36,7 +36,7 @@ fssj <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {
 }
 #' @rdname greedy_wrapper
 #' @export
-bsej <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {    
+bsej <- function(class, dataset, k, epsilon = 0.01, smooth = 0) {    
   full_nb <- nb(class = class, dataset)
   full_nb <- remove_dag_call_arg(full_nb)
   x <- greedy_search(class = class, to_include = NULL, init = full_nb,
@@ -46,7 +46,7 @@ bsej <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {
 }
 #' @export
 #' @rdname greedy_wrapper
-tan_hc <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {    
+tan_hc <- function(class, dataset, k, epsilon = 0.01, smooth = 0) {    
   full_nb <- nb(class = class, dataset)
   full_nb <- remove_dag_call_arg(full_nb)
   x <- greedy_search(class = class, to_include = NULL, init = full_nb,
@@ -57,7 +57,7 @@ tan_hc <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {
 }
 #' @export
 #' @rdname greedy_wrapper
-tan_hcsp <- function(class, dataset, k, epsilon = 0.01, smooth = 0.01) {    
+tan_hcsp <- function(class, dataset, k, epsilon = 0.01, smooth = 0) {    
   full_nb <- nb(class = class, dataset)
   full_nb <- remove_dag_call_arg(full_nb)
   x <- greedy_search(class = class, to_include = NULL, init = full_nb,
