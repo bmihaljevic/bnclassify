@@ -133,8 +133,8 @@ NULL
 
 #' Learn Bayesian network classifiers in a a greedy wrapper fashion.
 #' 
-#' Greedy wrapper algorithms for learning Bayesian network classifiers. All
-#' algorithms use cross-validated estimate of predictive accuracy to evaluate
+#' Greedy wrapper algorithms for learning Bayesian network classifiers. All 
+#' algorithms use cross-validated estimate of predictive accuracy to evaluate 
 #' candidate structures.
 #' 
 #' @name greedy_wrapper
@@ -144,6 +144,9 @@ NULL
 #' @inheritParams learn_params
 #' @param epsilon A numeric. Minimum absolute improvement in accuracy required 
 #'   to keep searching.
+#' @param cache_reset A numeric. Number of interations after which to reset the 
+#'   cache of conditional probability tables. A small number reduces the amount
+#'   of memory used. \code{NULL} means the cache is never reset (the default).
 #' @return A \code{\link{bnc_dag}} object.
 #'   
 #' @references Pazzani M (1996). Constructive induction of Cartesian product 

@@ -8,13 +8,14 @@
 \alias{tan_hcsp}
 \title{Learn Bayesian network classifiers in a a greedy wrapper fashion.}
 \usage{
-fssj(class, dataset, k, epsilon = 0.01, smooth = 0)
+fssj(class, dataset, k, epsilon = 0.01, smooth = 0, cache_reset = NULL)
 
-bsej(class, dataset, k, epsilon = 0.01, smooth = 0)
+bsej(class, dataset, k, epsilon = 0.01, smooth = 0, cache_reset = NULL)
 
-tan_hc(class, dataset, k, epsilon = 0.01, smooth = 0)
+tan_hc(class, dataset, k, epsilon = 0.01, smooth = 0, cache_reset = NULL)
 
-tan_hcsp(class, dataset, k, epsilon = 0.01, smooth = 0)
+tan_hcsp(class, dataset, k, epsilon = 0.01, smooth = 0,
+  cache_reset = NULL)
 }
 \arguments{
 \item{class}{A character. Name of the class variable.}
@@ -28,6 +29,10 @@ to keep searching.}
 
 \item{smooth}{A numeric. The smoothing value (\eqn{\alpha}) for Bayesian
 parameter estimation. Nonnegative.}
+
+\item{cache_reset}{A numeric. Number of interations after which to reset the
+cache of conditional probability tables. A small number reduces the amount
+of memory used. \code{NULL} means the cache is never reset (the default).}
 }
 \value{
 A \code{\link{bnc_dag}} object.

@@ -1,6 +1,6 @@
 # Ties are resolved randomly.
 greedy_search <- function(class, to_include, init, step, dataset, epsilon, k, 
-                          smooth) {
+                          smooth, cache_reset = NULL) {
   stopifnot(is_nonnegative(epsilon))
   #  Init loop variables   
   scores_log <- numeric()  
@@ -29,6 +29,9 @@ greedy_search <- function(class, to_include, init, step, dataset, epsilon, k,
     current_dag <- candidate_dags[[best_ind]]
     current_score <- scores[[best_ind]]
     scores_log <- c(scores_log, current_score)
+    if (!is.null(cache_reset)) {
+      if (length(scores_log) %% cache_reset == 0) lapply(train, forget)
+    }
     # Generate all candidates from best state 
     # ...tan_hcsp requires parameters dataset, smooth, and k; the rest do not
     candidate_dags <- step(bnc_dag = current_dag,
