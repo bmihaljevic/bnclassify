@@ -43,7 +43,7 @@ microbenchmark(bnclassify = predict(nb, car),
 The wrapper algorithms can be computationally intensive. The following are runtimes for `tan_hc` on a Windows 7, 2.80 GHz, 16 GB RAM machine. 
 
 ```{r}
-microbenchmark::microbenchmark(
+microbenchmark(
   tan_hc = {set.seed(0); t <- b <- tan_hc('class', car, k = 10, 
                                           epsilon = 0)},
   tan_hc5 = {set.seed(0); t <- b <- tan_hc('class', car, k = 5, 
@@ -68,7 +68,7 @@ library(mlbench)
 data(Soybean)
 soy_complete <- na.omit(Soybean)
 dim(soy_complete)
-microbenchmark::microbenchmark( 
+microbenchmark( 
   tan_hc = {set.seed(0); tan_hc('Class', soy_complete, k = 5, 
                                   epsilon = 0)}, 
   times = 1)
