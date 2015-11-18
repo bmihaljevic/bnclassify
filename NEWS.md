@@ -1,4 +1,4 @@
-# 0.3.1.9000
+# 0.3.2
 * Memoized cpt extraction during greedy search 
 * Deprecated lpawnb() (use lp() instead)
 * Added logLik, AIC, and BIC
