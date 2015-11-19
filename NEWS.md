@@ -1,11 +1,11 @@
 # 0.3.2
-* Memoized cpt extraction during greedy search 
-* Deprecated lpawnb() (use lp() instead)
-* Added logLik, AIC, and BIC
+* Improved function documentation
 * Updated and re-organized tutorial vignette 
 * Added 'techical information' and 'runtimes' vignettes
-* Fixed: #2; an error in AWNB cross-validation  (#3) 
-* Improved function documentation
+* Added logLik, AIC, and BIC
+* Memoized cpt extraction during greedy search 
+* Deprecated lpawnb() (use lp() instead)
+* Fixed a number of bugs, including an error in AWNB cross-validation 
 
 # 0.3.1
 * Minor improvements in vignette 
