@@ -50,7 +50,7 @@ Estimate predictive accuracy with cross validation.
 
 ``` r
 cv(tn, car, k = 10)
-#> [1] 0.9409732
+#> [1] 0.937511
 ```
 
 Or compute the log-likelihood
@@ -80,8 +80,11 @@ Or get the current development version from Github:
 
 ``` r
 # install.packages('devtools')
-devtools::install_github('bmihaljevic/bnclassify', build_vignettes = TRUE)
+devtools::install_github('bmihaljevic/bnclassify')
+# devtools::install_github('bmihaljevic/bnclassify', build_vignettes = TRUE)
 ```
+
+Ideally, you would use the `build_vignettes = TRUE` version, and thus get the vignettes, but it requires programs such as texi2dvi to be installed on your side.
 
 Overview
 ========

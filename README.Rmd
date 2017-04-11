@@ -69,8 +69,11 @@ install.packages('bnclassify')
 Or get the current development version from Github:
 ```{r, eval = FALSE}
 # install.packages('devtools')
-devtools::install_github('bmihaljevic/bnclassify', build_vignettes = TRUE)
+devtools::install_github('bmihaljevic/bnclassify')
+# devtools::install_github('bmihaljevic/bnclassify', build_vignettes = TRUE)
 ```
+
+Ideally, you would use the `build_vignettes = TRUE` version, and thus get the vignettes, but it requires programs such as texi2dvi to be installed on your side. 
 
 # Overview
 
