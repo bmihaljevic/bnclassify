@@ -10,12 +10,11 @@
 #' @examples 
 #' data(car)
 #' nb <- bnc('nb', 'class', car, smooth = 1)
+#' library(mlr)
 #' nb_mlr <- as_mlr(nb, dag = FALSE, id = "ode_cl_aic") 
 #' nb_mlr
 as_mlr <- function(x, dag, id = "1") {
-  if (!requireNamespace("mlr", quietly = TRUE)) {
-    stop("Package mlr required for this functionality.")
-  }
+  check_mlr_attached()  
   check_bnc_bn(x)
   args <- bnc_get_update_args(x, dag)
   # Call make learner with the arguments
@@ -69,3 +68,12 @@ retrieve_bnc_properties <- function() {
   c("oneclass", "twoclass", "multiclass", "factors", "prob", "numerics", 
     "missings")
 }
+#' Checks if mlr attached.
+#' 
+#' mlr must be attached because otherwise  `getMlrOptions()` in `makeLearner` will not be found.
+check_mlr_attached <- function() {
+  mlr_loaded <- 'package:mlr' %in% search()
+  if (!mlr_loaded) {
+    stop("mlr package must be loaded (run, e.g., library(mlr)) in order to use this functionality. Install the package first if needed.")
+  } 
+} 

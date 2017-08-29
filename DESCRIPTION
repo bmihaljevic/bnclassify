@@ -31,3 +31,4 @@ Suggests:
 License: GPL (>= 2)
 Maintainer: Mihaljevic Bojan <bmihaljevic@fi.upm.es>
 VignetteBuilder: knitr
+RoxygenNote: 6.0.1
