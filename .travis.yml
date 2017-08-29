@@ -4,6 +4,7 @@ language: r
 warnings_are_errors: true
 sudo: required
 bioc_required: true
+use_bioc: true
 
 bioc_packages:
 - graph
