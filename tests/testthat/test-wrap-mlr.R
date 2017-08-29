@@ -2,7 +2,8 @@ context("mlr")
 
 test_that("as mlr", {
   skip_on_cran()
-  skip_if_not_installed('mlr')
+  skip_if_not_installed('mlr') 
+  library(mlr)
   # Creates a learner just for fitting
   nf <- nbcar()
   ml <- as_mlr(nf, dag = FALSE)

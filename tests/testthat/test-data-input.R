@@ -15,7 +15,7 @@ test_that("Check dataset", {
   expect_error(check_dataset(tm), "unique")
   tm <- car; colnames(tm)[1] <- NA
   expect_error(check_dataset(tm),
-               "Error : is_non_empty_complete(cnames) is not TRUE", fixed = TRUE)
+               "is_non_empty_complete(cnames) is not TRUE", fixed = TRUE)
   tm <- car; tm[[1]] <- as.numeric(tm[[1]])
   expect_error(check_dataset(tm), "factors")
 })
