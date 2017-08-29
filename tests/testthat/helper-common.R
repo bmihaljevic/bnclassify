@@ -52,7 +52,7 @@ identical_non_call <- function(x, y) {
 
 # Load data
 
-data(car)
-data(voting)
+data(car, envir = environment())
+data(voting, envir = environment())
 v <- na.omit(voting)
 alphadb <- random_letters_db()
