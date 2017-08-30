@@ -2,18 +2,25 @@
 
 language: r
 warnings_are_errors: true
-sudo: required 
-
-after_success:
-  - Rscript -e 'covr::codecov()'
+sudo: required   
 
 env:
  global:
    - CRAN: http://cran.rstudio.com
-before_install: echo "options(repos = c(CRAN='http://cran.rstudio.com'))" > ~/.Rprofile   
+   
+before_install: 
+    - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
+    - chmod 755 ./travis-tool.sh
+    - ./travis-tool.sh bootstrap
+    - echo "options(repos = c(CRAN='http://cran.rstudio.com'))" > ~/.Rprofile   
+    
 install: 
   - ./travis-tool.sh install_bioc_deps 
-
+  - ./travis-tool.sh install_deps      
+  
+after_success:
+  - Rscript -e 'covr::codecov()'
+  
 notifications:
   email:
     on_success: change
