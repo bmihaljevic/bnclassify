@@ -3,15 +3,8 @@
 language: r
 warnings_are_errors: true
 sudo: required
-# bioc_required: true
-# use_bioc: true  
-
-before_install:
-  - echo "options(repos = c(CRAN='http://cran.rstudio.com'))" > ~/.Rprofile   
-  - R_USE_BIOC_CMDS='source('\''http://bioconductor.org/biocLite.R'\''); tryCatch(useDevel(TRUE), error=function(e) {if (!grepl('\''already in use'\'', e)) {e}}); options(repos=biocinstallRepos());' 
-  
-install:
-  - Rscript -e "${R_USE_BIOC_CMDS}"' biocLite(commandArgs(TRUE))' "$@" 
+bioc_required: true
+use_bioc: true  
 
 after_success:
   - Rscript -e 'covr::codecov()'
@@ -19,6 +12,7 @@ after_success:
 env:
  global:
    - CRAN: http://cran.rstudio.com
+before_install: echo "options(repos = c(CRAN='http://cran.rstudio.com'))" > ~/.Rprofile   
 
 notifications:
   email:
