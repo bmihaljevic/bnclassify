@@ -1,3 +1,5 @@
+# 0.3.2.9000
+
 # 0.3.2
 * Improved function documentation
 * Updated and re-organized tutorial vignette 
