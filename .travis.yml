@@ -7,7 +7,7 @@ sudo: required
 env:
  global:
    - CRAN: http://cran.rstudio.com
-   - R_USE_BIOC_CMDS: 'source('\''http://bioconductor.org/biocLite.R'\''); tryCatch(useDevel(TRUE), error=function(e) {if (!grepl('\''already in use'\'', e)) {e}}); options(repos=biocinstallRepos());'
+   - R_USE_BIOC_CMDS: "source('\''http://bioconductor.org/biocLite.R'\''); tryCatch(useDevel(TRUE), error=function(e) {if (!grepl('\''already in use'\'', e)) {e}}); options(repos=biocinstallRepos());"
    
 before_install: 
     - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
@@ -17,7 +17,7 @@ before_install:
     
 install:  
   - Rscript -e "${R_USE_BIOC_CMDS}"' biocLite(commandArgs(TRUE))' graph
-  - ./travis-tool.sh install_deps        
+- ./travis-tool.sh install_deps        
   
 after_success:
   - Rscript -e 'covr::codecov()'
