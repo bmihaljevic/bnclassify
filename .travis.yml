@@ -16,7 +16,7 @@ before_install:
     
 install:  
   - Rscript -e "source('http://bioconductor.org/biocLite.R');tryCatch(useDevel(TRUE), error=function(e)"'{if (!grepl'"('already in use', e)) {e}}); options(repos=biocinstallRepos()); biocLite(commandArgs(TRUE))" graph RBGL Rgraphviz
-  - ./travis-tool.sh install_deps        
+  - Rscript -e "install.packages(c('assertthat', 'entropy', 'matrixStats', 'rpart', 'gRain', 'gRbase', 'mlr', 'testthat', 'knitr', 'microbenchmark', 'ParamHelpers', 'rmarkdown','covr'))"
   
 after_success:
   - Rscript -e 'covr::codecov()'
@@ -24,4 +24,4 @@ after_success:
 notifications:
   email:
     on_success: change
-    on_failure: change
+    on_failure: change 
