@@ -17,7 +17,7 @@ before_install:
     
 install:  
   - Rscript -e "${R_USE_BIOC_CMDS}"' biocLite(commandArgs(TRUE))' graph
-- ./travis-tool.sh install_deps        
+  - ./travis-tool.sh install_deps        
   
 after_success:
   - Rscript -e 'covr::codecov()'
