@@ -25,7 +25,7 @@ tn
 plot(tn)
 ```
 
-![](README-unnamed-chunk-2-1.png)
+![](man/figures/README-unnamed-chunk-2-1.png)
 
 After learning the network's parameters, you can use it to classify data.
 
@@ -50,7 +50,7 @@ Estimate predictive accuracy with cross validation.
 
 ``` r
 cv(tn, car, k = 10)
-#> [1] 0.937511
+#> [1] 0.9409595
 ```
 
 Or compute the log-likelihood
