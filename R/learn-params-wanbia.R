@@ -33,12 +33,7 @@ cll_gradient_var <- function(x, cpt, class, cp) {
 #  How many max iterations?
 #  MSE or CLL
 # 
-#  Numerically OK? 
-# debug evolution of values of w
-# 
-# function of w. a point is a vector of weights 
-# 0 and 1 are bounds for weights 
-# initial w = 1 
+# 0 and 1 are bounds for weights  initial w = 1 
 compute_wanbia_weights <- function(class, dataset) {
   # stopifnot(is_nb(x))
   features <- setdiff(colnames(dataset), class)
