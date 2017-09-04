@@ -71,6 +71,7 @@ retrieve_bnc_properties <- function() {
 #' Checks if mlr attached.
 #' 
 #' mlr must be attached because otherwise  `getMlrOptions()` in `makeLearner` will not be found.
+#' @keywords internal
 check_mlr_attached <- function() {
   mlr_loaded <- 'package:mlr' %in% search()
   if (!mlr_loaded) {
