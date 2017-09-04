@@ -1,3 +1,6 @@
+# 0.3.3
+* Fixed warnings for resubmission to CRAN
+
 # 0.3.2
 * Improved function documentation
 * Updated and re-organized tutorial vignette 
