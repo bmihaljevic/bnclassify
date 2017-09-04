@@ -1,5 +1,10 @@
+ context("learn params wanbia")
+
 test_that('make cll', {
   make_cll('Class', v)(rep(1, 16))
+  
+  # Too few weights
+  expect_error(make_cll('Class', v)(rep(1, 15)))
 })
 
 get_accus <- function(class_var, w, dataset) {
@@ -12,15 +17,14 @@ get_accus <- function(class_var, w, dataset) {
 
 test_that('datasets', {
   w <- compute_wanbia_weights('Class', v)  
-  names(w)[w > 0.3] 
-  get_accus('Class', w, v) 
-  
+  acc <- get_accus('Class', w, v)   
+  expect_true(acc[2] > acc[1])
   
   w <- compute_wanbia_weights('class', car)  
-  names(w)[w > 0.3]  
-  get_accus('class', w, car) 
+  acc <- get_accus('class', w, car)   
   
+  # Too slow 
   # kr <- foreign::read.arff('~/gd/phd/code/works-aug-semi-bayes/data/original/kr-vs-kp.arff') 
   # w <- compute_wanbia_weights('class', kr)   
-  get_accus('class', w, kr) 
-})
+  # get_accus('class', w, kr) 
+})  
