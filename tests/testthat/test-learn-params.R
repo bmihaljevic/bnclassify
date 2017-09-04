@@ -136,3 +136,11 @@ test_that("check manb predictions match wei java implementation", {
   expect_equal(as.vector(p[12, 2]), 0.301510, tolerance = 0.000002)
   expect_equal(as.vector(p[18, 2]), 0.418681, tolerance = 0.000002)
 })
+
+test_that("wanbia", { 
+  n <- nb('Class', v)
+  w <- lp(n, v, smooth = 1, wanbia = TRUE)
+  nb <- lp(n, v, smooth = 1)
+  expect_lt(sum(abs(params(w)$anti_satellite_test_ban - 0.5)), 1e-15) 
+})
+  
