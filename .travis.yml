@@ -20,6 +20,8 @@ after_success:
 
 ## Set up the matrix of different runs
 env:
+  global:
+  - _R_CHECK_CRAN_INCOMING_: TRUE
   matrix:
   - r: release
     not_cran: true
