@@ -7,7 +7,7 @@
 fast_equal(a, b)
 }
 \arguments{
-\item{b}{numeric. Must be lenght one but no check is performed.}
+\item{b}{numeric. Must be length one but no check is performed.}
 }
 \description{
 Compares all elements in a to b

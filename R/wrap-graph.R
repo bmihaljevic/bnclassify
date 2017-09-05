@@ -45,7 +45,7 @@ named_edge_matrix <- function(g) {
 #' Direct an undirected graph.
 #' 
 #' Starting from a \code{root} not, directs all arcs away from it and applies 
-#' the same, recursively to its children and descendents. Produces a directed
+#' the same, recursively to its children and descendants. Produces a directed
 #' forest.
 #' 
 #' @param g An undirected \code{\link{graphNEL}}.

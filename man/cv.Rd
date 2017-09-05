@@ -21,7 +21,7 @@ Parameters are always learned.}
 to return a k-row matrix with accuracies per fold.}
 }
 \value{
-A numeric vector of same lenght as \code{x}, giving the predictive
+A numeric vector of same length as \code{x}, giving the predictive
   accuracy of each classifier. If \code{mean = FALSE} then a matrix with k
   rows and a column per each classifier in \code{x}.
   @examples 
@@ -34,7 +34,7 @@ A numeric vector of same lenght as \code{x}, giving the predictive
   # Get accuracies on each fold
   cv(list(nb=nb, manb=nb_manb), car, k = 10, mean = FALSE)
   ode <- bnc('tan_cl', 'class', car, smooth = 1, dag_args = list(score = 'aic')) 
-  # keep structure fixed accross training subsamples
+  # keep structure fixed across training subsamples
   cv(ode, car, k = 10, dag = FALSE)
 }
 \description{

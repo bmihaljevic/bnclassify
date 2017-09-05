@@ -2,11 +2,11 @@
 % Please edit documentation in R/wrap-rpart.R
 \name{learn_unprunned_tree}
 \alias{learn_unprunned_tree}
-\title{Learns a unprunned \code{rpart} recursive partition.}
+\title{Learns a unpruned \code{rpart} recursive partition.}
 \usage{
 learn_unprunned_tree(dataset, class)
 }
 \description{
-Learns a unprunned \code{rpart} recursive partition.
+Learns a unpruned \code{rpart} recursive partition.
 }
 \keyword{internal}

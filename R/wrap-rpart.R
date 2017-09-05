@@ -1,4 +1,4 @@
-#' Learns a unprunned \code{rpart} recursive partition.
+#' Learns a unpruned \code{rpart} recursive partition.
 #' @keywords internal
 learn_unprunned_tree <- function(dataset, class) {
   form <- as.formula(paste(class, '~ .'))    

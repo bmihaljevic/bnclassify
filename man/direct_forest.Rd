@@ -16,7 +16,7 @@ A directed \code{\link{graphNEL}}.
 }
 \description{
 Starting from a \code{root} not, directs all arcs away from it and applies 
-the same, recursively to its children and descendents. Produces a directed
+the same, recursively to its children and descendants. Produces a directed
 forest.
 }
 \keyword{internal}

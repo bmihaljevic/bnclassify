@@ -30,7 +30,7 @@ to keep searching.}
 \item{smooth}{A numeric. The smoothing value (\eqn{\alpha}) for Bayesian 
 parameter estimation. Nonnegative.}
 
-\item{cache_reset}{A numeric. Number of interations after which to reset the 
+\item{cache_reset}{A numeric. Number of iterations after which to reset the 
 cache of conditional probability tables. A small number reduces the amount
 of memory used. \code{NULL} means the cache is never reset (the default).}
 }

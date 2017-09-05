@@ -38,7 +38,7 @@ rep_factor_as_int <- function(f, reps) {
 }
 #' Compares all elements in a to b
 #' 
-#' @param b numeric. Must be lenght one but no check is performed.
+#' @param b numeric. Must be length one but no check is performed.
 #' @keywords internal
 fast_equal <- function(a, b) {
   #   stopifnot(length(b) == 1) No check for efficiency
