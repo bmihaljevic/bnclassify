@@ -3,7 +3,7 @@ After being archived last year, the package now passes check on multiple platfor
 
 ## Test environments
 * ubuntu 14.04, R-devel and R-release (travis-CI)
-* Ubuntu 14.04, R 3.4.0 (local)
+* Ubuntu 14.04, R 3.4.1 (local)
 * win-builder (R-devel and R-release)
 
 ## R CMD check results
