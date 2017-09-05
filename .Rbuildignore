@@ -1,14 +1,10 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-tmp-vignette-example.Rmd
 .gitignore
 cran-comments.md
 develop
 paper
 theory
-vignettes\bnclassify-implementation.Rmd
 design-and-manage
 ^\.travis\.yml$
 ^README\.Rmd$
-^README-.*\.png$
-^NEWS\.md$

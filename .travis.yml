@@ -1,11 +1,7 @@
 language: r
 warnings_are_errors: true
 sudo: required   
-dist: trusty
-
-r:
-   - release
-   - devel
+dist: trusty 
 
 env:
  global:
@@ -21,6 +17,24 @@ install:
   
 after_success:
   - Rscript -e 'covr::codecov()'
+
+## Set up the matrix of different runs
+env:
+  global:
+  - _R_CHECK_CRAN_INCOMING_: TRUE
+  matrix:
+  - r: release
+    not_cran: true
+    r_check_args: "--no-manual"
+  - r: release
+    not_cran: false
+    r_check_args: "--no-manual --as-cran"
+  - r: devel
+    not_cran: true
+    r_check_args: "--no-manual"
+  - r: devel
+    not_cran: false
+    r_check_args: "--no-manual --as-cran"
   
 notifications:
   email:
