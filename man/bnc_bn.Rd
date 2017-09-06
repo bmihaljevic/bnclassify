@@ -14,3 +14,12 @@ in \code{\link{inspect_bnc_bn}} and \code{\link{inspect_bnc_dag}}, and
 convert it to mlr, grain, and graph objects --see \code{\link{as_mlr}} and 
 \code{\link{grain_and_graph}}.
 }
+\examples{
+data(car)
+tan <- bnc('tan_cl', 'class', car, smooth = 1)   
+tan
+p <- predict(tan, car)
+head(p)
+plot(tan)
+nparams(tan)
+}

@@ -95,6 +95,15 @@ NULL
 #' \code{\link{grain_and_graph}}.
 #' 
 #' @name bnc_bn
+#' 
+#' @examples 
+#' data(car)
+#' tan <- bnc('tan_cl', 'class', car, smooth = 1)   
+#' tan
+#' p <- predict(tan, car)
+#' head(p)
+#' plot(tan)
+#' nparams(tan)
 NULL
 
 #' Bayesian network classifier structure.
@@ -103,10 +112,17 @@ NULL
 #' \code{\link{nb}} and \code{\link{tan_cl}}. You can plot its structure (with 
 #' \code{\link[=plot.bnc_dag]{plot}}), print a summary to console 
 #' (\code{\link[=print.bnc_dag]{print}}), inspect it with functions documented
-#' in \code{\link{inspect_bnc_dag}}, and convert it to a graph object; see
+#' in \code{\link{inspect_bnc_dag}}, and convert it to a graph object with 
 #' \code{\link{grain_and_graph}}.
 #' 
 #' @name bnc_dag
+#' 
+#' @examples 
+#' data(car)
+#' nb <- tan_cl('class', car)   
+#' nb
+#' plot(nb)
+#' narcs(nb)
 NULL
 
 #' Congress Voting Data Set.

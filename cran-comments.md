@@ -5,7 +5,7 @@ This is a re-submission. The CRAN reviewer has asked me to:
 
 I have:
 - Added a reference to a survey paper covering most of the implemented algorithms
-- All 16 documented function groups now have small executable examples: added 4 examples (cv, accuracy, predict, and greedy_wrapper functions) and removed one function that lacked an example 
+- All 17 documented function groups now have small executable examples: added 6 examples and removed one function that lacked an example 
 
 ## Test environments
 * ubuntu 14.04, R-devel and R-release (travis-CI)
