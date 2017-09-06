@@ -90,3 +90,15 @@ make_call <- function(f, args) {
   f <- as.name(f)
   as.call(c(f, args))
 }
+#' Subset a 2D structure by a vector of column names.
+#' 
+#' Not all colnames are necessarily in the columns of data; in that case this
+#' returns NA.
+#' @param colnames a character vector
+#' @param data a matrix or data frame 
+subset_by_colnames <- function(colnames, data) {
+  stopifnot(is.character(colnames), length(colnames) == nrow(data)) 
+  ind_cols <- match(colnames, colnames(data))
+  ind_matrix <- cbind(seq_along(ind_cols), ind_cols)
+  data[ind_matrix]   
+}

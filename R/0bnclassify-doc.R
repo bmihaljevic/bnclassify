@@ -51,7 +51,7 @@
 #' 
 #' @docType package
 #' @name bnclassify
-#' @importFrom stats predict as.formula complete.cases setNames logLik AIC BIC nobs
+#' @importFrom stats predict as.formula complete.cases setNames logLik AIC BIC nobs optim
 #' @importFrom graphics plot
 #' @importFrom utils combn 
 #' 
@@ -222,7 +222,7 @@ NULL
 #' \alpha},}{\theta[ijk] = (N[ijk] + \alpha) / (N[ ij . ] + r[i] \alpha),} where
 #' \eqn{N_{ijk}}{N[ijk]} is the number of instances in \code{dataset} in which 
 #' \eqn{X_i = k}{X[i] = k} and \eqn{\mathbf{Pa}(X_i) = j}{Pa(X[i]) = j}, 
-#' \eqn{N_{ ij \cdot} = \sum_{k=1}^{r_i} N_{ijk}}{N[ ij . ] = \sum[k=1]^(r[i])
+#' \eqn{N_{ ij \cdot} = \sum_{k=1}^{r_i} N_{ijk}}{N[ ij . ] = \sum[k=1]^(r[i]) 
 #' N[ijk]}, \eqn{r_i}{r[i]} is the cardinality of \eqn{X_i}{X[i]}, and all 
 #' hyperparameters of the Dirichlet prior equal to \eqn{\alpha}. \eqn{\alpha = 
 #' 0} corresponds to maximum likelihood estimation. Returns a uniform 
@@ -236,15 +236,16 @@ NULL
 #' \theta_{ijk}^{w_i}},}{\theta[ijk]^(AWNB) = (\theta[ijk])^w[i] / 
 #' \sum[k=1]^(r[i]) (\theta[ijk])^(w[i]),} while the weights \eqn{w_i}{w[i]} are
 #' computed as \deqn{w_i = \frac{1}{M}\sum_{t=1}^M \sqrt{\frac{1}{d_{ti}}},}{w_i
-#' = (1 / M)\sum_[t=1]^M \sqrt{1 / d[ti]},} where \eqn{M} is the number of
-#' bootstrap samples from \code{dataset} and \eqn{d_{ti}}{d[ti]} the minimum
-#' testing depth of \eqn{X_i}{X[i]} in an unpruned classification tree learned
-#' from the \eqn{t}-th subsample (\eqn{d_{ti} = 0}{d[ti] = 0} if \eqn{X_i}{X_i}
+#' = (1 / M)\sum_[t=1]^M \sqrt{1 / d[ti]},} where \eqn{M} is the number of 
+#' bootstrap samples from \code{dataset} and \eqn{d_{ti}}{d[ti]} the minimum 
+#' testing depth of \eqn{X_i}{X[i]} in an unpruned classification tree learned 
+#' from the \eqn{t}-th subsample (\eqn{d_{ti} = 0}{d[ti] = 0} if \eqn{X_i}{X_i} 
 #' is omitted from \eqn{t}-th tree).
 #' 
 #' The MANB parameters correspond to Bayesian model averaging over the naive 
 #' Bayes models obtained from all \eqn{2^n}{2^n} subsets over the \eqn{n} 
-#' features. To get MANB parameters, provide the \code{manb_prior} argument.
+#' features. To get MANB parameters, provide the \code{manb_prior} argument. For
+#' the WANBIA feature weighting, set \code{wanbia} to \code{TRUE}.
 #' 
 #' @name learn_params
 #'   
@@ -259,6 +260,8 @@ NULL
 #'   relative to the size of \code{dataset} (given in [0,1]).
 #' @param manb_prior A numeric. The prior probability for an arc between the 
 #'   class and any feature.
+#' @param wanbia A logical. If \code{TRUE}, WANBIA feature weighting is
+#'   performed.
 #' @return A \code{\link{bnc_bn}} object.
 #' @references Hall M (2004). A decision tree-based attribute weighting filter 
 #'   for naive Bayes. \emph{Knowledge-based Systems}, \bold{20}(2), 120-126.

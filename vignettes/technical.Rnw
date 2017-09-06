@@ -96,8 +96,9 @@ Parameter learning methods:
 
 \begin{itemize}
 \item Bayesian and maximum likelihood estimation
-\item Attribute-weighted naive Bayes (AWNB)  \citep{Hall2007}
 \item Model averaged naive Bayes (MANB) \citep{Dash2002}
+\item Weighting to Alleviate the Naive Bayes Independence Assumption (WANBIA) \citep{Zaidi2013}
+\item Attribute-weighted naive Bayes (AWNB)  \citep{Hall2007}
 \end{itemize}
 
 Model evaluating:
@@ -279,30 +280,6 @@ case analysis} \citep{Pigott2001} and estimate the parameters independently, sub
 
 Thus, the parameter estimates are not maximum likelihood nor Bayesian when data is incomplete.
 
-\subsection{Attribute-weighted naive Bayes}
-
-The AWNB parameter estimation method is intended for the naive Bayes but in \code{bnclassify} it can be applied to any model. It exponentiates the conditional probability of a predictor,
-
-\begin{equation*}
-P(\mathbf{X}, C) \propto P(C) \prod_{i=1}^{n} P(X_i \mid \mathbf{Pa}(X_i))^{w_i},
-\label{eq:awnb}
-\end{equation*}
-
-\noindent reducing or maintaining its effect on the class posterior, since \(w_i \in [0,1]\) (note that a weight \(w_i = 0\) omits \(X_i\) from the model, rendering it independent from the class.). This is equivalent to updating parameters of $\theta_{ijk}$ given by Equation~(\ref{eq:incp_params}) as 
-
-\begin{equation*}
-  \theta_{ijk}^{AWNB} = \frac{\theta_{ijk}^{w_i}}{\sum_{k=1}^{r_i} \theta_{ijk}^{w_i}},
-\end{equation*}
-
-and plugging those estimates into Equation~(\ref{eq:augnb}). Weights $w_i$ are computed as
-
-\[w_i = \frac{1}{M}\sum_{t=1}^M \frac{1}{\sqrt{d_{ti}}},\]
-
-where \(M\) is the number of bootstrap \citep{Efron1979} subsamples
-from \(\mathcal{D}\) and \(d_{ti}\) is the minimum testing depth of \(X_i\)
-in an unpruned classification tree learned from the \(t\)-th subsample
-(\(d_{ti} = 0\) if \(X_i\) is omitted from \(t\)-th tree). 
-
 \subsection{Exact model averaging for naive Bayes}
 
 The MANB parameter estimation method corresponds to exact Bayesian model averaging over the naive Bayes models obtained from all $2^n$ subsets of the $n$ features, yet it is computed in time linear in $n$. The implementation in \code{bnclassify} follows the online appendix of \cite{Wei2011}, extending it to the cases where $\alpha \neq 1$ in Equation~(\ref{eq:incp_params}).
@@ -350,6 +327,39 @@ P(\mathcal{G}) = P(\mathcal{G}_{C \nbigCI X_i})^a (1-P(\mathcal{G}_{C \nbigCI X_
 \end{equation}
 
 Note that \code{bnclassify} computes the above in logarithmic space to reduce numerical errors. 
+
+\subsection{Weighting to Alleviate the Naive Bayes Independence Assumption}
+Like AWNB, the WANBIA \citep{Zaidi2013} method updates naive Bayes' parameters with a single exponent `weight' per feature. The weights are computed by optimizing either the conditional log-likelihood or the mean root squared error of the predictions. \code{bnclassify} implements the conditional log-likelihood optimization as described in the original paper, namely optimizing it with the L-BFGS \citep{Zhu1997algorithm} algorithm, with its gradient for feature $X_i$ given by 
+
+\begin{equation}
+    g_i = \sum_{j = 1}{N} \big( \log{P(X_i = x^{(j)} \mid c^{(j)})} - \sum_{c \in C} P(c \mid \mathbf{x}; \mathbf{w} ) \log P(X_i = x^{(j)} \mid c \big),
+\end{equation}
+where the probabilities are those estimated with maximum likelihood, i.e., without taking weights into account, whereas $P(c \mid \mathbf{x}; \mathbf{w} )$ takes weights into account. This corresponds to discriminative learning of parameters, as a discriminative, rather than generative, objective function is optimized.  
+
+\subsection{Attribute-weighted naive Bayes}
+
+The AWNB parameter estimation method is intended for the naive Bayes but in \code{bnclassify} it can be applied to any model. It exponentiates the conditional probability of a predictor,
+
+\begin{equation*}
+P(\mathbf{X}, C) \propto P(C) \prod_{i=1}^{n} P(X_i \mid \mathbf{Pa}(X_i))^{w_i},
+\label{eq:awnb}
+\end{equation*}
+
+\noindent reducing or maintaining its effect on the class posterior, since \(w_i \in [0,1]\) (note that a weight \(w_i = 0\) omits \(X_i\) from the model, rendering it independent from the class.). This is equivalent to updating parameters of $\theta_{ijk}$ given by Equation~(\ref{eq:incp_params}) as 
+
+\begin{equation*}
+  \theta_{ijk}^{AWNB} = \frac{\theta_{ijk}^{w_i}}{\sum_{k=1}^{r_i} \theta_{ijk}^{w_i}},
+\end{equation*}
+
+and plugging those estimates into Equation~(\ref{eq:augnb}). Weights $w_i$ are computed as
+
+\[w_i = \frac{1}{M}\sum_{t=1}^M \frac{1}{\sqrt{d_{ti}}},\]
+
+where \(M\) is the number of bootstrap \citep{Efron1979} subsamples
+from \(\mathcal{D}\) and \(d_{ti}\) is the minimum testing depth of \(X_i\)
+in an unpruned classification tree learned from the \(t\)-th subsample
+(\(d_{ti} = 0\) if \(X_i\) is omitted from \(t\)-th tree). 
+
 
 \section{Cross-validation}
 \label{sec:eval}

@@ -15,11 +15,8 @@ compute_ll <- function(x, dataset) {
   # Get log joint prob per class 
   log_joint_per_class <- compute_log_joint(x, dataset)
   # Find the entries in log prob corresponding to observed classes
-  observed_classes <- dataset[, class_var(x)]
-  ind_classes <- match(observed_classes, colnames(log_joint_per_class)) 
-  # Extract them with matrix indices
-  ind_classes <- cbind(seq_len(nrow(dataset)), ind_classes)
-  class_probs <- log_joint_per_class[ind_classes]
+  observed_classes <- as.character(dataset[, class_var(x)])
+  class_probs <- subset_by_colnames(observed_classes, log_joint_per_class)   
   # Sum them up 
   sum(class_probs)
 }
