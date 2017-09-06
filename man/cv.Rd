@@ -24,18 +24,6 @@ to return a k-row matrix with accuracies per fold.}
 A numeric vector of same lenght as \code{x}, giving the predictive
   accuracy of each classifier. If \code{mean = FALSE} then a matrix with k
   rows and a column per each classifier in \code{x}.
-  @examples 
-  data(car)
-  nb <- bnc('nb', 'class', car, smooth = 1) 
-  # CV a single classifier
-  cv(nb, car, k = 10) 
-  nb_manb <- bnc('nb', 'class', car, smooth = 1, manb_prior = 0.5) 
-  cv(list(nb=nb, manb=nb_manb), car, k = 10)
-  # Get accuracies on each fold
-  cv(list(nb=nb, manb=nb_manb), car, k = 10, mean = FALSE)
-  ode <- bnc('tan_cl', 'class', car, smooth = 1, dag_args = list(score = 'aic')) 
-  # keep structure fixed accross training subsamples
-  cv(ode, car, k = 10, dag = FALSE)
 }
 \description{
 Estimate predictive accuracy of a classifier with stratified cross 
@@ -43,4 +31,17 @@ validation. It learns the models from the training subsamples by repeating
 the learning procedures used to obtain \code{x}. It can keep the network 
 structure fixed and re-learn only the parameters, or re-learn both structure 
 and parameters.
+}
+\examples{
+data(car)
+nb <- bnc('nb', 'class', car, smooth = 1) 
+# CV a single classifier
+cv(nb, car, k = 10) 
+nb_manb <- bnc('nb', 'class', car, smooth = 1, manb_prior = 0.5) 
+cv(list(nb=nb, manb=nb_manb), car, k = 10)
+# Get accuracies on each fold
+cv(list(nb=nb, manb=nb_manb), car, k = 10, mean = FALSE)
+ode <- bnc('tan_cl', 'class', car, smooth = 1, dag_args = list(score = 'aic')) 
+# keep structure fixed accross training subsamples
+cv(ode, car, k = 10, dag = FALSE)
 }
