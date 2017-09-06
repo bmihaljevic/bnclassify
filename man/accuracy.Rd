@@ -14,3 +14,10 @@ accuracy(x, y)
 \description{
 Compute predictive accuracy.
 }
+\examples{
+ 
+data(car)
+nb <- bnc('nb', 'class', car, smooth = 1)
+p <- predict(nb, car)
+accuracy(p, car$class)
+}
