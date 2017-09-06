@@ -28,15 +28,19 @@ cll_gradient_var <- function(x, cpt, class, cp) {
   theta_class <- mlearn::subset_by_colnames(class, theta) 
   sum(- log(theta_class) + diag(log(theta) %*% t(cp)))
 } 
-#  Compute WANBIA
-# 
-#  How many max iterations?
-#  MSE or CLL
-# 
-# 0 and 1 are bounds for weights  initial w = 1 
+#' Compute WANBIA weights.
+#'  
+#' Computes feature weights by optimizing conditional log-likelihood.  
+#' Weights are bounded to [0, 1]. Implementation based on the original paper 
+#' and the code provided at \url{http://sourceforge.net/projects/rawnaivebayes}.
+#' 
+#' @inheritParams nb
+#' @param class character 
+#' @param dataset The data frame from which to learn feature weights
+#' @return a named numeric vector
 compute_wanbia_weights <- function(class, dataset) {
-  # stopifnot(is_nb(x))
   features <- setdiff(colnames(dataset), class)
+  # Initial weights are 1.
   w <- rep(1, length(features))
   cll <- make_cll(class, dataset) 
   cll_gradient <- make_cll_gradient(class, dataset) 

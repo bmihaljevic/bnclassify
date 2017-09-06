@@ -6,7 +6,7 @@
 \title{Learn the parameters of a Bayesian network structure.}
 \usage{
 lp(x, dataset, smooth, awnb_trees = NULL, awnb_bootstrap = NULL,
-  manb_prior = NULL)
+  manb_prior = NULL, wanbia = NULL)
 }
 \arguments{
 \item{x}{The \code{\link{bnc_dag}} object. The Bayesian network classifier
