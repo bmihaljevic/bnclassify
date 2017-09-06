@@ -1,5 +1,11 @@
 ## Update 
-After being archived last year, the package now passes check on multiple platforms and R versions. 
+This is a re-submission. The CRAN reviewer has asked me to: 
+- Provide some references in the 'Description' field of DESCRIPTION file
+- Add more small executable examples in Rd-files
+
+I have:
+- Added a reference to a survey paper covering most of the implemented algorithms
+- All 16 documented function groups now have small executable examples: added 4 examples (cv, accuracy, predict, and greedy_wrapper functions) and removed one function that lacked an example 
 
 ## Test environments
 * ubuntu 14.04, R-devel and R-release (travis-CI)
