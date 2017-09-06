@@ -6,6 +6,11 @@
 \usage{
 subset_by_colnames(colnames, data)
 }
+\arguments{
+\item{colnames}{a character vector}
+
+\item{data}{a matrix or data frame}
+}
 \description{
 Not all colnames are necessarily in the columns of data; in that case this
 returns NA.

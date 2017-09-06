@@ -88,6 +88,8 @@ make_call <- function(f, args) {
 #' 
 #' Not all colnames are necessarily in the columns of data; in that case this
 #' returns NA.
+#' @param colnames a character vector
+#' @param data a matrix or data frame 
 subset_by_colnames <- function(colnames, data) {
   stopifnot(is.character(colnames), length(colnames) == nrow(data)) 
   ind_cols <- match(colnames, colnames(data))
