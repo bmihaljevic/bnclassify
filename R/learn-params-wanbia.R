@@ -25,8 +25,7 @@ cll_gradient_var <- function(x, cpt, class, class_posterior) {
   log_theta <- cpt[x, ]
   stopifnot(identical(dim(class_posterior), dim(log_theta )))
   log_theta_class <- subset_by_colnames(class, log_theta) 
-  sum(- log_theta_class + diag(log_theta %*% t(class_posterior)))
-  # sum(- log_theta_class + rowSums(log_theta * class_posterior))
+  sum(- log_theta_class + rowSums(log_theta * class_posterior))
 } 
 #' Compute WANBIA weights.
 #'  
