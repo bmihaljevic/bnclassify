@@ -5,7 +5,7 @@ make_cll <- function(class_var, dataset) {
   
   pred <- compute_cp(x = nb, dataset = dataset)  
     class <- as.character(dataset[[class_var]])
-  - sum(log(mlearn::subset_by_colnames(class, pred ) ))
+  - sum(log(subset_by_colnames(class, pred ) ))
   }    
 }
 # gradient is a vector 
@@ -18,15 +18,15 @@ make_cll_gradient <- function(class_var, dataset) {
   db <- lapply(dataset, as.character)
   feats <- db[features(nb)]
   params <- params(nb)[features(nb)]
-  mapply(cll_gradient_var, feats, params , MoreArgs = list(class = db[[class_var]], cp = cp ))
+  mapply(cll_gradient_var, feats, params , MoreArgs = list(class = db[[class_var]], class_posterior = cp ))
  } 
-} 
-cll_gradient_var <- function(x, cpt, class, cp) { 
-  # must mulptily by class, then it is OK
-  stopifnot(nrow(cp) == length(x))
-  theta <- cpt[x, ]
-  theta_class <- mlearn::subset_by_colnames(class, theta) 
-  sum(- log(theta_class) + diag(log(theta) %*% t(cp)))
+}  
+cll_gradient_var <- function(x, cpt, class, class_posterior) { 
+  log_theta <- cpt[x, ]
+  stopifnot(identical(dim(class_posterior), dim(log_theta )))
+  log_theta_class <- subset_by_colnames(class, log_theta) 
+  sum(- log_theta_class + diag(log_theta %*% t(class_posterior)))
+  # sum(- log_theta_class + rowSums(log_theta * class_posterior))
 } 
 #' Compute WANBIA weights.
 #'  
