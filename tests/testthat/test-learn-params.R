@@ -103,9 +103,9 @@ test_that('lp_implement with cache nominal', {
 test_that('either awnb or manb', {
   n <- nb('class', car)
   expect_error(lp(n, car, smooth = 1, awnb_trees = 2, manb_prior = 0.3),
-               "Either MANB or AWNB can be applied, not both.")
+               "Either MANB, AWNB, WANBIA can be applied, not more than one.")
   expect_error(lp(n, car, smooth = 1, awnb_bootstrap = 1, manb_prior = 0.3),
-               "Either MANB or AWNB can be applied, not both.")
+               "Either MANB, AWNB, WANBIA can be applied, not more than one.")
 })
 
 test_that("manb nominal", {
@@ -141,6 +141,6 @@ test_that("wanbia", {
   n <- nb('Class', v)
   w <- lp(n, v, smooth = 1, wanbia = TRUE)
   nb <- lp(n, v, smooth = 1)
-  expect_lt(sum(abs(params(w)$anti_satellite_test_ban - 0.5)), 1e-15) 
+  expect_lt(sum(abs(params(w)$anti_satellite_test_ban - 0.5)), 1e-10) 
 })
   
