@@ -21,7 +21,7 @@ as_mlr <- function(x, dag, id = "1") {
   mlr::makeLearner("bnc", id = id, par.vals = list(args=args))
 }
 #' makeRLearner. Auxiliary mlr function. 
-#' @export
+#' @export makeRLearner.bnc 
 #' @keywords internal
 makeRLearner.bnc <- function() {
   if (!requireNamespace("mlr", quietly = TRUE)) {
@@ -37,7 +37,7 @@ makeRLearner.bnc <- function() {
   )
 }
 #' trainLearner. Auxiliary mlr function. 
-#' @export 
+#' @export trainLearner.bnc 
 #' @keywords internal
 #' @param .learner,.task,.subset,.weights Internal.
 #' @param ... Internal.
@@ -51,7 +51,7 @@ trainLearner.bnc = function(.learner, .task, .subset, .weights, ...) {
   bnc_update(args, dataset)
 }
 #' predictLearner. Auxiliary mlr function. 
-#' @export 
+#' @export predictLearner.bnc 
 #' @keywords internal
 #' @param .learner,.model,.newdata Internal.
 #' @param ... Internal.
