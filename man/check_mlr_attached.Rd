@@ -9,3 +9,4 @@ check_mlr_attached()
 \description{
 mlr must be attached because otherwise  `getMlrOptions()` in `makeLearner` will not be found.
 }
+\keyword{internal}

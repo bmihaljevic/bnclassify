@@ -49,6 +49,12 @@ fast_equal <- function(a, b) {
 #' @param x A vector of predicted labels.
 #' @param y A vector of true labels.
 #' @export
+#' 
+#' @examples  
+#' data(car)
+#' nb <- bnc('nb', 'class', car, smooth = 1)
+#' p <- predict(nb, car)
+#' accuracy(p, car$class)
 accuracy <- function(x, y) {
   stopifnot(length(x) == length(y))
   sum(x == y) / length(x)

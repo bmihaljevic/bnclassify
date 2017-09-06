@@ -148,6 +148,11 @@ NULL
 #'   cache of conditional probability tables. A small number reduces the amount
 #'   of memory used. \code{NULL} means the cache is never reset (the default).
 #' @return A \code{\link{bnc_dag}} object.
+#' 
+#' @examples 
+#' data(car)
+#' tanhc <- tan_hc('class', car, k = 5, epsilon = 0)  
+#' plot(tanhc) 
 #'   
 #' @references Pazzani M (1996). Constructive induction of Cartesian product 
 #'   attributes. In \emph{Proceedings of the Information, Statistics and 

@@ -42,6 +42,12 @@ Greedy wrapper algorithms for learning Bayesian network classifiers. All
 algorithms use cross-validated estimate of predictive accuracy to evaluate 
 candidate structures.
 }
+\examples{
+data(car)
+tanhc <- tan_hc('class', car, k = 5, epsilon = 0)  
+plot(tanhc) 
+  
+}
 \references{
 Pazzani M (1996). Constructive induction of Cartesian product 
   attributes. In \emph{Proceedings of the Information, Statistics and 

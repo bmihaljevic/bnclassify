@@ -19,18 +19,19 @@
 #' @return A numeric vector of same length as \code{x}, giving the predictive
 #'   accuracy of each classifier. If \code{mean = FALSE} then a matrix with k
 #'   rows and a column per each classifier in \code{x}.
-#'   @examples 
-#'   data(car)
-#'   nb <- bnc('nb', 'class', car, smooth = 1) 
-#'   # CV a single classifier
-#'   cv(nb, car, k = 10) 
-#'   nb_manb <- bnc('nb', 'class', car, smooth = 1, manb_prior = 0.5) 
-#'   cv(list(nb=nb, manb=nb_manb), car, k = 10)
-#'   # Get accuracies on each fold
-#'   cv(list(nb=nb, manb=nb_manb), car, k = 10, mean = FALSE)
-#'   ode <- bnc('tan_cl', 'class', car, smooth = 1, dag_args = list(score = 'aic')) 
-#'   # keep structure fixed across training subsamples
-#'   cv(ode, car, k = 10, dag = FALSE)
+#'   
+#' @examples 
+#' data(car)
+#' nb <- bnc('nb', 'class', car, smooth = 1) 
+#' # CV a single classifier
+#' cv(nb, car, k = 10) 
+#' nb_manb <- bnc('nb', 'class', car, smooth = 1, manb_prior = 0.5) 
+#' cv(list(nb=nb, manb=nb_manb), car, k = 10)
+#' # Get accuracies on each fold
+#' cv(list(nb=nb, manb=nb_manb), car, k = 10, mean = FALSE)
+#' ode <- bnc('tan_cl', 'class', car, smooth = 1, dag_args = list(score = 'aic')) 
+#' # keep structure fixed accross training subsamples
+#' cv(ode, car, k = 10, dag = FALSE)
 cv <- function(x, dataset, k, dag = TRUE, mean = TRUE) {
   xs <- ensure_multi_list(x, type = "bnc_bn")
   class <- get_common_class(xs)

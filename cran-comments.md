@@ -1,5 +1,11 @@
-## Update 
-After being archived last year, the package now passes check on multiple platforms and R versions. 
+## Resubmission
+This is a re-submission. The CRAN reviewer has asked me to: 
+- Provide some references in the 'Description' field of DESCRIPTION file
+- Add more small executable examples in Rd-files
+
+I have:
+- Added a reference to a survey paper covering most of the implemented algorithms
+- All 16 documented function groups now have small executable examples: added 4 examples (cv, accuracy, predict, and greedy_wrapper functions) and removed one function that lacked an example 
 
 ## Test environments
 * ubuntu 14.04, R-devel and R-release (travis-CI)
@@ -10,11 +16,15 @@ After being archived last year, the package now passes check on multiple platfor
 There were no ERRORs, WARNINGs. There was one NOTE:   
 
 checking CRAN incoming feasibility ... NOTE
-Maintainer: 'Mihaljevic Bojan <bmihaljevic@fi.upm.es>'
+Maintainer: ‘Mihaljevic Bojan <bmihaljevic@fi.upm.es>’
 
 New submission
 
 Package was archived on CRAN
+
+Possibly mis-spelled words in DESCRIPTION:
+  Bielza (3:156)
+  Larranaga (3:165)
 
 CRAN repository db overrides:
   X-CRAN-Comment: Archived on 2016-05-02 as check problems were not
