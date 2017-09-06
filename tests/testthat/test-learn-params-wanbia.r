@@ -20,8 +20,8 @@ test_that('datasets', {
   acc <- get_accus('Class', w, v)   
   expect_true(acc[2] > acc[1]) 
   
-  kr <- foreign::read.arff('~/gd/phd/code/works-aug-semi-bayes/data/original/kr-vs-kp.arff')
-  w <- compute_wanbia_weights('class', kr)
-  acc <- get_accus('class', w, kr) 
-  expect_true(acc[2] > acc[1])
+  # kr <- foreign::read.arff('~/gd/phd/code/works-aug-semi-bayes/data/original/kr-vs-kp.arff')
+  # w <- compute_wanbia_weights('class', kr)
+  # acc <- get_accus('class', w, kr) 
+  # expect_true(acc[2] > acc[1])
 })  
