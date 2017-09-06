@@ -56,23 +56,7 @@ lp_implement <- function(x, dataset, smooth, awnb_trees = NULL,
     bn <- include_manb_probs(bn, arc_probs, ctgts = ctgts, smooth = smooth)
   }
   bn
-}
-#' Learn AWNB parameters. 
-#' 
-#' Deprecated. Use \code{lp} instead.
-#' 
-#' @export
-#' @inheritParams nb 
-#' @inheritParams learn_params
-#' @inheritParams inspect_bnc_dag
-#' @param trees An integer. The number (\eqn{M}) of bootstrap samples to 
-#'   generate.
-#' @param bootstrap_size A numeric. The size of the bootstrap subsample, 
-#'   relative to the size of \code{dataset} (given in [0,1]).
-lpawnb <- function(x, dataset, smooth, trees, bootstrap_size) {
-  .Deprecated("lp")
-  lp(x, dataset, smooth, awnb_trees = trees, awnb_bootstrap = bootstrap_size)  
-}
+} 
 set_weights <- function(bn, weights) {
   stopifnot(inherits(bn, "bnc_bn"))  
   # Currently only expecting weights that can decrease the importance of a feature
