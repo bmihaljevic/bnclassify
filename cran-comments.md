@@ -1,4 +1,4 @@
-## Update 
+## Resubmission
 This is a re-submission. The CRAN reviewer has asked me to: 
 - Provide some references in the 'Description' field of DESCRIPTION file
 - Add more small executable examples in Rd-files
@@ -16,11 +16,15 @@ I have:
 There were no ERRORs, WARNINGs. There was one NOTE:   
 
 checking CRAN incoming feasibility ... NOTE
-Maintainer: 'Mihaljevic Bojan <bmihaljevic@fi.upm.es>'
+Maintainer: ‘Mihaljevic Bojan <bmihaljevic@fi.upm.es>’
 
 New submission
 
 Package was archived on CRAN
+
+Possibly mis-spelled words in DESCRIPTION:
+  Bielza (3:156)
+  Larranaga (3:165)
 
 CRAN repository db overrides:
   X-CRAN-Comment: Archived on 2016-05-02 as check problems were not
