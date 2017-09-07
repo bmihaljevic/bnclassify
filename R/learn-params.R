@@ -30,11 +30,22 @@ bnc <- function(dag_learner, class, dataset, smooth, dag_args = NULL,
 #' @rdname learn_params
 lp <- function(x, dataset, smooth, awnb_trees = NULL, awnb_bootstrap = NULL,
                manb_prior = NULL, wanbia = NULL) {
-  bn <- lp_implement(x = x, dataset = dataset, smooth = smooth, 
+  bn <- lp_intermediate(x = x, dataset = dataset, smooth = smooth, 
                      awnb_trees = awnb_trees, awnb_bootstrap = awnb_bootstrap,
                      manb_prior = manb_prior, wanbia = wanbia)
-  check_bnc_bn(bn) 
+  # TODO: this should only somehow be in lp_implement
+  # check_bnc_bn(bn) 
   add_params_call_arg(bn, call = match.call(), env = parent.frame(), force = TRUE)
+}
+# this could be a method of lp_implement for ensembles. lp_implement only covers to anb_dags 
+lp_intermediate <- function(x, dataset, smooth, awnb_trees = NULL, 
+                         awnb_bootstrap = NULL, manb_prior = NULL, wanbia = NULL, .mem_cpts=NULL) { 
+  stopifnot(is_aode(x))
+  models <- lapply(x$models, lp_implement, dataset = dataset, smooth = smooth)
+  features <- x$features
+  names(features) <- features
+  freqs <- lapply(features, function(f) table(dataset[,f, drop=F]))
+  bnc_aode(x, models, freqs) 
 }
 lp_implement <- function(x, dataset, smooth, awnb_trees = NULL, 
                          awnb_bootstrap = NULL, manb_prior = NULL, wanbia = NULL, .mem_cpts=NULL) {

@@ -1,3 +1,9 @@
+base_bnc_type <- function(class, features) { 
+  obj <- list(class = class, features = features)
+  class(obj) <- 'base_bnc'
+  obj
+}
+
 # Creates an augmented naive Bayes with structure but no parameters.
 bnc_dag <- function(dag, class) {
   families <- graphNEL2families(dag, class)  
