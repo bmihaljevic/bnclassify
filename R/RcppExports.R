@@ -6,10 +6,10 @@ are_disjoint <- function(x, y) {
 }
 
 normalize <- function(x) {
-    invisible(.Call('_bnclassify_normalize', PACKAGE = 'bnclassify', x))
+    .Call('_bnclassify_normalize', PACKAGE = 'bnclassify', x)
 }
 
 normalize_ctgt <- function(ctgt) {
-    invisible(.Call('_bnclassify_normalize_ctgt', PACKAGE = 'bnclassify', ctgt))
+    .Call('_bnclassify_normalize_ctgt', PACKAGE = 'bnclassify', ctgt)
 }
 

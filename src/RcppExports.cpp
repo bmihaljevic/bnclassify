@@ -18,23 +18,25 @@ BEGIN_RCPP
 END_RCPP
 }
 // normalize
-void normalize(NumericVector& x);
+NumericVector normalize(NumericVector& x);
 RcppExport SEXP _bnclassify_normalize(SEXP xSEXP) {
 BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector& >::type x(xSEXP);
-    normalize(x);
-    return R_NilValue;
+    rcpp_result_gen = Rcpp::wrap(normalize(x));
+    return rcpp_result_gen;
 END_RCPP
 }
 // normalize_ctgt
-void normalize_ctgt(NumericVector& ctgt);
+NumericVector normalize_ctgt(NumericVector& ctgt);
 RcppExport SEXP _bnclassify_normalize_ctgt(SEXP ctgtSEXP) {
 BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector& >::type ctgt(ctgtSEXP);
-    normalize_ctgt(ctgt);
-    return R_NilValue;
+    rcpp_result_gen = Rcpp::wrap(normalize_ctgt(ctgt));
+    return rcpp_result_gen;
 END_RCPP
 }
 

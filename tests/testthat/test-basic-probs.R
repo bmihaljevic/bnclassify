@@ -27,7 +27,8 @@ test_that("Multiply Two factors", {
 
 test_that("normalize", {
   # Nominal 
-  a <- normalize(setNames(1:5, letters[1:5]))
+  a <- setNames(1:5, letters[1:5])
+  a <- normalize(a)
   expect_equal(sum(a), 1)
   expect_equal(length(a), 5)
   expect_equal(unname(a), 1:5 / sum(1:5))

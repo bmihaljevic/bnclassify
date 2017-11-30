@@ -29,14 +29,14 @@ void normalize(NumericVector::iterator begin, NumericVector::iterator end) {
   }
 }     
 // [[Rcpp::export]]
-void normalize(NumericVector & x) {
+NumericVector normalize(NumericVector & x) {
   normalize(x.begin(), x.end());
+  return x;
 }
 // Normalizes the contigency table on the first dimension. Returns a table.
 // It modifes its argument, returns nothing.
-// Todo: ensure is is numeric; not integer, otherwise it won't be modified!!  
 // [[Rcpp::export]]
-void normalize_ctgt(NumericVector & ctgt) {
+NumericVector normalize_ctgt(NumericVector & ctgt) {
   if (is_true(any(is_na(ctgt)))) stop("NAs in contigency table."); // TODO: Should check for NaN
   // # Keep attributes (e.g., class and dimension names); just change entries
   NumericVector &  cpt = ctgt;
@@ -59,11 +59,17 @@ void normalize_ctgt(NumericVector & ctgt) {
   else {
     stop("0 dimension of contigency table");
   } 
-}
+  return cpt; 
+}  
 
-
+// Todo: ensure is is numeric; not integer, otherwise it won't be modified!!  
 /***R  
 a <- c(0.0, 0.0)
+dim(a) <- c(2)
+normalize_ctgt(a) 
+a
+
+a <- c(0, 0)
 dim(a) <- c(2)
 normalize_ctgt(a) 
 a
@@ -84,4 +90,9 @@ normalize_ctgt(a)
 a <- a ^ 0.5  
 normalize_ctgt(a)
 a  
+
+a <- table(letters, letters)
+a <- a + 1 
+
+microbenchmark::microbenchmark(normalize_ctgt(a), times = 1e3)
 */

@@ -29,8 +29,7 @@ ctgt2cpt <- function(ctgt, smooth) {
   stopifnot(smooth >= 0, is.table(ctgt), are_complete_dimnames(ctgt))
   # Add smooth to ctgt 
   ctgt <- ctgt + smooth
-  normalize_ctgt(ctgt)
-  ctgt 
+  normalize_ctgt(ctgt) 
 } 
 #' Get just form first dimension in their own cpt, not checking for consistency
 #' in others.
@@ -77,8 +76,7 @@ subset_cpt <- function(cpt, indices) {
 }
 exponentiate_cpt <- function(cpt, value) {
   cpt <- cpt ^ value
-  normalize_ctgt(cpt )
-  cpt
+  normalize_ctgt(cpt) 
 }
 get_cpt_id <- function(cpt) {
   make_family_id(cpt2family(cpt))
