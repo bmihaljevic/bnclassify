@@ -17,9 +17,31 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// normalize
+void normalize(NumericVector& x);
+RcppExport SEXP _bnclassify_normalize(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector& >::type x(xSEXP);
+    normalize(x);
+    return R_NilValue;
+END_RCPP
+}
+// normalize_ctgt
+void normalize_ctgt(NumericVector& ctgt);
+RcppExport SEXP _bnclassify_normalize_ctgt(SEXP ctgtSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector& >::type ctgt(ctgtSEXP);
+    normalize_ctgt(ctgt);
+    return R_NilValue;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_bnclassify_are_disjoint", (DL_FUNC) &_bnclassify_are_disjoint, 2},
+    {"_bnclassify_normalize", (DL_FUNC) &_bnclassify_normalize, 1},
+    {"_bnclassify_normalize_ctgt", (DL_FUNC) &_bnclassify_normalize_ctgt, 1},
     {NULL, NULL, 0}
 };
 
