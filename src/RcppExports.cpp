@@ -6,19 +6,20 @@
 using namespace Rcpp;
 
 // are_disjoint
-bool are_disjoint(NumericVector x);
-RcppExport SEXP _bnclassify_are_disjoint(SEXP xSEXP) {
+bool are_disjoint(Nullable<CharacterVector> x, Nullable<CharacterVector> y);
+RcppExport SEXP _bnclassify_are_disjoint(SEXP xSEXP, SEXP ySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(are_disjoint(x));
+    Rcpp::traits::input_parameter< Nullable<CharacterVector> >::type x(xSEXP);
+    Rcpp::traits::input_parameter< Nullable<CharacterVector> >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(are_disjoint(x, y));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_bnclassify_are_disjoint", (DL_FUNC) &_bnclassify_are_disjoint, 1},
+    {"_bnclassify_are_disjoint", (DL_FUNC) &_bnclassify_are_disjoint, 2},
     {NULL, NULL, 0}
 };
 
