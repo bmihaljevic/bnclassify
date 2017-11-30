@@ -1,5 +1,6 @@
 # 0.3.3.9000 
 * Added WANBIA discriminative parameter learning for naive Bayes  
+* Added minor RCPP optimizations
 
 # 0.3.3
 * Fixed warnings for resubmission to CRAN
