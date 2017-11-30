@@ -361,3 +361,11 @@ NULL
 #' g <- as_grain(nb)
 #' gRain::querygrain.grain(g)$buying
 NULL
+
+#' @useDynLib bnclassify
+#' @importFrom Rcpp sourceCpp
+NULL
+
+.onUnload <- function (libpath) {
+  library.dynam.unload("bnclassify", libpath)
+}

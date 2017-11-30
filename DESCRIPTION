@@ -16,7 +16,8 @@ Imports:
     graph(>= 1.42.0),
     matrixStats(>= 0.14.0),
     RBGL(>= 1.40.1),
-    rpart(>= 4.1-8)
+    rpart(>= 4.1-8),
+    Rcpp
 Suggests:
     gRain(>= 1.2-3),
     gRbase(>= 1.7-0.1),
@@ -32,3 +33,4 @@ License: GPL (>= 2)
 Maintainer: Mihaljevic Bojan <bmihaljevic@fi.upm.es>
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
+LinkingTo: Rcpp
