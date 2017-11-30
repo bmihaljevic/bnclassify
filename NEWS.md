@@ -1,6 +1,5 @@
 # 0.3.3.9000 
-* Added WANBIA discriminative parameter learning for naive Bayes 
-* Added AODE (averaged one-dependence classifiers)
+* Added WANBIA discriminative parameter learning for naive Bayes  
 
 # 0.3.3
 * Fixed warnings for resubmission to CRAN
