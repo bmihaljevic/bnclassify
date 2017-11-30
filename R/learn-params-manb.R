@@ -52,7 +52,9 @@ compute_manb_cpt <- function(nijk, prob_arc, smooth) {
   arc <- lp_arc +  lnijk
   # no arc
   lni <- rowSums(nijk)
-  lni[] <- log(normalize(lni + smooth)) 
+  smoothed <- lni + smooth
+  normalize(smoothed)
+  lni[] <- log(smoothed)
   lp_noarc <- log(1 - prob_arc)
   no_arc <- lp_noarc + lni
   rt <- ncol(nijk)
