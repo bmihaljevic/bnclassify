@@ -31,8 +31,7 @@ compute_cll <- function(x, dataset) {
     pred <- compute_cp(x = x, dataset = dataset)   
     pred <- log(pred) 
     class_probs <- select_probs(x, dataset, pred)  
-    - sum(class_probs)
-    # TODO: negative is wanbia! 
+    sum(class_probs)
 }  
 # Computes the log joint probability of the observed features for each of the classes
 # The result is a numeric matrix with a column per class and a row per data instance.

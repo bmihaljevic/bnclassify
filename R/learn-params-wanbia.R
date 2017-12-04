@@ -4,10 +4,7 @@ make_cll <- function(class_var, dataset) {
   check_class_in_dataset(class_var, dataset)
   function(w) {  
     nb <- make_weighted_nb(w, class_var, dataset)   
-    
-    pred <- compute_cp(x = nb, dataset = dataset)  
-    class <- as.character(dataset[[class_var]])
-    - sum(log(subset_by_colnames(class, pred ) ))
+    - compute_cll(nb, dataset) 
   }    
 }
 make_weighted_nb <- function(w, class_var, dataset) { 
