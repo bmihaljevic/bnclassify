@@ -1,19 +1,26 @@
-make_cll <- function(class_var, dataset) {  
-  function(w) { 
-  nb <- lp(nb(class_var, dataset), dataset, smooth = 1)
-  nb <- set_weights(nb, setNames(w, features(nb) )) 
-  
-  pred <- compute_cp(x = nb, dataset = dataset)  
+#' Returns a function to compute negative conditional log-likelihood given feature weights
+#' @keywords internal
+make_cll <- function(class_var, dataset) {   
+  check_class_in_dataset(class_var, dataset)
+  function(w) {  
+    nb <- make_weighted_nb(w, class_var, dataset)   
+    
+    pred <- compute_cp(x = nb, dataset = dataset)  
     class <- as.character(dataset[[class_var]])
-  - sum(log(subset_by_colnames(class, pred ) ))
+    - sum(log(subset_by_colnames(class, pred ) ))
   }    
 }
-# gradient is a vector 
-# ***is as.character ok? better way? **
-make_cll_gradient <- function(class_var, dataset) {
- function(w) { 
+make_weighted_nb <- function(w, class_var, dataset) { 
   nb <- lp(nb(class_var, dataset), dataset, smooth = 1)
   nb <- set_weights(nb, setNames(w, features(nb) ))  
+  nb 
+}
+#' Returns a function to compute the gradient of negative conditional log-likelihood with respect to feature weights
+#' @keywords internal
+make_cll_gradient <- function(class_var, dataset) { 
+ check_class_in_dataset(class_var, dataset)
+ function(w) { 
+  nb <- make_weighted_nb(w, class_var, dataset)  
   cp <- compute_cp(nb, dataset = dataset)
   db <- lapply(dataset, as.character)
   feats <- db[features(nb)]
