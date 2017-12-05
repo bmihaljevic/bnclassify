@@ -5,7 +5,7 @@
 \title{Learn network structure and parameters.}
 \usage{
 bnc(dag_learner, class, dataset, smooth, dag_args = NULL, awnb_trees = NULL,
-  awnb_bootstrap = NULL, manb_prior = NULL)
+  awnb_bootstrap = NULL, manb_prior = NULL, wanbia = NULL)
 }
 \arguments{
 \item{dag_learner}{A character. Name of the structure learning function.}
@@ -28,6 +28,9 @@ relative to the size of \code{dataset} (given in [0,1]).}
 
 \item{manb_prior}{A numeric. The prior probability for an arc between the 
 class and any feature.}
+
+\item{wanbia}{A logical. If \code{TRUE}, WANBIA feature weighting is
+performed.}
 }
 \description{
 A convenience function to learn the structure and parameters in a single 
