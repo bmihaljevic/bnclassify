@@ -52,6 +52,7 @@ cll_gradient_var <- function(x, cpt, class, class_posterior) {
 #' @param dataset The data frame from which to learn feature weights
 #' @param return_optim_object Return full output of `optim`
 #' @return a named numeric vector
+#' @keywords internal
 compute_wanbia_weights <- function(class, dataset, return_optim_object = FALSE) {
   features <- get_features(class = class, dataset = dataset)
   # Initial weights are 1.
