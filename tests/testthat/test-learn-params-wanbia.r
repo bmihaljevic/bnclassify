@@ -23,10 +23,4 @@ test_that('datasets', {
   w <- compute_wanbia_weights('class', kr)
   acc <- get_accus('class', w, kr)
   expect_true(acc[2] > acc[1])
-})  
-
-# summary wanbia experiments
-# - smooth? no, they used 'm-estimates' 
-#   - I can check this is their code
-# - incomplete data?
-# - folds? stratified?
+})      

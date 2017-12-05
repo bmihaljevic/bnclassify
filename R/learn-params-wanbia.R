@@ -7,8 +7,11 @@ make_cll <- function(class_var, dataset) {
     - compute_cll(nb, dataset) 
   }    
 }
+fit_nb <- function(class_var, dataset) { 
+  lp(nb(class_var, dataset), dataset, smooth = 1)
+} 
 make_weighted_nb <- function(w, class_var, dataset) { 
-  nb <- lp(nb(class_var, dataset), dataset, smooth = 1)
+  nb <- fit_nb(class_var, dataset) 
   nb <- set_weights(nb, setNames(w, features(nb) ))  
   nb 
 }
@@ -16,20 +19,29 @@ make_weighted_nb <- function(w, class_var, dataset) {
 #' @keywords internal
 make_cll_gradient <- function(class_var, dataset) { 
  check_class_in_dataset(class_var, dataset)
- function(w) { 
-  nb <- make_weighted_nb(w, class_var, dataset)  
-  cp <- compute_cp(nb, dataset = dataset)
-  db <- lapply(dataset, as.character)
-  feats <- db[features(nb)]
-  params <- params(nb)[features(nb)]
-  mapply(cll_gradient_var, feats, params , MoreArgs = list(class = db[[class_var]], class_posterior = cp ))
+ function(w) {  
+  weighted <- make_weighted_nb(w, class_var, dataset)  
+  unweighted <- fit_nb(class_var, dataset) 
+  compute_cll_gradients(weighted, unweighted, dataset)  
  } 
 }  
+compute_cll_gradients <- function(weighted, unweighted, dataset) {
+  features <- features(weighted)
+  stopifnot(identical(features, features(unweighted)))
+  db <- lapply(dataset, as.character)
+  feats <- db[features]
+  params <- params(unweighted)[features]
+  cp <- compute_cp(weighted, dataset = dataset)
+  class_var <- class_var(weighted)
+  grad <- mapply(cll_gradient_var, feats, params , MoreArgs = list(class = db[[class_var]], class_posterior = cp )) 
+  grad 
+}
 cll_gradient_var <- function(x, cpt, class, class_posterior) { 
-  log_theta <- cpt[x, ]
+  stopifnot(is.character(x))
+  log_theta <- log(cpt[x, ])
   stopifnot(identical(dim(class_posterior), dim(log_theta )))
   log_theta_class <- subset_by_colnames(class, log_theta) 
-  sum(- log_theta_class + rowSums(log_theta * class_posterior))
+  sum(- log_theta_class + rowSums(log_theta * class_posterior)) 
 } 
 #' Compute WANBIA weights.
 #'  

@@ -137,10 +137,28 @@ test_that("check manb predictions match wei java implementation", {
   expect_equal(as.vector(p[18, 2]), 0.418681, tolerance = 0.000002)
 })
 
-test_that("wanbia", { 
+test_that("wanbia", {  
   n <- nb('Class', v)
   w <- lp(n, v, smooth = 1, wanbia = TRUE)
   nb <- lp(n, v, smooth = 1)
   expect_lt(sum(abs(params(w)$anti_satellite_test_ban - 0.5)), 1e-10) 
+  expect_lt(compute_cll(nb, v), compute_cll(w, v)) 
+  # tail(predict(nb, v, prob = TRUE))
+  # tail(predict(w, v, prob = TRUE))
+  
+  n <- nb('class', car)
+  w <- lp(n, car, smooth = 1, wanbia = TRUE)
+  nb <- lp(n, car, smooth = 1)
+  expect_lt(sum(abs(params(w)$anti_satellite_test_ban - 0.5)), 1e-10) 
+  expect_lt(compute_cll(nb, car), compute_cll(w, car))
+  accuracy(predict(w, car), car$class) 
+  
+  kr <- foreign::read.arff('~/gd/phd/code/works-aug-semi-bayes/data/original/kr-vs-kp.arff') 
+  n <- nb('class', kr) 
+  w <- lp(n, kr, smooth = 1, wanbia = TRUE) 
+  
+  compute_cll(w, kr)
+  compute_cll(lp(n, kr, smooth = 1), kr)
+  
 })
   
