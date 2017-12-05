@@ -8,12 +8,14 @@ Computes feature weights by optimizing conditional log-likelihood.
 Weights are bounded to [0, 1]. Implementation based on the original paper 
 and the code provided at \url{http://sourceforge.net/projects/rawnaivebayes}.}
 \usage{
-compute_wanbia_weights(class, dataset)
+compute_wanbia_weights(class, dataset, return_optim_object = FALSE)
 }
 \arguments{
 \item{class}{character}
 
 \item{dataset}{The data frame from which to learn feature weights}
+
+\item{return_optim_object}{Return full output of `optim`}
 }
 \value{
 a named numeric vector
