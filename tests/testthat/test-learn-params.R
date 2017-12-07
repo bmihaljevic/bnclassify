@@ -78,7 +78,7 @@ test_that('bnc function nominal', {
 test_that('bnc with args', {
   a <- bnc('tan_cl', 'class', car, smooth = 1, dag_args = list(root = 'safety'))
   b <- lp(tan_cl('class', car, root = 'safety'), car, smooth = 1, 
-          awnb_trees = NULL, awnb_bootstrap = NULL, manb_prior = NULL)
+          awnb_trees = NULL, awnb_bootstrap = NULL, manb_prior = NULL, wanbia = NULL)
   expect_identical(a, b)
 })
 
@@ -88,7 +88,7 @@ test_that('bnc with args and awnb', {
            awnb_trees = 10)
   set.seed(0)
   b <- lp(tan_cl('class', car, root = 'safety'), car, smooth = 1, 
-          awnb_trees = 10, awnb_bootstrap = NULL, manb_prior = NULL)
+          awnb_trees = 10, awnb_bootstrap = NULL, manb_prior = NULL, wanbia = NULL)
   expect_identical(a, b)
 })
 
@@ -137,10 +137,16 @@ test_that("check manb predictions match wei java implementation", {
   expect_equal(as.vector(p[18, 2]), 0.418681, tolerance = 0.000002)
 })
 
-test_that("wanbia", { 
+test_that("wanbia", {  
   n <- nb('Class', v)
   w <- lp(n, v, smooth = 1, wanbia = TRUE)
   nb <- lp(n, v, smooth = 1)
   expect_lt(sum(abs(params(w)$anti_satellite_test_ban - 0.5)), 1e-10) 
-})
+  expect_lt(compute_cll(nb, v), compute_cll(w, v))   
   
+  # For car no weights seem to improve 
+  n <- nb('class', car)
+  nb <- lp(n, car, smooth = 1)
+  w <- lp(n, car, smooth = 1, wanbia = TRUE)
+  expect_equal(compute_cll(nb, car), compute_cll(w, car))  
+}) 

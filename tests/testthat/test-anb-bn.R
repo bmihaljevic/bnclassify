@@ -42,3 +42,9 @@ test_that(" Classes", {
   a <- lp(nb('class', car), car, smooth = 0)   
   expect_equal(classes(a), levels(car$class))
 })
+
+test_that("nominal wanbia", {
+  a <- lp(nb('Class', v), v, smooth = 0, wanbia = TRUE)   
+  expect_equal(a$.weights[['handicapped_infants']], 0.00000000) 
+  expect_equal(a$.weights[['immigration']], 1.00000000) 
+})
