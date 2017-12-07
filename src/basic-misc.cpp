@@ -34,7 +34,7 @@ NumericVector normalize(NumericVector & x) {
   return x;
 }
 // Normalizes the contigency table on the first dimension. Returns a table.
-// It modifes its argument, returns nothing.
+// It modifes its argument and returns it.
 // [[Rcpp::export]]
 NumericVector normalize_ctgt(NumericVector & ctgt) {
   if (is_true(any(is_na(ctgt)))) stop("NAs in contigency table."); // TODO: Should check for NaN

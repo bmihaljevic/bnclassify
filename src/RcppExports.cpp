@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 // are_disjoint
 bool are_disjoint(Nullable<CharacterVector> x, Nullable<CharacterVector> y);
-RcppExport SEXP _bnclassify_are_disjoint(SEXP xSEXP, SEXP ySEXP) {
+RcppExport SEXP bnclassify_are_disjoint(SEXP xSEXP, SEXP ySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -19,7 +19,7 @@ END_RCPP
 }
 // normalize
 NumericVector normalize(NumericVector& x);
-RcppExport SEXP _bnclassify_normalize(SEXP xSEXP) {
+RcppExport SEXP bnclassify_normalize(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -30,7 +30,7 @@ END_RCPP
 }
 // normalize_ctgt
 NumericVector normalize_ctgt(NumericVector& ctgt);
-RcppExport SEXP _bnclassify_normalize_ctgt(SEXP ctgtSEXP) {
+RcppExport SEXP bnclassify_normalize_ctgt(SEXP ctgtSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -41,9 +41,9 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_bnclassify_are_disjoint", (DL_FUNC) &_bnclassify_are_disjoint, 2},
-    {"_bnclassify_normalize", (DL_FUNC) &_bnclassify_normalize, 1},
-    {"_bnclassify_normalize_ctgt", (DL_FUNC) &_bnclassify_normalize_ctgt, 1},
+    {"bnclassify_are_disjoint", (DL_FUNC) &bnclassify_are_disjoint, 2},
+    {"bnclassify_normalize", (DL_FUNC) &bnclassify_normalize, 1},
+    {"bnclassify_normalize_ctgt", (DL_FUNC) &bnclassify_normalize_ctgt, 1},
     {NULL, NULL, 0}
 };
 
