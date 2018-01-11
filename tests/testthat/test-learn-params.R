@@ -71,7 +71,7 @@ test_that("awnb Incomplete data" , {
 test_that('bnc function nominal', {
   a <- bnc('nb', 'class', car, smooth = 1)
   b <- lp(nb('class', car), car, smooth = 1, awnb_trees = NULL, 
-          awnb_bootstrap = NULL, manb_prior = NULL)
+          awnb_bootstrap = NULL, manb_prior = NULL, wanbia = NULL)
   expect_identical(a, b)
 })
 
