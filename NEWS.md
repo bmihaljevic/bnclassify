@@ -1,6 +1,6 @@
-# 0.3.3.9000 
+# 0.3.4
 * Added WANBIA discriminative parameter learning for naive Bayes  
-* Remove microbenchmark dependency
+* Remove 'runtimes' vignette and microbenchmark dependency
 
 # 0.3.3
 * Fixed warnings for resubmission to CRAN
