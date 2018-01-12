@@ -61,6 +61,7 @@ compute_wanbia_weights <- function(class, dataset, return_optim_object = FALSE) 
   cll <- make_cll(class, dataset) 
   cll_gradient <- make_cll_gradient(class, dataset) 
   w <- optim(w, cll, cll_gradient, method = 'L-BFGS-B', lower = 0, upper = 1)
+  if (w$convergence != 0) warning(paste0("WANBIA did not converge correctly. ", w$message))
   if (return_optim_object ) return (w)
   w$par
 }   
