@@ -71,14 +71,14 @@ test_that("awnb Incomplete data" , {
 test_that('bnc function nominal', {
   a <- bnc('nb', 'class', car, smooth = 1)
   b <- lp(nb('class', car), car, smooth = 1, awnb_trees = NULL, 
-          awnb_bootstrap = NULL, manb_prior = NULL)
+          awnb_bootstrap = NULL, manb_prior = NULL, wanbia = NULL)
   expect_identical(a, b)
 })
 
 test_that('bnc with args', {
   a <- bnc('tan_cl', 'class', car, smooth = 1, dag_args = list(root = 'safety'))
   b <- lp(tan_cl('class', car, root = 'safety'), car, smooth = 1, 
-          awnb_trees = NULL, awnb_bootstrap = NULL, manb_prior = NULL)
+          awnb_trees = NULL, awnb_bootstrap = NULL, manb_prior = NULL, wanbia = NULL)
   expect_identical(a, b)
 })
 
@@ -88,7 +88,7 @@ test_that('bnc with args and awnb', {
            awnb_trees = 10)
   set.seed(0)
   b <- lp(tan_cl('class', car, root = 'safety'), car, smooth = 1, 
-          awnb_trees = 10, awnb_bootstrap = NULL, manb_prior = NULL)
+          awnb_trees = 10, awnb_bootstrap = NULL, manb_prior = NULL, wanbia = NULL)
   expect_identical(a, b)
 })
 
@@ -103,9 +103,9 @@ test_that('lp_implement with cache nominal', {
 test_that('either awnb or manb', {
   n <- nb('class', car)
   expect_error(lp(n, car, smooth = 1, awnb_trees = 2, manb_prior = 0.3),
-               "Either MANB or AWNB can be applied, not both.")
+               "Either MANB, AWNB, WANBIA can be applied, not more than one.")
   expect_error(lp(n, car, smooth = 1, awnb_bootstrap = 1, manb_prior = 0.3),
-               "Either MANB or AWNB can be applied, not both.")
+               "Either MANB, AWNB, WANBIA can be applied, not more than one.")
 })
 
 test_that("manb nominal", {
@@ -136,3 +136,17 @@ test_that("check manb predictions match wei java implementation", {
   expect_equal(as.vector(p[12, 2]), 0.301510, tolerance = 0.000002)
   expect_equal(as.vector(p[18, 2]), 0.418681, tolerance = 0.000002)
 })
+
+test_that("wanbia", {  
+  n <- nb('Class', v)
+  w <- lp(n, v, smooth = 1, wanbia = TRUE)
+  nb <- lp(n, v, smooth = 1)
+  expect_lt(sum(abs(params(w)$anti_satellite_test_ban - 0.5)), 1e-10) 
+  expect_lt(compute_cll(nb, v), compute_cll(w, v))   
+  
+  # For car no weights seem to improve 
+  n <- nb('class', car)
+  nb <- lp(n, car, smooth = 1)
+  w <- lp(n, car, smooth = 1, wanbia = TRUE)
+  expect_equal(compute_cll(nb, car), compute_cll(w, car))  
+}) 

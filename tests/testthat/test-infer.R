@@ -88,6 +88,15 @@ test_that("Nominal log-likelihood two vars", {
   expect_true(equivalent_num(ll, log(lik)))
 })
 
+test_that("Nominal conditional log-likelihood two vars", {
+  cb <- car[1, c(1, 7), drop = FALSE]
+  nb <- nbcarp(cb)
+  p <- params(nb)$class * params(nb)$buying['vhigh', ]
+  clik = (p / sum(p) )['unacc']
+  cll <- compute_cll(nb, cb)
+  expect_true(equivalent_num(cll, log(clik)))
+})
+
 test_that("log-likelihood with incomplete data", {
   skip_if_not_installed('gRain')
   cb <- car[1, c(1, 7), drop = FALSE]

@@ -18,32 +18,33 @@
 #' ode_cl_aic <- bnc('tan_cl', 'class', car, smooth = 1, dag_args = list(score = 'aic'))
 bnc <- function(dag_learner, class, dataset, smooth, dag_args = NULL, 
                 awnb_trees = NULL, awnb_bootstrap = NULL,
-                manb_prior = NULL) {
+                manb_prior = NULL, wanbia = NULL) {
   # It is easier to handle a funct. name than a funct. object in save_bnc_call
   stopifnot(assertthat::is.string(dag_learner))
   dag_args <- append(list(class = class, dataset = dataset), dag_args)
   dag <- do.call(dag_learner, dag_args)
   lp(dag, dataset = dataset, smooth = smooth, awnb_trees = awnb_trees, 
-     awnb_bootstrap = awnb_bootstrap, manb_prior = manb_prior)
+     awnb_bootstrap = awnb_bootstrap, manb_prior = manb_prior, wanbia = wanbia)
 }
 #' @export
 #' @rdname learn_params
 lp <- function(x, dataset, smooth, awnb_trees = NULL, awnb_bootstrap = NULL,
-               manb_prior = NULL) {
+               manb_prior = NULL, wanbia = NULL) {
   bn <- lp_implement(x = x, dataset = dataset, smooth = smooth, 
                      awnb_trees = awnb_trees, awnb_bootstrap = awnb_bootstrap,
-                     manb_prior = manb_prior)
+                     manb_prior = manb_prior, wanbia = wanbia)
   check_bnc_bn(bn) 
   add_params_call_arg(bn, call = match.call(), env = parent.frame(), force = TRUE)
 }
 lp_implement <- function(x, dataset, smooth, awnb_trees = NULL, 
-                         awnb_bootstrap = NULL, manb_prior = NULL, .mem_cpts=NULL) {
+                         awnb_bootstrap = NULL, manb_prior = NULL, wanbia = NULL, .mem_cpts=NULL) {
   params <- families2cpts(families(x), dataset = dataset, smooth = smooth,
                           .mem_cpts = .mem_cpts)
   bn <- make_bnc_bn(x, params = params)
   awnb <- (!is.null(awnb_trees) || !is.null(awnb_bootstrap))
   manb <- !is.null(manb_prior)
-  if (awnb && manb) stop("Either MANB or AWNB can be applied, not both.")
+  wanbia <- !is.null(wanbia)
+  if (sum(awnb + manb + wanbia) > 1) stop("Either MANB, AWNB, WANBIA can be applied, not more than one.")
   if (awnb) {
     weights <- awnb(class_var(bn), dataset = dataset, trees = awnb_trees, 
                     bootstrap_size = awnb_bootstrap)
@@ -54,6 +55,10 @@ lp_implement <- function(x, dataset, smooth, awnb_trees = NULL,
     arc_probs <- compute_manb_arc_posteriors(x, ctgts = ctgts, smooth = smooth,
                                              prior = manb_prior)
     bn <- include_manb_probs(bn, arc_probs, ctgts = ctgts, smooth = smooth)
+  }
+  if (wanbia) { 
+    weights <- compute_wanbia_weights(class_var(bn), dataset = dataset)
+    bn <- set_weights(bn, weights)  
   }
   bn
 } 
