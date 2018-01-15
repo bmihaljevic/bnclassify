@@ -329,10 +329,10 @@ P(\mathcal{G}) = P(\mathcal{G}_{C \nbigCI X_i})^a (1-P(\mathcal{G}_{C \nbigCI X_
 Note that \code{bnclassify} computes the above in logarithmic space to reduce numerical errors. 
 
 \subsection{Weighting to Alleviate the Naive Bayes Independence Assumption}
-Like AWNB, the WANBIA \citep{Zaidi2013} method updates naive Bayes' parameters with a single exponent `weight' per feature. The weights are computed by optimizing either the conditional log-likelihood or the mean root squared error of the predictions. \code{bnclassify} implements the conditional log-likelihood optimization as described in the original paper, namely optimizing it with the L-BFGS \citep{Zhu1997algorithm} algorithm, with its gradient for feature $X_i$ given by 
+The WANBIA \citep{Zaidi2013} method updates naive Bayes' parameters with a single exponent `weight' per feature. The weights are computed by optimizing either the conditional log-likelihood or the mean root squared error of the predictions. \code{bnclassify} implements the conditional log-likelihood optimization as described in the original paper, namely optimizing it with the L-BFGS \citep{Zhu1997algorithm} algorithm, with its gradient $\mathbf{g}$ given by 
 
 \begin{equation}
-    g_i = \sum_{j = 1}{N} \big( \log{P(X_i = x^{(j)} \mid c^{(j)})} - \sum_{c \in C} P(c \mid \mathbf{x}; \mathbf{w} ) \log P(X_i = x^{(j)} \mid c \big),
+    g_i = \sum_{j = 1}^{N} \Big( \log{P(X_i = x_i^{(j)} \mid c^{(j)})} - \sum_{c \in C} P(c \mid \mathbf{x}; \mathbf{w} ) \log P(X_i = x_i^{(j)} \mid c) \Big),
 \end{equation}
 where the probabilities are those estimated with maximum likelihood, i.e., without taking weights into account, whereas $P(c \mid \mathbf{x}; \mathbf{w} )$ takes weights into account. This corresponds to discriminative learning of parameters, as a discriminative, rather than generative, objective function is optimized.  
 
