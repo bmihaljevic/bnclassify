@@ -2,14 +2,14 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 are_disjoint <- function(x, y) {
-    .Call('bnclassify_are_disjoint', PACKAGE = 'bnclassify', x, y)
+    .Call('_bnclassify_are_disjoint', PACKAGE = 'bnclassify', x, y)
 }
 
 normalize <- function(x) {
-    .Call('bnclassify_normalize', PACKAGE = 'bnclassify', x)
+    .Call('_bnclassify_normalize', PACKAGE = 'bnclassify', x)
 }
 
 normalize_ctgt <- function(ctgt) {
-    .Call('bnclassify_normalize_ctgt', PACKAGE = 'bnclassify', ctgt)
+    .Call('_bnclassify_normalize_ctgt', PACKAGE = 'bnclassify', ctgt)
 }
 
