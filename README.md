@@ -1,7 +1,7 @@
 bnclassify
 ==========
 
-[![Travis-CI Build Status](https://travis-ci.org/bmihaljevic/bnclassify.svg?branch=master)](https://travis-ci.org/bmihaljevic/bnclassify) [![codecov.io](https://codecov.io/github/bmihaljevic/bnclassify/coverage.svg?branch=master)](https://codecov.io/github/bmihaljevic/bnclassify?branch=master) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/bnclassify)](http://cran.r-project.org/package=bnclassify) ![](http://cranlogs.r-pkg.org/badges/bnclassify?color=yellow) ![](http://cranlogs.r-pkg.org/badges/grand-total/bnclassify?color=yellowgreen)
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/bnclassify)](http://cran.r-project.org/package=bnclassify) ![](http://cranlogs.r-pkg.org/badges/bnclassify?color=yellow) ![](http://cranlogs.r-pkg.org/badges/grand-total/bnclassify?color=yellowgreen) [![Research software impact](http://depsy.org/api/package/cran/bnclassify/badge.svg)](http://depsy.org/package/r/bnclassify) [![codecov.io](https://codecov.io/github/bmihaljevic/bnclassify/coverage.svg?branch=master)](https://codecov.io/github/bmihaljevic/bnclassify?branch=master) [![Travis-CI Build Status](https://travis-ci.org/bmihaljevic/bnclassify.svg?branch=master)](https://travis-ci.org/bmihaljevic/bnclassify)
 
 Implements algorithms for learning discrete Bayesian network classifiers from data, as well as functions for using these classifiers for prediction, assessing their predictive performance, and inspecting and analyzing their properties.
 
@@ -50,7 +50,7 @@ Estimate predictive accuracy with cross validation.
 
 ``` r
 cv(tn, car, k = 10)
-#> [1] 0.9403711
+#> [1] 0.9432847
 ```
 
 Or compute the log-likelihood
