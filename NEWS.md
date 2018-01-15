@@ -1,3 +1,5 @@
+# 0.3.4.9000
+
 # 0.3.4
 * Added WANBIA discriminative parameter learning for naive Bayes  
 * Remove 'runtimes' vignette and microbenchmark dependency
