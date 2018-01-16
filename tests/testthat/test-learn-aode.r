@@ -35,11 +35,18 @@ test_that("fit aode and bnc", {
   sapply(a$models, BIC, car) # No error
 })
 
+test_that("log joint", {   
+  a <- aode('class', car)  
+  a <- lp(a, car, smooth = 1)
+  lj <- compute_log_joint(a, car)
+  expect_equal(sum(exp(lj)), 1)     
+})
+
 test_that("predict", {  
-  a <- aode('class', car, m=10000)  
-  a <- lp(a, car, smooth = 1) 
- 
   # currently not considering weights
+  # a <- aode('class', car, m=10000)  
+  # a <- lp(a, car, smooth = 1) 
+ 
   # a <- bnc('aode', 'class', car, dag_args = list(m=10000), smooth = 1)  
   # p <- predict(a, car, prob = TRUE)  
   # cp <- params(a$models[[1]])$class

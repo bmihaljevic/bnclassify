@@ -57,10 +57,13 @@ compute_log_joint_complete <- function(x, dataset) {
   UseMethod("compute_log_joint_complete")
 }
 compute_log_joint_complete.bnc_aode <- function(x, dataset) { 
+  # TODO: validate aode: at least one model , or two models?
+  stopifnot(length(x$models) > 0)
   p <- lapply(x$models, compute_anb_log_joint_per_class, dataset = dataset)  
-  p <- lapply(p, exp)
-  # need to take the average!! 
+  # take the average
+  p <- lapply(p, exp) 
   p <- Reduce('+', p)
+  p <- p / length(x$models)
   log(p)
 }
 compute_log_joint_complete.bnc_bn <- function(x, dataset) {
