@@ -13,7 +13,7 @@ before_install:
     
 install:  
   - Rscript -e "source('http://bioconductor.org/biocLite.R');tryCatch(useDevel(TRUE), error=function(e)"'{if (!grepl'"('already in use', e)) {e}}); options(repos=biocinstallRepos()); biocLite(commandArgs(TRUE))" graph RBGL Rgraphviz
-  - Rscript -e "install.packages(c('assertthat', 'entropy', 'matrixStats', 'rpart', 'gRain', 'gRbase', 'mlr', 'testthat', 'knitr', 'microbenchmark', 'ParamHelpers', 'rmarkdown','covr', 'memoise'))"
+  - Rscript -e "install.packages(c('assertthat', 'entropy', 'matrixStats', 'rpart', 'gRain', 'gRbase', 'mlr', 'testthat', 'knitr', 'ParamHelpers', 'rmarkdown','covr', 'memoise'))"
   
 after_success:
   - Rscript -e 'covr::codecov()'

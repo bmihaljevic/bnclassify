@@ -6,6 +6,12 @@ compute_cp <- function(x, dataset) {
   stopifnot(are_pdists(p))
   p
 }
+select_probs <- function(x, dataset, log_prob_pred_class) {
+  # Find the entries in log prob corresponding to observed classes
+  observed_classes <- as.character(dataset[, class_var(x)])
+  class_probs <- subset_by_colnames(observed_classes, log_prob_pred_class)   
+  class_probs 
+}
 #' Computes log-likelihood of the model on the provided data.
 #' 
 #' @param x A \code{\link{bnc_bn}} object.
@@ -14,12 +20,19 @@ compute_cp <- function(x, dataset) {
 compute_ll <- function(x, dataset) {
   # Get log joint prob per class 
   log_joint_per_class <- compute_log_joint(x, dataset)
-  # Find the entries in log prob corresponding to observed classes
-  observed_classes <- as.character(dataset[, class_var(x)])
-  class_probs <- subset_by_colnames(observed_classes, log_joint_per_class)   
+  class_probs <- select_probs(x, dataset, log_joint_per_class) 
   # Sum them up 
   sum(class_probs)
 }
+
+#' Computes the conditional log-likelihood of the model on the provided data.
+#' @keywords internal
+compute_cll <- function(x, dataset) { 
+    pred <- compute_cp(x = x, dataset = dataset)   
+    pred <- log(pred) 
+    class_probs <- select_probs(x, dataset, pred)  
+    sum(class_probs)
+}  
 # Computes the log joint probability of the observed features for each of the classes
 # The result is a numeric matrix with a column per class and a row per data instance.
 compute_log_joint <- function(x, dataset) {

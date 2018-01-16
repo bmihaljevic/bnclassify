@@ -13,11 +13,7 @@ equivalent_num <- function(x, y) {
   class(x) <- NULL
   class(y) <- NULL
   all.equal(x, y, check.attributes = FALSE)
-}
-# I use this a lot, e.g., in check_features
-are_disjoint <- function(x, y) {
-	length(intersect(x, y)) == 0
-}
+} 
 is_subset <- function(x, y) {
   all(x %in% y)
 }

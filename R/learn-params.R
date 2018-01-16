@@ -18,13 +18,13 @@
 #' ode_cl_aic <- bnc('tan_cl', 'class', car, smooth = 1, dag_args = list(score = 'aic'))
 bnc <- function(dag_learner, class, dataset, smooth, dag_args = NULL, 
                 awnb_trees = NULL, awnb_bootstrap = NULL,
-                manb_prior = NULL) {
+                manb_prior = NULL, wanbia = NULL) {
   # It is easier to handle a funct. name than a funct. object in save_bnc_call
   stopifnot(assertthat::is.string(dag_learner))
   dag_args <- append(list(class = class, dataset = dataset), dag_args)
   dag <- do.call(dag_learner, dag_args)
   lp(dag, dataset = dataset, smooth = smooth, awnb_trees = awnb_trees, 
-     awnb_bootstrap = awnb_bootstrap, manb_prior = manb_prior)
+     awnb_bootstrap = awnb_bootstrap, manb_prior = manb_prior, wanbia = wanbia)
 }
 #' @export
 #' @rdname learn_params
