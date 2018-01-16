@@ -4,7 +4,7 @@
 \alias{aode}
 \title{Learn an AODE ensemble.}
 \usage{
-aode(class_var, features, m = 1, ...)
+aode(class, dataset, m = 1, ...)
 }
 \arguments{
 \item{m}{integer The minimum frequency of an value \eqn{x_i} in order to use 

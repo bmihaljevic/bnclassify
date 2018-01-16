@@ -47,15 +47,8 @@ compute_log_joint_complete.bnc_aode <- function(x, dataset) {
   p <- lapply(x$models, compute_anb_log_joint_per_class, dataset = dataset)  
   p <- lapply(p, exp)
   # need to take the average!! 
-  # stopifnot(identical(colnames(w), names(p)))  
-  # This is for the weights
-  # p <- mapply('*', w, p, SIMPLIFY = FALSE)
   p <- Reduce('+', p)
   log(p)
-  #   ind_nospode <- which(rowSums(w) == 0)
-  #   cp <- aode_class_prior(x)
-  #   p[ind_nospode, ] <- rep(cp, each=length(ind_nospode))
-  #   normalize_matrix(p) 
 }
 compute_log_joint_complete.bnc_bn <- function(x, dataset) {
   compute_anb_log_joint_per_class(x, dataset)
