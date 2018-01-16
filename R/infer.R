@@ -59,18 +59,32 @@ compute_log_joint_complete <- function(x, dataset) {
 compute_log_joint_complete.bnc_aode <- function(x, dataset) { 
   # TODO: validate aode: at least one model , or two models?
   stopifnot(length(x$models) > 0)
-  p <- lapply(x$models, compute_anb_log_joint_per_class, dataset = dataset)  
-  # take the average
-  p <- lapply(p, exp) 
-  p <- Reduce('+', p)
-  p <- p / length(x$models)
-  log(p)
+  p <- lapply(x$models, compute_log_joint_complete, dataset = dataset)  
+  average_aode(p)  
 }
 compute_log_joint_complete.bnc_bn <- function(x, dataset) {
   compute_anb_log_joint_per_class(x, dataset)
-}
-# TODO: below
+} 
 compute_log_joint_incomplete <- function(x, dataset) {
+  UseMethod("compute_log_joint_incomplete")
+} 
+compute_log_joint_incomplete.bnc_aode <- function(x, dataset) {  
+  # TODO: validate aode: at least one model , or two models?
+  stopifnot(length(x$models) > 0)
+  p <- lapply(x$models, compute_log_joint_incomplete, dataset = dataset)  
+  average_aode(p)  
+}
+# take the average
+# p is a list of matrices of log joint 
+average_aode <- function(p) {
+  stopifnot(is.list(p))
+  nmodels <- length(p)
+  p <- lapply(p, exp) 
+  p <- Reduce('+', p)
+  p <- p / nmodels 
+  log(p)
+}
+compute_log_joint_incomplete.bnc_bn <- function(x, dataset) {
   # Check all rows in dataset have missings 
   stopifnot(sum(complete.cases(dataset)) == 0)
   # Check x is a bnc_bn

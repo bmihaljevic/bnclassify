@@ -60,4 +60,12 @@ test_that("predict", {
   # a <- bnc('aode', 'Class', dbreast, smooth=1)  
   # p <- predict(a, dbreast, prob = TRUE)  
   # expect_equal(p[1, 1], c("no-recurrence-events"=0.494), tolerance = 0.01) # Weka has 0.494   
-}) 
+})  
+
+test_that("incomplete data", {   
+  # no error
+  vt <- voting[1:10, ] 
+  a <- aode('Class', vt)   
+  a <- lp(a, vt, smooth = 1) 
+  p <- predict(a, vt, prob = TRUE)    
+})
