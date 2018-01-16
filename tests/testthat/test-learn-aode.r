@@ -39,7 +39,7 @@ test_that("predict", {
   a <- aode('class', car, m=10000)  
   a <- lp(a, car, smooth = 1) 
   
-  a <- bnc(car, learner=list("aode", m=10000))  
+  a <- bnc('aode', 'class', car, dag_args = list(m=10000), smooth = 1)  
   p <- predict(a, car, prob = TRUE)  
   expect_equal(sum(abs(apply(p, 1, '-', class_prior(a)))), 0)
   
