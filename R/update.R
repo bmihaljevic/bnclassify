@@ -63,7 +63,7 @@ add_params_call_arg <- function(bnc_bn, call, env, force = TRUE) {
 add_call_arg <- function(bnc_dag, fun_name, call, env, arg, force) {
   # stopifnot(inherits(bnc_dag, "bnc_dag"))
   # TODO  Fix this for appropriate types
-  stopifnot(inherits(bnc_dag, "bnc_dag") || inherits(bnc_dag, "base_bnc"))
+  stopifnot(inherits(bnc_dag, "bnc_dag") || inherits(bnc_dag, "bnc_base"))
   if (!force) { 
     stopifnot(is.null(bnc_dag[[arg]]))
   }

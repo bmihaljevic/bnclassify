@@ -28,6 +28,11 @@ test_that("aode str", {
   d <- u$models[[9]]
   expect_equal(graph::numEdges(as_graphNEL(d)), 9 + 8)
   expect_equal(length(graph::adj(as_graphNEL(d), 'j')$j), 8)
+}) 
+
+test_that("aode bnc funs", {    
+  u <- aode(class = 'a', random_letters_db(10))  
+  features(u)
 })
 
 test_that("fit aode and bnc", {

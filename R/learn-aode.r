@@ -44,7 +44,7 @@ bnc_aode_str <- function(models, m, class_var, log_struct = NULL) {
   stopifnot(all(vapply(models, is_ode, FUN.VALUE = logical(1))))
   features <- models[[1]]$features
   # TODO: should be en ensemble constructor
-  bnc <- base_bnc_type(class = class, features = features)
+  bnc <- bnc_base(class = class, features = features)
   bnc$models <- models
   bnc$m <- m
   class(bnc) <- c('bnc_aode', class(bnc))

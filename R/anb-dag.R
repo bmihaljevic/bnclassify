@@ -1,9 +1,10 @@
-base_bnc_type <- function(class, features) { 
-  obj <- list(class = class, features = features)
-  class(obj) <- 'base_bnc'
+# a basic supertype of all bnc
+bnc_base <- function(class, features) {  
+  obj <- list(.class = class)
+  obj$.features <- features
+  class(obj) <- 'bnc_base'
   obj
-}
-
+} 
 # Creates an augmented naive Bayes with structure but no parameters.
 bnc_dag <- function(dag, class) {
   families <- graphNEL2families(dag, class)  
@@ -12,8 +13,10 @@ bnc_dag <- function(dag, class) {
 }
 make_bnc_dag <- function(class, families, graphNEL) {
   # Not checking families for efficiency; they are checked in bnc_dag anyway
-  obj <- list(.dag = graphNEL, .class = class, .families = families)
-  class(obj) <- 'bnc_dag'
+  obj <- bnc_base(class = class, features = NULL)
+  obj$.dag = graphNEL
+  obj$.families = families
+  class(obj) <- c('bnc_dag', class(obj))
   obj
 }
 # Checks it is a valid bnc_dag object 
