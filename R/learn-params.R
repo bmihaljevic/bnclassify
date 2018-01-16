@@ -30,24 +30,26 @@ bnc <- function(dag_learner, class, dataset, smooth, dag_args = NULL,
 #' @rdname learn_params
 lp <- function(x, dataset, smooth, awnb_trees = NULL, awnb_bootstrap = NULL,
                manb_prior = NULL, wanbia = NULL) {
-  bn <- lp_intermediate(x = x, dataset = dataset, smooth = smooth, 
+  bn <- lp_implement(x = x, dataset = dataset, smooth = smooth, 
                      awnb_trees = awnb_trees, awnb_bootstrap = awnb_bootstrap,
                      manb_prior = manb_prior, wanbia = wanbia)
   # TODO: this should only somehow be in lp_implement
   # check_bnc_bn(bn) 
   add_params_call_arg(bn, call = match.call(), env = parent.frame(), force = TRUE)
+} 
+lp_implement <- function(x, ...) {
+  UseMethod("lp_implement")
 }
-# this could be a method of lp_implement for ensembles. lp_implement only covers to anb_dags 
-lp_intermediate <- function(x, dataset, smooth, awnb_trees = NULL, 
-                         awnb_bootstrap = NULL, manb_prior = NULL, wanbia = NULL, .mem_cpts=NULL) { 
-  stopifnot(is_aode(x))
+lp_implement.bnc_aode <- function(x, dataset, smooth, ...) {
+  # TODO: pass meme cpts and other parameters to lp_implement?? wanbia? others as well?
   models <- lapply(x$models, lp_implement, dataset = dataset, smooth = smooth)
   features <- x$features
   names(features) <- features
+  # TODO: should use constructor here. to make a bn...
   freqs <- lapply(features, function(f) table(dataset[,f, drop=F]))
   bnc_aode(x, models, freqs) 
-}
-lp_implement <- function(x, dataset, smooth, awnb_trees = NULL, 
+}  
+lp_implement.bnc_dag <- function(x, dataset, smooth, awnb_trees = NULL, 
                          awnb_bootstrap = NULL, manb_prior = NULL, wanbia = NULL, .mem_cpts=NULL) {
   params <- families2cpts(families(x), dataset = dataset, smooth = smooth,
                           .mem_cpts = .mem_cpts)

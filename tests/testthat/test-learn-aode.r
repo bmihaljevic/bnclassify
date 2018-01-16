@@ -30,25 +30,27 @@ test_that("aode str", {
   expect_equal(length(graph::adj(as_graphNEL(d), 'j')$j), 8)
 })
 
-# test_that("fit aode and bnc", {
-#   a <- bnc(car, learner="aode")
-#   sapply(a$models, BIC, car) # No error
-# })  
+test_that("fit aode and bnc", {
+  a <- bnc('aode', 'class', car, smooth = 1)
+  sapply(a$models, BIC, car) # No error
+})
 
 test_that("predict", {  
   a <- aode('class', car, m=10000)  
   a <- lp(a, car, smooth = 1) 
+ 
+  # currently not considering weights
+  # a <- bnc('aode', 'class', car, dag_args = list(m=10000), smooth = 1)  
+  # p <- predict(a, car, prob = TRUE)  
+  # cp <- params(a$models[[1]])$class
+  # expect_equal(sum(abs(apply(p, 1, '-', cp))), 0)
   
-  a <- bnc('aode', 'class', car, dag_args = list(m=10000), smooth = 1)  
-  p <- predict(a, car, prob = TRUE)  
-  expect_equal(sum(abs(apply(p, 1, '-', class_prior(a)))), 0)
-  
-  a <- bnc(car, learner=list("aode"), smooth=1)  
-  nb <- bnc(car)  
+  a <- bnc('aode', 'class', car, smooth=1)  
   p <- predict(a, car, prob = TRUE)  
   expect_equal(p[12, 1], c(unacc=0.793), tolerance = 0.001) # Probability from Weka     
-  
-  a <- bnc(dbreast, learner=list("aode"), smooth=1)  
-  p <- predict(a, dbreast, prob = TRUE)  
-  expect_equal(p[1, 1], c("no-recurrence-events"=0.494), tolerance = 0.01) # Weka has 0.494   
-})
+ 
+  # dbreast <- foreign::read.arff('~/code/teach-asdm-c01/data/dbreast-cancer.arff')
+  # a <- bnc('aode', 'Class', dbreast, smooth=1)  
+  # p <- predict(a, dbreast, prob = TRUE)  
+  # expect_equal(p[1, 1], c("no-recurrence-events"=0.494), tolerance = 0.01) # Weka has 0.494   
+}) 
