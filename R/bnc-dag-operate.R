@@ -50,9 +50,7 @@ print.bnc_base <- function(x, ...) {
     cat(" (only structure, no parameters)")
   } 
   if (is_aode) { 
-    # TODO: get number of models
-    m <- 9999999999999
-    cat(paste0("\n   An ensemble of ", m, " Bayesian networks."))
+    cat(paste0("\n   An ensemble of ", nmodels(x), " Bayesian networks."))
   }
   cat("\n\n")
   cat("  class variable:       ", class_var(x), "\n")

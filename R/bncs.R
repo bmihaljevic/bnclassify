@@ -26,3 +26,11 @@ is_aode <- function(x) {
   if (length(x$models) < 2) return (FALSE)
   all(sapply(x$models, is_ode)) # TODO Should be is spode
 }
+nmodels <- function(x) {
+ stopifnot(inherits(x, 'bnc_aode')) 
+ length(x$models)
+}
+models <- function(x) { 
+ stopifnot(inherits(x, 'bnc_aode'))  
+ x$models
+}

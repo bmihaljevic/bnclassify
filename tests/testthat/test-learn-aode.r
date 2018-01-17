@@ -13,15 +13,15 @@ test_that("spode", {
 test_that("aode str", {  
   # with 1 feature is an nb
   u <- aode(class = 'a', alphadb[, 1:2, drop = FALSE])  
-  expect_true(is_ode(u))  
+  expect_true(is_nb(u))  
   
   u <- aode(class = 'a', random_letters_db(10))  
   expect_true(is_aode(u))    
   expect_true(is_ode(u$models[['c']]))  
   expect_equal(length(u$models), 9)
-  # expect_identical(class_var(u), 'A')
-  # TODO 
-  # expect_identical(features(u), LETTERS[2:10])
+  expect_identical(class_var(u), 'a') 
+  expect_identical(features(u), letters[2:10])
+  
   d <- u$models[[1]]
   expect_equal(graph::numEdges(as_graphNEL(d)), 9 + 8)
   expect_equal(length(graph::adj(as_graphNEL(d), 'b')$b), 8)
