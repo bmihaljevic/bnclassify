@@ -4,7 +4,7 @@
 \alias{bnc_aode_str}
 \title{Returns a \code{c("bnc_aode_str", "bnc")} object.}
 \usage{
-bnc_aode_str(models, m, class_var, log_struct = NULL)
+bnc_aode_str(models, m, class_var, features)
 }
 \description{
 Returns a \code{c("bnc_aode_str", "bnc")} object.

@@ -1,7 +1,7 @@
 # a basic supertype of all bnc
 bnc_base <- function(class, features) {  
-  obj <- list(.class = class)
-  obj$.features <- features
+  obj <- list(.class = unname(class))
+  obj$.features <- unname(features)
   class(obj) <- 'bnc_base'
   obj
 } 
@@ -42,13 +42,20 @@ as_graphNEL <- function(x) {
 #' @export 
 #' @describeIn  inspect_bnc_dag Returns the class variable.
 class_var <- function(x) {
-  stopifnot(inherits(x, "bnc_dag"))
+  stopifnot(inherits(x, "bnc_base"))
   x$.class
 }
 #' @export 
 #' @describeIn  inspect_bnc_dag Returns the features.
 features <- function(x) {
-  setdiff(vars(x), class_var(x))
+  # Implementing a generic features did not allow me to document it in inspect_bnc_dag, so I dispatch by class within the function
+  if (inherits(x, 'bnc_dag')) {
+    return (setdiff(vars(x), class_var(x)))
+  }
+  else if (inherits(x, 'bnc_base')) {
+    return(x$.features)
+  }
+  stop('Must be either bnc_dag or bnc_base')
 }
 #' @export 
 #' @describeIn  inspect_bnc_dag Returns all variables (i.e., features + class).

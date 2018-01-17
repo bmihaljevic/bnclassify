@@ -1,0 +1,28 @@
+ #' Returns a \code{c("bnc_aode_str", "bnc")} object.
+#' @keywords internal
+bnc_aode_str <- function(models, m, class_var, features) {
+  stopifnot(is.numeric(m))
+  stopifnot(length(models) > 0)
+  stopifnot(all(vapply(models, is_ode, FUN.VALUE = logical(1))))
+  bnc <- bnc_base(class = class_var, features = features)
+  bnc$models <- models
+  class(bnc) <- c('bnc_aode', class(bnc))
+  bnc
+}
+#' Fits an AODE model.
+#' @keywords internal
+bnc_aode <- function(x, fit_models, freqs) {
+  stopifnot(inherits(x, 'bnc_aode'))
+  x$models <- fit_models
+  x$freqs <- freqs
+  class(x) <- c('bnc_aode', 'bnc_bn', class(x))
+  x
+}
+#' Is it en AODE?
+#'
+#' @keywords internal
+is_aode <- function(x) {
+  if (!inherits(x, c('bnc_aode'))) return (FALSE)
+  if (length(x$models) < 2) return (FALSE)
+  all(sapply(x$models, is_ode)) # TODO Should be is spode
+}

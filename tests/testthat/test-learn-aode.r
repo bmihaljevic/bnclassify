@@ -31,8 +31,15 @@ test_that("aode str", {
 }) 
 
 test_that("aode bnc funs", {    
-  u <- aode(class = 'a', random_letters_db(10))  
-  features(u)
+  lets <- random_letters_db(10)
+  u <- aode(class = 'a', lets)  
+  feats <- setdiff(colnames(lets), 'a')
+  expect_equal(features(u), feats)
+  expect_false(is_ode(u)) 
+  expect_false(is_semi_naive(u)) 
+  expect_false(is_nb(u))  
+  expect_error(narcs(u))
+  print(u)
 })
 
 test_that("fit aode and bnc", {

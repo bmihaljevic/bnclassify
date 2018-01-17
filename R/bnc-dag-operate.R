@@ -41,16 +41,25 @@ plot.bnc_dag <- function(x, y, layoutType='dot', fontsize = NULL, ...) {
 #' Print basic information about a classifier.
 #' @export
 #' @keywords internal
-print.bnc_dag <- function(x, ...) {  
+print.bnc_base <- function(x, ...) {  
   cat("\n  Bayesian network classifier")  
   is_bnc_bn <- inherits(x, "bnc_bn")
-  if (!is_bnc_bn) {
+  is_aode <- inherits(x, "bnc_aode")
+  # says ensemble as could be others besides aode. 
+  if (!is_bnc_bn & !is_aode) {
     cat(" (only structure, no parameters)")
+  } 
+  if (is_aode) { 
+    # TODO: get number of models
+    m <- 9999999999999
+    cat(paste0("\n   An ensemble of ", m, " Bayesian networks."))
   }
   cat("\n\n")
   cat("  class variable:       ", class_var(x), "\n")
   cat("  num. features:  ", length(features(x)), "\n")
-  cat("  num. arcs:  ", narcs(x), "\n")
+  if (!is_aode) { 
+    cat("  num. arcs:  ", narcs(x), "\n")
+  }
   if (is_bnc_bn) {
     cat("  free parameters:  ", nparams(x), "\n")
   }
@@ -68,6 +77,7 @@ is_semi_naive <- function(x) {
 #' @export 
 #' @describeIn inspect_bnc_dag Returns TRUE if \code{x} is an augmented naive Bayes.
 is_anb <- function(x) {
+  if (!inherits(x, 'bnc_dag')) return(FALSE)
   if (!is_dag_graph(as_graphNEL(x))) return(FALSE)
   # Check call has no parents and class is in all families. This
   # code assumes class is last in each family.
