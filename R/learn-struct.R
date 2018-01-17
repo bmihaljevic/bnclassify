@@ -78,3 +78,22 @@ tan_cl <- function(class, dataset, score='loglik', root = NULL) {
   add_dag_call_arg(x, fun_name = 'tan_cl', call = match.call(), 
                    env = parent.frame(), force = TRUE)
 }
+#' Learn an AODE ensemble.
+#' 
+#' If there is a single predictor then returns a naive Bayes.
+#' 
+#' @param m integer The minimum frequency of an value \eqn{x_i} in order to use 
+#'   SPODE \eqn{i} in the ensemble.
+#' @keywords internal
+#' @return \code{bnc_aode} or \code{bnc_str}
+aode <- function(class, dataset, m = 1, features = NULL) {       
+  if (!is.null(dataset)) {
+    features <- get_features(class = class, dataset = dataset)
+  }
+  if (length(features) == 1) return(nb(class = class, features = features))
+  names(features) <- features
+  models <- lapply(features, spode, features, class)
+  x <- bnc_aode_str(models = models, m = m, class = class, features = features) 
+  add_dag_call_arg(x, fun_name = 'aode', call = match.call(), 
+                   env = parent.frame(), force = TRUE)
+}  

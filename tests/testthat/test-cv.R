@@ -66,6 +66,15 @@ test_that("CV a wrapper", {
   t <- lp(t, car, smooth = 0.01)
   r <- cv(t, car, k = 2, dag = TRUE)
   expect_equal(r, 0.9346065, tolerance = 1e-7)
+}) 
+
+test_that("CV aode", {
+  skip_on_cran()
+  set.seed(0)
+  t <- aode('class', car)
+  t <- lp(t, car, smooth = 0.01)
+  r <- cv(t, car, k = 2, dag = TRUE)
+  expect_equal(r, 0.9056713, tolerance = 1e-7) # just regression test, comparing value I obtained on first run
 })
 
 test_that("correct cv result", {

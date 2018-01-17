@@ -2,7 +2,7 @@
 #' @keywords internal
 bnc_aode_str <- function(models, m, class_var, features) {
   stopifnot(is.numeric(m))
-  stopifnot(length(models) > 0)
+  stopifnot(length(models) > 0, identical(names(models), unname(features)))
   stopifnot(all(vapply(models, is_ode, FUN.VALUE = logical(1))))
   bnc <- bnc_base(class = class_var, features = features)
   bnc$models <- models
