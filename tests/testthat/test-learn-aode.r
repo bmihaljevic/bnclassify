@@ -39,7 +39,7 @@ test_that("aode bnc funs", {
   expect_false(is_semi_naive(u)) 
   expect_false(is_nb(u))  
   expect_error(narcs(u))
-  print(u)
+  expect_output(print(u), regexp = 'ensemble of 9') 
 })
 
 test_that("fit aode and bnc", {
