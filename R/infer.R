@@ -58,8 +58,8 @@ compute_log_joint_complete <- function(x, dataset) {
 }
 compute_log_joint_complete.bnc_aode <- function(x, dataset) { 
   # TODO: validate aode: at least one model , or two models?
-  stopifnot(length(x$models) > 0)
-  p <- lapply(x$models, compute_log_joint_complete, dataset = dataset)  
+  stopifnot(nmodels(x) > 0)
+  p <- lapply(models(x), compute_log_joint_complete, dataset = dataset)  
   average_aode(p)  
 }
 compute_log_joint_complete.bnc_bn <- function(x, dataset) {
@@ -69,9 +69,9 @@ compute_log_joint_incomplete <- function(x, dataset) {
   UseMethod("compute_log_joint_incomplete")
 } 
 compute_log_joint_incomplete.bnc_aode <- function(x, dataset) {  
-  # TODO: validate aode: at least one model , or two models?
-  stopifnot(length(x$models) > 0)
-  p <- lapply(x$models, compute_log_joint_incomplete, dataset = dataset)  
+  # TODO: validate aode: at least one model , or two models? 
+  stopifnot(nmodels(x) > 0)
+  p <- lapply(models(x), compute_log_joint_incomplete, dataset = dataset)  
   average_aode(p)  
 }
 # take the average

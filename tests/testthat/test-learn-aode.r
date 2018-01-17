@@ -17,15 +17,15 @@ test_that("aode str", {
   
   u <- aode(class = 'a', random_letters_db(10))  
   expect_true(is_aode(u))    
-  expect_true(is_ode(u$models[['c']]))  
-  expect_equal(length(u$models), 9)
+  expect_true(is_ode(models(u)[['c']]))  
+  expect_equal(length(models(u)), 9)
   expect_identical(class_var(u), 'a') 
   expect_identical(features(u), letters[2:10])
   
-  d <- u$models[[1]]
+  d <- models(u)[[1]]
   expect_equal(graph::numEdges(as_graphNEL(d)), 9 + 8)
   expect_equal(length(graph::adj(as_graphNEL(d), 'b')$b), 8)
-  d <- u$models[[9]]
+  d <- models(u)[[9]]
   expect_equal(graph::numEdges(as_graphNEL(d)), 9 + 8)
   expect_equal(length(graph::adj(as_graphNEL(d), 'j')$j), 8)
 }) 

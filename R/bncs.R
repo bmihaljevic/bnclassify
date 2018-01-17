@@ -4,16 +4,15 @@ bnc_aode_str <- function(models, class_var, features) {
   stopifnot(length(models) > 0, identical(names(models), unname(features)))
   stopifnot(all(vapply(models, is_ode, FUN.VALUE = logical(1))))
   bnc <- bnc_base(class = class_var, features = features)
-  bnc$models <- models
+  bnc$.models <- models
   class(bnc) <- c('bnc_aode', class(bnc))
   bnc
 }
 #' Fits an AODE model.
 #' @keywords internal
-bnc_aode <- function(x, fit_models, freqs) {
+bnc_aode <- function(x, fit_models) {
   stopifnot(inherits(x, 'bnc_aode'))
-  x$models <- fit_models
-  x$freqs <- freqs
+  x$.models <- fit_models
   class(x) <- c('bnc_aode', 'bnc_bn', class(x))
   x
 }
@@ -22,14 +21,14 @@ bnc_aode <- function(x, fit_models, freqs) {
 #' @keywords internal
 is_aode <- function(x) {
   if (!inherits(x, c('bnc_aode'))) return (FALSE)
-  if (length(x$models) < 2) return (FALSE)
-  all(sapply(x$models, is_ode)) # TODO Should be is spode
+  if (length(x$.models) < 2) return (FALSE)
+  all(sapply(x$.models, is_ode)) # TODO Should be is spode
 }
 nmodels <- function(x) {
  stopifnot(inherits(x, 'bnc_aode')) 
- length(x$models)
+ length(x$.models)
 }
 models <- function(x) { 
  stopifnot(inherits(x, 'bnc_aode'))  
- x$models
+ x$.models
 }

@@ -41,12 +41,8 @@ lp_implement <- function(x, ...) {
   UseMethod("lp_implement")
 }
 lp_implement.bnc_aode <- function(x, dataset, smooth, ...) { 
-  models <- lapply(x$models, lp_implement, dataset = dataset, smooth = smooth) # TODO: pass mem_cpts, wanbia and other parameters to lp_implement?? 
-  features <- x$features
-  names(features) <- features
-  # TODO: should use constructor here. to make a bn...
-  freqs <- lapply(features, function(f) table(dataset[,f, drop=F]))
-  bnc_aode(x, models, freqs) 
+  models <- lapply(models(x), lp_implement, dataset = dataset, smooth = smooth) # TODO: pass mem_cpts, wanbia and other parameters to lp_implement?? 
+  bnc_aode(x, models) 
 }  
 lp_implement.bnc_dag <- function(x, dataset, smooth, awnb_trees = NULL, 
                          awnb_bootstrap = NULL, manb_prior = NULL, wanbia = NULL, .mem_cpts=NULL) {

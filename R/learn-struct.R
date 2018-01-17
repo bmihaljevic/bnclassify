@@ -82,8 +82,9 @@ tan_cl <- function(class, dataset, score='loglik', root = NULL) {
 #' 
 #' If there is a single predictor then returns a naive Bayes.
 #' 
-#' @keywords internal
-#' @return \code{bnc_aode} or \code{bnc_str}
+#' @export
+#' @inheritParams nb
+#' @return A \code{bnc_aode} or a \code{bnc_str} (if returning a naive Bayes)
 aode <- function(class, dataset, features = NULL) {       
   if (!is.null(dataset)) {
     features <- get_features(class = class, dataset = dataset)
