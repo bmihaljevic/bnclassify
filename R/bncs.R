@@ -1,7 +1,6 @@
  #' Returns a \code{c("bnc_aode_str", "bnc")} object.
 #' @keywords internal
-bnc_aode_str <- function(models, m, class_var, features) {
-  stopifnot(is.numeric(m))
+bnc_aode_str <- function(models, class_var, features) {
   stopifnot(length(models) > 0, identical(names(models), unname(features)))
   stopifnot(all(vapply(models, is_ode, FUN.VALUE = logical(1))))
   bnc <- bnc_base(class = class_var, features = features)

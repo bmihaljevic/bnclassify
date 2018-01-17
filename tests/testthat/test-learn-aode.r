@@ -40,6 +40,7 @@ test_that("aode bnc funs", {
   expect_false(is_nb(u))  
   expect_error(narcs(u))
   expect_output(print(u), regexp = 'ensemble of 9') 
+  expect_output(print(u), regexp = 'learning algorithm:    aode') 
 })
 
 test_that("fit aode and bnc", {
@@ -81,3 +82,4 @@ test_that("incomplete data", {
   a <- lp(a, vt, smooth = 1) 
   p <- predict(a, vt, prob = TRUE)    
 })
+
