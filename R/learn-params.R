@@ -36,16 +36,19 @@ lp <- function(x, dataset, smooth, awnb_trees = NULL, awnb_bootstrap = NULL,
   # TODO: this should only somehow be in lp_implement
   # check_bnc_bn(bn) 
   add_params_call_arg(bn, call = match.call(), env = parent.frame(), force = TRUE)
-} 
-lp_implement <- function(x, ...) {
+}    
+#' @keywords internal
+lp_implement <- function(x, dataset, smooth, awnb_trees = NULL, 
+                         awnb_bootstrap = NULL, manb_prior = NULL, wanbia = NULL, .mem_cpts=NULL, ...) {
   UseMethod("lp_implement")
-}
-lp_implement.bnc_aode <- function(x, dataset, smooth, ...) { 
+}  
+lp_implement.bnc_aode <- function(x, dataset, smooth, awnb_trees = NULL, 
+                         awnb_bootstrap = NULL, manb_prior = NULL, wanbia = NULL, .mem_cpts=NULL, ...) {
   models <- lapply(models(x), lp_implement, dataset = dataset, smooth = smooth) # TODO: pass mem_cpts, wanbia and other parameters to lp_implement?? 
   bnc_aode(x, models) 
-}  
+}   
 lp_implement.bnc_dag <- function(x, dataset, smooth, awnb_trees = NULL, 
-                         awnb_bootstrap = NULL, manb_prior = NULL, wanbia = NULL, .mem_cpts=NULL) {
+                         awnb_bootstrap = NULL, manb_prior = NULL, wanbia = NULL, .mem_cpts=NULL, ...) {
   params <- families2cpts(families(x), dataset = dataset, smooth = smooth,
                           .mem_cpts = .mem_cpts)
   bn <- make_bnc_bn(x, params = params)
