@@ -4,7 +4,7 @@
 \alias{bnc_aode}
 \title{Fits an AODE model.}
 \usage{
-bnc_aode(x, fit_models, freqs)
+bnc_aode(x, fit_models)
 }
 \description{
 Fits an AODE model.
