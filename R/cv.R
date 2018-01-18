@@ -33,7 +33,7 @@
 #' # keep structure fixed accross training subsamples
 #' cv(ode, car, k = 10, dag = FALSE)
 cv <- function(x, dataset, k, dag = TRUE, mean = TRUE) {
-  xs <- ensure_multi_list(x, type = "bnc_bn")
+  xs <- ensure_multi_list(x, type = "bnc_fit")
   class <- get_common_class(xs)
   cnames <- colnames(dataset)
   stopifnot(!are_disjoint(class, cnames))

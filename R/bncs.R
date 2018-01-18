@@ -13,7 +13,7 @@ bnc_aode_str <- function(models, class_var, features) {
 bnc_aode <- function(x, fit_models) {
   stopifnot(inherits(x, 'bnc_aode'))
   x$.models <- fit_models
-  class(x) <- c('bnc_aode', 'bnc_bn', class(x))
+  class(x) <- c('bnc_aode_bns', class(x), 'bnc_fit')
   x
 }
 #' Is it en AODE?
