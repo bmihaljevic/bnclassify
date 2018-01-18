@@ -34,6 +34,7 @@ A \code{\link{bnc_bn}} object.
 }
 \description{
 Learn parameters with maximum likelihood or Bayesian estimation, the 
+weighting attributes to alleviate naive bayes’ independence assumption (WANBIA), 
 attribute weighted naive Bayes (AWNB), or the model averaged naive Bayes 
 (MANB) methods. Returns a \code{\link{bnc_bn}}.
 }
@@ -52,6 +53,10 @@ distribution when \eqn{N_{ i j \cdot } + r_i \alpha = 0}{N[ ij . ] + r[i]
 \alpha = 0}. With partially observed data, the above amounts to 
 \emph{available case analysis}.
 
+WANBIA learns a unique exponent 'weight' per feature. They are 
+computed by optimizing conditional log-likelihood, and are bounded with
+all \eqn{w_i \in [0, 1]}. For WANBIA estimates, set \code{wanbia} to \code{TRUE}.
+
 In order to get the AWNB parameter estimate, provide either the 
 \code{awnb_bootstrap} and/or the \code{awnb_trees} argument. The estimate is:
 \deqn{\theta_{ijk}^{AWNB} = \frac{\theta_{ijk}^{w_i}}{\sum_{k=1}^{r_i} 
@@ -67,10 +72,6 @@ is omitted from \eqn{t}-th tree).
 The MANB parameters correspond to Bayesian model averaging over the naive 
 Bayes models obtained from all \eqn{2^n}{2^n} subsets over the \eqn{n} 
 features. To get MANB parameters, provide the \code{manb_prior} argument.
-
-Like AWNB, WANBIA learns a unique exponent 'weight' per feature. They are 
-computed by optimizing conditional log-likelihood, and are bounded with
-all \eqn{w_i \in [0, 1]}. For WANBIA estimates, set \code{wanbia} to \code{TRUE}.
 }
 \examples{
 data(car)
