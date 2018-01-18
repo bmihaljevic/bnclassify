@@ -1,6 +1,6 @@
- #' Returns a \code{c("bnc_aode_str", "bnc")} object.
+ #' Returns a \code{c("bnc_aode", "bnc")} object.
 #' @keywords internal
-bnc_aode_str <- function(models, class_var, features) {
+bnc_aode <- function(models, class_var, features) {
   stopifnot(length(models) > 0, identical(names(models), unname(features)))
   stopifnot(all(vapply(models, is_ode, FUN.VALUE = logical(1))))
   bnc <- bnc_base(class = class_var, features = features)
@@ -10,7 +10,7 @@ bnc_aode_str <- function(models, class_var, features) {
 }
 #' Fits an AODE model.
 #' @keywords internal
-bnc_aode <- function(x, fit_models) {
+bnc_aode_bns <- function(x, fit_models) {
   stopifnot(inherits(x, 'bnc_aode'))
   x$.models <- fit_models
   class(x) <- c('bnc_aode_bns', class(x), 'bnc_fit')

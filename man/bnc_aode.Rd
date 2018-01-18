@@ -2,11 +2,11 @@
 % Please edit documentation in R/bncs.R
 \name{bnc_aode}
 \alias{bnc_aode}
-\title{Fits an AODE model.}
+\title{Returns a \code{c("bnc_aode", "bnc")} object.}
 \usage{
-bnc_aode(x, fit_models)
+bnc_aode(models, class_var, features)
 }
 \description{
-Fits an AODE model.
+Returns a \code{c("bnc_aode", "bnc")} object.
 }
 \keyword{internal}

@@ -92,7 +92,7 @@ aode <- function(class, dataset, features = NULL) {
   if (length(features) == 1) return(nb(class = class, features = features))
   names(features) <- features
   models <- lapply(features, spode, features, class)
-  x <- bnc_aode_str(models = models, class = class, features = features) 
+  x <- bnc_aode(models = models, class_var = class, features = features) 
   add_dag_call_arg(x, fun_name = 'aode', call = match.call(), 
                    env = parent.frame(), force = TRUE)
 }  
