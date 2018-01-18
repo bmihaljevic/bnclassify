@@ -53,21 +53,26 @@ compute_log_joint <- function(x, dataset) {
     p
   }
 } 
+#' @keywords internal
 compute_log_joint_complete <- function(x, dataset) {
   UseMethod("compute_log_joint_complete")
-}
+} 
+#' @export
 compute_log_joint_complete.bnc_aode <- function(x, dataset) { 
   # TODO: validate aode: at least one model , or two models?
   stopifnot(nmodels(x) > 0)
   p <- lapply(models(x), compute_log_joint_complete, dataset = dataset)  
   average_aode(p)  
-}
+} 
+#' @export
 compute_log_joint_complete.bnc_bn <- function(x, dataset) {
   compute_anb_log_joint_per_class(x, dataset)
-} 
+}  
+#' @keywords internal
 compute_log_joint_incomplete <- function(x, dataset) {
   UseMethod("compute_log_joint_incomplete")
-} 
+}  
+#' @export
 compute_log_joint_incomplete.bnc_aode <- function(x, dataset) {  
   # TODO: validate aode: at least one model , or two models? 
   stopifnot(nmodels(x) > 0)
@@ -83,7 +88,8 @@ average_aode <- function(p) {
   p <- Reduce('+', p)
   p <- p / nmodels 
   log(p)
-}
+} 
+#' @export
 compute_log_joint_incomplete.bnc_bn <- function(x, dataset) {
   # Check all rows in dataset have missings 
   stopifnot(sum(complete.cases(dataset)) == 0)
@@ -95,4 +101,4 @@ compute_log_joint_incomplete.bnc_bn <- function(x, dataset) {
   class <- class_var(x)
   # Call grain class posterior
   compute_grain_log_joint(grain, dataset, class)
-}
+}#

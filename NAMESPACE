@@ -2,7 +2,13 @@
 
 S3method(AIC,bnc_bn)
 S3method(BIC,bnc_bn)
+S3method(compute_log_joint_complete,bnc_aode)
+S3method(compute_log_joint_complete,bnc_bn)
+S3method(compute_log_joint_incomplete,bnc_aode)
+S3method(compute_log_joint_incomplete,bnc_bn)
 S3method(logLik,bnc_bn)
+S3method(lp_implement,bnc_aode)
+S3method(lp_implement,bnc_dag)
 S3method(plot,bnc_dag)
 S3method(predict,bnc_bn)
 S3method(print,bnc_base)

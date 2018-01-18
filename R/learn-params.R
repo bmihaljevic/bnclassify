@@ -42,11 +42,13 @@ lp_implement <- function(x, dataset, smooth, awnb_trees = NULL,
                          awnb_bootstrap = NULL, manb_prior = NULL, wanbia = NULL, .mem_cpts=NULL, ...) {
   UseMethod("lp_implement")
 }  
+#' @export
 lp_implement.bnc_aode <- function(x, dataset, smooth, awnb_trees = NULL, 
                          awnb_bootstrap = NULL, manb_prior = NULL, wanbia = NULL, .mem_cpts=NULL, ...) {
   models <- lapply(models(x), lp_implement, dataset = dataset, smooth = smooth) # TODO: pass mem_cpts, wanbia and other parameters to lp_implement?? 
   bnc_aode(x, models) 
-}   
+}    
+#' @export
 lp_implement.bnc_dag <- function(x, dataset, smooth, awnb_trees = NULL, 
                          awnb_bootstrap = NULL, manb_prior = NULL, wanbia = NULL, .mem_cpts=NULL, ...) {
   params <- families2cpts(families(x), dataset = dataset, smooth = smooth,
