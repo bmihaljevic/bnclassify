@@ -1,5 +1,6 @@
 # 0.3.4.9000
 * Added minor RCPP optimizations
+* Added AODE (averaged one-dependence estimators)
 
 # 0.3.4
 * Added WANBIA discriminative parameter learning for naive Bayes  

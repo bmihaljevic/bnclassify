@@ -38,12 +38,12 @@
 #' 
 #' Predicting: 
 #' \itemize{
-#' \item \code{\link[=predict.bnc_bn]{predict}}: Inference for complete and/or incomplete data (the latter through \code{gRain})}
+#' \item \code{\link[=predict.bnc_fit]{predict}}: Inference for complete and/or incomplete data (the latter through \code{gRain})}
 #' 
 #' Inspecting models:
 #'  \itemize{ 
 #'  \item \code{\link[=plot.bnc_dag]{plot}}: Structure plotting (through \code{Rgraphviz})
-#'  \item \code{\link[=print.bnc_dag]{print}}: Summary 
+#'  \item \code{\link[=print.bnc_base]{print}}: Summary 
 #'  \item \code{\link{params}}: Access conditional probability tables 
 #'  \item \code{\link{nparams}}: Number of free parameters 
 #'  \item and more. See \code{\link{inspect_bnc_dag}} and \code{\link{inspect_bnc_bn}}.
@@ -86,10 +86,10 @@ NULL
 #' 
 #' A Bayesian network classifier with structure and parameters. Returned by 
 #' \code{\link{lp}} and \code{\link{bnc}} functions. You can use it to classify
-#' data (with \code{\link[=predict.bnc_bn]{predict}}). Can estimate its
+#' data (with \code{\link[=predict.bnc_fit]{predict}}). Can estimate its
 #' predictive accuracy with \code{\link{cv}}, plot its structure (with 
 #' \code{\link[=plot.bnc_dag]{plot}}), print a summary to console 
-#' (\code{\link[=print.bnc_dag]{print}}), inspect it with functions documented 
+#' (\code{\link[=print.bnc_base]{print}}), inspect it with functions documented 
 #' in \code{\link{inspect_bnc_bn}} and \code{\link{inspect_bnc_dag}}, and
 #' convert it to mlr, grain, and graph objects --see \code{\link{as_mlr}} and 
 #' \code{\link{grain_and_graph}}.
@@ -111,7 +111,7 @@ NULL
 #' A Bayesian network classifier structure, returned by functions such as 
 #' \code{\link{nb}} and \code{\link{tan_cl}}. You can plot its structure (with 
 #' \code{\link[=plot.bnc_dag]{plot}}), print a summary to console 
-#' (\code{\link[=print.bnc_dag]{print}}), inspect it with functions documented
+#' (\code{\link[=print.bnc_base]{print}}), inspect it with functions documented
 #' in \code{\link{inspect_bnc_dag}}, and convert it to a graph object with 
 #' \code{\link{grain_and_graph}}.
 #' 
@@ -340,7 +340,7 @@ NULL
 #' 
 #' @name loglik
 #'   
-#' @inheritParams predict.bnc_bn
+#' @inheritParams predict.bnc_fit
 #' @param ... A data frame (\eqn{\mathcal{D}}{D}).
 #' @examples 
 #' data(car)
