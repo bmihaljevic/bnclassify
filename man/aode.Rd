@@ -15,7 +15,7 @@ aode(class, dataset, features = NULL)
 is ignored if \code{dataset} is provided.}
 }
 \value{
-A \code{bnc_aode} or a \code{bnc_str} (if returning a naive Bayes)
+A \code{bnc_aode} or a \code{bnc_dag} (if returning a naive Bayes)
 }
 \description{
 If there is a single predictor then returns a naive Bayes.

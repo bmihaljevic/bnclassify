@@ -84,7 +84,7 @@ tan_cl <- function(class, dataset, score='loglik', root = NULL) {
 #' 
 #' @export
 #' @inheritParams nb
-#' @return A \code{bnc_aode} or a \code{bnc_str} (if returning a naive Bayes)
+#' @return A \code{bnc_aode} or a \code{bnc_dag} (if returning a naive Bayes)
 aode <- function(class, dataset, features = NULL) {       
   if (!is.null(dataset)) {
     features <- get_features(class = class, dataset = dataset)
