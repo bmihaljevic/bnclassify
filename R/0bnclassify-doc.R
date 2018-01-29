@@ -24,7 +24,7 @@
 #' 
 #' \itemize{
 #' \item Bayesian and maximum likelihood estimation
-#' \item weighting attributes to alleviate naive bayes’ independence assumption (WANBIA) (Zaiti et al., 2013)
+#' \item Weighting attributes to alleviate naive bayes’ independence assumption (WANBIA) (Zaidi et al., 2013)
 #' \item Attribute-weighted naive Bayes (AWNB)  (Hall, 2007)
 #' \item Model averaged naive Bayes (MANB) (Dash and Cooper, 2002)
 #' }
