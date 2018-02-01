@@ -46,7 +46,7 @@ Using `bnclassify` generally consists of four steps:
 1. Learning network structure
 1. Learning network parameters
 1. Evaluating the model 
-1. Using the model 
+1. Predicting with the model 
 
 In between those steps, you may also want to inspect the model's properties. 
 
@@ -61,7 +61,7 @@ cv(nb, car, k = 10) # 10-fold Cross-validation estimate of accuracy
 head(predict(nb, car)) # Classify the entire data set
 ```
 
-While there are multiple alternatives to `nb` for the first step, you are most likely to use `lp`, `cv`, and `predict`  for steps 2-4. We will elaborate on all four steps throughout the rest of the vignette.  
+While there are multiple alternatives to `nb` for the first step, you are most likely to use `lp`, `cv`, and `predict` for steps 2-4. We will elaborate on all four steps throughout the rest of the vignette.  
 
 <!-- The above gave us an accuracy estimate of 85.60\%. -->
 
