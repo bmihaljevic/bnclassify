@@ -61,6 +61,20 @@ augment_ode <- function(bnc_dag, ...) {
                  MoreArgs = list(x = bnc_dag), SIMPLIFY = FALSE)
   stopifnot(all(vapply(dags, is_ode, FUN.VALUE = logical(1))))
   dags
+} 
+#' Arcs that do not invalidate the k-DB structure
+#' 
+#' @param ... Ignored.
+#' @keywords internal
+augment_kdb <- function(bnc_dag, ...) {
+  # TODO: decide on this argument. maybe a closure. maybe just additional params to these functions.
+  kdbk <- 2
+  arcs <- augment_kdb_arcs(bnc_dag, kdbk)
+  if (length(arcs) == 0) return(NULL)
+  dags <- mapply(add_feature_parents, arcs[, 'from'], arcs[, 'to'], 
+                 MoreArgs = list(x = bnc_dag), SIMPLIFY = FALSE)
+  # stopifnot(all(vapply(dags, is_ode, FUN.VALUE = logical(1))))
+  dags
 }
 #' Returns augmenting arcs that do not invalidate the ODE. 
 #' 
@@ -72,6 +86,23 @@ augment_ode_arcs <- function(bnc_dag) {
   # An ODE must have at least one orphan
   stopifnot(length(orphans) >= 1)  
   if (length(orphans) == 1) return(matrix(character(), ncol = 2))
+  non_orphans <- setdiff(features(bnc_dag), orphans)
+  arcs <- arcs_to_orphans(orphans, non_orphans)
+  arcs <- discard_cycles(arcs, bnc_dag)
+  # discard equivalent arcs
+  discard_reversed(arcs)
+} 
+#' Returns augmenting arcs that do not invalidate the k-DB. 
+#' 
+#' @keywords internal
+#' @return a character matrix. NULL if no arcs can be added.
+augment_kdb_arcs <- function(bnc_dag, k) {
+  stopifnot(is_ode(bnc_dag))
+  orphans <- upto_k_parents(bnc_dag, k) 
+  # An kDE must have at least one with < k parents
+  stopifnot(length(orphans) >= k)  
+  # There are k that do not have parents 
+  # if (length(orphans) <= k) return(matrix(character(), ncol = 2))
   non_orphans <- setdiff(features(bnc_dag), orphans)
   arcs <- arcs_to_orphans(orphans, non_orphans)
   arcs <- discard_cycles(arcs, bnc_dag)
