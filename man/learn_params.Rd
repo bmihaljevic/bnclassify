@@ -34,7 +34,7 @@ A \code{\link{bnc_bn}} object.
 }
 \description{
 Learn parameters with maximum likelihood or Bayesian estimation, the 
-weighting attributes to alleviate naive bayes’ independence assumption (WANBIA), 
+weighting attributes to alleviate naive bayes' independence assumption (WANBIA), 
 attribute weighted naive Bayes (AWNB), or the model averaged naive Bayes 
 (MANB) methods. Returns a \code{\link{bnc_bn}}.
 }

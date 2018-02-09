@@ -24,7 +24,7 @@
 #' 
 #' \itemize{
 #' \item Bayesian and maximum likelihood estimation
-#' \item Weighting attributes to alleviate naive bayes’ independence assumption (WANBIA) (Zaidi et al., 2013)
+#' \item Weighting attributes to alleviate naive bayes' independence assumption (WANBIA) (Zaidi et al., 2013)
 #' \item Attribute-weighted naive Bayes (AWNB)  (Hall, 2007)
 #' \item Model averaged naive Bayes (MANB) (Dash and Cooper, 2002)
 #' }
@@ -222,7 +222,7 @@ NULL
 #' Learn the parameters of a Bayesian network structure.
 #' 
 #' Learn parameters with maximum likelihood or Bayesian estimation, the 
-#' weighting attributes to alleviate naive bayes’ independence assumption (WANBIA), 
+#' weighting attributes to alleviate naive bayes' independence assumption (WANBIA), 
 #' attribute weighted naive Bayes (AWNB), or the model averaged naive Bayes 
 #' (MANB) methods. Returns a \code{\link{bnc_bn}}.
 #' 
