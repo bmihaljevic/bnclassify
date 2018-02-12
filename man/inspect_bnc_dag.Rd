@@ -7,6 +7,7 @@
 \alias{features}
 \alias{vars}
 \alias{families}
+\alias{modelstring}
 \alias{feature_families}
 \alias{narcs}
 \alias{is_semi_naive}
@@ -22,6 +23,8 @@ features(x)
 vars(x)
 
 families(x)
+
+modelstring(x)
 
 feature_families(x)
 
@@ -51,6 +54,8 @@ Functions for inspecting a \code{\link{bnc_dag}} object.
 \item \code{vars}: Returns all variables (i.e., features + class).
 
 \item \code{families}: Returns the family of each variable.
+
+\item \code{modelstring}: Returns the model string of the network in bnlearn format.
 
 \item \code{feature_families}: Returns the family of each feature.
 

@@ -6,10 +6,8 @@
 \alias{bnclassify-package}
 \title{Learn discrete Bayesian network classifiers from data.}
 \description{
-Implements state-of-the-art algorithms for learning discrete Bayesian network 
-classifiers from data, as well as functions for using these classifiers for
-prediction, assessing their predictive performance, and inspecting their
-properties.
+State-of-the-art algorithms for learning discrete Bayesian network 
+classifiers from data, with functions prediction, model evaluation and inspection.
 }
 \details{
 The learn more about the package, start with the vignettes:
