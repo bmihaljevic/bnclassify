@@ -15,3 +15,4 @@ subset_by_colnames(colnames, data)
 Not all colnames are necessarily in the columns of data; in that case this
 returns NA.
 }
+\keyword{internal}
