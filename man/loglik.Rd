@@ -5,6 +5,7 @@
 \alias{AIC.bnc_bn}
 \alias{BIC.bnc_bn}
 \alias{logLik.bnc_bn}
+\alias{cLogLik}
 \title{Compute (penalized) log-likelihood.}
 \usage{
 \method{AIC}{bnc_bn}(object, ...)
@@ -12,6 +13,8 @@
 \method{BIC}{bnc_bn}(object, ...)
 
 \method{logLik}{bnc_bn}(object, ...)
+
+cLogLik(object, ...)
 }
 \arguments{
 \item{object}{A \code{\link{bnc_bn}} object.}
@@ -19,7 +22,7 @@
 \item{...}{A data frame (\eqn{\mathcal{D}}{D}).}
 }
 \description{
-Compute (penalized) log-likelihood score of a \code{\link{bnc_bn}} object on
+Compute (penalized) log-likelihood and conditional log-likelihood score of a \code{\link{bnc_bn}} object on
 a data set. Requires a data frame argument in addition to \code{object}.
 }
 \details{
@@ -34,6 +37,8 @@ The Bayesian information criterion (BIC) score: = \eqn{log P(\mathcal{D} \mid
 where \eqn{|\theta|} is the number of free parameters in \code{object}, 
 \eqn{\mathcal{D}}{D} is the data set and N is the number of instances in 
 \eqn{\mathcal{D}}{D}.
+
+\code{cLogLik} computes the conditional log-likelihood of the model.
 }
 \examples{
 data(car)
@@ -41,4 +46,5 @@ nb <- bnc('nb', 'class', car, smooth = 1)
 logLik(nb, car)   
 AIC(nb, car)
 BIC(nb, car)
+cLogLik(nb, car)   
 }

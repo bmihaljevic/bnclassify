@@ -67,7 +67,19 @@ vars <- function(x) {
 families <- function(x) {
   stopifnot(inherits(x, "bnc_dag"))
   x$.families
+} 
+#' @export 
+#' @describeIn  inspect_bnc_dag Returns the model string of the network in bnlearn format.
+modelstring <- function(x) {
+  stopifnot(inherits(x, "bnc_dag"))
+  fams <- families(x)
+  order <- order_acyclic(families(x))
+  fams <- fams[order] 
+  paste(sapply(names(fams), function(node) { 
+    paste("[", node, ifelse(length(fams[[node]]) - 1 > 0, "|", ""), paste(fams[[node]][-1], sep = "", collapse = ":"), "]", sep = "")
+  }), collapse = "")   
 }
+# # Returns all feature families excluding the class variable
 # # Returns all feature families excluding the class variable
 # feature_families <- function(x) {
 #   feature_fams <- families(x)[features(x)]
