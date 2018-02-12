@@ -332,7 +332,7 @@ NULL
 
 #' Compute (penalized) log-likelihood.
 #' 
-#' Compute (penalized) log-likelihood score of a \code{\link{bnc_bn}} object on
+#' Compute (penalized) log-likelihood and conditional log-likelihood score of a \code{\link{bnc_bn}} object on
 #' a data set. Requires a data frame argument in addition to \code{object}.
 #' 
 #' log-likelihood =  \eqn{log P(\mathcal{D} \mid \theta)}{log P(D | \theta)},
@@ -347,6 +347,8 @@ NULL
 #' \eqn{\mathcal{D}}{D} is the data set and N is the number of instances in 
 #' \eqn{\mathcal{D}}{D}.
 #' 
+#' \code{cLogLik} computes the conditional log-likelihood of the model. 
+#' 
 #' @name loglik
 #'   
 #' @inheritParams predict.bnc_fit
@@ -357,6 +359,7 @@ NULL
 #' logLik(nb, car)   
 #' AIC(nb, car)
 #' BIC(nb, car)
+#' cLogLik(nb, car)   
 NULL
 
 #' Convert to graph and gRain.
