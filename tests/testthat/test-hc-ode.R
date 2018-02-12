@@ -147,3 +147,14 @@ test_that("augment ode hc nominal", {
   a <- augment_ode_sp(nb, NULL, train = list(mem, mem), test = list(car, car))
   expect_equal(length(a), 5)  
 })
+  
+test_that("Discard existing", {
+  nb <- nbcarp(car) 
+  arcs <- arcs_to_orphans(features(nb), character()) 
+  d <- discard_existing(arcs, nb)
+  expect_equal(nrow(d), nrow(arcs))
+  
+  nb <- add_feature_parents('lug_boot', 'safety', nb)  
+  d <- discard_existing(arcs, nb)
+  expect_equal(nrow(d), nrow(arcs) - 1) 
+}) 

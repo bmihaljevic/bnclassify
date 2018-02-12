@@ -56,13 +56,20 @@ test_that("tanhc sp nominal", {
   t <- tan_hcsp('class', dataset = car, k = 10, epsilon = 0)
   expect_equal(length(features(t)), 6)
   expect_equal(narcs(t), 11)
-})
+}) 
 
-
-test_that("kdb nominal", {
+test_that("kdb nominal 2", {
   skip_on_cran()
   set.seed(0)
   t <- kdb('class', dataset = car, k = 10, epsilon = 0)
   expect_equal(length(features(t)), 6)
-  expect_equal(narcs(t), 11)
-})
+  expect_equal(narcs(t), 10)
+}) 
+
+# test_that("kdb nominal 1", {
+#   skip_on_cran()
+#   set.seed(0)
+#   t <- kdb('class', dataset = car, k = 10, epsilon = 0)
+#   expect_equal(length(features(t)), 6)
+#   expect_equal(narcs(t), 10)
+# })

@@ -97,14 +97,15 @@ augment_ode_arcs <- function(bnc_dag) {
 #' @keywords internal
 #' @return a character matrix. NULL if no arcs can be added.
 augment_kdb_arcs <- function(bnc_dag, k) {
-  stopifnot(is_ode(bnc_dag))
+  stopifnot(is_kde(bnc_dag, k = k)) 
   orphans <- upto_k_parents(bnc_dag, k) 
   # An kDE must have at least one with < k parents
   stopifnot(length(orphans) >= k)  
-  # There are k that do not have parents 
+  # There are k that do have less than k parents 
   # if (length(orphans) <= k) return(matrix(character(), ncol = 2))
   non_orphans <- setdiff(features(bnc_dag), orphans)
-  arcs <- arcs_to_orphans(orphans, non_orphans)
+  arcs <- arcs_to_orphans(orphans, non_orphans) 
+  arcs <- discard_existing(arcs, bnc_dag)
   arcs <- discard_cycles(arcs, bnc_dag)
   # discard equivalent arcs
   discard_reversed(arcs)
@@ -128,7 +129,20 @@ arcs_to_orphans <- function(orphans, non_orphans) {
     a <- rbind(a, b)  
   }
   as.matrix(a)
-}
+}  
+# Remove from arcs_df those already in bnc_dag
+discard_existing <- function(arcs_df, bnc_dag) { 
+  stopifnot(is.matrix(arcs_df), is.character(arcs_df))
+  # TODO!!!!!: do i access this in this way? .dag??
+  in_bnc_dag <- t(named_edge_matrix(bnc_dag$.dag))
+  # They are not sorted. For each of a I want to see if it is already in b.  
+  # It is OK if the first ones match. if so, then I will look at the second. 
+  list_from <- lapply(arcs_df[, 'from'], '==', in_bnc_dag[, 'from'] )
+  list_to   <- lapply(arcs_df[, 'to'], '==', in_bnc_dag[, 'to'] )
+  both <- mapply('&', list_from, list_to, SIMPLIFY = FALSE)
+  both <- vapply(both, any, FUN.VALUE = logical(1))  
+  arcs_df[!both, , drop = FALSE]
+} 
 # Remove from arcs_df arcs that would introduce a cycle in bnc_dag
 discard_cycles <- function(arcs_df, bnc_dag) {
   stopifnot(is.matrix(arcs_df), is.character(arcs_df))
