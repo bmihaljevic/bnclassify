@@ -2,9 +2,6 @@
 ^\.Rproj\.user$
 .gitignore
 cran-comments.md
-develop
-paper
-theory
-design-and-manage
+Makefile
 ^\.travis\.yml$
 ^README\.Rmd$
