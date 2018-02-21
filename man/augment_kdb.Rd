@@ -4,7 +4,7 @@
 \alias{augment_kdb}
 \title{Arcs that do not invalidate the k-DB structure}
 \usage{
-augment_kdb(bnc_dag, ...)
+augment_kdb(kdbk)
 }
 \arguments{
 \item{...}{Ignored.}

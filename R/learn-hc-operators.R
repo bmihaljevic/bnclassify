@@ -66,15 +66,16 @@ augment_ode <- function(bnc_dag, ...) {
 #' 
 #' @param ... Ignored.
 #' @keywords internal
-augment_kdb <- function(bnc_dag, ...) {
-  # TODO: decide on this argument. maybe a closure. maybe just additional params to these functions.
-  kdbk <- 2
-  arcs <- augment_kdb_arcs(bnc_dag, kdbk)
-  if (length(arcs) == 0) return(NULL)
-  dags <- mapply(add_feature_parents, arcs[, 'from'], arcs[, 'to'], 
-                 MoreArgs = list(x = bnc_dag), SIMPLIFY = FALSE)
-  # stopifnot(all(vapply(dags, is_ode, FUN.VALUE = logical(1))))
-  dags
+augment_kdb <- function(kdbk) {
+  stopifnot(is.numeric(kdbk), kdbk > 0)
+  function(bnc_dag, ...) {
+    arcs <- augment_kdb_arcs(bnc_dag, k = kdbk)
+    if (length(arcs) == 0) return(NULL)
+    dags <- mapply(add_feature_parents, arcs[, 'from'], arcs[, 'to'], 
+                   MoreArgs = list(x = bnc_dag), SIMPLIFY = FALSE)
+    stopifnot(all(vapply(dags, is_kde, kdbk, FUN.VALUE = logical(1))))
+    dags
+  }
 }
 #' Returns augmenting arcs that do not invalidate the ODE. 
 #' 

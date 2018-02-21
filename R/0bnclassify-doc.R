@@ -165,6 +165,7 @@ NULL
 #' @inheritParams nb
 #' @inheritParams cv
 #' @inheritParams learn_params
+#' @param kdbk An integer. The maximum number of feature parents per feature.
 #' @param epsilon A numeric. Minimum absolute improvement in accuracy required 
 #'   to keep searching.
 #' @param cache_reset A numeric. Number of iterations after which to reset the 

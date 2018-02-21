@@ -60,12 +60,12 @@ tan_hc <- function(class, dataset, k, epsilon = 0.01, smooth = 0,
 } 
 #' @export
 #' @rdname greedy_wrapper
-kdb <- function(class, dataset, k, kdb = 2, epsilon = 0.01, smooth = 0,
+kdb <- function(class, dataset, k, kdbk = 2, epsilon = 0.01, smooth = 0,
                    cache_reset = NULL) {    
   full_nb <- nb(class = class, dataset)
   full_nb <- remove_dag_call_arg(full_nb)
   x <- greedy_search(class = class, to_include = NULL, init = full_nb,
-                step = augment_kdb, dataset = dataset, epsilon = epsilon, k = k,
+                step = augment_kdb(kdbk), dataset = dataset, epsilon = epsilon, k = k,
                 smooth = smooth, cache_reset = cache_reset)
   add_dag_call_arg(x, fun_name = 'kdb', call = match.call(), 
                    env = parent.frame(), force = TRUE)

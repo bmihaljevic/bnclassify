@@ -37,6 +37,8 @@ parameter estimation. Nonnegative.}
 \item{cache_reset}{A numeric. Number of iterations after which to reset the 
 cache of conditional probability tables. A small number reduces the amount
 of memory used. \code{NULL} means the cache is never reset (the default).}
+
+\item{kdbk}{An integer. The maximum number of feature parents per feature.}
 }
 \value{
 A \code{\link{bnc_dag}} object.
