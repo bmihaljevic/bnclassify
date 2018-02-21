@@ -56,4 +56,18 @@ test_that("tanhc sp nominal", {
   t <- tan_hcsp('class', dataset = car, k = 10, epsilon = 0)
   expect_equal(length(features(t)), 6)
   expect_equal(narcs(t), 11)
-})
+  nfams <- sapply(families(t), length)
+  expect_true(max(nfams) < 5) 
+}) 
+
+test_that("kdb nominal", {
+  skip_on_cran()
+  set.seed(0)
+  t <- kdb('class', dataset = car, kdb = 1, k = 10, epsilon = 0)
+  set.seed(0)
+  to <- tan_hc('class', dataset = car, k = 10, epsilon = 0)
+  expect_false(isTRUE(all.equal(t, to)))
+  t$.call_struct <- NULL
+  to$.call_struct <- NULL
+  expect_true(isTRUE(all.equal(t, to)))
+})  

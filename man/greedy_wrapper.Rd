@@ -5,6 +5,7 @@
 \alias{fssj}
 \alias{bsej}
 \alias{tan_hc}
+\alias{kdb}
 \alias{tan_hcsp}
 \title{Learn Bayesian network classifiers in a a greedy wrapper fashion.}
 \usage{
@@ -13,6 +14,9 @@ fssj(class, dataset, k, epsilon = 0.01, smooth = 0, cache_reset = NULL)
 bsej(class, dataset, k, epsilon = 0.01, smooth = 0, cache_reset = NULL)
 
 tan_hc(class, dataset, k, epsilon = 0.01, smooth = 0, cache_reset = NULL)
+
+kdb(class, dataset, k, kdbk = 2, epsilon = 0.01, smooth = 0,
+  cache_reset = NULL)
 
 tan_hcsp(class, dataset, k, epsilon = 0.01, smooth = 0,
   cache_reset = NULL)
@@ -33,6 +37,8 @@ parameter estimation. Nonnegative.}
 \item{cache_reset}{A numeric. Number of iterations after which to reset the 
 cache of conditional probability tables. A small number reduces the amount
 of memory used. \code{NULL} means the cache is never reset (the default).}
+
+\item{kdbk}{An integer. The maximum number of feature parents per feature.}
 }
 \value{
 A \code{\link{bnc_dag}} object.

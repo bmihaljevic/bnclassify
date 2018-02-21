@@ -174,3 +174,14 @@ test_that("distribute accross folds nominal", {
   f <- distribute_class_over_folds(0, 2)
   expect_equal(f, integer())
 })
+
+test_that("cv of different models", {  
+  skip_on_cran()
+  t <- kdb('class', dataset = car, kdb = 1, k = 10, epsilon = 0)
+  t <- lp(t, car, smooth = 1) 
+  to <- tan_hc('class', dataset = car, k = 10, epsilon = 0)
+  to <- lp(to, car, smooth = 1) 
+  set.seed(0) 
+  score <- cv(list(t, to), car, k = 2)
+  expect_false(isTRUE(all.equal(score[1], score[2])))
+})
