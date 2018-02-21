@@ -1,0 +1,158 @@
+\section{Background}\label{background}
+
+\label{sec:bcground}
+
+\subsection{Bayesian network
+classifiers}\label{bayesian-network-classifiers}
+
+\label{bayesian-networks} A Bayesian network classifier is a Bayesian
+network used for predicting a discrete class variable \(C\). It assigns
+\(\mathbf{x}\), an observation of \(n\) predictor variables (features)
+\(\mathbf{X} = (X_1,\ldots,X_n\)), to the most probable class:
+
+\[ c^* = \argmax_c P(c \mid \mathbf{x}) = \argmax_c P(\mathbf{x}, c).\]
+
+\noindent The classifier factorizes \(P(\mathbf{x}, c)\) according to a
+Bayesian network
+\(\mathcal{B} = \langle \mathcal{G}, \boldsymbol{ \theta } \rangle\).
+\(\mathcal{G}\) is a directed acyclic graph with a node per each of the
+variables \((\mathbf{X}, C)\), encoding conditional independences: a
+variable \(X\) is independent of its nondescendants in \(\mathcal{G}\)
+given the values \(\mathbf{pa}(x)\) of its parents. \(\mathcal{G}\) thus
+factorizes the joint into local conditional distributions over subsets
+of variables:
+
+\[P(\mathbf{x}, c) = P(c \mid \mathbf{pa}(c)) \prod_{i=1}^{n} P(x_i \mid \mathbf{pa}(x_i)).\]
+
+\noindent The parameters \(\boldsymbol{ \theta }\) specify the local
+distributions.
+
+\subsection{Learning structure}\label{learning-structure}
+
+\label{sec:bkg:learning} We learn \(\mathcal{B}\) from a data set
+\(\mathcal{D} = \{ (\mathbf{x}^{1}, c^{1}), \ldots, (\mathbf{x}^{N}, c^{N}) \}\)
+of \(N\) observations of \(\mathbf{X}\) and \(C\). There are two main
+approaches to learning the structure \gstuc/: a) testing for conditional
+independence among triplets of variables and b) searching a space of
+possible structures in order to optimize a network quality score. Under
+assumptions such as a limited number of parents per variable, approach
+a) can produce the correct network in polynomial time
+\citep{cheng-greiner02,Tsamardinos2003a}. On the other hand, finding the
+optimal structure even with at most two parents per variable is NP-hard
+\citep{Chickering2004}. Thus, heuristic search algorithms, such as
+greedy hill-climbing, are commonly used
+\citep[see, e.g.,][]{Koller2009}. Ways to reduce model complexity, in
+order to avoid overfitting the training data \(\mathcal{D}\), include
+searching in restricted structure spaces and penalizing it with adequate
+scores.
+
+Common scores in structure learning are the penalized log-likelihood
+scores, such as the Akaike information criterion (AIC) \citep{Akaike74}
+and Bayesian information criterion (BIC) \citep{Schwarz1978}. They
+measure the model's fitting of the empirical distribution \pcxemp/
+adding a penalty term that is a function of structure complexity. They
+are decomposable with respect to \(\mathcal{G}\), allowing for efficient
+search algorithms. Yet, with limited \(N\) and a large \(n\),
+discriminative scores based on \pcgx/, such as conditional
+log-likelihood and classification accuracy, are more suitable to the
+classification task \citep{Friedman1997}. These, however, are not
+decomposable according to \(\mathcal{G}\). While one can add a
+complexity penalty to them \citep[e.g.,][]{grossman2004}, they are
+instead often cross-validated to induce preference towards structures
+that generalize better, making their computation even more time
+demanding.
+
+For Bayesian network classifiers, a common \citep[see][]{Bielza14}
+structure space is that of augmented naive Bayes \citep{Friedman1997}
+models (see Figure \ref{fig:structures}), factorizing
+\(P(\mathbf{X}, C)\) as
+
+\begin{equation}
+P(\mathbf{X}, C) = P(C) \prod_{i=1}^{n} P(X_i \mid \mathbf{Pa}(X_i)), \label{eq:augnb}
+\end{equation}
+
+\noindent with \(C \in \mathbf{Pa}(X_i)\) for all \(X_i\) and
+\(\mathbf{Pa}(C) = \emptyset\). Models of different complexity arise by
+extending or shrinking the parent sets \(\mathbf{Pa}(X_i)\), ranging
+from the NB \citep{Minsky1961} with \(\mathbf{Pa}(X_i) = \{C \}\) for
+all \(X_i\), to those with a limited-size \(\mathbf{Pa}(X_i)\)
+\citep{Friedman1997,Sahami1996}, to those with unbounded
+\(\mathbf{Pa}(X_i)\) \citep{Pernkopf2003}. \textbf{While the NB can only
+represent linearly} separable classes (see Minsky) \citep{jaeger2003},
+more complex models are more expressive \citep{Varando2015jmlr}. Simpler
+models, with sparser \(\mathbf{Pa}(X_i)\), may perform better with less
+training data, due to their lower variance, yet worse with more data as
+the bias due to wrong independence assumptions will tend to dominate the
+error.
+
+The algorithms that produce the above structures are generally instances
+of greedy hill-climbing \citep{Keogh2002,Sahami1996}, with arc inclusion
+and removal as their search operators. Some \citep[e.g.,][]{Pazzani1996}
+add node inclusion or removal, thus embedding feature selection
+\citep{Guyon2003} within structure learning. Alternatives include the
+adaptation \citep{Friedman1997} of the Chow-Liu \citep{Chow1968}
+algorithm to find the optimal one-dependence estimator (ODE) with
+respect to decomposable penalized log-likelihood scores in time
+quadratic in \(n\). Some structures, such as NB or AODE, are fixed and
+thus require no search.
+
+\subsection{Learning parameters}\label{learning-parameters}
+
+Given \(\mathcal{G}\), learning \(\boldsymbol{\theta}\) in order to best
+approximate the underlying \PCX/ is straightforward. For discrete
+variables \(X_i\) and \(\mathbf{Pa}(X_i)\), Bayesian estimation can be
+obtained in closed form by assuming a Dirichlet prior over
+\(\boldsymbol{\theta}\). With all Dirichlet hyper-parameters equal to
+\(\alpha\),
+
+\begin{equation}
+\theta_{ijk} = \frac{N_{ijk} + \alpha}{N_{ \cdot j \cdot } + r_i \alpha},
+\label{eq:disparams}
+\end{equation}
+
+where \(N_{ijk}\) is the number of instances in \(\mathcal{D}\) such
+that \(X_i = k\) and \(\mathbf{pa}(x_i) = j\), corresponding to the
+\(j\)-th possible instantiation of \(\mathbf{pa}(x_i)\), while \(r_i\)
+is the cardinality of \(X_i\). \(\alpha = 0\) in \req{disparams} yields
+the maximum likelihood estimate of \(\theta_{ijk}\). With incomplete
+data, the parameters of local distributions are no longer independent
+and we cannot separately maximize the likelihood for each \(X_i\) as in
+\req{disparams}. Optimizing the likelihood requires a time-consuming
+algorithm like expectation maximization \citep{Dempster1977} which does
+not guarantee convergence to the global optimum.
+
+While the NB can separate any two linearly separable classes given the
+appropriate \mthetas/, learning by approximating \PCX/ cannot render the
+optimal \mthetas/ in some cases \citep{jaeger2003}. Multiple methods
+\citep{Hall2007,Zaidi2013,Zaidi2017} learn a weight \(w_i \in [0,1]\)
+for each feature and then update \(\boldsymbol{\theta}\) as
+
+\begin{equation*}
+  \theta_{ijk}^{weighted} = \frac{(\theta_{ijk})^{w_i}}{\sum_{k=1}^{r_i} (\theta_{ijk})^{w_i}}.
+\end{equation*}
+
+\noindent A \(w_i < 1\) reduces the effect of \(X_i\) on the class
+posterior, with \(w_i = 0\) omitting \(X_i\) from the model, making
+weighting more general than feature selection. The weights can be found
+by maximizing a discriminative score \citep{Zaidi2013} or computing the
+usefulness of a feature in a decision tree \citep{Hall2007}. Mainly
+applied to naive Bayes models, a generalization for augmented naive
+Bayes classifiers has been recently developed \citep{Zaidi2017}.
+
+Another parameter estimation method for the naive Bayes is by means of
+Bayesian model averaging over the \(2^n\) possible naive Bayes
+structures with up to \(n\) features \citep{Dash2002}. It is computed in
+time linear in \(n\) and provides the posterior probability of an arc
+from \(C\) to \(X_i\).
+
+\subsection{Inference}\label{inference}
+
+Computing \pcgx/ for a fully observed \x/ means multiplying the
+corresponding \(\boldsymbol{\theta}\). With an incomplete \x/, however,
+exact inference requires summing over parameters of the local
+distributions and is NP-hard in the general case \citep{cooper1990}, yet
+can be tracktable with limited-complexity structures. The AODE ensemble
+computes \pcgx/ as the average of the \(P_i (c\mid\mathbf{x})\) of the
+\(n\) base models. A special case is the lazy elimination
+\citep{zheng2006efficient} heuristic which omits \(x_i\) from
+\req{augnb} if \(P(x_i \mid x_j) = 1\) for some \(x_j\).
