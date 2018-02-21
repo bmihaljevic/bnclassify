@@ -75,7 +75,7 @@ Many algorithms for learning discrete Bayesian network classifiers from data hav
 \section{Introduction}\label{introduction} 
 Many algorithms for learning Bayesian network classifiers \citep{Friedman1997} from data have been developed over the last 40 years \citep{Bielza14}. However, only a handful are available in the R environment for statistical computing \citep{RCore2015}. The \code{bnclassify} package helps filling this gap by implementing state-of-the-art algorithms for learning discrete Bayesian network classifiers, including both structure and parameter learning methods, as well as functions for using these classifiers for prediction, assessing their predictive performance, and inspecting and analyzing their properties. 
 
-This vignettes provides details about some of the implemented functionalities. A comprehensive list of the functionalities is listed with \texttt{?bnclassify}. 
+This vignettes provides details about some of the implemented functionalities. A comprehensive list of the functionalities is listed with \texttt{?bnclassify}. The "introduction" vignette presents examples and shows how to combine the existing functions. The first part of this vignette provides background and lists all implemented functionalities. The last three chapters provide details on some of the implemented methods. 
 
 \input{background}
 
@@ -84,7 +84,6 @@ This vignettes provides details about some of the implemented functionalities. A
 
 \label{sec:structure} 
 
-%\subsection{Chow-Liu for one-dependence estimators}
 %AODE. There are no weights. 
 
 \subsection{Chow-Liu for one-dependence estimators}\label{chow-liu-for-one-dependence-estimators}
@@ -94,12 +93,13 @@ The CL-ODE algorithm by \citep{Friedman1997} adapts the Chow-Liu \citep{Chow1968
 Note that when data is incomplete \code{bnclassify} does not necessarily return the optimal (with respect to penalized log-likelihood) ODE. Namely, that requires the computationally expensive calculation of the sufficient statistics \(N_{ijk}\) which maximize parameter likelihood; instead, \code{bnclassify} approximates these statistics with the \emph{available case analysis} heuristic (see Section \ref{sec:params}).   
 
 %The tree is done with the Kruskal algorithm. For BIC and AIC, the penalization is. Since this is symmetric it will work. Just that some will be like this and it may turn out as a forest. 
+% The weight for the BIC is ...
 
 %\subsection{Greedy hill-climbing}\label{greedy-hill-climbing}
-%All greedy algorithms maximize the cross-validated estimate of accuracy as objective function.  
- 
-%BSEJ starts from a naive Bayes structure and adds augmenting arcs and removes features from the model until no improvement in network score. On the contrary, FSSJ starts from a structure containing just the class node and proceeds by incorporating features features and augmenting arcs.  
-%
+%All greedy algorithms maximize the cross-validated estimate of accuracy as their objective function. The BSEJ algorithm  starts from a naive Bayes structure and adds augmenting arcs and removes features from the model until no improvement in network score. On the contrary, FSSJ starts from a structure containing just the class node and proceeds by incorporating features features and augmenting arcs. 
+\subsection{TAN-HC}\label{greedy-hill-climbing} 
+The TAN HC considers equivalent structures at each step because adding arcs $X_i \rightarrow X_j$ and $X_j \rightarrow X_i$ results in identical structures. Given the tree structure of the features subgraph, $|Pa(X) \setminus C| \leq 1$ for each feature $X$. Thus, we can only add the arc $X_i \rightarrow X_j$ if $X_j$ has no feature parents.  Thus, adding an arc $X_i \rightarrow X_j$ introduces no v-structures into the network, and both $X_i \rightarrow X_j$ and $X_j \rightarrow X_i$ only remove the independence between $X_i$ and $X_j$. They thus correspond to identical factorizations of the joint distribution. To avoid duplicated evaluations, at each step we selected the $X_i$ to $X_j$ such that $X_i$ is alphabetically (that is, the name of the column in the data set) before $X_j$. A preferable implementation would be to select the arc randomly. 
+
 \section{Parameter learning}\label{parameter-learning}
 
 \label{sec:params}
