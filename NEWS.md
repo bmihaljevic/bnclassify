@@ -1,6 +1,7 @@
 # 0.3.4.9000
 * Added minor RCPP optimizations
 * Added AODE (averaged one-dependence estimators)
+* Added k-db classifier
 * Minor additions: cLogLik function
 
 # 0.3.4
