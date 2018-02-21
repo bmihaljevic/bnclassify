@@ -108,8 +108,7 @@ augment_kdb_arcs <- function(bnc_dag, k) {
   arcs <- arcs_to_orphans(orphans, non_orphans) 
   arcs <- discard_existing(arcs, bnc_dag)
   arcs <- discard_cycles(arcs, bnc_dag)
-  # discard equivalent arcs
-  discard_reversed(arcs)
+  arcs 
 }
 # Returns each possible ode-augmenting arc. It also includes equivalent arcs among orphans --- e.g., A -> B is yields an equivalent structure as B -> A --- but this is handled by discard_reversed. Returns a data frame.
 arcs_to_orphans <- function(orphans, non_orphans) {
