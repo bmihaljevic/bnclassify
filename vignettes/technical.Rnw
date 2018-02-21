@@ -374,12 +374,7 @@ cross-validate the entire two-step learning process --learning the structure and
 \texttt{bnclassify} implements prediction for augmented naive Bayes
 models with complete data. This amounts to multiplying the corresponding entries in the local distributions and is done in logarithmic space, applying the *log-sum-exp* trick before normalizing, in order to reduce the chance of underflow.   
 
-With incomplete data this cannot be done and therefore \code{bnclassify} uses the \texttt{gRain} package \citep{Hojsgaard2012} to perform exact inference. Such inference is time-consuming and, therefore, wrapper algorithms can be very slow when applied on incomplete data sets.
-
-\section{Future work}
-\label{sec:future}
-
-Future work involves handling real-valued data, via, for example, conditional Gaussian models. Straightforward extensions include additional variants of the greedy hill-climbing algorithm, such as the k-DB \citep{Sahami1996} algorithm, or adding more flexibility to the hill-climbing algorithm, such as enabling the choice of the initial structure (e.g., whether a naive Bayes or a model with no arcs), when applicable. Useful parameter learning methods to implement include \cite{Zaidi2013}.
+With incomplete data this cannot be done and therefore \code{bnclassify} uses the \texttt{gRain} package \citep{Hojsgaard2012} to perform exact inference. Such inference is time-consuming and, therefore, wrapper algorithms can be very slow when applied on incomplete data sets.   
 
 \bibliographystyle{abbrvnat}
 \bibliography{bnclassify}
