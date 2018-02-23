@@ -106,16 +106,11 @@ The TAN HC considers equivalent structures at each step because adding arcs $X_i
 
 \subsection{Bayesian parameter estimation}
 
-With fully observed data, \texttt{bnclassify} estimates parameters with maximum likelihood or Bayesian estimation, according to Equation~(\ref{eq:disparams}), with all prior hyperparameters \(\alpha = a\) for a specified \(a\) (provided by the user). When \(N_{\cdot j \cdot} = 0\) and \(a = 0\), that is, when the model's probability of observing $ \mathbf{Pa}(X_i) = j$ is 0, \texttt{bnclassify} assigns a uniform distribution to \(P(X_i \mid \mathbf{Pa}(X_i) = j)\).
-
-When data is incomplete, the parameters of local distributions are no longer independent and we cannot separately maximize the likelihood of each one as in Equation \ref{eq:disparams}. Optimizing (heuristically) the likelihood would require a time-consuming algorithm like expectation maximization \citep{Dempster1977}. Instead, we use \emph{available case analysis} \citep{Pigott2001} and estimate the parameters independently, substituting \(N_{\cdot j \cdot}\) in Equation \ref{eq:disparams} with \(N_{i j \cdot} = \sum_{k = 1}^{r_i} N_{i j k}\), i.e., with the count of instances in which \(\mathbf{Pa}(X_i) = j\) and \(X_i\) is observed, regardless of the observation of other variables. That is,
-
-\begin{equation}
+\code{bnclassify} only handles discrete features. With fully observed data, it estimates the parameters with maximum likelihood or Bayesian estimation, according to Equation \ref{eq:disparams}, with a single \(\alpha\) for all local distributions. With incomplete data it uses \textit{available case analysis} \citep{Pigott2001} and substitutes \(N_{\cdot j \cdot}\) in \req{disparams} with \(N_{i j \cdot} = \sum_{k = 1}^{r_i} N_{i j k}\), i.e., with the count of instances in which \(\mathbf{Pa}(X_i) = j\) and \(X_i\) is observed:   
+\begin{equation*}
 \theta_{ijk} = \frac{N_{ijk} + \alpha}{N_{ i j \cdot } + r_i \alpha}.
 \label{eq:incp_params}
-\end{equation}
-
-Thus, the parameter estimates are not maximum likelihood nor Bayesian when data is incomplete.
+\end{equation*}    
 
 \subsection{Exact model averaging for naive Bayes}
 
