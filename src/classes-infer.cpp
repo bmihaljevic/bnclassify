@@ -62,25 +62,21 @@ public:
   void get_entries(IntegerVector values, std::vector<double> & cpt_entries) {
     // maybe i could iterate the values with iterator; but more cumbersome
     // Do the - 1 outside of the loop
-    // IntegerVector cpt_values = values[db_indices];
     // each cpt values corresponds to a dim + value - 1 because it is 0-based
+    // IntegerVector cpt_values = values[db_indices];
 
-   // match - 1, because factors are 1-based.
-   // When converting db to set of indices in the CPTs, discount 1; that way it is useful.
-   // int size =  fam.size();
    // if (!(size  + 1 == dimension_prods.size())) stop("Must specify n-1 dimensions.");
    
    // get the index for the first class
    int index = values(db_indices[0]);
-   index = index - 1;
-   int sum = index;
+   int sum = index - 1;
    for (int k = 1; k < db_indices.size(); k++) {
-     index = values[db_indices[k]];
+     int index = values(db_indices(k));
      index = index - 1;  // delete
-      sum += index * this->dim_prod(k - 1);
+     sum += index * this->dim_prod(k - 1);
    }
-   int per_class_entries   = this->dim_prod(this->dim_prod.size() - 2);
    // Add an entry per each class 
+   int per_class_entries   = this->dim_prod(this->dim_prod.size() - 2);
    for (int i = 0; i < cpt_entries.size(); i++ ) {
      cpt_entries[i] =  this->cpt(sum + i * per_class_entries );
    }
@@ -109,7 +105,7 @@ IntegerVector CPT::dims2columns(const CharacterVector features, const CharacterV
 NumericVector make_cpt(NumericVector cpt, const CharacterVector features, const CharacterVector class_var, const CharacterVector columns_db) { 
   CPT c = CPT(cpt, features, class_var, columns_db); 
   IntegerVector inds = IntegerVector::create(1);
-  inds[0] = 3;
+  inds[0] = 2;
   // must initialize vector  of entries
   std::vector<double> entries(2);
   c.get_entries(inds, entries);
@@ -123,4 +119,6 @@ dbor <- kr
 t <- lp(nb('class', dbor), dbor, smooth = 1)    
 make_cpt(t$.params$bkblk, features(t), class_var(t), colnames(dbor))
 t$.params$bkblk
+
+microbenchmark::microbenchmark({a = make_cpt(t$.params$bkblk, features(t), class_var(t), colnames(dbor))})
 */
