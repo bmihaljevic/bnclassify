@@ -7,6 +7,7 @@ using namespace Rcpp;
 // many of the cpts are common
 // the thetas corresponding to the data are common as long as the cpts are fixed
 // many times the product is fixed given the same thetas
+// **check that factor levels correspond to cpt levels; this is also done initially, at this first point, so the accessing code can be safe.**
 
 // DAtaset initial optimize
  // Do all entries - 1. 
@@ -70,18 +71,18 @@ public:
    // if (!(size  + 1 == dimension_prods.size())) stop("Must specify n-1 dimensions.");
    
    // get the index for the first class
-   int index = values[db_indices[0]];
+   int index = values(db_indices[0]);
    index = index - 1;
    int sum = index;
    for (int k = 1; k < db_indices.size(); k++) {
      index = values[db_indices[k]];
      index = index - 1;  // delete
-      sum += index * this->dim_prod[k - 1];
+      sum += index * this->dim_prod(k - 1);
    }
-   int per_class_entries   = this->dim_prod[this->dim_prod.size() - 2];
+   int per_class_entries   = this->dim_prod(this->dim_prod.size() - 2);
    // Add an entry per each class 
    for (int i = 0; i < cpt_entries.size(); i++ ) {
-     cpt_entries[i] =  this->cpt[sum + i * per_class_entries ];
+     cpt_entries[i] =  this->cpt(sum + i * per_class_entries );
    }
   }
 private:  
@@ -108,16 +109,18 @@ IntegerVector CPT::dims2columns(const CharacterVector features, const CharacterV
 NumericVector make_cpt(NumericVector cpt, const CharacterVector features, const CharacterVector class_var, const CharacterVector columns_db) { 
   CPT c = CPT(cpt, features, class_var, columns_db); 
   IntegerVector inds = IntegerVector::create(1);
-  inds[0] = 1;
-  std::vector<double> entries;
-  entries.reserve(2);
+  inds[0] = 3;
+  // must initialize vector  of entries
+  std::vector<double> entries(2);
   c.get_entries(inds, entries);
-  // nothing added to vector
-  Rcout << entries.at(0) << std::endl;
   return wrap(entries);
 }
 
-/*** R 
-t
+/*** R   
+kr <- foreign::read.arff('~/gd/phd/code/works-aug-semi-bayes/data/original/kr-vs-kp.arff')
+library(bnclassify)
+dbor <- kr 
+t <- lp(nb('class', dbor), dbor, smooth = 1)    
 make_cpt(t$.params$bkblk, features(t), class_var(t), colnames(dbor))
+t$.params$bkblk
 */
