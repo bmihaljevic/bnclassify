@@ -16,7 +16,7 @@ using namespace Rcpp;
  // Arrange by instance, not by column?
  // Then do the splitting into the folds 
  
- class Task { 
+class Task { 
   CharacterVector features;
   CharacterVector class_var;
   CharacterVector data_columns;
@@ -40,7 +40,7 @@ class Dataset {
 public:
   // check length of class var, check columns, etc.   
   // the underlying storage will be irrelevant. it will be hidden inside. could simply go and advance over the df, could hold it in std vector; whatever.
-  inline double get(int i, int j) {  
+  inline double get(int i, int j) const {  
   // check range? done by ()
   // HERE THE INDICES ARE 0 BASED!!! 
     return data.at(i).at(j); 
@@ -67,8 +67,10 @@ class CPT {
   IntegerVector dim_prod; // this memory will reside in R rather than in c++ 
   IntegerVector db_indices;  //maps of columns to indices in a data set
   NumericVector cpt; 
+  const Dataset & test;
 public: 
-  CPT(NumericVector cpt, const CharacterVector features, const CharacterVector class_var, const CharacterVector columns_db) {
+  CPT(NumericVector cpt, const CharacterVector features, const CharacterVector class_var, const CharacterVector columns_db, const Dataset & test) :
+                    test(test) {
     // Do I want this to make a copy? Its OK to make a copy because it is a lightweight object.
     this->cpt = cpt; 
     // check class is the last dimension of the cpt? 
@@ -76,19 +78,33 @@ public:
     // No, I do not need to do this for class cpt. Class is a special cpt.
     const IntegerVector & dim = cpt.attr("dim"); 
     IntegerVector dim_prods = cumprod(dim);
-    this->dim_prod = dim_prods; 
+    this->dim_prod = dim_prods;  
     this->db_indices = dims2columns(features, class_var, columns_db);
   }  
+  
+  
+  void get_entries(int row, std::vector<double> & cpt_entries) { 
+   int index = test.get(db_indices[0], row);
+   int sum = index - 1;
+   for (int k = 1; k < db_indices.size(); k++) {
+     int index = test.get(db_indices(k), row);
+     index = index - 1;  // delete
+     sum += index * this->dim_prod(k - 1);
+   }
+   // Add an entry per each class 
+   int per_class_entries   = this->dim_prod(this->dim_prod.size() - 2);
+   for (int i = 0; i < cpt_entries.size(); i++ ) {
+     cpt_entries[i] =  this->cpt(sum + i * per_class_entries );
+   }
+  }
  
   // // get the entries of the cpt based on values in the dataset. the values are 1-based indices, because of factors. 
   void get_entries(IntegerVector values, std::vector<double> & cpt_entries) {
     // maybe i could iterate the values with iterator; but more cumbersome
     // Do the - 1 outside of the loop
     // each cpt values corresponds to a dim + value - 1 because it is 0-based
-    // IntegerVector cpt_values = values[db_indices];
-
-   // if (!(size  + 1 == dimension_prods.size())) stop("Must specify n-1 dimensions.");
-   
+    // IntegerVector cpt_values = values[db_indices]; 
+   // if (!(size  + 1 == dimension_prods.size())) stop("Must specify n-1 dimensions."); 
    // get the index for the first class
    int index = values(db_indices[0]);
    int sum = index - 1;
@@ -124,8 +140,9 @@ IntegerVector CPT::dims2columns(const CharacterVector features, const CharacterV
 }
 
 // [[Rcpp::export]]
-NumericVector make_cpt(NumericVector cpt, const CharacterVector features, const CharacterVector class_var, const CharacterVector columns_db) { 
-  CPT c = CPT(cpt, features, class_var, columns_db); 
+NumericVector make_cpt(NumericVector cpt, const CharacterVector features, const CharacterVector class_var, const CharacterVector columns_db, DataFrame df) { 
+  Dataset ds(df);
+  CPT c = CPT(cpt, features, class_var, columns_db, df); 
   IntegerVector inds = IntegerVector::create(1);
   inds[0] = 2;
   // must initialize vector  of entries
@@ -142,13 +159,24 @@ IntegerMatrix df2matrix(DataFrame x) {
 
 //[[Rcpp::export]]
 NumericVector get_instance(NumericVector cpt, const CharacterVector features, const CharacterVector class_var, const CharacterVector columns_db, DataFrame df) { 
+  Dataset ds(df);
+  CPT c = CPT(cpt, features, class_var, columns_db, ds);
   IntegerMatrix mat = df2matrix(df);
-  CPT c = CPT(cpt, features, class_var, columns_db);  
   IntegerVector row = mat.row(1);
   std::vector<double> entries(2);
   c.get_entries(row, entries);
   return wrap(entries);
 }
+
+//[[Rcpp::export]]
+NumericVector get_row(NumericVector cpt, const CharacterVector features, const CharacterVector class_var, const CharacterVector columns_db, DataFrame df) { 
+  Dataset ds(df);
+  CPT c = CPT(cpt, features, class_var, columns_db, ds);
+  std::vector<double> entries(2);
+  c.get_entries(1, entries);
+  return wrap(entries);
+}
+
 
 void predict_db (DataFrame newdata) {
  // make sure levels match the levels in my data set.
@@ -184,15 +212,17 @@ kr <- foreign::read.arff('~/gd/phd/code/works-aug-semi-bayes/data/original/kr-vs
 library(bnclassify)
 dbor <- kr 
 t <- lp(nb('class', dbor), dbor, smooth = 1)    
-make_cpt(t$.params$bkblk, features(t), class_var(t), colnames(dbor))
+make_cpt(t$.params$bkblk, features(t), class_var(t), colnames(dbor), dbor)
 get_instance(t$.params$bkblk, features(t), class_var(t), colnames(dbor), dbor) 
+get_row(t$.params$bkblk, features(t), class_var(t), colnames(dbor), dbor) 
 t$.params$bkblk 
 get_dataset(dbor, 0, 0)
 get_dataset(dbor, 36, 0)
-get_dataset(dbor, 37, 0) # check out of
+# get_dataset(dbor, 37, 0) # check out of
 
-microbenchmark::microbenchmark({a = make_cpt(t$.params$bkblk, features(t), class_var(t), colnames(dbor))},
+microbenchmark::microbenchmark({a = make_cpt(t$.params$bkblk, features(t), class_var(t), colnames(dbor), dbor)},
                                { b = get_instance(t$.params$bkblk, features(t), class_var(t), colnames(dbor), dbor)  },
-                               { d = make_dataset(dbor) }
+                               { d = get_row(t$.params$bkblk, features(t), class_var(t), colnames(dbor), dbor)  },
+                               { e = make_dataset(dbor) }
                                )
 */
