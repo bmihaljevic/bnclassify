@@ -15,16 +15,36 @@ using namespace Rcpp;
  // Do all entries - 1. 
  // Arrange by instance, not by column?
  // Then do the splitting into the folds 
+ 
+ class Task { 
+  CharacterVector features;
+  CharacterVector class_var;
+  CharacterVector data_columns;
+};
+
+class Model {
+  CharacterVector features;
+  CharacterVector class_var;
+  // check all features and class are in data set. Well, I do not need class in data set.
+};   
+// R and C++
+ // most code could be in R, with certain critical parts in C++
+ // Thus greedy could be in R, but parts where I update the prediction matrix output or similar could be C++
 
 // maybe distinguish train set and test set?
 class Dataset {
   CharacterVector columns;
-  CharacterVector class_var;
+  CharacterVector class_var; // the test set does not have a class var. only train does.
   std::vector<std::vector<int> > data; 
   
 public:
   // check length of class var, check columns, etc.   
-  double get(int i, int j);  // the underlying storage will be irrelevant. it will be hidden inside. could simply go and advance over the df, could hold it in std vector; whatever.
+  // the underlying storage will be irrelevant. it will be hidden inside. could simply go and advance over the df, could hold it in std vector; whatever.
+  inline double get(int i, int j) {  
+  // check range? done by ()
+  // HERE THE INDICES ARE 0 BASED!!! 
+    return data.at(i).at(j); 
+  }  
    
   Dataset(DataFrame test) {
      // keep df storage  
@@ -36,25 +56,7 @@ public:
      // This could also be the initial matrix split 
      this->data = Rcpp::as<std::vector<std::vector<int> > > (test);   
   }
-} ;
-
-class Task { 
-  CharacterVector features;
-  CharacterVector class_var;
-  CharacterVector data_columns;
-};
-
-class Model {
-  CharacterVector features;
-  CharacterVector class_var;
-  // check all features and class are in data set. Well, I do not need class in data set.
-};
-
-
- 
-// R and C++
- // most code could be in R, with certain critical parts in C++
- // Thus greedy could be in R, but parts where I update the prediction matrix output or similar could be C++
+} ;  
 
 // TODO: NEW NAME: dB_feature_cpt 
 // get_entries int row. db is a member of the cpt. 
@@ -171,6 +173,11 @@ void make_dataset(DataFrame df) {
  Dataset dset(df);
 }
 
+// [[Rcpp::export]] 
+double get_dataset(DataFrame df, int i, int j) {
+ Dataset dset(df);
+ return dset.get(i, j);
+}
 
 /*** R   
 kr <- foreign::read.arff('~/gd/phd/code/works-aug-semi-bayes/data/original/kr-vs-kp.arff')
@@ -180,6 +187,10 @@ t <- lp(nb('class', dbor), dbor, smooth = 1)
 make_cpt(t$.params$bkblk, features(t), class_var(t), colnames(dbor))
 get_instance(t$.params$bkblk, features(t), class_var(t), colnames(dbor), dbor) 
 t$.params$bkblk 
+get_dataset(dbor, 0, 0)
+get_dataset(dbor, 36, 0)
+get_dataset(dbor, 37, 0) # check out of
+
 microbenchmark::microbenchmark({a = make_cpt(t$.params$bkblk, features(t), class_var(t), colnames(dbor))},
                                { b = get_instance(t$.params$bkblk, features(t), class_var(t), colnames(dbor), dbor)  },
                                { d = make_dataset(dbor) }
