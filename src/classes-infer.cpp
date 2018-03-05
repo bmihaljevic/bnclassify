@@ -9,15 +9,33 @@ using namespace Rcpp;
 // many times the product is fixed given the same thetas
 // **check that factor levels correspond to cpt levels; this is also done initially, at this first point, so the accessing code can be safe.**
 
+// The data could be a integer matrix rather than a data frame, because all entries are integers
+
 // DAtaset initial optimize
  // Do all entries - 1. 
  // Arrange by instance, not by column?
  // Then do the splitting into the folds 
 
+// maybe distinguish train set and test set?
 class Dataset {
   CharacterVector columns;
   CharacterVector class_var;
-  // check length of class var, check columns, etc. 
+  std::vector<std::vector<int> > data; 
+  
+public:
+  // check length of class var, check columns, etc.   
+  double get(int i, int j);  // the underlying storage will be irrelevant. it will be hidden inside. could simply go and advance over the df, could hold it in std vector; whatever.
+   
+  Dataset(DataFrame test) {
+     // keep df storage  
+     // get columns and class var
+     // check at least 1 row and count N. 
+     // Get number of classes? or not? Or that is elsewhere? That is, e.g., in model.
+     // I could also reduce all entries - 1 and make a transpose, that is, a matrix that goes by instance and then iterate that way.
+     // If I go to integer, I ought to store the levels of the cpts somewhere.
+     // This could also be the initial matrix split 
+     this->data = Rcpp::as<std::vector<std::vector<int> > > (test);   
+  }
 } ;
 
 class Task { 
@@ -38,7 +56,9 @@ class Model {
  // most code could be in R, with certain critical parts in C++
  // Thus greedy could be in R, but parts where I update the prediction matrix output or similar could be C++
 
-// TODO: NEW NAME: dB_feature_cpt
+// TODO: NEW NAME: dB_feature_cpt 
+// get_entries int row. db is a member of the cpt. 
+
 class CPT {
 // get entries for classes, passing simply the instance values
 // invariant: `rows` sum to one
@@ -80,7 +100,7 @@ public:
    for (int i = 0; i < cpt_entries.size(); i++ ) {
      cpt_entries[i] =  this->cpt(sum + i * per_class_entries );
    }
-  }
+ }
 private:  
   // matches the dims of the CPT to columns of the db 
   IntegerVector dims2columns(const CharacterVector features, const CharacterVector class_var,  const CharacterVector columns_db);
@@ -89,7 +109,7 @@ private:
  
 // Get the DB indices of a family
 // maps the cpt inds to the columns of the data set 
-IntegerVector CPT::dims2columns(const CharacterVector features, const CharacterVector class_var,  const CharacterVector columns_db) {
+IntegerVector CPT::dims2columns(const CharacterVector features, const CharacterVector class_var,  const CharacterVector columns_db) { 
   const List & dimnames = this->cpt.attr("dimnames");
   const CharacterVector & fam = dimnames.attr("names");
   CharacterVector feature_fam = setdiff(fam, class_var);
@@ -112,13 +132,56 @@ NumericVector make_cpt(NumericVector cpt, const CharacterVector features, const 
   return wrap(entries);
 }
 
+//[[Rcpp::export]]
+IntegerMatrix df2matrix(DataFrame x) {
+  IntegerMatrix y = internal::convert_using_rfunction(x, "data.matrix");  
+  return y;
+}
+
+//[[Rcpp::export]]
+NumericVector get_instance(NumericVector cpt, const CharacterVector features, const CharacterVector class_var, const CharacterVector columns_db, DataFrame df) { 
+  IntegerMatrix mat = df2matrix(df);
+  CPT c = CPT(cpt, features, class_var, columns_db);  
+  IntegerVector row = mat.row(1);
+  std::vector<double> entries(2);
+  c.get_entries(row, entries);
+  return wrap(entries);
+}
+
+void predict_db (DataFrame newdata) {
+ // make sure levels match the levels in my data set.
+}  
+
+// [[Rcpp::export]] 
+NumericVector predict_rcpp(List model, const DataFrame & dataset) { 
+  int N = dataset.nrow();
+  const CharacterVector & vars_db = dataset.names(); 
+  // cpts to log. or not?
+ 
+  const std::string class_var = as<std::string>(model[".class"]);
+  // const NumericVector & class_cpt = all_cpts[class_var];
+  // could also get this form n levels of class in the db? no, the model is the truth.
+  // int nclass = class_cpt.size(); 
+  NumericVector res;
+  return res;
+} 
+
+// [[Rcpp::export]] 
+void make_dataset(DataFrame df) {
+ Dataset dset(df);
+}
+
+
 /*** R   
 kr <- foreign::read.arff('~/gd/phd/code/works-aug-semi-bayes/data/original/kr-vs-kp.arff')
 library(bnclassify)
 dbor <- kr 
 t <- lp(nb('class', dbor), dbor, smooth = 1)    
 make_cpt(t$.params$bkblk, features(t), class_var(t), colnames(dbor))
-t$.params$bkblk
-
-microbenchmark::microbenchmark({a = make_cpt(t$.params$bkblk, features(t), class_var(t), colnames(dbor))})
+get_instance(t$.params$bkblk, features(t), class_var(t), colnames(dbor), dbor) 
+t$.params$bkblk 
+microbenchmark::microbenchmark({a = make_cpt(t$.params$bkblk, features(t), class_var(t), colnames(dbor))},
+                               { b = get_instance(t$.params$bkblk, features(t), class_var(t), colnames(dbor), dbor)  },
+                               { d = make_dataset(dbor) }
+                               )
 */
