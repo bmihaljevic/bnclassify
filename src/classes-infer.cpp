@@ -42,18 +42,7 @@ Model::Model(List x): model(x) {
   // int nclass = class_cpt.size(); 
 }
 
-// Mapping of model to cpts
-// check all features in data set. Well, I do not need class in data set.
-     // this is done by each cpt check
-class MappedModel {
- const Model model;
-public:
-  MappedModel(Model x): model(x) {
-    
-  } 
-};  
 
-// maybe distinguish train set and test set?
 // name: test data set
 class Dataset {
   CharacterVector columns;
@@ -161,6 +150,22 @@ IntegerVector CPT::dims2columns(const CharacterVector features, const CharacterV
   return feature_fam_inds;
 }
 
+// Mapping of model to cpts
+// check all features in data set. Well, I do not need class in data set.
+     // this is done by each cpt check
+class MappedModel {
+ const Model model;
+  // no copies of the original cpts 
+ std::vector<CPT> cpts;  
+public:
+  MappedModel(Model x, Dataset test): model(x) {
+    
+  } 
+};  
+
+// maybe distinguish train set and test set?
+
+
 // [[Rcpp::export]]
 NumericVector make_cpt(NumericVector cpt, const CharacterVector features, const CharacterVector class_var, const CharacterVector columns_db, DataFrame df) { 
   Dataset ds(df);
@@ -222,7 +227,6 @@ NumericVector predict_rcpp(const List x, const DataFrame newdata) {
   // get all the cpts. this requires initializing the data set.
   // you would get the names of the things from the data set
   // then, for each row in the thing, get the cpts entries and multiply them 
- std::vector<CPT> cpts =  map2dataset(model, test);  
   
   NumericVector res;
   return res;
