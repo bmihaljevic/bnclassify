@@ -192,7 +192,7 @@ public:
     // now, adding it to the vector will make a copy of it. That is important to keep in mind.  BUt it is a rather light-weight object
     cpts.push_back(c);
     // TODO: this must be better done!!! And must work with more cases, etc.
-    int nvars = x.get_cpts().at(0);
+    int nvars = x.get_cpts().size();
     // this will make a copy. yet, a lightweight one...
     this->class_cpt = x.get_cpts().at(nvars - 1); 
   }  
@@ -249,75 +249,82 @@ double get_dataset(DataFrame df, int i, int j) {
  return dset.get(i, j);
 }   
 
-// [[Rcpp::export]] 
-NumericVector predict_rcpp(const List x, const DataFrame newdata) { 
+// [[Rcpp::export]]
+NumericVector predict_rcpp(const List x, const DataFrame newdata) {
   Model model(x);
-  // cpts to log. or not?  
-  
-  Testdata test(newdata); 
-  
+  // cpts to log. or not?
+
+  Testdata test(newdata);
+
   // make sure levels match the levels in my data set.
-  MappedModel mm(model, test); 
-  // cpt: mapping of the model to the test data. dataset is the test data, only knows its columns.   
+  MappedModel mm(model, test);
+  // cpt: mapping of the model to the test data. dataset is the test data, only knows its columns.
   // you would get the names of the things from the data set
-  // then, for each row in the thing, get the cpts entries and multiply them 
-  
+  // then, for each row in the thing, get the cpts entries and multiply them
+
   NumericVector res;
   return res;
-}     
-
-
-// [[Rcpp::export]] 
-NumericVector compute_joint_instance(MappedModel model) {
- // from 1 to N get the cpt entries of all classes from the cpts; multiply them.
- // get all cpts; for all get the entries, then multiply the entries to get the row of output
- // output could simply be a vector, thus do not increase to output 
- // i could have iterators over the data and just go across it 
- return NumericVector::create(1); 
 }
+
+// 
+// // [[Rcpp::export]] 
+// NumericVector compute_joint_instance(MappedModel model) {
+//  // from 1 to N get the cpt entries of all classes from the cpts; multiply them.
+//  // get all cpts; for all get the entries, then multiply the entries to get the row of output
+//  // output could simply be a vector, thus do not increase to output 
+//  // i could have iterators over the data and just go across it 
+//  return NumericVector::create(1); 
+// }
 
 // output: N x nclass
 // instances: N x whatever. Follow the feature indices.  
  
-// // [[Rcpp::export]] 
-// NumericVector compute_joint(MappedModel model) {  
-//  int N = 3;
-//  int n = 4;
-//  int nclass = 2;
-//  NumericMatrix output(N, n);    
-//  NumericVector & class_cpt = model.get_class_cpt();
-//  std::vector<int> instance(n);
-//  std::vector<double> per_class_cpt_entries(nclass);
-//  for (int instance_ind = 0; instance_ind  < N ; instance_ind++) { 
-//     // set output to copies of class cpt 
-//      for (int theta_ind = 0; theta_ind < nclass; theta_ind++) {
-//        // int ind_column = theta_ind * N;
-//        // output.at(ind_column + instance_ind) = class_cpt[theta_ind];  
-//        output.at(instance_ind, theta_ind) = class_cpt[theta_ind];
-//      } 
-//      // add the cpt entry of a single feature: 
-//      for (int j = 0; j < n; j++) {   
-//         CPT & cpt  = model.get_mapped_cpt(j);
-//         cpt.get_entries(instance_ind, per_class_cpt_entries);
-//         for (int theta_ind = 0; theta_ind < nclass; theta_ind++) {
-//              // int ind_column = theta_ind * N;
-//              // output.at(ind_column + instance_ind) += per_class_cpt_entries[theta_ind];
-//              output.at(instance_ind, theta_ind) += per_class_cpt_entries[theta_ind];
-//         }
-//      } // features
-//  } // instances      
-// }  
+// NumericVector compute_joint(MappedModel model) { 
 
-// [[Rcpp::export]] 
+// [[Rcpp::export]]
+NumericVector compute_joint(List x, DataFrame newdata) { 
+ Model mod(x);
+ Testdata test(newdata);
+ MappedModel model(mod, test);
+ // TODO: don't know why it would not compilea with MappedModel parameter. 
+ int N = 3;
+ int n = 4;
+ int nclass = 2;
+ NumericMatrix output(N, n);
+ NumericVector & class_cpt = model.get_class_cpt();
+ std::vector<int> instance(n);
+ std::vector<double> per_class_cpt_entries(nclass);
+ for (int instance_ind = 0; instance_ind  < N ; instance_ind++) {
+    // set output to copies of class cpt
+     for (int theta_ind = 0; theta_ind < nclass; theta_ind++) {
+       // int ind_column = theta_ind * N;
+       // output.at(ind_column + instance_ind) = class_cpt[theta_ind];
+       output.at(instance_ind, theta_ind) = class_cpt[theta_ind];
+     }
+     // add the cpt entry of a single feature:
+     for (int j = 0; j < n; j++) {
+        CPT & cpt  = model.get_mapped_cpt(j);
+        cpt.get_entries(instance_ind, per_class_cpt_entries);
+        for (int theta_ind = 0; theta_ind < nclass; theta_ind++) {
+             // int ind_column = theta_ind * N;
+             // output.at(ind_column + instance_ind) += per_class_cpt_entries[theta_ind];
+             output.at(instance_ind, theta_ind) += per_class_cpt_entries[theta_ind];
+        }
+     } // features
+ } // instances
+ return NumericVector::create(1);
+}
+
+// [[Rcpp::export]]
 NumericVector do_mapped(List x, DataFrame newdata) {
  Model model(x);
  Testdata test(newdata);
- MappedModel mm(model, test); 
+ MappedModel mm(model, test);
  CPT c = mm.get_mapped_cpt(0);
  std::vector<double> entries(2);
  c.get_entries(1, entries);
  return wrap(entries);
-} 
+}
 
 /*** R   
 kr <- foreign::read.arff('~/gd/phd/code/works-aug-semi-bayes/data/original/kr-vs-kp.arff')
