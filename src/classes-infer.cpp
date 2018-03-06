@@ -1,6 +1,9 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+// R and C++
+// most code could be in R, with certain critical parts in C++
+// Thus greedy could be in R, but parts where I update the prediction matrix output or similar could be C++
 
 // Commonalities:
 // the data set is common across iterations
@@ -23,24 +26,35 @@ class Task {
 };
 
 class Model { 
+public:
   List get_cpts();
   Model(List model);
 private:   
   List model;
   CharacterVector features;
-  CharacterVector class_var;
+  std::string class_var; 
 };   
 
-// Mapping of model to cpts
-// { 
-//   // check all features and class are in data set. Well, I do not need class in data set.
-// }
+Model::Model(List x): model(x) { 
+  this->class_var = as<std::string>(model[".class"]);
+  // const NumericVector & class_cpt = all_cpts[class_var];
+  // could also get this form n levels of class in the db? no, the model is the truth.
+  // int nclass = class_cpt.size(); 
+}
 
-// R and C++
- // most code could be in R, with certain critical parts in C++
- // Thus greedy could be in R, but parts where I update the prediction matrix output or similar could be C++
+// Mapping of model to cpts
+// check all features in data set. Well, I do not need class in data set.
+     // this is done by each cpt check
+class MappedModel {
+ const Model model;
+public:
+  MappedModel(Model x): model(x) {
+    
+  } 
+};  
 
 // maybe distinguish train set and test set?
+// name: test data set
 class Dataset {
   CharacterVector columns;
   CharacterVector class_var; // the test set does not have a class var. only train does.
@@ -83,8 +97,7 @@ public:
     // Do I want this to make a copy? Its OK to make a copy because it is a lightweight object.
     this->cpt = cpt; 
     // check class is the last dimension of the cpt? 
-    // TODO: this could also be the class cpt!!! remember that. 
-    // No, I do not need to do this for class cpt. Class is a special cpt.
+    // TODO: this could also be the class cpt!!! remember that. No, I do not need to do this for class cpt. Class is a special cpt.
     const IntegerVector & dim = cpt.attr("dim"); 
     IntegerVector dim_prods = cumprod(dim);
     this->dim_prod = dim_prods;  
@@ -191,28 +204,26 @@ void predict_db (DataFrame newdata) {
  // make sure levels match the levels in my data set.
 }  
 
-std::vector<CPT> get_cpts(const List model, Dataset test) {
+std::vector<CPT> map2dataset(const Model & model, Dataset test) {
  // for all cpts in the model, that is, for all features, get the cpt 
 }
 
 // [[Rcpp::export]] 
-NumericVector predict_rcpp(const List model, const DataFrame dataset) { 
+NumericVector predict_rcpp(const List x, const DataFrame newdata) { 
+  Model model(x);
+  // cpts to log. or not?
+  
+  // int N = dataset.nrow();
+  // const CharacterVector & vars_db = dataset.names();  
+  
   // model: has features, class, etc. that is independent of the dataset. 
   // cpt: mapping of the model to the test data. dataset is the test data, only knows its columns.  
-  
+   
   // get all the cpts. this requires initializing the data set.
   // you would get the names of the things from the data set
   // then, for each row in the thing, get the cpts entries and multiply them 
+ std::vector<CPT> cpts =  map2dataset(model, test);  
   
-  
-  int N = dataset.nrow();
-  const CharacterVector & vars_db = dataset.names(); 
-  // cpts to log. or not?
- 
-  const std::string class_var = as<std::string>(model[".class"]);
-  // const NumericVector & class_cpt = all_cpts[class_var];
-  // could also get this form n levels of class in the db? no, the model is the truth.
-  // int nclass = class_cpt.size(); 
   NumericVector res;
   return res;
 } 
