@@ -180,19 +180,28 @@ IntegerVector CPT::dims2columns(const CharacterVector features, const CharacterV
 class MappedModel {
  const Model model;
   // no copies of the original cpts 
- std::vector<CPT> cpts;  
+ std::vector<CPT> cpts;   
+ // class cpt is the only unmapped one 
+ NumericVector class_cpt;
 public:
   MappedModel(Model x, Testdata test): model(x) {
-    int n = 2;
+    int n = 1;
     cpts.reserve(n); 
     NumericVector cpt  = x.get_cpts().at(0);
     CPT c(cpt, model.getFeatures(), model.getClassVar(), test);
     // now, adding it to the vector will make a copy of it. That is important to keep in mind.  BUt it is a rather light-weight object
     cpts.push_back(c);
+    // TODO: this must be better done!!! And must work with more cases, etc.
+    int nvars = x.get_cpts().at(0);
+    // this will make a copy. yet, a lightweight one...
+    this->class_cpt = x.get_cpts().at(nvars - 1); 
   }  
-  CPT& get_mapped_cpt(int i) {
+  inline CPT& get_mapped_cpt(int i) {
     // TODO: change to []?
-    return cpts.at(i);
+    return this->cpts.at(i);
+  } 
+  inline NumericVector& get_class_cpt() {
+    return this->class_cpt;
   }
 };    
 
@@ -264,7 +273,40 @@ NumericVector compute_joint_instance(MappedModel model) {
  // get all cpts; for all get the entries, then multiply the entries to get the row of output
  // output could simply be a vector, thus do not increase to output 
  // i could have iterators over the data and just go across it 
+ return NumericVector::create(1); 
 }
+
+// output: N x nclass
+// instances: N x whatever. Follow the feature indices.  
+ 
+// // [[Rcpp::export]] 
+// NumericVector compute_joint(MappedModel model) {  
+//  int N = 3;
+//  int n = 4;
+//  int nclass = 2;
+//  NumericMatrix output(N, n);    
+//  NumericVector & class_cpt = model.get_class_cpt();
+//  std::vector<int> instance(n);
+//  std::vector<double> per_class_cpt_entries(nclass);
+//  for (int instance_ind = 0; instance_ind  < N ; instance_ind++) { 
+//     // set output to copies of class cpt 
+//      for (int theta_ind = 0; theta_ind < nclass; theta_ind++) {
+//        // int ind_column = theta_ind * N;
+//        // output.at(ind_column + instance_ind) = class_cpt[theta_ind];  
+//        output.at(instance_ind, theta_ind) = class_cpt[theta_ind];
+//      } 
+//      // add the cpt entry of a single feature: 
+//      for (int j = 0; j < n; j++) {   
+//         CPT & cpt  = model.get_mapped_cpt(j);
+//         cpt.get_entries(instance_ind, per_class_cpt_entries);
+//         for (int theta_ind = 0; theta_ind < nclass; theta_ind++) {
+//              // int ind_column = theta_ind * N;
+//              // output.at(ind_column + instance_ind) += per_class_cpt_entries[theta_ind];
+//              output.at(instance_ind, theta_ind) += per_class_cpt_entries[theta_ind];
+//         }
+//      } // features
+//  } // instances      
+// }  
 
 // [[Rcpp::export]] 
 NumericVector do_mapped(List x, DataFrame newdata) {
