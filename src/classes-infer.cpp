@@ -45,9 +45,7 @@ Model::Model(List x): model(x) {
 class Testdata {
   CharacterVector columns;
   std::vector<std::vector<int> > data; 
-  int N;
-  
-  
+  int N;  
 public:
   // check length of class var, check columns, etc.   
   // the underlying storage will be irrelevant. it will be hidden inside. could simply go and advance over the df, could hold it in std vector; whatever.
@@ -55,8 +53,10 @@ public:
   // check range? done by ()
   // HERE THE INDICES ARE 0 BASED!!! 
     return data.at(i).at(j); 
-  }  
-   
+  }   
+  inline CharacterVector& getColumns() {
+   return  columns;
+  }
   Testdata(DataFrame test) {
      // keep df storage  
      // get columns and class var
@@ -82,16 +82,18 @@ class CPT {
   NumericVector cpt; 
   const Testdata & test;
 public: 
-  CPT(NumericVector cpt, const CharacterVector features, const CharacterVector class_var, const CharacterVector columns_db, const Testdata & test) :
+  CPT(NumericVector cpt, const CharacterVector features, const CharacterVector class_var,  Testdata & test) :
                     test(test) {
     // Do I want this to make a copy? Its OK to make a copy because it is a lightweight object.
     this->cpt = cpt; 
     // check class is the last dimension of the cpt? 
     // TODO: this could also be the class cpt!!! remember that. No, I do not need to do this for class cpt. Class is a special cpt.
     const IntegerVector & dim = cpt.attr("dim"); 
-    IntegerVector dim_prods = cumprod(dim);
+    IntegerVector dim_prods = cumprod(dim); 
+    // note: i am using the local test here. it might do something non const to the object 
     this->dim_prod = dim_prods;  
-    this->db_indices = dims2columns(features, class_var, columns_db);
+    CharacterVector columns_db = test.getColumns();
+    this->db_indices = dims2columns(features, class_var, columns_db);  
   }  
   
  // get all classes entries, passing the index of the row 
@@ -168,9 +170,9 @@ public:
 
 
 // [[Rcpp::export]]
-NumericVector make_cpt(NumericVector cpt, const CharacterVector features, const CharacterVector class_var, const CharacterVector columns_db, DataFrame df) { 
+NumericVector make_cpt(NumericVector cpt, const CharacterVector features, const CharacterVector class_var, DataFrame df) { 
   Testdata ds(df);
-  CPT c = CPT(cpt, features, class_var, columns_db, df); 
+  CPT c = CPT(cpt, features, class_var, ds); 
   IntegerVector inds = IntegerVector::create(1);
   inds[0] = 2;
   // must initialize vector  of entries
@@ -186,9 +188,9 @@ IntegerMatrix df2matrix(DataFrame x) {
 }
 
 //[[Rcpp::export]]
-NumericVector get_instance(NumericVector cpt, const CharacterVector features, const CharacterVector class_var, const CharacterVector columns_db, DataFrame df) { 
+NumericVector get_instance(NumericVector cpt, const CharacterVector features, const CharacterVector class_var, DataFrame df) { 
   Testdata ds(df);
-  CPT c = CPT(cpt, features, class_var, columns_db, ds);
+  CPT c = CPT(cpt, features, class_var, ds);
   IntegerMatrix mat = df2matrix(df);
   IntegerVector row = mat.row(1);
   std::vector<double> entries(2);
@@ -197,22 +199,19 @@ NumericVector get_instance(NumericVector cpt, const CharacterVector features, co
 }
 
 //[[Rcpp::export]]
-NumericVector get_row(NumericVector cpt, const CharacterVector features, const CharacterVector class_var, const CharacterVector columns_db, DataFrame df) { 
+NumericVector get_row(NumericVector cpt, const CharacterVector features, const CharacterVector class_var, DataFrame df) { 
   Testdata ds(df);
-  CPT c = CPT(cpt, features, class_var, columns_db, ds);
+  CPT c = CPT(cpt, features, class_var, ds);
   std::vector<double> entries(2);
   c.get_entries(1, entries);
   return wrap(entries);
 }
 
-
-void predict_db (DataFrame newdata) {
- // make sure levels match the levels in my data set.
-}  
-
-std::vector<CPT> map2dataset(const Model & model, Testdata test) {
- // for all cpts in the model, that is, for all features, get the cpt 
-}
+// [[Rcpp::export]] 
+double get_dataset(DataFrame df, int i, int j) {
+ Testdata dset(df);
+ return dset.get(i, j);
+}   
 
 // [[Rcpp::export]] 
 NumericVector predict_rcpp(const List x, const DataFrame newdata) { 
@@ -225,34 +224,29 @@ NumericVector predict_rcpp(const List x, const DataFrame newdata) {
   // get all the cpts. this requires initializing the data set.
   // you would get the names of the things from the data set
   // then, for each row in the thing, get the cpts entries and multiply them 
+ // make sure levels match the levels in my data set.
   
   NumericVector res;
   return res;
-}  
-
-// [[Rcpp::export]] 
-double get_dataset(DataFrame df, int i, int j) {
- Testdata dset(df);
- return dset.get(i, j);
-}
-  
+}     
 
 /*** R   
 kr <- foreign::read.arff('~/gd/phd/code/works-aug-semi-bayes/data/original/kr-vs-kp.arff')
 library(bnclassify)
 dbor <- kr 
 t <- lp(nb('class', dbor), dbor, smooth = 1)    
-make_cpt(t$.params$bkblk, features(t), class_var(t), colnames(dbor), dbor)
-get_instance(t$.params$bkblk, features(t), class_var(t), colnames(dbor), dbor) 
-get_row(t$.params$bkblk, features(t), class_var(t), colnames(dbor), dbor) 
+make_cpt(t$.params$bkblk, features(t), class_var(t), dbor)
+get_instance(t$.params$bkblk, features(t), class_var(t), dbor) 
+get_row(t$.params$bkblk, features(t), class_var(t), dbor) 
 t$.params$bkblk 
 get_dataset(dbor, 0, 0)
 get_dataset(dbor, 36, 0)
 # get_dataset(dbor, 37, 0) # check out of
+f <- features(t)
 
-microbenchmark::microbenchmark({a = make_cpt(t$.params$bkblk, features(t), class_var(t), colnames(dbor), dbor)},
-                               { b = get_instance(t$.params$bkblk, features(t), class_var(t), colnames(dbor), dbor)  },
-                               { d = get_row(t$.params$bkblk, features(t), class_var(t), colnames(dbor), dbor)  },
+microbenchmark::microbenchmark({a = make_cpt(t$.params$bkblk, f, class_var(t), dbor)},
+                               { b = get_instance(t$.params$bkblk, f, class_var(t),  dbor)  },
+                               { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  },
                                { e = get_dataset(dbor, 0, 25) }
                                )
 */
