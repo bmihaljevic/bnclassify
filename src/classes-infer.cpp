@@ -196,13 +196,12 @@ public:
   MappedModel(Model x, Testdata test): model(x) { 
     // int n = x.get_cpts().size() - 1;
     const int n = x.get_n();
-    cpts.reserve(n); 
-    Rcout << n << std::endl;
-    Rcout << x.get_cpts().size() << std::endl;  
+    cpts.reserve(n);  
     // for (List::iterator iter = x.get_cpts().begin(); iter != x.get_cpts().begin() + 5; iter++) {
     for (unsigned int i = 0; i < n; i++) {
       // NumericVector cpt = (*iter);
       NumericVector cpt = x.get_cpts().at(i);
+      // could extract these function calls
       CPT c(cpt, model.getFeatures(), model.getClassVar(), test);
       // adding it to the vector will make a copy of it. That is important to keep in mind.  BUt it is a rather light-weight object
       cpts.push_back(c);
@@ -279,7 +278,7 @@ double get_dataset(DataFrame df, int i, int j) {
 // NumericVector compute_joint(MappedModel model) { 
 
 // [[Rcpp::export]]
-NumericVector compute_joint(List x, DataFrame newdata) { 
+NumericMatrix compute_joint(List x, DataFrame newdata) { 
  Model mod(x);
  Testdata test(newdata);
  MappedModel model(mod, test);
@@ -309,7 +308,7 @@ NumericVector compute_joint(List x, DataFrame newdata) {
         }
      } // features
  } // instances
- return NumericVector::create(1);
+ return output;
 }
 
 // [[Rcpp::export]]
@@ -317,11 +316,11 @@ NumericVector do_mapped(List x, DataFrame newdata) {
  Model model(x);
  Testdata test(newdata);
  MappedModel mm(model, test);
- CPT c = mm.get_mapped_cpt(0);
- std::vector<double> entries(2);
- c.get_entries(1, entries);
- return wrap(entries);
- // return NumericVector::create(1);
+ // CPT c = mm.get_mapped_cpt(0);
+ // std::vector<double> entries(2);
+ // c.get_entries(1, entries);
+ // return wrap(entries);
+ return NumericVector::create(1);
 }
 
 /*** R   
@@ -339,10 +338,12 @@ get_dataset(dbor, 36, 0)
 do_mapped(t, dbor)
 # compute_joint(t, dbor)
 # 
-# f <- features(t) 
-# microbenchmark::microbenchmark({a = make_cpt(t$.params$bkblk, f, class_var(t), dbor)},
-#                                { b = get_instance(t$.params$bkblk, f, class_var(t),  dbor)  },
-#                                { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  },
-#                                { e = get_dataset(dbor, 0, 25) }
-#                                )
+f <- features(t)
+microbenchmark::microbenchmark({a = make_cpt(t$.params$bkblk, f, class_var(t), dbor)},
+                               { b = get_instance(t$.params$bkblk, f, class_var(t),  dbor)  },
+                               { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  },
+                               { e = get_dataset(dbor, 0, 25) }, 
+                               # { f = compute_joint(t, dbor)},
+                               { g = do_mapped(t, dbor)}
+                               )
 */
