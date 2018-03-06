@@ -4,17 +4,16 @@ using namespace Rcpp;
 // R and C++
 // most code could be in R, with certain critical parts in C++
 // Thus greedy could be in R, but parts where I update the prediction matrix output or similar could be C++
+// The data could be a integer matrix rather than a data frame, because all entries are integers
+// maybe distinguish train set and test set?
+  // yes, in greedy distinguish the full data set
 
 // Commonalities:
 // the data set is common across iterations
 // many of the cpts are common
 // the thetas corresponding to the data are common as long as the cpts are fixed
 // many times the product is fixed given the same thetas
-// **check that factor levels correspond to cpt levels; this is also done initially, at this first point, so the accessing code can be safe.**
-
-// The data could be a integer matrix rather than a data frame, because all entries are integers
-
-// maybe distinguish train set and test set?
+// **check that factor levels correspond to cpt levels; this is also done initially, at this first point, so the accessing code can be safe.**  
 
 // DAtaset initial optimize
  // Do all entries - 1. 
@@ -85,10 +84,10 @@ public:
   // check range? done by ()
     return data.at(i).at(j); 
   }   
-  inline CharacterVector& getColumns() {
+  inline CharacterVector getColumns() const {
    return  columns;
   }
-  Testdata(DataFrame test) {
+  Testdata(DataFrame test): columns(test.names()) {
      // keep df storage  
      // get columns and class var
      // check at least 1 row and count N. 
@@ -97,7 +96,6 @@ public:
      // If I go to integer, I ought to store the levels of the cpts somewhere.
      // This could also be the initial matrix split 
      this->N = test.nrow();
-     this->columns = test.names();   
      this->data = Rcpp::as<std::vector<std::vector<int> > > (test);   
   }
 } ;  
@@ -112,10 +110,9 @@ class CPT {
   NumericVector cpt; 
   Testdata test;
 public: 
-  CPT(NumericVector cpt, const CharacterVector features, const CharacterVector class_var,  Testdata & test) :
-                    test(test) {
+  CPT(const NumericVector & cpt, const CharacterVector & features, const CharacterVector & class_var,  const Testdata & test) :
+                    test(test), cpt(cpt) {
     // Do I want this to make a copy? Its OK to make a copy because it is a lightweight object.
-    this->cpt = cpt; 
     // check class is the last dimension of the cpt? 
     // TODO: this could also be the class cpt!!! remember that. No, I do not need to do this for class cpt. Class is a special cpt.
     const IntegerVector & dim = cpt.attr("dim"); 
@@ -123,8 +120,8 @@ public:
     // note: i am using the local test here. it might do something non const to the object 
     this->dim_prod = dim_prods;  
     CharacterVector columns_db = test.getColumns();
-    this->db_indices = dims2columns(features, class_var, columns_db);  
-  }  
+    this->db_indices = dims2columns(features, class_var, columns_db);
+ }  
   
  // get all classes entries, passing the index of the row 
   void get_entries(int row, std::vector<double> & cpt_entries) { 
@@ -346,4 +343,6 @@ microbenchmark::microbenchmark({a = make_cpt(t$.params$bkblk, f, class_var(t), d
                                # { f = compute_joint(t, dbor)},
                                { g = do_mapped(t, dbor)}
                                )
+
+microbenchmark::microbenchmark(  { g = do_mapped(t, dbor)} )
 */
