@@ -113,17 +113,18 @@ class CPT {
   NumericVector cpt; 
   Testdata test;
 public: 
-  CPT(NumericVector cpt, CharacterVector features, CharacterVector class_var,  Testdata & test) :
-                    test(test), cpt(cpt) {
+  CPT(NumericVector cpt, const CharacterVector features, const CharacterVector class_var,  Testdata & test) :
+                    test(test) {
     // Do I want this to make a copy? Its OK to make a copy because it is a lightweight object.
+    this->cpt = cpt; 
     // check class is the last dimension of the cpt? 
     // TODO: this could also be the class cpt!!! remember that. No, I do not need to do this for class cpt. Class is a special cpt.
-    // const IntegerVector & dim = cpt.attr("dim"); 
-    // IntegerVector dim_prods = cumprod(dim); 
+    const IntegerVector & dim = cpt.attr("dim");
+    IntegerVector dim_prods = cumprod(dim);
     // note: i am using the local test here. it might do something non const to the object 
-    // this->dim_prod = dim_prods;  
-    // CharacterVector columns_db = test.getColumns();
-    // this->db_indices = dims2columns(features, class_var, columns_db);
+    this->dim_prod = dim_prods;
+    CharacterVector columns_db = test.getColumns();
+    this->db_indices = dims2columns(features, class_var, columns_db);
  }  
   
  // get all classes entries, passing the index of the row 
@@ -326,6 +327,7 @@ NumericVector do_mapped(List x, DataFrame newdata) {
 
 // todo: logarithm of the cpts
 // class names for all cpts
+// after joint, all times go up
 
 /*** R   
 kr <- foreign::read.arff('~/gd/phd/code/works-aug-semi-bayes/data/original/kr-vs-kp.arff')
@@ -343,13 +345,16 @@ do_mapped(t, dbor)
 compute_joint(t, dbor)
 # 
 f <- features(t)
-microbenchmark::microbenchmark({a = make_cpt(t$.params$bkblk, f, class_var(t), dbor)},
-                               { b = get_instance(t$.params$bkblk, f, class_var(t),  dbor)  },
+microbenchmark::microbenchmark(
                                { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  },
-                               { e = get_dataset(dbor, 0, 25) }, 
-                               { f = compute_joint(t, dbor)},
-                               { g = do_mapped(t, dbor)}
-                               ) 
-# microbenchmark::microbenchmark(  { g = do_mapped(t, dbor)} )
+                               {a = make_cpt(t$.params$bkblk, f, class_var(t), dbor)},
+                               { b = get_instance(t$.params$bkblk, f, class_var(t),  dbor)  },
+                               { e = get_dataset(dbor, 0, 25) },
+                               { g = do_mapped(t, dbor)})  
+microbenchmark::microbenchmark( { f = compute_joint(t, dbor)} )
+
+microbenchmark::microbenchmark(  { g = do_mapped(t, dbor)} )
+microbenchmark::microbenchmark(    { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  })
+microbenchmark::microbenchmark(    { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  })
 microbenchmark::microbenchmark(    { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  })
 */
