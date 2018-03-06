@@ -28,21 +28,43 @@ class Task {
 };
 
 class Model { 
-public:
-  List get_cpts();
-  Model(List model);
-private:   
-  List model;
-  CharacterVector features;
-  std::string class_var; 
-};   
-
+  public:
+    Model(List model);   
+    // this should return a copy? how to return a const reference
+    List get_cpts() const {      
+      return this->all_cpts;
+    } 
+    CharacterVector getFeatures() const {      
+      return this->features;
+    } 
+    CharacterVector getClassVar() const {      
+      return this->class_var;
+    } 
+  private:   
+    List model;
+    CharacterVector features;
+    CharacterVector class_var;  
+    List all_cpts;
+    int n;//should n exclude the class?    
+};     
 Model::Model(List x): model(x) { 
-  this->class_var = as<std::string>(model[".class"]);
+  // this->class_var = as<std::string>(model[".class"]); 
+  this->class_var = model[".class"];
+  this->all_cpts = x[".params"];
   // const NumericVector & class_cpt = all_cpts[class_var];
   // could also get this form n levels of class in the db? no, the model is the truth.
-  // int nclass = class_cpt.size(); 
-}
+  // int nclass = class_cpt.size();   
+  const CharacterVector & vars_model = all_cpts.names(); 
+  // extract this to a function
+  const CharacterVector & class_var_rcpp = wrap(class_var);
+  IntegerVector index = match(class_var_rcpp, vars_model );
+  IntegerVector allinds =  seq_along(vars_model);
+  index = setdiff(allinds, index) - 1;
+  const List & feature_cpts = all_cpts[index];
+  // I could get it in c++ and pass it to std::vector instead 
+  this->features = feature_cpts.names();   
+  this->n = features.size();  
+}  
 
 class Testdata {
   CharacterVector columns;
@@ -82,7 +104,7 @@ class CPT {
   IntegerVector dim_prod; // this memory will reside in R rather than in c++ 
   IntegerVector db_indices;  //maps of columns to indices in a data set
   NumericVector cpt; 
-  const Testdata & test;
+  Testdata test;
 public: 
   CPT(NumericVector cpt, const CharacterVector features, const CharacterVector class_var,  Testdata & test) :
                     test(test) {
@@ -139,7 +161,6 @@ private:
   // matches the dims of the CPT to columns of the db 
   IntegerVector dims2columns(const CharacterVector features, const CharacterVector class_var,  const CharacterVector columns_db);
 };
-//            
  
 // Get the DB indices of a family
 // maps the cpt inds to the columns of the data set 
@@ -166,14 +187,13 @@ class MappedModel {
 public:
   MappedModel(Model x, Testdata test): model(x) {
     int n = 2;
-    cpts.reserve(n);
-    CPT c = CPT(cpt, model.getFeatures(), model.getClassVar(), test); 
+    cpts.reserve(n); 
+    NumericVector cpt  = x.get_cpts()[0];
+    CPT c(cpt, model.getFeatures(), model.getClassVar(), test);
     // now, adding it to the vector will make a copy of it. That is important to keep in mind.  BUt it is a rather light-weight object
-    cpts[0] = c;
+    // cpts[0] = c;
   } 
-};  
-
-
+};    
 
 // [[Rcpp::export]]
 NumericVector make_cpt(NumericVector cpt, const CharacterVector features, const CharacterVector class_var, DataFrame df) { 
