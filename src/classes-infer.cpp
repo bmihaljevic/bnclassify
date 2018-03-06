@@ -188,11 +188,15 @@ public:
   MappedModel(Model x, Testdata test): model(x) {
     int n = 2;
     cpts.reserve(n); 
-    NumericVector cpt  = x.get_cpts()[0];
+    NumericVector cpt  = x.get_cpts().at(0);
     CPT c(cpt, model.getFeatures(), model.getClassVar(), test);
     // now, adding it to the vector will make a copy of it. That is important to keep in mind.  BUt it is a rather light-weight object
-    // cpts[0] = c;
-  } 
+    cpts.push_back(c);
+  }  
+  CPT& get_mapped_cpt(int i) {
+    // TODO: change to []?
+    return cpts.at(i);
+  }
 };    
 
 // [[Rcpp::export]]
@@ -256,6 +260,17 @@ NumericVector predict_rcpp(const List x, const DataFrame newdata) {
   return res;
 }     
 
+// [[Rcpp::export]] 
+NumericVector do_mapped(List x, DataFrame newdata) {
+ Model model(x);
+ Testdata test(newdata);
+ MappedModel mm(model, test); 
+ CPT c = mm.get_mapped_cpt(0);
+ std::vector<double> entries(2);
+ c.get_entries(1, entries);
+ return wrap(entries);
+} 
+
 /*** R   
 kr <- foreign::read.arff('~/gd/phd/code/works-aug-semi-bayes/data/original/kr-vs-kp.arff')
 library(bnclassify)
@@ -268,8 +283,9 @@ t$.params$bkblk
 get_dataset(dbor, 0, 0)
 get_dataset(dbor, 36, 0)
 # get_dataset(dbor, 37, 0) # check out of
-f <- features(t)
+do_mapped(t, dbor)
 
+f <- features(t) 
 microbenchmark::microbenchmark({a = make_cpt(t$.params$bkblk, f, class_var(t), dbor)},
                                { b = get_instance(t$.params$bkblk, f, class_var(t),  dbor)  },
                                { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  },
