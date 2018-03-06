@@ -22,11 +22,20 @@ class Task {
   CharacterVector data_columns;
 };
 
-class Model {
+class Model { 
+  List get_cpts();
+  Model(List model);
+private:   
+  List model;
   CharacterVector features;
   CharacterVector class_var;
-  // check all features and class are in data set. Well, I do not need class in data set.
 };   
+
+// Mapping of model to cpts
+// { 
+//   // check all features and class are in data set. Well, I do not need class in data set.
+// }
+
 // R and C++
  // most code could be in R, with certain critical parts in C++
  // Thus greedy could be in R, but parts where I update the prediction matrix output or similar could be C++
@@ -82,9 +91,9 @@ public:
     this->db_indices = dims2columns(features, class_var, columns_db);
   }  
   
-  
+ // get all classes entries, passing the index of the row 
   void get_entries(int row, std::vector<double> & cpt_entries) { 
-   int index = test.get(db_indices[0], row);
+   int index = test.get(db_indices(0), row);
    int sum = index - 1;
    for (int k = 1; k < db_indices.size(); k++) {
      int index = test.get(db_indices(k), row);
@@ -182,8 +191,20 @@ void predict_db (DataFrame newdata) {
  // make sure levels match the levels in my data set.
 }  
 
+std::vector<CPT> get_cpts(const List model, Dataset test) {
+ // for all cpts in the model, that is, for all features, get the cpt 
+}
+
 // [[Rcpp::export]] 
-NumericVector predict_rcpp(List model, const DataFrame & dataset) { 
+NumericVector predict_rcpp(const List model, const DataFrame dataset) { 
+  // model: has features, class, etc. that is independent of the dataset. 
+  // cpt: mapping of the model to the test data. dataset is the test data, only knows its columns.  
+  
+  // get all the cpts. this requires initializing the data set.
+  // you would get the names of the things from the data set
+  // then, for each row in the thing, get the cpts entries and multiply them 
+  
+  
   int N = dataset.nrow();
   const CharacterVector & vars_db = dataset.names(); 
   // cpts to log. or not?
