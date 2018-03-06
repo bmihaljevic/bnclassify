@@ -42,12 +42,11 @@ Model::Model(List x): model(x) {
   // int nclass = class_cpt.size(); 
 }
 
-
-// name: test data set
-class Dataset {
+class Testdata {
   CharacterVector columns;
-  CharacterVector class_var; // the test set does not have a class var. only train does.
   std::vector<std::vector<int> > data; 
+  int N;
+  
   
 public:
   // check length of class var, check columns, etc.   
@@ -58,7 +57,7 @@ public:
     return data.at(i).at(j); 
   }  
    
-  Dataset(DataFrame test) {
+  Testdata(DataFrame test) {
      // keep df storage  
      // get columns and class var
      // check at least 1 row and count N. 
@@ -66,6 +65,8 @@ public:
      // I could also reduce all entries - 1 and make a transpose, that is, a matrix that goes by instance and then iterate that way.
      // If I go to integer, I ought to store the levels of the cpts somewhere.
      // This could also be the initial matrix split 
+     this->N = test.nrow();
+     this->columns = test.names();   
      this->data = Rcpp::as<std::vector<std::vector<int> > > (test);   
   }
 } ;  
@@ -79,9 +80,9 @@ class CPT {
   IntegerVector dim_prod; // this memory will reside in R rather than in c++ 
   IntegerVector db_indices;  //maps of columns to indices in a data set
   NumericVector cpt; 
-  const Dataset & test;
+  const Testdata & test;
 public: 
-  CPT(NumericVector cpt, const CharacterVector features, const CharacterVector class_var, const CharacterVector columns_db, const Dataset & test) :
+  CPT(NumericVector cpt, const CharacterVector features, const CharacterVector class_var, const CharacterVector columns_db, const Testdata & test) :
                     test(test) {
     // Do I want this to make a copy? Its OK to make a copy because it is a lightweight object.
     this->cpt = cpt; 
@@ -158,7 +159,7 @@ class MappedModel {
   // no copies of the original cpts 
  std::vector<CPT> cpts;  
 public:
-  MappedModel(Model x, Dataset test): model(x) {
+  MappedModel(Model x, Testdata test): model(x) {
     
   } 
 };  
@@ -168,7 +169,7 @@ public:
 
 // [[Rcpp::export]]
 NumericVector make_cpt(NumericVector cpt, const CharacterVector features, const CharacterVector class_var, const CharacterVector columns_db, DataFrame df) { 
-  Dataset ds(df);
+  Testdata ds(df);
   CPT c = CPT(cpt, features, class_var, columns_db, df); 
   IntegerVector inds = IntegerVector::create(1);
   inds[0] = 2;
@@ -186,7 +187,7 @@ IntegerMatrix df2matrix(DataFrame x) {
 
 //[[Rcpp::export]]
 NumericVector get_instance(NumericVector cpt, const CharacterVector features, const CharacterVector class_var, const CharacterVector columns_db, DataFrame df) { 
-  Dataset ds(df);
+  Testdata ds(df);
   CPT c = CPT(cpt, features, class_var, columns_db, ds);
   IntegerMatrix mat = df2matrix(df);
   IntegerVector row = mat.row(1);
@@ -197,7 +198,7 @@ NumericVector get_instance(NumericVector cpt, const CharacterVector features, co
 
 //[[Rcpp::export]]
 NumericVector get_row(NumericVector cpt, const CharacterVector features, const CharacterVector class_var, const CharacterVector columns_db, DataFrame df) { 
-  Dataset ds(df);
+  Testdata ds(df);
   CPT c = CPT(cpt, features, class_var, columns_db, ds);
   std::vector<double> entries(2);
   c.get_entries(1, entries);
@@ -209,17 +210,14 @@ void predict_db (DataFrame newdata) {
  // make sure levels match the levels in my data set.
 }  
 
-std::vector<CPT> map2dataset(const Model & model, Dataset test) {
+std::vector<CPT> map2dataset(const Model & model, Testdata test) {
  // for all cpts in the model, that is, for all features, get the cpt 
 }
 
 // [[Rcpp::export]] 
 NumericVector predict_rcpp(const List x, const DataFrame newdata) { 
   Model model(x);
-  // cpts to log. or not?
-  
-  // int N = dataset.nrow();
-  // const CharacterVector & vars_db = dataset.names();  
+  // cpts to log. or not?  
   
   // model: has features, class, etc. that is independent of the dataset. 
   // cpt: mapping of the model to the test data. dataset is the test data, only knows its columns.  
@@ -230,18 +228,14 @@ NumericVector predict_rcpp(const List x, const DataFrame newdata) {
   
   NumericVector res;
   return res;
-} 
-
-// [[Rcpp::export]] 
-void make_dataset(DataFrame df) {
- Dataset dset(df);
-}
+}  
 
 // [[Rcpp::export]] 
 double get_dataset(DataFrame df, int i, int j) {
- Dataset dset(df);
+ Testdata dset(df);
  return dset.get(i, j);
 }
+  
 
 /*** R   
 kr <- foreign::read.arff('~/gd/phd/code/works-aug-semi-bayes/data/original/kr-vs-kp.arff')
@@ -259,6 +253,6 @@ get_dataset(dbor, 36, 0)
 microbenchmark::microbenchmark({a = make_cpt(t$.params$bkblk, features(t), class_var(t), colnames(dbor), dbor)},
                                { b = get_instance(t$.params$bkblk, features(t), class_var(t), colnames(dbor), dbor)  },
                                { d = get_row(t$.params$bkblk, features(t), class_var(t), colnames(dbor), dbor)  },
-                               { e = make_dataset(dbor) }
+                               { e = get_dataset(dbor, 0, 25) }
                                )
 */
