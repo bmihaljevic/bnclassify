@@ -190,17 +190,17 @@ class MappedModel {
  // class cpt is the only unmapped one 
  NumericVector class_cpt;
 public:
-  MappedModel(Model x, Testdata test): model(x) {
-    int n = 1;
+  MappedModel(Model x, Testdata test): model(x) { 
+    int n = x.get_cpts().size() - 1;
     cpts.reserve(n); 
     NumericVector cpt  = x.get_cpts().at(0);
-    CPT c(cpt, model.getFeatures(), model.getClassVar(), test);
-    // now, adding it to the vector will make a copy of it. That is important to keep in mind.  BUt it is a rather light-weight object
-    cpts.push_back(c);
+    for (List::iterator iter = x.get_cpts().begin(); iter != x.get_cpts().end(); iter++) { 
+      CPT c((*iter), model.getFeatures(), model.getClassVar(), test);
+      // adding it to the vector will make a copy of it. That is important to keep in mind.  BUt it is a rather light-weight object
+      cpts.push_back(c);
+    }
     // TODO: this must be better done!!! And must work with more cases, etc.
-    int nvars = x.get_cpts().size();
-    // this will make a copy. yet, a lightweight one...
-    this->class_cpt = x.get_cpts().at(nvars - 1); 
+    this->class_cpt = x.get_cpts().at(n); 
   }  
   inline CPT& get_mapped_cpt(int i) {
     // TODO: change to []?
