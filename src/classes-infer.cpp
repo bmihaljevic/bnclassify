@@ -86,6 +86,9 @@ public:
   }   
   inline CharacterVector getColumns() const {
    return  columns;
+  } 
+  inline int getN() const {
+   return  N;
   }
   Testdata(DataFrame test): columns(test.names()) {
      // keep df storage  
@@ -280,10 +283,10 @@ NumericMatrix compute_joint(List x, DataFrame newdata) {
  Testdata test(newdata);
  MappedModel model(mod, test);
  // TODO: don't know why it would not compilea with MappedModel parameter. 
- int N = 3;
- int n = 4;
+ int N = test.getN();
+ int n = mod.get_n();
  int nclass = 2;
- NumericMatrix output(N, n);
+ NumericMatrix output(N, nclass);
  NumericVector & class_cpt = model.get_class_cpt();
  std::vector<int> instance(n);
  std::vector<double> per_class_cpt_entries(nclass);
@@ -333,16 +336,15 @@ get_dataset(dbor, 0, 0)
 get_dataset(dbor, 36, 0)
 # get_dataset(dbor, 37, 0) # check out of
 do_mapped(t, dbor)
-# compute_joint(t, dbor)
+compute_joint(t, dbor)
 # 
 f <- features(t)
 microbenchmark::microbenchmark({a = make_cpt(t$.params$bkblk, f, class_var(t), dbor)},
                                { b = get_instance(t$.params$bkblk, f, class_var(t),  dbor)  },
                                { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  },
                                { e = get_dataset(dbor, 0, 25) }, 
-                               # { f = compute_joint(t, dbor)},
+                               { f = compute_joint(t, dbor)},
                                { g = do_mapped(t, dbor)}
-                               )
-
-microbenchmark::microbenchmark(  { g = do_mapped(t, dbor)} )
+                               ) 
+# microbenchmark::microbenchmark(  { g = do_mapped(t, dbor)} )
 */
