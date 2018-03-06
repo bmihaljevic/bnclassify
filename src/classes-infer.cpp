@@ -20,7 +20,13 @@ using namespace Rcpp;
  // Do all entries - 1. 
  // Arrange by instance, not by column?
  // Then do the splitting into the folds 
-  
+ 
+ // predict_rcpp
+//   Model model(x);
+//   // cpts to log. or not? 
+//   Testdata test(newdata); 
+//   // make sure levels match the levels in my data set.
+//   MappedModel mm(model, test); 
 
 // model: has features, class, etc. that is independent of the dataset. 
 class Model { 
@@ -247,24 +253,7 @@ NumericVector get_row(NumericVector cpt, const CharacterVector features, const C
 double get_dataset(DataFrame df, int i, int j) {
  Testdata dset(df);
  return dset.get(i, j);
-}   
-
-// [[Rcpp::export]]
-NumericVector predict_rcpp(const List x, const DataFrame newdata) {
-  Model model(x);
-  // cpts to log. or not?
-
-  Testdata test(newdata);
-
-  // make sure levels match the levels in my data set.
-  MappedModel mm(model, test);
-  // cpt: mapping of the model to the test data. dataset is the test data, only knows its columns.
-  // you would get the names of the things from the data set
-  // then, for each row in the thing, get the cpts entries and multiply them
-
-  NumericVector res;
-  return res;
-}
+}      
 
 // 
 // // [[Rcpp::export]] 
@@ -339,6 +328,7 @@ get_dataset(dbor, 0, 0)
 get_dataset(dbor, 36, 0)
 # get_dataset(dbor, 37, 0) # check out of
 do_mapped(t, dbor)
+compute_joint(t, dbor)
 
 f <- features(t) 
 microbenchmark::microbenchmark({a = make_cpt(t$.params$bkblk, f, class_var(t), dbor)},
