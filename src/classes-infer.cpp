@@ -317,11 +317,11 @@ NumericVector do_mapped(List x, DataFrame newdata) {
  Model model(x);
  Testdata test(newdata);
  MappedModel mm(model, test);
- // CPT c = mm.get_mapped_cpt(0);
- // std::vector<double> entries(2);
- // c.get_entries(1, entries);
- // return wrap(entries);
- return NumericVector::create(1);
+ CPT c = mm.get_mapped_cpt(0);
+ std::vector<double> entries(2);
+ c.get_entries(1, entries);
+ return wrap(entries);
+ // return NumericVector::create(1);
 }
 
 /*** R   
