@@ -20,13 +20,9 @@ using namespace Rcpp;
  // Do all entries - 1. 
  // Arrange by instance, not by column?
  // Then do the splitting into the folds 
- 
-class Task { 
-  CharacterVector features;
-  CharacterVector class_var;
-  CharacterVector data_columns;
-};
+  
 
+// model: has features, class, etc. that is independent of the dataset. 
 class Model { 
   public:
     Model(List model);   
@@ -66,6 +62,9 @@ Model::Model(List x): model(x) {
   this->n = features.size();  
 }  
 
+// HERE THE INDICES ARE 0 BASED!!! 
+// they could be 1 based; that could be part of the mapping from data to here
+// has the columns, N, but also contains the data? 
 class Testdata {
   CharacterVector columns;
   std::vector<std::vector<int> > data; 
@@ -75,7 +74,6 @@ public:
   // the underlying storage will be irrelevant. it will be hidden inside. could simply go and advance over the df, could hold it in std vector; whatever.
   inline double get(int i, int j) const {  
   // check range? done by ()
-  // HERE THE INDICES ARE 0 BASED!!! 
     return data.at(i).at(j); 
   }   
   inline CharacterVector& getColumns() {
@@ -96,8 +94,7 @@ public:
 } ;  
 
 // TODO: NEW NAME: dB_feature_cpt 
-// get_entries int row. db is a member of the cpt. 
-
+// get_entries int row. db is a member of the cpt.  
 class CPT {
 // get entries for classes, passing simply the instance values
 // invariant: `rows` sum to one
@@ -248,17 +245,26 @@ NumericVector predict_rcpp(const List x, const DataFrame newdata) {
   Model model(x);
   // cpts to log. or not?  
   
-  // model: has features, class, etc. that is independent of the dataset. 
-  // cpt: mapping of the model to the test data. dataset is the test data, only knows its columns.  
-   
-  // get all the cpts. this requires initializing the data set.
+  Testdata test(newdata); 
+  
+  // make sure levels match the levels in my data set.
+  MappedModel mm(model, test); 
+  // cpt: mapping of the model to the test data. dataset is the test data, only knows its columns.   
   // you would get the names of the things from the data set
   // then, for each row in the thing, get the cpts entries and multiply them 
- // make sure levels match the levels in my data set.
   
   NumericVector res;
   return res;
 }     
+
+
+// [[Rcpp::export]] 
+NumericVector compute_joint_instance(MappedModel model) {
+ // from 1 to N get the cpt entries of all classes from the cpts; multiply them.
+ // get all cpts; for all get the entries, then multiply the entries to get the row of output
+ // output could simply be a vector, thus do not increase to output 
+ // i could have iterators over the data and just go across it 
+}
 
 // [[Rcpp::export]] 
 NumericVector do_mapped(List x, DataFrame newdata) {
