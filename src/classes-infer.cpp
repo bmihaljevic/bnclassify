@@ -42,6 +42,9 @@ class Model {
     CharacterVector getClassVar() const {      
       return this->class_var;
     } 
+    int get_n() const {
+      return n;
+    }
   private:   
     List model;
     CharacterVector features;
@@ -191,16 +194,21 @@ class MappedModel {
  NumericVector class_cpt;
 public:
   MappedModel(Model x, Testdata test): model(x) { 
-    int n = x.get_cpts().size() - 1;
+    // int n = x.get_cpts().size() - 1;
+    const int n = x.get_n();
     cpts.reserve(n); 
-    NumericVector cpt  = x.get_cpts().at(0);
-    for (List::iterator iter = x.get_cpts().begin(); iter != x.get_cpts().end(); iter++) { 
-      CPT c((*iter), model.getFeatures(), model.getClassVar(), test);
+    Rcout << n << std::endl;
+    Rcout << x.get_cpts().size() << std::endl;  
+    // for (List::iterator iter = x.get_cpts().begin(); iter != x.get_cpts().begin() + 5; iter++) {
+    for (unsigned int i = 0; i < n; i++) {
+      // NumericVector cpt = (*iter);
+      NumericVector cpt = x.get_cpts().at(i);
+      CPT c(cpt, model.getFeatures(), model.getClassVar(), test);
       // adding it to the vector will make a copy of it. That is important to keep in mind.  BUt it is a rather light-weight object
       cpts.push_back(c);
     }
-    // TODO: this must be better done!!! And must work with more cases, etc.
-    this->class_cpt = x.get_cpts().at(n); 
+    // // TODO: this must be better done!!! And must work with more cases, etc.
+    this->class_cpt = x.get_cpts().at(n);
   }  
   inline CPT& get_mapped_cpt(int i) {
     // TODO: change to []?
@@ -309,10 +317,11 @@ NumericVector do_mapped(List x, DataFrame newdata) {
  Model model(x);
  Testdata test(newdata);
  MappedModel mm(model, test);
- CPT c = mm.get_mapped_cpt(0);
- std::vector<double> entries(2);
- c.get_entries(1, entries);
- return wrap(entries);
+ // CPT c = mm.get_mapped_cpt(0);
+ // std::vector<double> entries(2);
+ // c.get_entries(1, entries);
+ // return wrap(entries);
+ return NumericVector::create(1);
 }
 
 /*** R   
@@ -321,19 +330,19 @@ library(bnclassify)
 dbor <- kr 
 t <- lp(nb('class', dbor), dbor, smooth = 1)    
 make_cpt(t$.params$bkblk, features(t), class_var(t), dbor)
-get_instance(t$.params$bkblk, features(t), class_var(t), dbor) 
-get_row(t$.params$bkblk, features(t), class_var(t), dbor) 
-t$.params$bkblk 
+get_instance(t$.params$bkblk, features(t), class_var(t), dbor)
+get_row(t$.params$bkblk, features(t), class_var(t), dbor)
+t$.params$bkblk
 get_dataset(dbor, 0, 0)
 get_dataset(dbor, 36, 0)
 # get_dataset(dbor, 37, 0) # check out of
 do_mapped(t, dbor)
-compute_joint(t, dbor)
-
-f <- features(t) 
-microbenchmark::microbenchmark({a = make_cpt(t$.params$bkblk, f, class_var(t), dbor)},
-                               { b = get_instance(t$.params$bkblk, f, class_var(t),  dbor)  },
-                               { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  },
-                               { e = get_dataset(dbor, 0, 25) }
-                               )
+# compute_joint(t, dbor)
+# 
+# f <- features(t) 
+# microbenchmark::microbenchmark({a = make_cpt(t$.params$bkblk, f, class_var(t), dbor)},
+#                                { b = get_instance(t$.params$bkblk, f, class_var(t),  dbor)  },
+#                                { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  },
+#                                { e = get_dataset(dbor, 0, 25) }
+#                                )
 */
