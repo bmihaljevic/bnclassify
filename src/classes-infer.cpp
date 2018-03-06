@@ -14,6 +14,8 @@ using namespace Rcpp;
 
 // The data could be a integer matrix rather than a data frame, because all entries are integers
 
+// maybe distinguish train set and test set?
+
 // DAtaset initial optimize
  // Do all entries - 1. 
  // Arrange by instance, not by column?
@@ -156,17 +158,21 @@ IntegerVector CPT::dims2columns(const CharacterVector features, const CharacterV
 // Mapping of model to cpts
 // check all features in data set. Well, I do not need class in data set.
      // this is done by each cpt check
+// make sure data levels and cpt levels match 
 class MappedModel {
  const Model model;
   // no copies of the original cpts 
  std::vector<CPT> cpts;  
 public:
   MappedModel(Model x, Testdata test): model(x) {
-    
+    int n = 2;
+    cpts.reserve(n);
+    CPT c = CPT(cpt, model.getFeatures(), model.getClassVar(), test); 
+    // now, adding it to the vector will make a copy of it. That is important to keep in mind.  BUt it is a rather light-weight object
+    cpts[0] = c;
   } 
 };  
 
-// maybe distinguish train set and test set?
 
 
 // [[Rcpp::export]]
