@@ -78,6 +78,7 @@ Model::Model(List x): model(x) {
 // HERE THE INDICES ARE 0 BASED!!! 
 // they could be 1 based; that could be part of the mapping from data to here
 // has the columns, N, but also contains the data? 
+// Copying instances of test data would copy the whole matrix. Thus, I need only a single instance of this object during execution lifetime.
 class Testdata {
   CharacterVector columns;
   std::vector<std::vector<int> > data; 
@@ -115,13 +116,14 @@ class CPT {
 // invariant: `rows` sum to one
   IntegerVector dim_prod; // this memory will reside in R rather than in c++ 
   IntegerVector db_indices;  //maps of columns to indices in a data set
-  NumericVector cpt; 
-  Testdata test;
+  // NumericVector cpt; 
+  std::vector<double> cpt;
+  Testdata & test;
 public: 
   CPT(NumericVector cpt, const CharacterVector features, const CharacterVector class_var,  Testdata & test) :
                     test(test) {
     // Do I want this to make a copy? Its OK to make a copy because it is a lightweight object.
-    this->cpt = cpt; 
+    this->cpt = as<std::vector <double> >(cpt); 
     // check class is the last dimension of the cpt? 
     // TODO: this could also be the class cpt!!! remember that. No, I do not need to do this for class cpt. Class is a special cpt.
     const IntegerVector & dim = cpt.attr("dim");
@@ -129,7 +131,7 @@ public:
     // note: i am using the local test here. it might do something non const to the object 
     this->dim_prod = dim_prods;
     CharacterVector columns_db = test.getColumns();
-    this->db_indices = dims2columns(features, class_var, columns_db);
+    this->db_indices = dims2columns(features, cpt, class_var, columns_db);
  }  
   
  // get all classes entries, passing the index of the row 
@@ -144,7 +146,7 @@ public:
    // Add an entry per each class 
    int per_class_entries   = this->dim_prod(this->dim_prod.size() - 2);
    for (int i = 0; i < cpt_entries.size(); i++ ) {
-     cpt_entries[i] =  this->cpt(sum + i * per_class_entries );
+     cpt_entries[i] =  this->cpt[sum + i * per_class_entries ];
    }
   }
  
@@ -166,18 +168,18 @@ public:
    // Add an entry per each class 
    int per_class_entries   = this->dim_prod(this->dim_prod.size() - 2);
    for (int i = 0; i < cpt_entries.size(); i++ ) {
-     cpt_entries[i] =  this->cpt(sum + i * per_class_entries );
+     cpt_entries[i] =  this->cpt[sum + i * per_class_entries ];
    }
  }
 private:  
   // matches the dims of the CPT to columns of the db 
-  IntegerVector dims2columns(const CharacterVector features, const CharacterVector class_var,  const CharacterVector columns_db);
+  IntegerVector dims2columns(const CharacterVector features, const NumericVector cpt, const CharacterVector class_var,  const CharacterVector columns_db);
 };
  
 // Get the DB indices of a family
 // maps the cpt inds to the columns of the data set 
-IntegerVector CPT::dims2columns(const CharacterVector features, const CharacterVector class_var,  const CharacterVector columns_db) { 
-  const List & dimnames = this->cpt.attr("dimnames");
+IntegerVector CPT::dims2columns(const CharacterVector features, const NumericVector cpt, const CharacterVector class_var,  const CharacterVector columns_db) { 
+  const List & dimnames = cpt.attr("dimnames");
   const CharacterVector & fam = dimnames.attr("names");
   CharacterVector feature_fam = setdiff(fam, class_var);
   // TODO: check fam is last
@@ -199,7 +201,7 @@ class MappedModel {
  // class cpt is the only unmapped one 
  NumericVector class_cpt;
 public:
-  MappedModel(Model x, Testdata test): model(x) { 
+  MappedModel(Model x, Testdata & test): model(x) { 
     // int n = x.get_cpts().size() - 1;
     const int n = x.get_n();
     cpts.reserve(n);  
@@ -210,6 +212,8 @@ public:
       // could extract these function calls
       CPT c(cpt, model.getFeatures(), model.getClassVar(), test);
       // adding it to the vector will make a copy of it. That is important to keep in mind.  BUt it is a rather light-weight object
+      // cpts.push_back(CPT(cpt, model.getFeatures(), model.getClassVar(), test));
+      // cpts.push_back(std::move(c));
       cpts.push_back(c);
     }
     // // TODO: this must be better done!!! And must work with more cases, etc.
@@ -295,30 +299,32 @@ NumericMatrix compute_joint(List x, DataFrame newdata) {
  int n = mod.get_n();
  int nclass = 2;
  // NumericMatrix output(N, nclass); 
- MatrixXd output(N, nclass);
- NumericVector & class_cpt = model.get_class_cpt();
- std::vector<int> instance(n);
- std::vector<double> per_class_cpt_entries(nclass);
- for (int instance_ind = 0; instance_ind  < N ; instance_ind++) {
-    // set output to copies of class cpt
-     for (int theta_ind = 0; theta_ind < nclass; theta_ind++) {
-       // int ind_column = theta_ind * N;
-       // output.at(ind_column + instance_ind) = class_cpt[theta_ind];
-       output(instance_ind, theta_ind) = class_cpt[theta_ind];
-     }
-     // add the cpt entry of a single feature:
-     for (int j = 0; j < n; j++) {
-        // CPT & cpt  = model.get_mapped_cpt(j);
-        // cpt.get_entries(instance_ind, per_class_cpt_entries);
-        model.get_mapped_cpt(j).get_entries(instance_ind, per_class_cpt_entries);
-        for (int theta_ind = 0; theta_ind < nclass; theta_ind++) {
-             // output.at(ind_column + instance_ind) += per_class_cpt_entries[theta_ind];
-             output(instance_ind, theta_ind) += per_class_cpt_entries[theta_ind];
-             // output.at(instance_ind, theta_ind) += theta_ind;
-        }
-     } // features
- } // instances
- return wrap(output);
+ // MatrixXd output(N, nclass);
+ // NumericVector & class_cpt = model.get_class_cpt();
+ // std::vector<int> instance(n);
+ // std::vector<double> per_class_cpt_entries(nclass);
+ // for (int instance_ind = 0; instance_ind  < N ; instance_ind++) {
+ //    // set output to copies of class cpt
+ //     for (int theta_ind = 0; theta_ind < nclass; theta_ind++) {
+ //       // int ind_column = theta_ind * N;
+ //       // output.at(ind_column + instance_ind) = class_cpt[theta_ind];
+ //       output(instance_ind, theta_ind) = class_cpt[theta_ind];
+ //     }
+ //     // add the cpt entry of a single feature:
+ //     for (int j = 0; j < n; j++) {
+ //        // CPT & cpt  = model.get_mapped_cpt(j);
+ //        // cpt.get_entries(instance_ind, per_class_cpt_entries);
+ //        model.get_mapped_cpt(j).get_entries(instance_ind, per_class_cpt_entries);
+ //        for (int theta_ind = 0; theta_ind < nclass; theta_ind++) {
+ //             // output.at(ind_column + instance_ind) += per_class_cpt_entries[theta_ind];
+ //             output(instance_ind, theta_ind) += per_class_cpt_entries[theta_ind];
+ //             // output.at(instance_ind, theta_ind) += theta_ind;
+ //        }
+ //     } // features
+ // } // instances
+ // return wrap(output);
+ NumericMatrix out(2,2);
+ return out;
 }
 
 // [[Rcpp::export]]
