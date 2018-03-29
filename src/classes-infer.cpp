@@ -144,7 +144,7 @@ public:
   }
  
   // // get the entries of the cpt based on values in the dataset. the values are 1-based indices, because of factors. 
-  void get_entries(IntegerVector values, std::vector<double> & cpt_entries) {
+  void get_entries(const IntegerVector & values, std::vector<double> & cpt_entries) {
     // maybe i could iterate the values with iterator; but more cumbersome
     // Do the - 1 outside of the loop
     // each cpt values corresponds to a dim + value - 1 because it is 0-based
@@ -229,6 +229,7 @@ NumericVector make_cpt(NumericVector cpt, const CharacterVector features, const 
   std::vector<double> entries(2);
   c.get_entries(inds, entries);
   return wrap(entries);
+  // return NumericVector::create(1);
 }
 
 //[[Rcpp::export]]
@@ -301,12 +302,14 @@ NumericMatrix compute_joint(List x, DataFrame newdata) {
      }
      // add the cpt entry of a single feature:
      for (int j = 0; j < n; j++) {
-        CPT & cpt  = model.get_mapped_cpt(j);
-        cpt.get_entries(instance_ind, per_class_cpt_entries);
+        // CPT & cpt  = model.get_mapped_cpt(j);
+        // cpt.get_entries(instance_ind, per_class_cpt_entries);
+        model.get_mapped_cpt(j).get_entries(instance_ind, per_class_cpt_entries);
         for (int theta_ind = 0; theta_ind < nclass; theta_ind++) {
              // int ind_column = theta_ind * N;
              // output.at(ind_column + instance_ind) += per_class_cpt_entries[theta_ind];
              output.at(instance_ind, theta_ind) += per_class_cpt_entries[theta_ind];
+             // output.at(instance_ind, theta_ind) += theta_ind;
         }
      } // features
  } // instances
@@ -345,16 +348,19 @@ do_mapped(t, dbor)
 compute_joint(t, dbor)
 # 
 f <- features(t)
+cpt <- t$.params$bkblk
+cvar <- class_var(t)
 microbenchmark::microbenchmark(
-                               { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  },
-                               {a = make_cpt(t$.params$bkblk, f, class_var(t), dbor)},
-                               { b = get_instance(t$.params$bkblk, f, class_var(t),  dbor)  },
+                               { d = get_row(cpt, f, cvar, dbor)  },
+                               {a = make_cpt(cpt, f, cvar, dbor)},
+                               { b = get_instance(cpt, f, cvar,  dbor)  },
                                { e = get_dataset(dbor, 0, 25) },
                                { g = do_mapped(t, dbor)})  
-microbenchmark::microbenchmark( { f = compute_joint(t, dbor)} )
-
-microbenchmark::microbenchmark(  { g = do_mapped(t, dbor)} )
-microbenchmark::microbenchmark(    { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  })
-microbenchmark::microbenchmark(    { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  })
-microbenchmark::microbenchmark(    { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  })
+microbenchmark::microbenchmark( { f = compute_joint(t, dbor)},
+                                  { h  = bnclassify:::compute_log_joint(t, dbor)} )
+# 
+# microbenchmark::microbenchmark(  { g = do_mapped(t, dbor)} )
+# microbenchmark::microbenchmark(    { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  })
+# microbenchmark::microbenchmark(    { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  })
+# microbenchmark::microbenchmark(    { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  })
 */

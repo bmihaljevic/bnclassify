@@ -13,3 +13,31 @@ normalize_ctgt <- function(ctgt) {
     .Call('_bnclassify_normalize_ctgt', PACKAGE = 'bnclassify', ctgt)
 }
 
+make_cpt <- function(cpt, features, class_var, df) {
+    .Call('_bnclassify_make_cpt', PACKAGE = 'bnclassify', cpt, features, class_var, df)
+}
+
+df2matrix <- function(x) {
+    .Call('_bnclassify_df2matrix', PACKAGE = 'bnclassify', x)
+}
+
+get_instance <- function(cpt, features, class_var, df) {
+    .Call('_bnclassify_get_instance', PACKAGE = 'bnclassify', cpt, features, class_var, df)
+}
+
+get_row <- function(cpt, features, class_var, df) {
+    .Call('_bnclassify_get_row', PACKAGE = 'bnclassify', cpt, features, class_var, df)
+}
+
+get_dataset <- function(df, i, j) {
+    .Call('_bnclassify_get_dataset', PACKAGE = 'bnclassify', df, i, j)
+}
+
+compute_joint <- function(x, newdata) {
+    .Call('_bnclassify_compute_joint', PACKAGE = 'bnclassify', x, newdata)
+}
+
+do_mapped <- function(x, newdata) {
+    .Call('_bnclassify_do_mapped', PACKAGE = 'bnclassify', x, newdata)
+}
+
