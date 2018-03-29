@@ -1,5 +1,10 @@
 #include <Rcpp.h>
+#include <RcppEigen.h>
 using namespace Rcpp;
+
+// [[Rcpp::depends(RcppEigen)]]
+
+using Eigen::MatrixXd;
 
 // R and C++
 // most code could be in R, with certain critical parts in C++
@@ -289,7 +294,8 @@ NumericMatrix compute_joint(List x, DataFrame newdata) {
  int N = test.getN();
  int n = mod.get_n();
  int nclass = 2;
- NumericMatrix output(N, nclass);
+ // NumericMatrix output(N, nclass); 
+ MatrixXd output(N, nclass);
  NumericVector & class_cpt = model.get_class_cpt();
  std::vector<int> instance(n);
  std::vector<double> per_class_cpt_entries(nclass);
@@ -298,7 +304,7 @@ NumericMatrix compute_joint(List x, DataFrame newdata) {
      for (int theta_ind = 0; theta_ind < nclass; theta_ind++) {
        // int ind_column = theta_ind * N;
        // output.at(ind_column + instance_ind) = class_cpt[theta_ind];
-       output.at(instance_ind, theta_ind) = class_cpt[theta_ind];
+       output(instance_ind, theta_ind) = class_cpt[theta_ind];
      }
      // add the cpt entry of a single feature:
      for (int j = 0; j < n; j++) {
@@ -306,14 +312,13 @@ NumericMatrix compute_joint(List x, DataFrame newdata) {
         // cpt.get_entries(instance_ind, per_class_cpt_entries);
         model.get_mapped_cpt(j).get_entries(instance_ind, per_class_cpt_entries);
         for (int theta_ind = 0; theta_ind < nclass; theta_ind++) {
-             // int ind_column = theta_ind * N;
              // output.at(ind_column + instance_ind) += per_class_cpt_entries[theta_ind];
-             output.at(instance_ind, theta_ind) += per_class_cpt_entries[theta_ind];
+             output(instance_ind, theta_ind) += per_class_cpt_entries[theta_ind];
              // output.at(instance_ind, theta_ind) += theta_ind;
         }
      } // features
  } // instances
- return output;
+ return wrap(output);
 }
 
 // [[Rcpp::export]]
@@ -345,22 +350,25 @@ get_dataset(dbor, 0, 0)
 get_dataset(dbor, 36, 0)
 # get_dataset(dbor, 37, 0) # check out of
 do_mapped(t, dbor)
-compute_joint(t, dbor)
+outp <- compute_joint(t, dbor)
+head(outp)
+tail(outp)
 # 
 f <- features(t)
 cpt <- t$.params$bkblk
 cvar <- class_var(t)
-microbenchmark::microbenchmark(
-                               { d = get_row(cpt, f, cvar, dbor)  },
-                               {a = make_cpt(cpt, f, cvar, dbor)},
-                               { b = get_instance(cpt, f, cvar,  dbor)  },
-                               { e = get_dataset(dbor, 0, 25) },
-                               { g = do_mapped(t, dbor)})  
-microbenchmark::microbenchmark( { f = compute_joint(t, dbor)},
-                                  { h  = bnclassify:::compute_log_joint(t, dbor)} )
-# 
+# microbenchmark::microbenchmark(
+#                                { d = get_row(cpt, f, cvar, dbor)  },
+#                                {a = make_cpt(cpt, f, cvar, dbor)},
+#                                { b = get_instance(cpt, f, cvar,  dbor)  },
+#                                { e = get_dataset(dbor, 0, 25) },
+#                                { g = do_mapped(t, dbor)})  
+
 # microbenchmark::microbenchmark(  { g = do_mapped(t, dbor)} )
 # microbenchmark::microbenchmark(    { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  })
 # microbenchmark::microbenchmark(    { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  })
 # microbenchmark::microbenchmark(    { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  })
+
+microbenchmark::microbenchmark( { f = compute_joint(t, dbor)},
+                                  { h  = bnclassify:::compute_log_joint(t, dbor)} ) 
 */
