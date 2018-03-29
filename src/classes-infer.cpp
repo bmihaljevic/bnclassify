@@ -114,8 +114,10 @@ public:
 class CPT {
 // get entries for classes, passing simply the instance values
 // invariant: `rows` sum to one
-  IntegerVector dim_prod; // this memory will reside in R rather than in c++ 
-  IntegerVector db_indices;  //maps of columns to indices in a data set
+  // IntegerVector dim_prod; // this memory will reside in R rather than in c++ 
+  std::vector<int> dim_prod;
+  // IntegerVector db_indices;  //maps of columns to indices in a data set
+  std::vector<int> db_indices;
   // NumericVector cpt; 
   std::vector<double> cpt;
   Testdata & test;
@@ -129,24 +131,26 @@ public:
     const IntegerVector & dim = cpt.attr("dim");
     IntegerVector dim_prods = cumprod(dim);
     // note: i am using the local test here. it might do something non const to the object 
-    this->dim_prod = dim_prods;
+    this->dim_prod = as<std::vector <int> >(dim_prods);
     CharacterVector columns_db = test.getColumns();
-    this->db_indices = dims2columns(features, cpt, class_var, columns_db);
+    IntegerVector dim_inds = dims2columns(features, cpt, class_var, columns_db);
+    this->db_indices = as<std::vector <int> >(dim_inds );
  }  
   
  // get all classes entries, passing the index of the row 
   void get_entries(int row, std::vector<double> & cpt_entries) { 
-   int index = test.get(db_indices(0), row);
+   int index = test.get(db_indices[0], row);
    int sum = index - 1;
    for (int k = 1; k < db_indices.size(); k++) {
-     int index = test.get(db_indices(k), row);
+     int index = test.get(db_indices[k], row);
      index = index - 1;  // delete
-     sum += index * this->dim_prod(k - 1);
+     sum += index * this->dim_prod[k - 1];
    }
-   // Add an entry per each class 
-   int per_class_entries   = this->dim_prod(this->dim_prod.size() - 2);
+   // // Add an entry per each class 
+   int per_class_entries   = this->dim_prod[this->dim_prod.size() - 2];
    for (int i = 0; i < cpt_entries.size(); i++ ) {
      cpt_entries[i] =  this->cpt[sum + i * per_class_entries ];
+     // cpt_entries[i] = this->cpt[sum];
    }
   }
  
@@ -161,12 +165,12 @@ public:
    int index = values(db_indices[0]);
    int sum = index - 1;
    for (int k = 1; k < db_indices.size(); k++) {
-     int index = values(db_indices(k));
+     int index = values(db_indices[k]);
      index = index - 1;  // delete
-     sum += index * this->dim_prod(k - 1);
+     sum += index * this->dim_prod[k - 1];
    }
    // Add an entry per each class 
-   int per_class_entries   = this->dim_prod(this->dim_prod.size() - 2);
+   int per_class_entries   = this->dim_prod[this->dim_prod.size() - 2];
    for (int i = 0; i < cpt_entries.size(); i++ ) {
      cpt_entries[i] =  this->cpt[sum + i * per_class_entries ];
    }
@@ -298,33 +302,33 @@ NumericMatrix compute_joint(List x, DataFrame newdata) {
  int N = test.getN();
  int n = mod.get_n();
  int nclass = 2;
- // NumericMatrix output(N, nclass); 
- // MatrixXd output(N, nclass);
- // NumericVector & class_cpt = model.get_class_cpt();
- // std::vector<int> instance(n);
- // std::vector<double> per_class_cpt_entries(nclass);
- // for (int instance_ind = 0; instance_ind  < N ; instance_ind++) {
- //    // set output to copies of class cpt
- //     for (int theta_ind = 0; theta_ind < nclass; theta_ind++) {
- //       // int ind_column = theta_ind * N;
- //       // output.at(ind_column + instance_ind) = class_cpt[theta_ind];
- //       output(instance_ind, theta_ind) = class_cpt[theta_ind];
- //     }
- //     // add the cpt entry of a single feature:
- //     for (int j = 0; j < n; j++) {
- //        // CPT & cpt  = model.get_mapped_cpt(j);
- //        // cpt.get_entries(instance_ind, per_class_cpt_entries);
- //        model.get_mapped_cpt(j).get_entries(instance_ind, per_class_cpt_entries);
- //        for (int theta_ind = 0; theta_ind < nclass; theta_ind++) {
- //             // output.at(ind_column + instance_ind) += per_class_cpt_entries[theta_ind];
- //             output(instance_ind, theta_ind) += per_class_cpt_entries[theta_ind];
- //             // output.at(instance_ind, theta_ind) += theta_ind;
- //        }
- //     } // features
- // } // instances
- // return wrap(output);
- NumericMatrix out(2,2);
- return out;
+ // NumericMatrix output(N, nclass);
+ MatrixXd output(N, nclass);
+ NumericVector & class_cpt = model.get_class_cpt();
+ std::vector<int> instance(n);
+ std::vector<double> per_class_cpt_entries(nclass);
+ for (int instance_ind = 0; instance_ind  < N ; instance_ind++) {
+    // set output to copies of class cpt
+     for (int theta_ind = 0; theta_ind < nclass; theta_ind++) {
+       // int ind_column = theta_ind * N;
+       // output.at(ind_column + instance_ind) = class_cpt[theta_ind];
+       output(instance_ind, theta_ind) = class_cpt[theta_ind];
+     }
+     // add the cpt entry of a single feature:
+     for (int j = 0; j < n; j++) {
+        // CPT & cpt  = model.get_mapped_cpt(j);
+        // cpt.get_entries(instance_ind, per_class_cpt_entries);
+        model.get_mapped_cpt(j).get_entries(instance_ind, per_class_cpt_entries);
+        for (int theta_ind = 0; theta_ind < nclass; theta_ind++) {
+             // output.at(ind_column + instance_ind) += per_class_cpt_entries[theta_ind];
+             output(instance_ind, theta_ind) += per_class_cpt_entries[theta_ind];
+             // output.at(instance_ind, theta_ind) += theta_ind;
+        }
+     } // features
+ } // instances
+ return wrap(output);
+ // NumericMatrix out(2,2);
+ // return out;
 }
 
 // [[Rcpp::export]]
