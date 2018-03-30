@@ -31,9 +31,9 @@ using Eigen::MatrixXd;
 //   // cpts to log. or not? 
 //   Testdata test(newdata); 
 //   // make sure levels match the levels in my data set.
-//   MappedModel mm(model, test); 
-
+//   MappedModel mm(model, test);  
 // model: has features, class, etc. that is independent of the dataset. 
+
 class Model { 
   public:
     Model(List model);   
@@ -46,34 +46,39 @@ class Model {
     } 
     CharacterVector getClassVar() const {      
       return this->class_var;
-    } 
+    }  
+    //n excludes the class    
     int get_n() const {
-      return n;
+      return features.size();  
+    }
+    int get_nclass() const { 
+      return nclass;
     }
   private:   
     List model;
     CharacterVector features;
     CharacterVector class_var;  
     List all_cpts;
-    int n;//should n exclude the class?    
-};     
+    int nclass;
+    IntegerVector get_class_index( ) ;
+};      
+IntegerVector Model::get_class_index() {  
+  const CharacterVector & vars_model = this->all_cpts.names(); 
+  IntegerVector index = match(class_var, vars_model );
+  if (index.size() != 1) stop("Class CPT missing.");
+  return index ;
+}
 Model::Model(List x): model(x) { 
-  // this->class_var = as<std::string>(model[".class"]); 
+  // pre-conditions? params not empty. class is string.
   this->class_var = model[".class"];
-  this->all_cpts = x[".params"];
-  // const NumericVector & class_cpt = all_cpts[class_var];
-  // could also get this form n levels of class in the db? no, the model is the truth.
-  // int nclass = class_cpt.size();   
-  const CharacterVector & vars_model = all_cpts.names(); 
-  // extract this to a function
-  const CharacterVector & class_var_rcpp = wrap(class_var);
-  IntegerVector index = match(class_var_rcpp, vars_model );
-  IntegerVector allinds =  seq_along(vars_model);
-  index = setdiff(allinds, index) - 1;
-  const List & feature_cpts = all_cpts[index];
-  // I could get it in c++ and pass it to std::vector instead 
+  this->all_cpts = x[".params"];   
+  IntegerVector class_index = get_class_index() ; 
+  IntegerVector allinds =  seq_along(this->all_cpts);
+  IntegerVector features_index = setdiff(allinds, class_index) - 1;
+  const List & feature_cpts = this->all_cpts[features_index];
   this->features = feature_cpts.names();   
-  this->n = features.size();  
+  const List & class_cpt = this->all_cpts[features_index];
+  this->nclass = class_cpt.size();
 }  
 
 // HERE THE INDICES ARE 0 BASED!!! 
@@ -297,10 +302,9 @@ NumericMatrix compute_joint(List x, DataFrame newdata) {
  Model mod(x);
  Testdata test(newdata);
  MappedModel model(mod, test);
- // TODO: don't know why it would not compilea with MappedModel parameter. 
  int N = test.getN();
  int n = mod.get_n();
- int nclass = 2;
+ int nclass = mod.get_nclass();
  // NumericMatrix output(N, nclass);
  MatrixXd output(N, nclass);
  NumericVector & class_cpt = model.get_class_cpt();
