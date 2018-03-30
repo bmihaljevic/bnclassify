@@ -3,6 +3,7 @@
 using namespace Rcpp;
 
 // [[Rcpp::depends(RcppEigen)]]
+// [[Rcpp::plugins(cpp11)]]
 
 using Eigen::MatrixXd;
 
@@ -90,7 +91,7 @@ public:
   // check range? done by ()
     return data.at(i).at(j); 
   }   
-  inline CharacterVector& getColumns() {
+  inline CharacterVector getColumns() {
    return  columns;
   } 
   inline int getN() const {
@@ -206,7 +207,6 @@ class MappedModel {
  NumericVector class_cpt;
 public:
   MappedModel(Model x, Testdata & test): model(x) { 
-    // int n = x.get_cpts().size() - 1;
     const int n = x.get_n();
     cpts.reserve(n);  
     // for (List::iterator iter = x.get_cpts().begin(); iter != x.get_cpts().begin() + 5; iter++) {
@@ -215,7 +215,6 @@ public:
       NumericVector cpt = x.get_cpts().at(i);
       // could extract these function calls
       CPT c(cpt, model.getFeatures(), model.getClassVar(), test);
-      // adding it to the vector will make a copy of it. That is important to keep in mind.  BUt it is a rather light-weight object
       // cpts.push_back(CPT(cpt, model.getFeatures(), model.getClassVar(), test));
       // cpts.push_back(std::move(c));
       cpts.push_back(c);
@@ -350,7 +349,7 @@ NumericVector do_mapped(List x, DataFrame newdata) {
 /*** R   
 kr <- foreign::read.arff('~/gd/phd/code/works-aug-semi-bayes/data/original/kr-vs-kp.arff')
 library(bnclassify)
-dbor <- kr 
+dbor <- kr
 t <- lp(nb('class', dbor), dbor, smooth = 1)    
 make_cpt(t$.params$bkblk, features(t), class_var(t), dbor)
 get_instance(t$.params$bkblk, features(t), class_var(t), dbor)
