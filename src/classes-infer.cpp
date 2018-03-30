@@ -69,16 +69,30 @@ IntegerVector Model::get_class_index() {
   return index ;
 }
 Model::Model(List x): model(x) { 
-  // pre-conditions? params not empty. class is string.
+  // this->class_var = as<std::string>(model[".class"]); 
   this->class_var = model[".class"];
-  this->all_cpts = x[".params"];   
-  IntegerVector class_index = get_class_index() ; 
-  IntegerVector allinds =  seq_along(this->all_cpts);
-  IntegerVector features_index = setdiff(allinds, class_index) - 1;
-  const List & feature_cpts = this->all_cpts[features_index];
+  this->all_cpts = x[".params"];
+  // const NumericVector & class_cpt = all_cpts[class_var];
+  // could also get this form n levels of class in the db? no, the model is the truth.
+  // int nclass = class_cpt.size();   
+  this->nclass = 2;
+  const CharacterVector & vars_model = all_cpts.names(); 
+  // extract this to a function
+  const CharacterVector & class_var_rcpp = wrap(class_var);
+  IntegerVector index = match(class_var_rcpp, vars_model );
+  IntegerVector allinds =  seq_along(vars_model);
+  index = setdiff(allinds, index) - 1;
+  const List & feature_cpts = all_cpts[index];
+  // I could get it in c++ and pass it to std::vector instead 
   this->features = feature_cpts.names();   
-  const List & class_cpt = this->all_cpts[features_index];
-  this->nclass = class_cpt.size();
+  IntegerVector class_index = get_class_index() ; 
+  allinds =  seq_along(this->all_cpts);
+  IntegerVector features_index = setdiff(allinds, class_index) - 1; 
+  const NumericVector & class_cpt = this->all_cpts.at(class_index[0] - 1);
+  // std::vector<double> class_cpt = as<std::vector <double>> (this->all_cpts[features_index]);
+  // this->nclass = class_cpt.size();
+  this->nclass = std::distance(class_cpt.begin(), class_cpt.end());
+  // this->n = features.size();
 }  
 
 // HERE THE INDICES ARE 0 BASED!!! 
