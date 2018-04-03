@@ -161,14 +161,16 @@ public:
   void get_entries(int row, std::vector<double> & cpt_entries) { 
    int index = test.get(db_indices[0], row);
    int sum = index - 1;
-   for (int k = 1; k < db_indices.size(); k++) {
+   int ndb_inds = db_indices.size();
+   for (int k = 1; k < ndb_inds ; k++) {
      int index = test.get(db_indices[k], row);
      index = index - 1;  // delete
      sum += index * this->dim_prod[k - 1];
    }
    // // Add an entry per each class 
    int per_class_entries   = this->dim_prod[this->dim_prod.size() - 2];
-   for (int i = 0; i < cpt_entries.size(); i++ ) {
+   int ncpts = cpt_entries.size();
+   for (int i = 0; i < ncpts ; i++ ) {
      cpt_entries[i] =  this->cpt[sum + i * per_class_entries ];
      // cpt_entries[i] = this->cpt[sum];
    }
@@ -397,5 +399,5 @@ cvar <- class_var(t)
 # microbenchmark::microbenchmark(    { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  })
 
 microbenchmark::microbenchmark( { f = compute_joint(t, dbor)},
-                                  { h  = bnclassify:::compute_log_joint(t, dbor)} ) 
+                                  { h  = bnclassify:::compute_log_joint(t, dbor)}, times = 3e3 ) 
 */
