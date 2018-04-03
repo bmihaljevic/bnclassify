@@ -141,6 +141,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// unidim_values
+Rcpp::IntegerVector unidim_values(const DataFrame& data);
+RcppExport SEXP _bnclassify_unidim_values(SEXP dataSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const DataFrame& >::type data(dataSEXP);
+    rcpp_result_gen = Rcpp::wrap(unidim_values(data));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_bnclassify_are_disjoint", (DL_FUNC) &_bnclassify_are_disjoint, 2},
@@ -154,6 +165,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bnclassify_compute_joint", (DL_FUNC) &_bnclassify_compute_joint, 2},
     {"_bnclassify_do_mapped", (DL_FUNC) &_bnclassify_do_mapped, 2},
     {"_bnclassify_table_cpp", (DL_FUNC) &_bnclassify_table_cpp, 1},
+    {"_bnclassify_unidim_values", (DL_FUNC) &_bnclassify_unidim_values, 1},
     {NULL, NULL, 0}
 };
 

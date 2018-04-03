@@ -28,7 +28,16 @@ Rcpp::IntegerVector table_cpp(const Rcpp::IntegerVector & v)
   IntegerVector rcpptable = wrap(table); 
   rcpptable.names() = factorLevels;
   return rcpptable;  
-}  
+}   
+
+Rcpp::IntegerVector tabulate(const Rcpp::IntegerVector & v, int levels) { 
+  std::vector<unsigned int> table(levels);   
+  std::size_t n =  v.size();
+  for (int i = 0; i != n; ++i) { 
+    table[ v[i] - 1 ] ++;
+  }    
+  return wrap(table); 
+}
 
 // [[Rcpp::export]]
 Rcpp::IntegerVector unidim_values(const DataFrame & data) {   
@@ -37,16 +46,27 @@ Rcpp::IntegerVector unidim_values(const DataFrame & data) {
   IntegerVector bin = no_init(nrow );
   bin.fill(1);
   unsigned int pd = 1;
-  int ncols = data.size();
+  int ncols = data.size(); 
+  IntegerVector  dims(ncols);
+  List  dimnames(ncols); 
+  dimnames.names() = data.names();
+  
   for (int i = 0; i < ncols; i++) {
     const IntegerVector & a = data.at(i);  
     if(!Rf_isFactor(a)) stop("Not a factor."); 
     const CharacterVector & factorLevels = a.attr("levels"); 
     int nl = factorLevels.size();
     bin = bin + pd * (a - 1L);
-    pd = pd * nl ;
-  } 
-  return bin;
+    pd = pd * nl ; 
+    dims.at(i) = nl; 
+    dimnames.at(i) = factorLevels;
+  }    
+  
+  IntegerVector tbl = tabulate(bin, pd);
+  tbl.attr("dim") =  dims;
+  tbl.attr("dimnames") =  dimnames;
+  tbl.attr("class") =  "table";
+  return tbl;
 }
 
 // Rcpp::IntegerVector unidim_table(const DataFrame & columns) {
@@ -99,22 +119,23 @@ tbl
 all.equal(y, tbl)
 
 a <- unidim_values(dbor[, 1:3])
-a <- factor(a)
-
-bin <- table_cpp(a) 
-bin
+a  
 
 set.seed(223)
 (a = sample(0:1, 1e5, replace = T))
 a <- factor(a)
-table_cpp(a)
+bin <- table_cpp(a) 
+bin
 microbenchmark::microbenchmark(table_cpp(a), table(a))
 microbenchmark::microbenchmark(table_cpp(a), table(a))
 
 a <- unidim_values(dbor[, 1:3])
+b <- table(dbor[, 1:3])
+all.equal(a, b)  
 
 tbl <- table(dbor[, 1:3])  
 
 fd <- dbor[, 1:3]
-microbenchmark::microbenchmark( a <- unidim_values(fd), tbl <- table(fd)   )
+microbenchmark::microbenchmark( a <- unidim_values(fd), tbl <- table(fd)   ) 
+
 */

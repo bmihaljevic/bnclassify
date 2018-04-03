@@ -45,3 +45,7 @@ table_cpp <- function(v) {
     .Call('_bnclassify_table_cpp', PACKAGE = 'bnclassify', v)
 }
 
+unidim_values <- function(data) {
+    .Call('_bnclassify_unidim_values', PACKAGE = 'bnclassify', data)
+}
+
