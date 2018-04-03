@@ -62,6 +62,7 @@ Rcpp::IntegerVector unidim_values(const DataFrame & data) {
     dimnames.at(i) = factorLevels;
   }    
   
+  bin = na_omit(bin);
   IntegerVector tbl = tabulate(bin, pd);
   tbl.attr("dim") =  dims;
   tbl.attr("dimnames") =  dimnames;
@@ -87,32 +88,9 @@ Rcpp::IntegerVector unidim_values(const DataFrame & data) {
 //  so, again, this is just indexing by a set of values, then you go to there and find it. 
 // }
 
-/*** R
-mktbl <- function(data) {  
-  bin <- 0L
-  lens <- NULL
-  dims <- integer()
-  pd <- 1L
-  dn <- NULL
-  for (i in seq_along(data)) {
-    a <- data[[i]]
-    ll <- levels(a) 
-    nl <- length(ll)
-    # dims <- c(dims, nl)
-    # if (prod(dims) > .Machine$integer.max) 
-    #   stop("attempt to make a table with >= 2^31 elements")
-    # dn <- c(dn, list(ll))
-    a <- as.integer(a)
-    bin <- bin + pd * (a - 1L)
-    pd <- pd * nl 
-  }
-  bin <- bin[!is.na(bin)]
-  if (length(bin)) 
-    bin <- bin + 1L
-  bin
-}
-tbl <- table(dbor[, 1:3])  
-bin <- mktbl(dbor[, 1:3]) 
+/*** R 
+kr <- foreign::read.arff('~/gd/phd/code/works-aug-semi-bayes/data/original/kr-vs-kp.arff')
+dbor <- kr
 y <- array(tabulate(bin, 8), dim(tbl), dimnames = dimnames(tbl))
 y
 tbl
@@ -136,6 +114,10 @@ all.equal(a, b)
 tbl <- table(dbor[, 1:3])  
 
 fd <- dbor[, 1:3]
-microbenchmark::microbenchmark( a <- unidim_values(fd), tbl <- table(fd)   ) 
+microbenchmark::microbenchmark( a <- unidim_values(fd), tbl <- table(fd)   )  
+
+ku <- dbor[, 1:3]
+ku[1, 1] <- NA
+a <- unidim_values(ku)
 
 */

@@ -70,7 +70,8 @@ extract_ctgt <- function(cols, dataset) {
 #   # Check all are factors
   # check_dataset(dataset)
   #   Return table over cols
-  table(dataset, dnn = cols)
+  # table(dataset, dnn = cols)
+  unidim_values(dataset)
 }
 # Get the level of each variable 
 extract_var_levels <- function(dataset) {
