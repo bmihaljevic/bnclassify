@@ -39,12 +39,13 @@ class Model {
   public:
     Model(List model);   
     // this should return a copy? how to return a const reference
-    // NumericVector get_cpt(int i) const {      
+    // NumericVector get_cpt(int i) const {
     //   return this->all_cpts.at(i);
-    // }  
-    const NumericVector & get_cpt(int i) const {      
+    // }
+    const NumericVector & get_cpt(int i) const {
+      // Rcout << i << " " << this->log_cpts.size() << std::endl;
       return this->log_cpts.at(i);
-    } 
+    }
     CharacterVector getFeatures() const {      
       return this->features;
     } 
@@ -77,13 +78,15 @@ Model::Model(List x): model(x) {
   // this->class_var = as<std::string>(model[".class"]); 
   this->class_var = model[".class"];
   this->all_cpts = x[".params"];
-  this->log_cpts = std::vector<NumericVector>(this->all_cpts.size()); 
+  this->log_cpts = std::vector<NumericVector>(); 
+  this->log_cpts.reserve(this->all_cpts.size());
   for (int i = 0; i < this->all_cpts.size(); i++) {
     // a copy so that log does not modify original 
    // this->log_cpts.push_back(as<std::vector<double> >(this->log_cpts.at(i)));
    const NumericVector & cpt = this->all_cpts.at(i);
    NumericVector cloned = clone(cpt);
-   std::transform(cloned.begin(), cloned.end(), std::log<double>());
+   float (*flog)(float) = &std::log;
+   std::transform(cloned.begin(), cloned.end(), cloned.begin(), flog);
    this->log_cpts.push_back(cloned);
   }
   // const NumericVector & class_cpt = all_cpts[class_var];
@@ -413,5 +416,5 @@ cvar <- class_var(t)
 # microbenchmark::microbenchmark(    { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  })
 
 microbenchmark::microbenchmark( { f = compute_joint(t, dbor)},
-                                  { h  = bnclassify:::compute_log_joint(t, dbor)}, times = 2e3 ) 
+                                  { h  = bnclassify:::compute_log_joint(t, dbor)}, times = 2e3 )
 */
