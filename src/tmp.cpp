@@ -28,7 +28,36 @@ Rcpp::IntegerVector table_cpp(const Rcpp::IntegerVector & v)
   IntegerVector rcpptable = wrap(table); 
   rcpptable.names() = factorLevels;
   return rcpptable;  
-} 
+}  
+
+// [[Rcpp::export]]
+Rcpp::IntegerVector unidim_values(const DataFrame & data) {   
+  const IntegerVector & column = data.at(0);
+  unsigned int nrow = column.size(); 
+  IntegerVector bin = no_init(nrow );
+  bin.fill(1);
+  unsigned int pd = 1;
+  int ncols = data.size();
+  for (int i = 0; i < ncols; i++) {
+    const IntegerVector & a = data.at(i);  
+    if(!Rf_isFactor(a)) stop("Not a factor."); 
+    const CharacterVector & factorLevels = a.attr("levels"); 
+    int nl = factorLevels.size();
+    bin = bin + pd * (a - 1L);
+    pd = pd * nl ;
+  } 
+  return bin;
+}
+
+// Rcpp::IntegerVector unidim_table(const DataFrame & columns) {
+//   dn <- c(dn, list(ll))
+//   bin <- bin + pd * (a - 1L)
+//   pd <- pd * nl
+//   names(dn) <- dnn
+//   bin <- bin[!is.na(bin)]
+//   if (length(bin)) 
+//     bin <- bin + 1L 
+// }
 
 // dataframe {
 //   for each column get the num of dims.tfm 
@@ -39,9 +68,53 @@ Rcpp::IntegerVector table_cpp(const Rcpp::IntegerVector & v)
 // }
 
 /*** R
+mktbl <- function(data) {  
+  bin <- 0L
+  lens <- NULL
+  dims <- integer()
+  pd <- 1L
+  dn <- NULL
+  for (i in seq_along(data)) {
+    a <- data[[i]]
+    ll <- levels(a) 
+    nl <- length(ll)
+    # dims <- c(dims, nl)
+    # if (prod(dims) > .Machine$integer.max) 
+    #   stop("attempt to make a table with >= 2^31 elements")
+    # dn <- c(dn, list(ll))
+    a <- as.integer(a)
+    bin <- bin + pd * (a - 1L)
+    pd <- pd * nl 
+  }
+  bin <- bin[!is.na(bin)]
+  if (length(bin)) 
+    bin <- bin + 1L
+  bin
+}
+tbl <- table(dbor[, 1:3])  
+bin <- mktbl(dbor[, 1:3]) 
+y <- array(tabulate(bin, 8), dim(tbl), dimnames = dimnames(tbl))
+y
+tbl
+all.equal(y, tbl)
+
+a <- unidim_values(dbor[, 1:3])
+a <- factor(a)
+
+bin <- table_cpp(a) 
+bin
+
 set.seed(223)
 (a = sample(0:1, 1e5, replace = T))
 a <- factor(a)
 table_cpp(a)
 microbenchmark::microbenchmark(table_cpp(a), table(a))
+microbenchmark::microbenchmark(table_cpp(a), table(a))
+
+a <- unidim_values(dbor[, 1:3])
+
+tbl <- table(dbor[, 1:3])  
+
+fd <- dbor[, 1:3]
+microbenchmark::microbenchmark( a <- unidim_values(fd), tbl <- table(fd)   )
 */
