@@ -130,6 +130,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// table_cpp
+Rcpp::IntegerVector table_cpp(const Rcpp::IntegerVector& v);
+RcppExport SEXP _bnclassify_table_cpp(SEXP vSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type v(vSEXP);
+    rcpp_result_gen = Rcpp::wrap(table_cpp(v));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_bnclassify_are_disjoint", (DL_FUNC) &_bnclassify_are_disjoint, 2},
@@ -142,6 +153,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bnclassify_get_dataset", (DL_FUNC) &_bnclassify_get_dataset, 3},
     {"_bnclassify_compute_joint", (DL_FUNC) &_bnclassify_compute_joint, 2},
     {"_bnclassify_do_mapped", (DL_FUNC) &_bnclassify_do_mapped, 2},
+    {"_bnclassify_table_cpp", (DL_FUNC) &_bnclassify_table_cpp, 1},
     {NULL, NULL, 0}
 };
 

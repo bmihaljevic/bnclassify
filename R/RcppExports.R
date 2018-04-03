@@ -41,3 +41,7 @@ do_mapped <- function(x, newdata) {
     .Call('_bnclassify_do_mapped', PACKAGE = 'bnclassify', x, newdata)
 }
 
+table_cpp <- function(v) {
+    .Call('_bnclassify_table_cpp', PACKAGE = 'bnclassify', v)
+}
+
