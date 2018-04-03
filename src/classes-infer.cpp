@@ -38,8 +38,11 @@ class Model {
   public:
     Model(List model);   
     // this should return a copy? how to return a const reference
-    List get_cpts() const {      
-      return this->all_cpts;
+    // NumericVector get_cpt(int i) const {      
+    //   return this->all_cpts.at(i);
+    // }  
+    const NumericVector & get_cpt(int i) const {      
+      return this->log_cpts.at(i);
     } 
     CharacterVector getFeatures() const {      
       return this->features;
@@ -59,6 +62,7 @@ class Model {
     CharacterVector features;
     CharacterVector class_var;  
     List all_cpts;
+    std::vector<NumericVector> log_cpts;
     int nclass;
     IntegerVector get_class_index( ) ;
 };      
@@ -72,6 +76,15 @@ Model::Model(List x): model(x) {
   // this->class_var = as<std::string>(model[".class"]); 
   this->class_var = model[".class"];
   this->all_cpts = x[".params"];
+  this->log_cpts = std::vector<NumericVector>(this->all_cpts.size()); 
+  for (int i = 0; i < this->all_cpts.size(); i++) {
+    // a copy so that log does not modify original 
+   // this->log_cpts.push_back(as<std::vector<double> >(this->log_cpts.at(i)));
+   const NumericVector & cpt = this->all_cpts.at(i);
+   NumericVector cloned = clone(cpt);
+   std::transform(cloned, cloned, std::log);
+   this->log_cpts.push_back(cloned);
+  }
   // const NumericVector & class_cpt = all_cpts[class_var];
   // could also get this form n levels of class in the db? no, the model is the truth.
   // int nclass = class_cpt.size();   
@@ -233,7 +246,7 @@ public:
     // for (List::iterator iter = x.get_cpts().begin(); iter != x.get_cpts().begin() + 5; iter++) {
     for (unsigned int i = 0; i < n; i++) {
       // NumericVector cpt = (*iter);
-      NumericVector cpt = x.get_cpts().at(i);
+      NumericVector cpt = x.get_cpt(i);
       // could extract these function calls
       CPT c(cpt, model.getFeatures(), model.getClassVar(), test);
       // cpts.push_back(CPT(cpt, model.getFeatures(), model.getClassVar(), test));
@@ -241,7 +254,7 @@ public:
       cpts.push_back(c);
     }
     // // TODO: this must be better done!!! And must work with more cases, etc.
-    this->class_cpt = x.get_cpts().at(n);
+    this->class_cpt = x.get_cpt(n);
   }  
   inline CPT& get_mapped_cpt(int i) {
     // TODO: change to []?
@@ -399,5 +412,5 @@ cvar <- class_var(t)
 # microbenchmark::microbenchmark(    { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  })
 
 microbenchmark::microbenchmark( { f = compute_joint(t, dbor)},
-                                  { h  = bnclassify:::compute_log_joint(t, dbor)}, times = 3e3 ) 
+                                  { h  = bnclassify:::compute_log_joint(t, dbor)}, times = 2e3 ) 
 */
