@@ -1,5 +1,6 @@
 #include <Rcpp.h>
 #include <RcppEigen.h>
+#include <cmath>
 using namespace Rcpp;
 
 // [[Rcpp::depends(RcppEigen)]]
@@ -82,7 +83,7 @@ Model::Model(List x): model(x) {
    // this->log_cpts.push_back(as<std::vector<double> >(this->log_cpts.at(i)));
    const NumericVector & cpt = this->all_cpts.at(i);
    NumericVector cloned = clone(cpt);
-   std::transform(cloned, cloned, std::log);
+   std::transform(cloned.begin(), cloned.end(), std::log<double>());
    this->log_cpts.push_back(cloned);
   }
   // const NumericVector & class_cpt = all_cpts[class_var];
