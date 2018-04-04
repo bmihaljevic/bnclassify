@@ -34,7 +34,7 @@ class Model {
       return this->class_var;
     }  
     //n excludes the class    
-    int get_n() const {
+    std::size_t get_n() const {
       return features.size();  
     }
     int get_nclass() const { 
@@ -189,6 +189,10 @@ private:
   // matches the dims of the CPT to columns of the db 
   IntegerVector dims2columns(const CharacterVector features, const NumericVector cpt, const CharacterVector class_var,  const CharacterVector columns_db);
 };
+
+bool safediff(unsigned int x, int y) {
+  return (y >= 0) && (x != static_cast<unsigned int>(y));
+}
  
 // Get the DB indices of a family
 // maps the cpt inds to the columns of the data set 
@@ -200,7 +204,7 @@ IntegerVector CPT::dims2columns(const CharacterVector features, const NumericVec
   IntegerVector feature_fam_inds = match(feature_fam, columns_db);
   if (is_true(any(feature_fam_inds == 0)))  stop("All features must be in the dataset.");
   feature_fam_inds = feature_fam_inds - 1; 
-  if (feature_fam_inds.size() != (this->dim_prod.size() - 1))  stop("Wrong cpt size.");
+  if (safediff(feature_fam_inds.size(), this->dim_prod.size() - 1)) stop("Wrong cpt size.");
   return feature_fam_inds;
 }
 
@@ -216,7 +220,7 @@ class MappedModel {
  NumericVector class_cpt;
 public:
   MappedModel(Model & x, Testdata & test): model(x) { 
-    const int n = x.get_n();
+    const std::size_t n = x.get_n();
     cpts.reserve(n);  
     for (unsigned int i = 0; i < n; i++) {
       NumericVector cpt = x.get_cpt(i);
@@ -315,6 +319,7 @@ stopifnot(all.equal(old, outp))
 
 wrapped <- bnclassify:::compute_log_joint(t, dbor)
 head(wrapped)
+stopifnot(all.equal(wrapped, outp)) 
 
 
 get_row(t, dbor, 3)
