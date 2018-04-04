@@ -40,6 +40,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// entry_index
+int entry_index(const std::vector<double>& indices, const std::vector<double>& dim_prod);
+RcppExport SEXP _bnclassify_entry_index(SEXP indicesSEXP, SEXP dim_prodSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type indices(indicesSEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type dim_prod(dim_prodSEXP);
+    rcpp_result_gen = Rcpp::wrap(entry_index(indices, dim_prod));
+    return rcpp_result_gen;
+END_RCPP
+}
 // hasna
 bool hasna(const DataFrame& newdata);
 RcppExport SEXP _bnclassify_hasna(SEXP newdataSEXP) {
@@ -51,13 +63,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// dostop
-void dostop();
-RcppExport SEXP _bnclassify_dostop() {
+// test_dims2columns
+IntegerVector test_dims2columns(const NumericVector cpt, const CharacterVector class_var, const CharacterVector columns_db);
+RcppExport SEXP _bnclassify_test_dims2columns(SEXP cptSEXP, SEXP class_varSEXP, SEXP columns_dbSEXP) {
 BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    dostop();
-    return R_NilValue;
+    Rcpp::traits::input_parameter< const NumericVector >::type cpt(cptSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector >::type class_var(class_varSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector >::type columns_db(columns_dbSEXP);
+    rcpp_result_gen = Rcpp::wrap(test_dims2columns(cpt, class_var, columns_db));
+    return rcpp_result_gen;
 END_RCPP
 }
 // compute_joint
@@ -112,8 +128,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bnclassify_are_disjoint", (DL_FUNC) &_bnclassify_are_disjoint, 2},
     {"_bnclassify_normalize", (DL_FUNC) &_bnclassify_normalize, 1},
     {"_bnclassify_normalize_ctgt", (DL_FUNC) &_bnclassify_normalize_ctgt, 1},
+    {"_bnclassify_entry_index", (DL_FUNC) &_bnclassify_entry_index, 2},
     {"_bnclassify_hasna", (DL_FUNC) &_bnclassify_hasna, 1},
-    {"_bnclassify_dostop", (DL_FUNC) &_bnclassify_dostop, 0},
+    {"_bnclassify_test_dims2columns", (DL_FUNC) &_bnclassify_test_dims2columns, 3},
     {"_bnclassify_compute_joint", (DL_FUNC) &_bnclassify_compute_joint, 2},
     {"_bnclassify_get_row", (DL_FUNC) &_bnclassify_get_row, 3},
     {"_bnclassify_table_cpp", (DL_FUNC) &_bnclassify_table_cpp, 1},

@@ -91,7 +91,8 @@ Model::Model(List x): model(x) {
   // extract this to a function
   const CharacterVector & class_var_rcpp = wrap(class_var);
   IntegerVector index = match(class_var_rcpp, vars_model );
-  IntegerVector allinds =  seq_along(vars_model);
+  IntegerVector allinds =  seq_along(vars_model); 
+  // TODO!!!!!!!!!!!!!!! setdiff does not preserve order.  
   index = setdiff(allinds, index) - 1;
   const List & feature_cpts = all_cpts[index];
   // I could get it in c++ and pass it to std::vector instead 
@@ -141,7 +142,9 @@ public:
      if (!is_true(all(in(features, vec)))) {
        stop("Some features missing from data set.");
      }
-     test = test[features];
+     // using intersect does not alter order of columns,  unlike test[features]. it can be useful for debugging. 
+     CharacterVector keep = intersect(vec, features);
+     test = test[keep];
      if (hasna(test)) stop("NA entries in data set.");  
      
      this->columns = test.names();  
@@ -163,6 +166,7 @@ class CPT {
   // NumericVector cpt; 
   std::vector<double> cpt;
   Testdata & test;
+  CharacterVector columns; 
 public: 
   CPT(NumericVector cpt, const CharacterVector class_var,  Testdata & test) :
                     test(test) {
@@ -176,20 +180,20 @@ public:
     this->dim_prod = as<std::vector <int> >(dim_prods);
     CharacterVector columns_db = test.getColumns();
     IntegerVector dim_inds = dims2columns(cpt, class_var, columns_db);
-    this->db_indices = as<std::vector <int> >(dim_inds );
- }  
-  
-
+    this->db_indices = as<std::vector <int> >(dim_inds ); 
+    const List & dimnames = cpt.attr("dimnames");
+    columns  = dimnames.attr("names"); 
+ }    
   
 // get all classes entries, passing the index of the row 
 void get_entries(int row, std::vector<double> & cpt_entries) {
- int index = test.get(db_indices.at(0), row);
- int sum = index - 1;
+ int cpt_index = test.get(db_indices.at(0), row);
+ int sum = cpt_index - 1;
  int ndb_inds = db_indices.size();
  for (int k = 1; k < ndb_inds ; k++) {
-   int index = test.get(db_indices.at(k), row);
-   index = index - 1;  // delete
-   sum += index * this->dim_prod.at(k - 1);
+   cpt_index = test.get(db_indices.at(k), row);
+   cpt_index -= 1;  // delete
+   sum += cpt_index * this->dim_prod.at(k  - 1);
  }
  // // Add an entry per each class 
  int per_class_entries   = this->dim_prod.at(this->dim_prod.size() - 2); 
@@ -205,8 +209,15 @@ void get_entries(int row, std::vector<double> & cpt_entries) {
      Rcout << "per class " << per_class_entries  << std::endl;
      Rcout << "i " << i  << std::endl;
      Rcout << "first " << test.get(db_indices.at(0), row)  << std::endl;
+     Rcout << "first col ind" << db_indices.at(0)  << std::endl;
      Rcout << "second " << test.get(db_indices.at(1), row)  << std::endl;
-     Rcout << "ndbs " << ndb_inds   << std::endl;
+     Rcout << "second col ind" << db_indices.at(1)  << std::endl;
+     Rcout << "ndbs " << ndb_inds   << std::endl; 
+     dims = wrap(this->db_indices );
+     Rcout << "db inds " << dims << std::endl;
+     Rcout << columns << std::endl;
+     Rcout << test.getColumns() << std::endl;
+     
    }
    cpt_entries[i] =  this->cpt.at(sum + i * per_class_entries );
    // cpt_entries[i] = this->cpt[sum];
@@ -221,14 +232,34 @@ private:
 bool safediff(unsigned int x, int y) {
   return (y >= 0) && (x != static_cast<unsigned int>(y));
 }
- 
+
+std::vector<std::string> ordersetdiff(CharacterVector vector, CharacterVector remove) {
+  std::vector<std::string> vec = as<std::vector<std::string>>(vector);
+  std::string move = as<std::string>(remove);
+  std::vector<std::string>::iterator index = std::find(vec.begin(), vec.end(), move);
+  vec.erase(index);
+  return vec;
+}
+
+
+// [[Rcpp::export]]
+IntegerVector test_dims2columns(const NumericVector cpt, const CharacterVector class_var,  const CharacterVector columns_db) {  
+  const List & dimnames = cpt.attr("dimnames");
+  const CharacterVector & fam = dimnames.attr("names");
+  CharacterVector feature_fam = wrap(ordersetdiff(fam, class_var)); 
+  IntegerVector feature_fam_inds = match(feature_fam, columns_db);
+  if (is_true(any(feature_fam_inds == 0)))  stop("All features must be in the dataset.");
+  feature_fam_inds = feature_fam_inds - 1; 
+  return feature_fam_inds; 
+}
+
+// needs not be a member function as it uses no members of CPT 
 // Get the DB indices of a family
 // maps the cpt inds to the columns of the data set 
 IntegerVector CPT::dims2columns(const NumericVector cpt, const CharacterVector class_var,  const CharacterVector columns_db) { 
   const List & dimnames = cpt.attr("dimnames");
-  const CharacterVector & fam = dimnames.attr("names");
-  CharacterVector feature_fam = setdiff(fam, class_var);
-  // TODO: check fam is last
+  const CharacterVector & fam = dimnames.attr("names"); 
+  CharacterVector feature_fam = wrap(ordersetdiff(fam, class_var)); 
   IntegerVector feature_fam_inds = match(feature_fam, columns_db);
   if (is_true(any(feature_fam_inds == 0)))  stop("All features must be in the dataset.");
   feature_fam_inds = feature_fam_inds - 1; 
@@ -368,6 +399,13 @@ test_ind <- function() {
 #  test_ind() 
 # }
 # a <- replicate( 1e3, test_ind)
+
+a <- aode('class', car)  
+a <- lp(a, car, smooth = 1)
+cpt <- a$.models$persons$.params$buying
+colnames(car)  
+names(dimnames(cpt))
+test_dims2columns(cpt,"class", columns_db = colnames(car))
 
 
 # microbenchmark::microbenchmark(  { g = do_mapped(t, dbor)} )
