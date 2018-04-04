@@ -185,27 +185,6 @@ public:
    }
   }
  
-  // // get the entries of the cpt based on values in the dataset. the values are 1-based indices, because of factors. 
-  void get_entries(const IntegerVector & values, std::vector<double> & cpt_entries) {
-    // maybe i could iterate the values with iterator; but more cumbersome
-    // Do the - 1 outside of the loop
-    // each cpt values corresponds to a dim + value - 1 because it is 0-based
-    // IntegerVector cpt_values = values[db_indices]; 
-   // if (!(size  + 1 == dimension_prods.size())) stop("Must specify n-1 dimensions."); 
-   // get the index for the first class
-   int index = values(db_indices[0]);
-   int sum = index - 1;
-   for (int k = 1; k < db_indices.size(); k++) {
-     int index = values(db_indices[k]);
-     index = index - 1;  // delete
-     sum += index * this->dim_prod[k - 1];
-   }
-   // Add an entry per each class 
-   int per_class_entries   = this->dim_prod[this->dim_prod.size() - 2];
-   for (int i = 0; i < cpt_entries.size(); i++ ) {
-     cpt_entries[i] =  this->cpt[sum + i * per_class_entries ];
-   }
- }
 private:  
   // matches the dims of the CPT to columns of the db 
   IntegerVector dims2columns(const CharacterVector features, const NumericVector cpt, const CharacterVector class_var,  const CharacterVector columns_db);
