@@ -35,6 +35,15 @@ using Eigen::MatrixXd;
 //   MappedModel mm(model, test);  
 // model: has features, class, etc. that is independent of the dataset. 
 
+// [[Rcpp::export]]
+bool hasna(const DataFrame & newdata) {  
+  for (int i = 0; i < newdata.size(); i++) { 
+   const IntegerVector & vec = newdata.at(i);
+   if (is_true(any(is_na(vec)))) return true;  
+  }  
+  return false;
+} 
+
 class Model { 
   public:
     Model(List model);   
@@ -43,7 +52,6 @@ class Model {
     //   return this->all_cpts.at(i);
     // }
     const NumericVector & get_cpt(int i) const {
-      // Rcout << i << " " << this->log_cpts.size() << std::endl;
       return this->log_cpts.at(i);
     }
     CharacterVector getFeatures() const {      
@@ -119,7 +127,7 @@ Model::Model(List x): model(x) {
 class Testdata {
   CharacterVector columns;
   std::vector<std::vector<int> > data; 
-  int N;  
+  int N;   
 public:
   // check length of class var, check columns, etc.   
   // the underlying storage will be irrelevant. it will be hidden inside. could simply go and advance over the df, could hold it in std vector; whatever.
@@ -133,18 +141,27 @@ public:
   inline int getN() const {
    return  N;
   }
-  Testdata(DataFrame test): columns(test.names()) {
+  Testdata(DataFrame & test, const CharacterVector & features): columns(test.names()) {
      // keep df storage  
      // get columns and class var
      // check at least 1 row and count N. 
      // Get number of classes? or not? Or that is elsewhere? That is, e.g., in model.
      // I could also reduce all entries - 1 and make a transpose, that is, a matrix that goes by instance and then iterate that way.
      // If I go to integer, I ought to store the levels of the cpts somewhere.
-     // This could also be the initial matrix split 
+     // This could also be the initial matrix split  
+     // checks: has all from model, right? no nas. 
+     const CharacterVector & vec = test.names();
+     if (!is_true(all(in(features, vec)))) {
+       stop("Some features missing from data set.");
+     }
+     test = test[features]; 
+     if (hasna(test)) stop("NA entries in data set.");
+     
      this->N = test.nrow();
      this->data = Rcpp::as<std::vector<std::vector<int> > > (test);   
   }
-} ;  
+} ;   
+
 
 // TODO: NEW NAME: dB_feature_cpt 
 // get_entries int row. db is a member of the cpt.  
@@ -244,16 +261,12 @@ class MappedModel {
  // class cpt is the only unmapped one 
  NumericVector class_cpt;
 public:
-  MappedModel(Model x, Testdata & test): model(x) { 
+  MappedModel(Model & x, Testdata & test): model(x) { 
     const int n = x.get_n();
     cpts.reserve(n);  
-    // for (List::iterator iter = x.get_cpts().begin(); iter != x.get_cpts().begin() + 5; iter++) {
     for (unsigned int i = 0; i < n; i++) {
-      // NumericVector cpt = (*iter);
       NumericVector cpt = x.get_cpt(i);
-      // could extract these function calls
       CPT c(cpt, model.getFeatures(), model.getClassVar(), test);
-      // cpts.push_back(CPT(cpt, model.getFeatures(), model.getClassVar(), test));
       // cpts.push_back(std::move(c));
       cpts.push_back(c);
     }
@@ -267,11 +280,17 @@ public:
   inline NumericVector& get_class_cpt() {
     return this->class_cpt;
   }
-};    
+};     
+
+// [[Rcpp::export]]
+void dostop() {
+  stop("Not here. ");
+}
+
 
 // [[Rcpp::export]]
 NumericVector make_cpt(NumericVector cpt, const CharacterVector features, const CharacterVector class_var, DataFrame df) { 
-  Testdata ds(df);
+  Testdata ds(df, features);
   CPT c = CPT(cpt, features, class_var, ds); 
   IntegerVector inds = IntegerVector::create(1);
   inds[0] = 2;
@@ -290,7 +309,7 @@ IntegerMatrix df2matrix(DataFrame x) {
 
 //[[Rcpp::export]]
 NumericVector get_instance(NumericVector cpt, const CharacterVector features, const CharacterVector class_var, DataFrame df) { 
-  Testdata ds(df);
+  Testdata ds(df, features);
   CPT c = CPT(cpt, features, class_var, ds);
   IntegerMatrix mat = df2matrix(df);
   IntegerVector row = mat.row(1);
@@ -301,19 +320,13 @@ NumericVector get_instance(NumericVector cpt, const CharacterVector features, co
 
 //[[Rcpp::export]]
 NumericVector get_row(NumericVector cpt, const CharacterVector features, const CharacterVector class_var, DataFrame df) { 
-  Testdata ds(df);
+  Testdata ds(df, features);
   CPT c = CPT(cpt, features, class_var, ds);
   // std::vector<double> entries(2);
   // c.get_entries(1, entries);
   // return wrap(entries);
   return NumericVector::create(1);
-}
-
-// [[Rcpp::export]] 
-double get_dataset(DataFrame df, int i, int j) {
- Testdata dset(df);
- return dset.get(i, j);
-}      
+}  
 
 // 
 // // [[Rcpp::export]] 
@@ -328,12 +341,15 @@ double get_dataset(DataFrame df, int i, int j) {
 // output: N x nclass
 // instances: N x whatever. Follow the feature indices.  
  
-// NumericVector compute_joint(MappedModel model) { 
+// NumericVector compute_joint(MappedModel model) {  
+
+
+
 
 // [[Rcpp::export]]
-NumericMatrix compute_joint(List x, DataFrame newdata) { 
+NumericMatrix compute_joint(List x, DataFrame newdata) {  
  Model mod(x);
- Testdata test(newdata);
+ Testdata test(newdata, mod.getFeatures());
  MappedModel model(mod, test);
  int N = test.getN();
  int n = mod.get_n();
@@ -362,7 +378,10 @@ NumericMatrix compute_joint(List x, DataFrame newdata) {
         }
      } // features
  } // instances
- return wrap(output);
+ NumericMatrix result = wrap(output);
+ CharacterVector classes = class_cpt.names();
+ colnames(result) = classes;
+ return result; 
  // NumericMatrix out(2,2);
  // return out;
 }
@@ -370,7 +389,7 @@ NumericMatrix compute_joint(List x, DataFrame newdata) {
 // [[Rcpp::export]]
 NumericVector do_mapped(List x, DataFrame newdata) {
  Model model(x);
- Testdata test(newdata);
+ Testdata test(newdata, model.getFeatures());
  MappedModel mm(model, test);
  // CPT c = mm.get_mapped_cpt(0);
  // std::vector<double> entries(2);
@@ -387,22 +406,26 @@ NumericVector do_mapped(List x, DataFrame newdata) {
 kr <- foreign::read.arff('~/gd/phd/code/works-aug-semi-bayes/data/original/kr-vs-kp.arff')
 library(bnclassify)
 dbor <- kr
-t <- lp(nb('class', dbor), dbor, smooth = 1)    
+t <- lp(nb('class', dbor), dbor, smooth = 1)
 make_cpt(t$.params$bkblk, features(t), class_var(t), dbor)
 get_instance(t$.params$bkblk, features(t), class_var(t), dbor)
 get_row(t$.params$bkblk, features(t), class_var(t), dbor)
 t$.params$bkblk
-get_dataset(dbor, 0, 0)
-get_dataset(dbor, 36, 0)
-# get_dataset(dbor, 37, 0) # check out of
+# get_dataset(dbor, 0, 0)
+# get_dataset(dbor, 36, 0)
+# # get_dataset(dbor, 37, 0) # check out of
 do_mapped(t, dbor)
-outp <- compute_joint(t, dbor)
+hasna(voting)
+
+outp <- compute_joint(t, dbor)  
 head(outp)
-tail(outp)
-# 
+old <- bnclassify:::compute_log_joint(t, dbor)
+head(old)
+stopifnot(all.equal(old, outp)) 
+
 f <- features(t)
 cpt <- t$.params$bkblk
-cvar <- class_var(t)
+cvar <- class_var(t)  
 # microbenchmark::microbenchmark(
 #                                { d = get_row(cpt, f, cvar, dbor)  },
 #                                {a = make_cpt(cpt, f, cvar, dbor)},
@@ -415,6 +438,12 @@ cvar <- class_var(t)
 # microbenchmark::microbenchmark(    { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  })
 # microbenchmark::microbenchmark(    { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  })
 
-microbenchmark::microbenchmark( { f = compute_joint(t, dbor)},
-                                  { h  = bnclassify:::compute_log_joint(t, dbor)}, times = 2e3 )
+# microbenchmark::microbenchmark( { f = compute_joint(t, dbor)},
+#                                   { h  = bnclassify:::compute_log_joint(t, dbor)}, times = 2e3 )
 */
+
+// Just the generics and marshalling functions take 0.3 milliseconds! Need a faster dispatch.  
+// expr      min       lq      mean    median       uq      max neval
+// {     f = compute_joint(t, dbor) }  886.097  906.663  950.3323  920.5845  948.043  3049.94  2000
+// {     h = bnclassify:::compute_log_joint(t, dbor) } 1143.406 1180.499 1771.0422 1248.9055 1357.745 91274.94  2000
+// > 

@@ -106,6 +106,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// hasna
+bool hasna(const DataFrame& newdata);
+RcppExport SEXP _bnclassify_hasna(SEXP newdataSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const DataFrame& >::type newdata(newdataSEXP);
+    rcpp_result_gen = Rcpp::wrap(hasna(newdata));
+    return rcpp_result_gen;
+END_RCPP
+}
 // compute_joint
 NumericMatrix compute_joint(List x, DataFrame newdata);
 RcppExport SEXP _bnclassify_compute_joint(SEXP xSEXP, SEXP newdataSEXP) {
@@ -162,6 +173,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bnclassify_get_instance", (DL_FUNC) &_bnclassify_get_instance, 4},
     {"_bnclassify_get_row", (DL_FUNC) &_bnclassify_get_row, 4},
     {"_bnclassify_get_dataset", (DL_FUNC) &_bnclassify_get_dataset, 3},
+    {"_bnclassify_hasna", (DL_FUNC) &_bnclassify_hasna, 1},
     {"_bnclassify_compute_joint", (DL_FUNC) &_bnclassify_compute_joint, 2},
     {"_bnclassify_do_mapped", (DL_FUNC) &_bnclassify_do_mapped, 2},
     {"_bnclassify_table_cpp", (DL_FUNC) &_bnclassify_table_cpp, 1},

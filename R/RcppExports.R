@@ -33,6 +33,10 @@ get_dataset <- function(df, i, j) {
     .Call('_bnclassify_get_dataset', PACKAGE = 'bnclassify', df, i, j)
 }
 
+hasna <- function(newdata) {
+    .Call('_bnclassify_hasna', PACKAGE = 'bnclassify', newdata)
+}
+
 compute_joint <- function(x, newdata) {
     .Call('_bnclassify_compute_joint', PACKAGE = 'bnclassify', x, newdata)
 }
