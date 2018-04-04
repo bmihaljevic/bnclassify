@@ -164,7 +164,7 @@ class CPT {
   std::vector<double> cpt;
   Testdata & test;
 public: 
-  CPT(NumericVector cpt, const CharacterVector features, const CharacterVector class_var,  Testdata & test) :
+  CPT(NumericVector cpt, const CharacterVector class_var,  Testdata & test) :
                     test(test) {
     // Do I want this to make a copy? Its OK to make a copy because it is a lightweight object.
     this->cpt = as<std::vector <double> >(cpt); 
@@ -175,7 +175,7 @@ public:
     // note: i am using the local test here. it might do something non const to the object 
     this->dim_prod = as<std::vector <int> >(dim_prods);
     CharacterVector columns_db = test.getColumns();
-    IntegerVector dim_inds = dims2columns(features, cpt, class_var, columns_db);
+    IntegerVector dim_inds = dims2columns(cpt, class_var, columns_db);
     this->db_indices = as<std::vector <int> >(dim_inds );
  }  
   
@@ -215,7 +215,7 @@ void get_entries(int row, std::vector<double> & cpt_entries) {
  
 private:  
   // matches the dims of the CPT to columns of the db 
-  IntegerVector dims2columns(const CharacterVector features, const NumericVector cpt, const CharacterVector class_var,  const CharacterVector columns_db);
+  IntegerVector dims2columns(const NumericVector cpt, const CharacterVector class_var,  const CharacterVector columns_db);
 };
 
 bool safediff(unsigned int x, int y) {
@@ -224,7 +224,7 @@ bool safediff(unsigned int x, int y) {
  
 // Get the DB indices of a family
 // maps the cpt inds to the columns of the data set 
-IntegerVector CPT::dims2columns(const CharacterVector features, const NumericVector cpt, const CharacterVector class_var,  const CharacterVector columns_db) { 
+IntegerVector CPT::dims2columns(const NumericVector cpt, const CharacterVector class_var,  const CharacterVector columns_db) { 
   const List & dimnames = cpt.attr("dimnames");
   const CharacterVector & fam = dimnames.attr("names");
   CharacterVector feature_fam = setdiff(fam, class_var);
@@ -252,7 +252,7 @@ public:
     cpts.reserve(n);  
     for (unsigned int i = 0; i < n; i++) {
       NumericVector cpt = x.get_cpt(i);
-      CPT c(cpt, model.getFeatures(), model.getClassVar(), test);
+      CPT c(cpt, model.getClassVar(), test);
       // cpts.push_back(std::move(c));
       cpts.push_back(c);
     }
@@ -311,7 +311,7 @@ NumericMatrix compute_joint(List x, DataFrame newdata) {
 NumericVector get_row(List x, DataFrame df, int cptind) { 
   Model mod(x);
   Testdata ds(df, mod.getFeatures()); 
-  CPT c = CPT(mod.get_cpt(cptind), mod.getFeatures(), mod.getClassVar(), ds);
+  CPT c = CPT(mod.get_cpt(cptind), mod.getClassVar(), ds);
   std::vector<double> entries(mod.get_nclass());
   c.get_entries(1, entries);
   return wrap(entries);
