@@ -9,6 +9,19 @@ using namespace Rcpp;
 using Eigen::MatrixXd;  
 
 // [[Rcpp::export]]
+int entry_index(const std::vector<double> & indices, const std::vector<double> & dim_prod) {
+ int index = indices.at(0);
+ int sum = index - 1;
+ int ndb_inds = indices.size();
+ for (int k = 1; k < ndb_inds ; k++) {
+   int index = indices.at(k);
+   index = index - 1;  // delete
+   sum += index * dim_prod.at(k - 1);
+ }
+ return sum; 
+} 
+
+// [[Rcpp::export]]
 bool hasna(const DataFrame & newdata) {  
   for (int i = 0; i < newdata.size(); i++) { 
    const IntegerVector & vec = newdata.at(i);
@@ -166,24 +179,36 @@ public:
     this->db_indices = as<std::vector <int> >(dim_inds );
  }  
   
- // get all classes entries, passing the index of the row 
-  void get_entries(int row, std::vector<double> & cpt_entries) { 
-   int index = test.get(db_indices[0], row);
-   int sum = index - 1;
-   int ndb_inds = db_indices.size();
-   for (int k = 1; k < ndb_inds ; k++) {
-     int index = test.get(db_indices[k], row);
-     index = index - 1;  // delete
-     sum += index * this->dim_prod[k - 1];
+
+  
+// get all classes entries, passing the index of the row 
+void get_entries(int row, std::vector<double> & cpt_entries) {
+ int index = test.get(db_indices.at(0), row);
+ int sum = index - 1;
+ int ndb_inds = db_indices.size();
+ for (int k = 1; k < ndb_inds ; k++) {
+   int index = test.get(db_indices.at(k), row);
+   index = index - 1;  // delete
+   sum += index * this->dim_prod.at(k - 1);
+ }
+ // // Add an entry per each class 
+ int per_class_entries   = this->dim_prod.at(this->dim_prod.size() - 2); 
+ int ncpts = cpt_entries.size();
+ for (int i = 0; i < ncpts ; i++ ) {
+   int ake = sum + i * per_class_entries;
+   if (ake >= cpt.size()) {
+     IntegerVector dims = wrap(this->dim_prod );
+     Rcout << dims << std::endl;
+     Rcout << ake << std::endl;
+     Rcout << cpt.size() << std::endl;
+     Rcout << "sum" << sum  << std::endl;
+     Rcout << "per class " << per_class_entries  << std::endl;
+     Rcout << "i " << i  << std::endl;
    }
-   // // Add an entry per each class 
-   int per_class_entries   = this->dim_prod[this->dim_prod.size() - 2];
-   int ncpts = cpt_entries.size();
-   for (int i = 0; i < ncpts ; i++ ) {
-     cpt_entries[i] =  this->cpt[sum + i * per_class_entries ];
-     // cpt_entries[i] = this->cpt[sum];
-   }
-  }
+   cpt_entries[i] =  this->cpt.at(sum + i * per_class_entries );
+   // cpt_entries[i] = this->cpt[sum];
+ }   
+}
  
 private:  
   // matches the dims of the CPT to columns of the db 
@@ -324,6 +349,22 @@ f <- features(t)
 cpt <- t$.params$bkblk
 cvar <- class_var(t)  
 
+test_ind <- function() {
+  samp <-  function(n) {
+    sample(1:n, size = 1)
+  } 
+  dim <- c(samp(10), samp(10) , samp(10) )
+  index <- c(samp(dim[1]), samp(dim[2]), 1)
+  ind <- entry_index(index, dim)
+  target <- arrayInd(ind + 1, dim)
+  # print(all(index == target))
+  stopifnot(all(index == target))
+}
+# test_ind()  
+# for (i in 1:1e4 ) {
+#  test_ind() 
+# }
+# a <- replicate( 1e3, test_ind)
 
 
 # microbenchmark::microbenchmark(  { g = do_mapped(t, dbor)} )
