@@ -72,6 +72,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// get_row
+NumericVector get_row(List x, DataFrame df, int cptind);
+RcppExport SEXP _bnclassify_get_row(SEXP xSEXP, SEXP dfSEXP, SEXP cptindSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type df(dfSEXP);
+    Rcpp::traits::input_parameter< int >::type cptind(cptindSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_row(x, df, cptind));
+    return rcpp_result_gen;
+END_RCPP
+}
 // table_cpp
 Rcpp::IntegerVector table_cpp(const Rcpp::IntegerVector& v);
 RcppExport SEXP _bnclassify_table_cpp(SEXP vSEXP) {
@@ -102,6 +115,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bnclassify_hasna", (DL_FUNC) &_bnclassify_hasna, 1},
     {"_bnclassify_dostop", (DL_FUNC) &_bnclassify_dostop, 0},
     {"_bnclassify_compute_joint", (DL_FUNC) &_bnclassify_compute_joint, 2},
+    {"_bnclassify_get_row", (DL_FUNC) &_bnclassify_get_row, 3},
     {"_bnclassify_table_cpp", (DL_FUNC) &_bnclassify_table_cpp, 1},
     {"_bnclassify_unidim_values", (DL_FUNC) &_bnclassify_unidim_values, 1},
     {NULL, NULL, 0}

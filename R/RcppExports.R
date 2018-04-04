@@ -25,6 +25,10 @@ compute_joint <- function(x, newdata) {
     .Call('_bnclassify_compute_joint', PACKAGE = 'bnclassify', x, newdata)
 }
 
+get_row <- function(x, df, cptind) {
+    .Call('_bnclassify_get_row', PACKAGE = 'bnclassify', x, df, cptind)
+}
+
 table_cpp <- function(v) {
     .Call('_bnclassify_table_cpp', PACKAGE = 'bnclassify', v)
 }

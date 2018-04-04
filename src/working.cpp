@@ -54,16 +54,7 @@
 //   return wrap(entries);
 // }
 // 
-// //[[Rcpp::export]]
-// NumericVector get_row(NumericVector cpt, const CharacterVector features, const CharacterVector class_var, DataFrame df) { 
-//   Testdata ds(df, features);
-//   CPT c = CPT(cpt, features, class_var, ds);
-//   // std::vector<double> entries(2);
-//   // c.get_entries(1, entries);
-//   // return wrap(entries);
-//   return NumericVector::create(1);
-// }  
-// 
+
 // // 
 // // // [[Rcpp::export]] 
 // // NumericVector compute_joint_instance(MappedModel model) {

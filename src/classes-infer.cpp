@@ -280,6 +280,15 @@ NumericMatrix compute_joint(List x, DataFrame newdata) {
  // NumericMatrix out(2,2);
  // return out;
 }  
+//[[Rcpp::export]]
+NumericVector get_row(List x, DataFrame df, int cptind) { 
+  Model mod(x);
+  Testdata ds(df, mod.getFeatures()); 
+  CPT c = CPT(mod.get_cpt(cptind), mod.getFeatures(), mod.getClassVar(), ds);
+  std::vector<double> entries(mod.get_nclass());
+  c.get_entries(1, entries);
+  return wrap(entries);
+} 
 
 // class names for all cpts
 // after joint, all times go up
@@ -307,9 +316,14 @@ stopifnot(all.equal(old, outp))
 wrapped <- bnclassify:::compute_log_joint(t, dbor)
 head(wrapped)
 
+
+get_row(t, dbor, 3)
+get_row(t, dbor, 35)
+
 f <- features(t)
 cpt <- t$.params$bkblk
 cvar <- class_var(t)  
+
 
 
 # microbenchmark::microbenchmark(  { g = do_mapped(t, dbor)} )
@@ -317,9 +331,9 @@ cvar <- class_var(t)
 # microbenchmark::microbenchmark(    { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  })
 # microbenchmark::microbenchmark(    { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  })
 
-microbenchmark::microbenchmark( { f = compute_joint(t, dbor)},
-                                  { h  = bnclassify:::compute_log_joint(t, dbor)}, 
-                                { g = bnclassify:::compute_anb_log_joint_per_class(t, dbor)} ,
-                                times = 2e3 )
+# microbenchmark::microbenchmark( { f = compute_joint(t, dbor)},
+#                                   { h  = bnclassify:::compute_log_joint(t, dbor)}, 
+#                                 { g = bnclassify:::compute_anb_log_joint_per_class(t, dbor)} ,
+#                                 times = 2e3 )
 */
 
