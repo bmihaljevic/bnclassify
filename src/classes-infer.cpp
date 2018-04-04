@@ -6,9 +6,7 @@ using namespace Rcpp;
 // [[Rcpp::depends(RcppEigen)]]
 // [[Rcpp::plugins(cpp11)]]
 
-using Eigen::MatrixXd;
-
-
+using Eigen::MatrixXd;  
 
 // [[Rcpp::export]]
 bool hasna(const DataFrame & newdata) {  
@@ -116,7 +114,8 @@ public:
   inline int getN() const {
    return  N;
   }
-  Testdata(DataFrame & test, const CharacterVector & features): columns(test.names()) {
+  Testdata(DataFrame & test, const CharacterVector & features) {
+     // TODO: features optional. Check all are factors?
      // keep df storage  
      // get columns and class var
      // check at least 1 row and count N. 
@@ -129,9 +128,10 @@ public:
      if (!is_true(all(in(features, vec)))) {
        stop("Some features missing from data set.");
      }
-     test = test[features]; 
-     if (hasna(test)) stop("NA entries in data set.");
+     test = test[features];
+     if (hasna(test)) stop("NA entries in data set.");  
      
+     this->columns = test.names();  
      this->N = test.nrow();
      this->data = Rcpp::as<std::vector<std::vector<int> > > (test);   
   }
@@ -318,7 +318,6 @@ library(bnclassify)
 dbor <- kr
 t <- lp(nb('class', dbor), dbor, smooth = 1) 
 t$.params$bkblk  
-hasna(voting) 
 
 outp <- compute_joint(t, dbor)  
 head(outp)
