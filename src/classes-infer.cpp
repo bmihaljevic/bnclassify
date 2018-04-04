@@ -241,11 +241,6 @@ public:
 };     
 
 // [[Rcpp::export]]
-void dostop() {
-  stop("Not here. ");
-}       
-
-// [[Rcpp::export]]
 NumericMatrix compute_joint(List x, DataFrame newdata) {  
  Model mod(x);
  Testdata test(newdata, mod.getFeatures());
