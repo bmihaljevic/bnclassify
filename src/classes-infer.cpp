@@ -199,26 +199,6 @@ void get_entries(int row, std::vector<double> & cpt_entries) {
  int per_class_entries   = this->dim_prod.at(this->dim_prod.size() - 2); 
  int ncpts = cpt_entries.size();
  for (int i = 0; i < ncpts ; i++ ) {
-   int ake = sum + i * per_class_entries;
-   if (ake >= cpt.size()) {
-     IntegerVector dims = wrap(this->dim_prod );
-     Rcout << dims << std::endl;
-     Rcout << ake << std::endl;
-     Rcout << cpt.size() << std::endl;
-     Rcout << "sum" << sum  << std::endl;
-     Rcout << "per class " << per_class_entries  << std::endl;
-     Rcout << "i " << i  << std::endl;
-     Rcout << "first " << test.get(db_indices.at(0), row)  << std::endl;
-     Rcout << "first col ind" << db_indices.at(0)  << std::endl;
-     Rcout << "second " << test.get(db_indices.at(1), row)  << std::endl;
-     Rcout << "second col ind" << db_indices.at(1)  << std::endl;
-     Rcout << "ndbs " << ndb_inds   << std::endl; 
-     dims = wrap(this->db_indices );
-     Rcout << "db inds " << dims << std::endl;
-     Rcout << columns << std::endl;
-     Rcout << test.getColumns() << std::endl;
-     
-   }
    cpt_entries[i] =  this->cpt.at(sum + i * per_class_entries );
    // cpt_entries[i] = this->cpt[sum];
  }   
@@ -413,9 +393,9 @@ test_dims2columns(cpt,"class", columns_db = colnames(car))
 # microbenchmark::microbenchmark(    { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  })
 # microbenchmark::microbenchmark(    { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  })
 
-# microbenchmark::microbenchmark( { f = compute_joint(t, dbor)},
-#                                   { h  = bnclassify:::compute_log_joint(t, dbor)}, 
-#                                 { g = bnclassify:::compute_anb_log_joint_per_class(t, dbor)} ,
-#                                 times = 2e3 )
+microbenchmark::microbenchmark( { f = compute_joint(t, dbor)},
+                                  { h  = bnclassify:::compute_log_joint(t, dbor)},
+                                { g = bnclassify:::compute_anb_log_joint_per_class(t, dbor)} ,
+                                times = 2e3 )
 */
 
