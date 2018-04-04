@@ -204,6 +204,9 @@ void get_entries(int row, std::vector<double> & cpt_entries) {
      Rcout << "sum" << sum  << std::endl;
      Rcout << "per class " << per_class_entries  << std::endl;
      Rcout << "i " << i  << std::endl;
+     Rcout << "first " << test.get(db_indices.at(0), row)  << std::endl;
+     Rcout << "second " << test.get(db_indices.at(1), row)  << std::endl;
+     Rcout << "ndbs " << ndb_inds   << std::endl;
    }
    cpt_entries[i] =  this->cpt.at(sum + i * per_class_entries );
    // cpt_entries[i] = this->cpt[sum];
