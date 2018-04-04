@@ -321,9 +321,12 @@ t$.params$bkblk
 
 outp <- compute_joint(t, dbor)  
 head(outp)
-old <- bnclassify:::compute_log_joint(t, dbor)
+old <- bnclassify:::compute_anb_log_joint_per_class(t, dbor)
 head(old)
 stopifnot(all.equal(old, outp)) 
+
+wrapped <- bnclassify:::compute_log_joint(t, dbor)
+head(wrapped)
 
 f <- features(t)
 cpt <- t$.params$bkblk
@@ -335,7 +338,9 @@ cvar <- class_var(t)
 # microbenchmark::microbenchmark(    { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  })
 # microbenchmark::microbenchmark(    { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  })
 
-# microbenchmark::microbenchmark( { f = compute_joint(t, dbor)},
-#                                   { h  = bnclassify:::compute_log_joint(t, dbor)}, times = 2e3 )
+microbenchmark::microbenchmark( { f = compute_joint(t, dbor)},
+                                  { h  = bnclassify:::compute_log_joint(t, dbor)}, 
+                                { g = bnclassify:::compute_anb_log_joint_per_class(t, dbor)} ,
+                                times = 2e3 )
 */
 
