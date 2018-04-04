@@ -40,72 +40,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// make_cpt
-NumericVector make_cpt(NumericVector cpt, const CharacterVector features, const CharacterVector class_var, DataFrame df);
-RcppExport SEXP _bnclassify_make_cpt(SEXP cptSEXP, SEXP featuresSEXP, SEXP class_varSEXP, SEXP dfSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type cpt(cptSEXP);
-    Rcpp::traits::input_parameter< const CharacterVector >::type features(featuresSEXP);
-    Rcpp::traits::input_parameter< const CharacterVector >::type class_var(class_varSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type df(dfSEXP);
-    rcpp_result_gen = Rcpp::wrap(make_cpt(cpt, features, class_var, df));
-    return rcpp_result_gen;
-END_RCPP
-}
-// df2matrix
-IntegerMatrix df2matrix(DataFrame x);
-RcppExport SEXP _bnclassify_df2matrix(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DataFrame >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(df2matrix(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// get_instance
-NumericVector get_instance(NumericVector cpt, const CharacterVector features, const CharacterVector class_var, DataFrame df);
-RcppExport SEXP _bnclassify_get_instance(SEXP cptSEXP, SEXP featuresSEXP, SEXP class_varSEXP, SEXP dfSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type cpt(cptSEXP);
-    Rcpp::traits::input_parameter< const CharacterVector >::type features(featuresSEXP);
-    Rcpp::traits::input_parameter< const CharacterVector >::type class_var(class_varSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type df(dfSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_instance(cpt, features, class_var, df));
-    return rcpp_result_gen;
-END_RCPP
-}
-// get_row
-NumericVector get_row(NumericVector cpt, const CharacterVector features, const CharacterVector class_var, DataFrame df);
-RcppExport SEXP _bnclassify_get_row(SEXP cptSEXP, SEXP featuresSEXP, SEXP class_varSEXP, SEXP dfSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type cpt(cptSEXP);
-    Rcpp::traits::input_parameter< const CharacterVector >::type features(featuresSEXP);
-    Rcpp::traits::input_parameter< const CharacterVector >::type class_var(class_varSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type df(dfSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_row(cpt, features, class_var, df));
-    return rcpp_result_gen;
-END_RCPP
-}
-// get_dataset
-double get_dataset(DataFrame df, int i, int j);
-RcppExport SEXP _bnclassify_get_dataset(SEXP dfSEXP, SEXP iSEXP, SEXP jSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DataFrame >::type df(dfSEXP);
-    Rcpp::traits::input_parameter< int >::type i(iSEXP);
-    Rcpp::traits::input_parameter< int >::type j(jSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_dataset(df, i, j));
-    return rcpp_result_gen;
-END_RCPP
-}
 // hasna
 bool hasna(const DataFrame& newdata);
 RcppExport SEXP _bnclassify_hasna(SEXP newdataSEXP) {
@@ -117,6 +51,15 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// dostop
+void dostop();
+RcppExport SEXP _bnclassify_dostop() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    dostop();
+    return R_NilValue;
+END_RCPP
+}
 // compute_joint
 NumericMatrix compute_joint(List x, DataFrame newdata);
 RcppExport SEXP _bnclassify_compute_joint(SEXP xSEXP, SEXP newdataSEXP) {
@@ -126,18 +69,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type newdata(newdataSEXP);
     rcpp_result_gen = Rcpp::wrap(compute_joint(x, newdata));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_mapped
-NumericVector do_mapped(List x, DataFrame newdata);
-RcppExport SEXP _bnclassify_do_mapped(SEXP xSEXP, SEXP newdataSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type newdata(newdataSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_mapped(x, newdata));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -168,14 +99,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bnclassify_are_disjoint", (DL_FUNC) &_bnclassify_are_disjoint, 2},
     {"_bnclassify_normalize", (DL_FUNC) &_bnclassify_normalize, 1},
     {"_bnclassify_normalize_ctgt", (DL_FUNC) &_bnclassify_normalize_ctgt, 1},
-    {"_bnclassify_make_cpt", (DL_FUNC) &_bnclassify_make_cpt, 4},
-    {"_bnclassify_df2matrix", (DL_FUNC) &_bnclassify_df2matrix, 1},
-    {"_bnclassify_get_instance", (DL_FUNC) &_bnclassify_get_instance, 4},
-    {"_bnclassify_get_row", (DL_FUNC) &_bnclassify_get_row, 4},
-    {"_bnclassify_get_dataset", (DL_FUNC) &_bnclassify_get_dataset, 3},
     {"_bnclassify_hasna", (DL_FUNC) &_bnclassify_hasna, 1},
+    {"_bnclassify_dostop", (DL_FUNC) &_bnclassify_dostop, 0},
     {"_bnclassify_compute_joint", (DL_FUNC) &_bnclassify_compute_joint, 2},
-    {"_bnclassify_do_mapped", (DL_FUNC) &_bnclassify_do_mapped, 2},
     {"_bnclassify_table_cpp", (DL_FUNC) &_bnclassify_table_cpp, 1},
     {"_bnclassify_unidim_values", (DL_FUNC) &_bnclassify_unidim_values, 1},
     {NULL, NULL, 0}
