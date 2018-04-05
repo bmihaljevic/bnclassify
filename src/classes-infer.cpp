@@ -363,6 +363,7 @@ f <- features(t)
 cpt <- t$.params$bkblk
 cvar <- class_var(t)  
 
+# todo: move to test.
 test_ind <- function() {
   samp <-  function(n) {
     sample(1:n, size = 1)
@@ -380,12 +381,12 @@ test_ind <- function() {
 # }
 # a <- replicate( 1e3, test_ind)
 
-a <- aode('class', car)  
-a <- lp(a, car, smooth = 1)
-cpt <- a$.models$persons$.params$buying
-colnames(car)  
-names(dimnames(cpt))
-test_dims2columns(cpt,"class", columns_db = colnames(car))
+# a <- aode('class', car)  
+# a <- lp(a, car, smooth = 1)
+# cpt <- a$.models$persons$.params$buying
+# colnames(car)  
+# names(dimnames(cpt))
+# test_dims2columns(cpt,"class", columns_db = colnames(car))
 
 
 # microbenchmark::microbenchmark(  { g = do_mapped(t, dbor)} )
@@ -393,9 +394,20 @@ test_dims2columns(cpt,"class", columns_db = colnames(car))
 # microbenchmark::microbenchmark(    { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  })
 # microbenchmark::microbenchmark(    { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  })
 
+simple_wrap <- function(x, dataset) {
+  if (!anyNA(dataset)) {
+    compute_joint(x, dataset)
+  }
+}
+
+
 microbenchmark::microbenchmark( { f = compute_joint(t, dbor)},
-                                  { h  = bnclassify:::compute_log_joint(t, dbor)},
+                                  { h  = simple_wrap(t, dbor)},
+                                times = 1e3 )
+
+microbenchmark::microbenchmark( { f = compute_joint(t, dbor)},
+                                  { h  = compute_log_joint(t, dbor)},
                                 { g = bnclassify:::compute_anb_log_joint_per_class(t, dbor)} ,
-                                times = 2e3 )
+                                times = 1e3 )
 */
 
