@@ -87,6 +87,7 @@ public:
 /** 
  * EVdenceMappedCPT, which knows which CPT entry to return for a given instance.
  * It actually returns nclass entries, one for each class. 
+ * It assumes that a factor value i for n-th variable corresponds to i-1 th entry i n-th dimension
  */
 class CPT {
   // It was faster using c++ storage than Rcpp

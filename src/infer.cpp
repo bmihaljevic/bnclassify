@@ -4,80 +4,56 @@
 // [[Rcpp::plugins(cpp11)]]
 
 using namespace Rcpp;
-using Eigen::MatrixXd;     
+using Eigen::MatrixXd;      
 
-
+// A function with the bnc model ( a list) as only parameter and CharacterVector output
 // [[Rcpp::export(rng=false)]]
-Rcpp::CharacterVector call_features(const Rcpp::List& x){ 
+Rcpp::CharacterVector call_model_fun(const Rcpp::List& x, const std::string funct) { 
    // Obtain environment containing function
    Rcpp::Environment base("package:bnclassify");  
    // Make function callable from C++
-   Rcpp::Function features = base["features"];     
+   Rcpp::Function features = base[funct];     
    // Call the function and receive its list output
    Rcpp::CharacterVector res = features(Rcpp::_["x"] = x);  
    return res;
-}
-// 
-// IntegerVector Model::get_class_index() {  
-//   const CharacterVector & vars_model = this->all_cpts.names(); 
-//   IntegerVector index = match(class_var, vars_model );
-//   if (index.size() != 1) stop("Class CPT missing.");
-//   return index ;
-// }
+}    
+
 /**
  * Wraps a bnc fit model.  Holds copies of its CPTs.
- * Takes log of CPTs for modelling. 
+ * Takes log of CPTs. 
  */
 Model::Model(List x)  { 
 // TODO: check model has basic bnc_fit properties. e.g., at least a class. 
 // TODO: no big checks; just calls back to R code; no need for re-implementing things. 
-// TODO: I should not hold a pointer to the underlying CPTs. Just the logged copies. 
-
+// TODO: I should not hold a pointer to the underlying CPTs. Just the logged copies.  
   // makes a copy of cpts, and logs them 
   // gets list of features.
   // get the class name. 
-  // could simply achieve this by calling back to R. This is done just once. 
-
+  // could simply achieve this by calling back to R. This is done just once.  
+  // Log after the copies. The class should point to that copy and never have access to original.
+  
+  // TODO: call class()
   this->class_var = x[".class"];
+  this->features  = call_model_fun(x, "features");
+  CharacterVector classes = call_model_fun(x, "classes");
+  this->nclass = classes.size();
+  
+  // TODO: call function. params()
   Rcpp::List all_cpts = x[".params"];
   this->log_cpts = std::vector<NumericVector>(); 
   this->log_cpts.reserve(all_cpts.size());
   for (int i = 0; i < all_cpts.size(); i++) {
     // a copy so that log does not modify original 
-   // this->log_cpts.push_back(as<std::vector<double> >(this->log_cpts.at(i)));
    const NumericVector & cpt = all_cpts.at(i);
    NumericVector cloned = clone(cpt);
    float (*flog)(float) = &std::log;
    std::transform(cloned.begin(), cloned.end(), cloned.begin(), flog);
    this->log_cpts.push_back(cloned);
-  }
-  // const NumericVector & class_cpt = all_cpts[class_var];
-  // could also get this form n levels of class in the db? no, the model is the truth.
+  }        
   
-  // 
-  
-  const CharacterVector & vars_model = all_cpts.names(); 
-  // extract this to a function
-  const CharacterVector & class_var_rcpp = wrap(class_var);
-  IntegerVector index = match(class_var_rcpp, vars_model );
-  IntegerVector allinds =  seq_along(vars_model); 
-  // TODO!!!!!!!!!!!!!!! setdiff does not preserve order.  
-  index = setdiff(allinds, index) - 1;
-  const List & feature_cpts = all_cpts[index];
-  // I could get it in c++ and pass it to std::vector instead 
-  this->features = feature_cpts.names();    
-  
-  // this->features  = call_features(x);
-  
-  // IntegerVector class_index = get_class_index(all_cpts) ; 
-  // allinds =  seq_along(all_cpts);
-  // IntegerVector features_index = setdiff(allinds, class_index) - 1; 
-  // const NumericVector & class_cpt = all_cpts.at(class_index[0] - 1);
-  // // std::vector<double> class_cpt = as<std::vector <double>> (this->all_cpts[features_index]);
-  // // this->nclass = class_cpt.size();
-  // this->nclass = std::distance(class_cpt.begin(), class_cpt.end());
-  // this->n = features.size();
-  this->nclass = 2;
+  // get index of class in all cpts
+  // take class cpt from log, not from original ones 
+  // this-> class_cpt = log cpts [] 
 }             
 // needs not be a member function as it uses no members of CPT 
 // Get the DB indices of a family
