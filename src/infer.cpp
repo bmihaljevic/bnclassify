@@ -50,27 +50,7 @@ Model::Model(List x): model(x) {
   // this->nclass = class_cpt.size();
   this->nclass = std::distance(class_cpt.begin(), class_cpt.end());
   // this->n = features.size();
-}         
-
-std::vector<std::string> ordersetdiff(CharacterVector vector, CharacterVector remove) {
-  std::vector<std::string> vec = as<std::vector<std::string>>(vector);
-  std::string move = as<std::string>(remove);
-  std::vector<std::string>::iterator index = std::find(vec.begin(), vec.end(), move);
-  vec.erase(index);
-  return vec;
-} 
-
-// [[Rcpp::export]]
-IntegerVector test_dims2columns(const NumericVector cpt, const CharacterVector class_var,  const CharacterVector columns_db) {  
-  const List & dimnames = cpt.attr("dimnames");
-  const CharacterVector & fam = dimnames.attr("names");
-  CharacterVector feature_fam = wrap(ordersetdiff(fam, class_var)); 
-  IntegerVector feature_fam_inds = match(feature_fam, columns_db);
-  if (is_true(any(feature_fam_inds == 0)))  stop("All features must be in the dataset.");
-  feature_fam_inds = feature_fam_inds - 1; 
-  return feature_fam_inds; 
-}
-
+}             
 // needs not be a member function as it uses no members of CPT 
 // Get the DB indices of a family
 // maps the cpt inds to the columns of the data set 
@@ -205,15 +185,7 @@ cvar <- class_var(t)
 # for (i in 1:1e4 ) {
 #  test_ind() 
 # }
-# a <- replicate( 1e3, test_ind)
-
-# a <- aode('class', car)  
-# a <- lp(a, car, smooth = 1)
-# cpt <- a$.models$persons$.params$buying
-# colnames(car)  
-# names(dimnames(cpt))
-# test_dims2columns(cpt,"class", columns_db = colnames(car))
-
+# a <- replicate( 1e3, test_ind)   
 
 # microbenchmark::microbenchmark(  { g = do_mapped(t, dbor)} )
 # microbenchmark::microbenchmark(    { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  })

@@ -78,21 +78,17 @@ public:
      this->data = Rcpp::as<std::vector<std::vector<int> > > (test);   
   }
 }; 
-
-// TODO: NEW NAME: dB_feature_cpt 
-// get_entries int row. db is a member of the cpt.  
+ 
 /** 
- * 
+ * EVdenceMappedCPT, which knows which CPT entry to return for a given instance.
+ * It actually returns nclass entries, one for each class. 
  */
 class CPT {
-// get entries for classes, passing simply the instance values
-// invariant: `rows` sum to one
-  // IntegerVector dim_prod; // this memory will reside in R rather than in c++ 
+  // It was faster using c++ storage than Rcpp
   std::vector<int> dim_prod;
-  // IntegerVector db_indices;  //maps of columns to indices in a data set
   std::vector<int> db_indices;
-  // NumericVector cpt; 
   std::vector<double> cpt;
+  // A reference to a unique instance of Evidence
   Evidence & test;
   Rcpp::CharacterVector columns; 
 public: 

@@ -1,7 +1,15 @@
 #include <basic-misc.h>
 using namespace Rcpp;  
 
-inline bool safediff(unsigned int x, int y) {
+std::vector<std::string> ordersetdiff(CharacterVector vector, CharacterVector remove) {
+  std::vector<std::string> vec = as<std::vector<std::string>>(vector);
+  std::string move = as<std::string>(remove);
+  std::vector<std::string>::iterator index = std::find(vec.begin(), vec.end(), move);
+  vec.erase(index);
+  return vec;
+}  
+
+bool safediff(unsigned int x, int y) {
   return (y >= 0) && (x != static_cast<unsigned int>(y));
 };
 
