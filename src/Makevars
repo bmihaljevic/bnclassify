@@ -1,0 +1,2 @@
+# Disable long types from C99 or CPP11 extensions
+PKG_CPPFLAGS = -I../inst/include

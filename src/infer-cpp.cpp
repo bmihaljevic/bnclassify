@@ -1,12 +1,11 @@
-#include <Rcpp.h>
-#include <RcppEigen.h>
-#include <cmath>
+#include <infer.h>
+
 using namespace Rcpp;
 
 // [[Rcpp::depends(RcppEigen)]]
 // [[Rcpp::plugins(cpp11)]]
 
-using Eigen::MatrixXd;   
+using Eigen::MatrixXd;
 
 // This should be called at instance level, not data frame! This way, if the data set is complete, it goes through it a couple of times.
 // [[Rcpp::export]]

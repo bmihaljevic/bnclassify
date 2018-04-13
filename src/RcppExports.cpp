@@ -6,6 +6,18 @@
 
 using namespace Rcpp;
 
+// entry_index
+int entry_index(const std::vector<double>& indices, const std::vector<double>& dim_prod);
+RcppExport SEXP _bnclassify_entry_index(SEXP indicesSEXP, SEXP dim_prodSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type indices(indicesSEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type dim_prod(dim_prodSEXP);
+    rcpp_result_gen = Rcpp::wrap(entry_index(indices, dim_prod));
+    return rcpp_result_gen;
+END_RCPP
+}
 // are_disjoint
 bool are_disjoint(Nullable<CharacterVector> x, Nullable<CharacterVector> y);
 RcppExport SEXP _bnclassify_are_disjoint(SEXP xSEXP, SEXP ySEXP) {
@@ -37,18 +49,6 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector& >::type ctgt(ctgtSEXP);
     rcpp_result_gen = Rcpp::wrap(normalize_ctgt(ctgt));
-    return rcpp_result_gen;
-END_RCPP
-}
-// entry_index
-int entry_index(const std::vector<double>& indices, const std::vector<double>& dim_prod);
-RcppExport SEXP _bnclassify_entry_index(SEXP indicesSEXP, SEXP dim_prodSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const std::vector<double>& >::type indices(indicesSEXP);
-    Rcpp::traits::input_parameter< const std::vector<double>& >::type dim_prod(dim_prodSEXP);
-    rcpp_result_gen = Rcpp::wrap(entry_index(indices, dim_prod));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -125,10 +125,10 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_bnclassify_entry_index", (DL_FUNC) &_bnclassify_entry_index, 2},
     {"_bnclassify_are_disjoint", (DL_FUNC) &_bnclassify_are_disjoint, 2},
     {"_bnclassify_normalize", (DL_FUNC) &_bnclassify_normalize, 1},
     {"_bnclassify_normalize_ctgt", (DL_FUNC) &_bnclassify_normalize_ctgt, 1},
-    {"_bnclassify_entry_index", (DL_FUNC) &_bnclassify_entry_index, 2},
     {"_bnclassify_hasna", (DL_FUNC) &_bnclassify_hasna, 1},
     {"_bnclassify_test_dims2columns", (DL_FUNC) &_bnclassify_test_dims2columns, 3},
     {"_bnclassify_compute_joint", (DL_FUNC) &_bnclassify_compute_joint, 2},
