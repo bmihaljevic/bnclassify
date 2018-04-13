@@ -25,12 +25,12 @@ test_dims2columns <- function(cpt, class_var, columns_db) {
     .Call('_bnclassify_test_dims2columns', PACKAGE = 'bnclassify', cpt, class_var, columns_db)
 }
 
-compute_joint <- function(x, newdata) {
-    .Call('_bnclassify_compute_joint', PACKAGE = 'bnclassify', x, newdata)
-}
-
 get_row <- function(x, df, cptind) {
     .Call('_bnclassify_get_row', PACKAGE = 'bnclassify', x, df, cptind)
+}
+
+compute_joint <- function(x, newdata) {
+    .Call('_bnclassify_compute_joint', PACKAGE = 'bnclassify', x, newdata)
 }
 
 table_cpp <- function(v) {

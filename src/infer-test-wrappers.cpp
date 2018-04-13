@@ -1,4 +1,6 @@
-#include <Rcpp.h>
+#include <Rcpp.h> 
+#include <infer.h>
+
 using namespace Rcpp;
 
 // [[Rcpp::export]]
@@ -11,6 +13,18 @@ IntegerVector test_dims2columns(const NumericVector cpt, const CharacterVector c
   feature_fam_inds = feature_fam_inds - 1; 
   return feature_fam_inds; 
 }
+
+// Delete?
+//[[Rcpp::export]]
+NumericVector get_row(List x, DataFrame df, int cptind) { 
+  Model mod(x);
+  Evidence ds(df, mod.getFeatures()); 
+  CPT c = CPT(mod.get_cpt(cptind), mod.getClassVar(), ds);
+  std::vector<double> entries(mod.get_nclass());
+  c.get_entries(1, entries);
+  return wrap(entries);
+}   
+
 
 /*** R
 # a <- aode('class', car)  

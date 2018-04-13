@@ -136,24 +136,6 @@ NumericMatrix compute_joint(List x, DataFrame newdata) {
  // NumericMatrix out(2,2);
  // return out;
 }  
-//[[Rcpp::export]]
-NumericVector get_row(List x, DataFrame df, int cptind) { 
-  Model mod(x);
-  Evidence ds(df, mod.getFeatures()); 
-  CPT c = CPT(mod.get_cpt(cptind), mod.getClassVar(), ds);
-  std::vector<double> entries(mod.get_nclass());
-  c.get_entries(1, entries);
-  return wrap(entries);
-} 
-
-// class names for all cpts
-// after joint, all times go up
-// getClasses() in model 
-// the anyNA call makes it much slower 
-// expr      min       lq      mean    median       uq      max neval
-// {     f = compute_joint(t, dbor) }  886.097  906.663  950.3323  920.5845  948.043  3049.94  2000
-// {     h = bnclassify:::compute_log_joint(t, dbor) } 1143.406 1180.499 1771.0422 1248.9055 1357.745 91274.94  2000
-// > 
 
 
 /*** R   
