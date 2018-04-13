@@ -14,7 +14,7 @@ IntegerVector Model::get_class_index() {
   return index ;
 }
 Model::Model(List x): model(x) { 
-  // this->class_var = as<std::string>(model[".class"]); 
+// TODO: check model has basic bnc_fit properties. e.g., at least a class. 
   this->class_var = model[".class"];
   this->all_cpts = x[".params"];
   this->log_cpts = std::vector<NumericVector>(); 
@@ -31,6 +31,7 @@ Model::Model(List x): model(x) {
   // const NumericVector & class_cpt = all_cpts[class_var];
   // could also get this form n levels of class in the db? no, the model is the truth.
   // int nclass = class_cpt.size();   
+  // TODO: fix!!! 
   this->nclass = 2;
   const CharacterVector & vars_model = all_cpts.names(); 
   // extract this to a function
@@ -50,54 +51,7 @@ Model::Model(List x): model(x) {
   // this->nclass = class_cpt.size();
   this->nclass = std::distance(class_cpt.begin(), class_cpt.end());
   // this->n = features.size();
-}  
-
-// HERE THE INDICES ARE 0 BASED!!! 
-// they could be 1 based; that could be part of the mapping from data to here
-// has the columns, N, but also contains the data? 
-// Copying instances of test data would copy the whole matrix. Thus, I need only a single instance of this object during execution lifetime.
-class Testdata {
-  CharacterVector columns;
-  std::vector<std::vector<int> > data; 
-  int N;   
-public:
-  // check length of class var, check columns, etc.   
-  // the underlying storage will be irrelevant. it will be hidden inside. could simply go and advance over the df, could hold it in std vector; whatever.
-  inline double get(int i, int j) const {  
-  // check range? done by ()
-    return data.at(i).at(j); 
-  }   
-  inline CharacterVector getColumns() {
-   return  columns;
-  } 
-  inline int getN() const {
-   return  N;
-  }
-  Testdata(DataFrame & test, const CharacterVector & features) {
-     // TODO: features optional. Check all are factors?
-     // keep df storage  
-     // get columns and class var
-     // check at least 1 row and count N. 
-     // Get number of classes? or not? Or that is elsewhere? That is, e.g., in model.
-     // I could also reduce all entries - 1 and make a transpose, that is, a matrix that goes by instance and then iterate that way.
-     // If I go to integer, I ought to store the levels of the cpts somewhere.
-     // This could also be the initial matrix split  
-     // checks: has all from model, right? no nas. 
-     const CharacterVector & vec = test.names();
-     if (!is_true(all(in(features, vec)))) {
-       stop("Some features missing from data set.");
-     }
-     // using intersect does not alter order of columns,  unlike test[features]. it can be useful for debugging. 
-     CharacterVector keep = intersect(vec, features);
-     test = test[keep];
-     if (hasna(test)) stop("NA entries in data set.");  
-     
-     this->columns = test.names();  
-     this->N = test.nrow();
-     this->data = Rcpp::as<std::vector<std::vector<int> > > (test);   
-  }
-} ;   
-
+}     
 
 // TODO: NEW NAME: dB_feature_cpt 
 // get_entries int row. db is a member of the cpt.  
