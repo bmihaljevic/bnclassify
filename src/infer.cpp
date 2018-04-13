@@ -12,8 +12,20 @@ IntegerVector Model::get_class_index() {
   if (index.size() != 1) stop("Class CPT missing.");
   return index ;
 }
+/**
+ * Wraps a bnc fit model.  Holds copies of its CPTs.
+ * Takes log of CPTs for modelling. 
+ */
 Model::Model(List x): model(x) { 
 // TODO: check model has basic bnc_fit properties. e.g., at least a class. 
+// TODO: no big checks; just calls back to R code; no need for re-implementing things. 
+// TODO: I should not hold a pointer to the underlying CPTs. Just the logged copies. 
+
+  // makes a copy of cpts, and logs them 
+  // gets list of features.
+  // get the class name. 
+  // could simply achieve this by calling back to R. This is done just once. 
+
   this->class_var = model[".class"];
   this->all_cpts = x[".params"];
   this->log_cpts = std::vector<NumericVector>(); 
@@ -29,9 +41,9 @@ Model::Model(List x): model(x) {
   }
   // const NumericVector & class_cpt = all_cpts[class_var];
   // could also get this form n levels of class in the db? no, the model is the truth.
-  // int nclass = class_cpt.size();   
-  // TODO: fix!!! 
-  this->nclass = 2;
+  
+  // 
+  
   const CharacterVector & vars_model = all_cpts.names(); 
   // extract this to a function
   const CharacterVector & class_var_rcpp = wrap(class_var);
@@ -67,7 +79,7 @@ IntegerVector CPT::dims2columns(const NumericVector cpt, const CharacterVector c
 
 // Mapping of model to cpts
 // check all features in data set. Well, I do not need class in data set.
-     // this is done by each cpt check
+// this is done by each cpt check
 // make sure data levels and cpt levels match 
 class MappedModel {
  const Model model;
@@ -86,6 +98,10 @@ public:
       cpts.push_back(c);
     }
     // // TODO: this must be better done!!! And must work with more cases, etc.
+    // This will be copied and logged above; all must be logged. 
+    // But only features will go to  CPT; class stays as numeric vector.
+    // TODO:: This onw will not hold the class CPT; only original model will. 
+  //  This is just for evidence.
     this->class_cpt = x.get_cpt(n);
   }  
   inline CPT& get_mapped_cpt(int i) {
@@ -97,7 +113,7 @@ public:
   }
 };     
 
-// [[Rcpp::export]]
+// [[Rcpp::export(rng=false)]]
 NumericMatrix compute_joint(List x, DataFrame newdata) {  
  Model mod(x);
  Evidence test(newdata, mod.getFeatures());
@@ -108,39 +124,32 @@ NumericMatrix compute_joint(List x, DataFrame newdata) {
  // NumericMatrix output(N, nclass);
  MatrixXd output(N, nclass);
  NumericVector & class_cpt = model.get_class_cpt();
+ // TODO: class cpt should be a std::vector.
  std::vector<int> instance(n);
  std::vector<double> per_class_cpt_entries(nclass);
  for (int instance_ind = 0; instance_ind  < N ; instance_ind++) {
-    // set output to copies of class cpt
-     for (int theta_ind = 0; theta_ind < nclass; theta_ind++) {
-       // int ind_column = theta_ind * N;
-       // output.at(ind_column + instance_ind) = class_cpt[theta_ind];
+    // initialize output with log class prior 
+     for (int theta_ind = 0; theta_ind < nclass; theta_ind++) { 
        output(instance_ind, theta_ind) = class_cpt[theta_ind];
      }
-     // add the cpt entry of a single feature:
-     for (int j = 0; j < n; j++) {
-        // CPT & cpt  = model.get_mapped_cpt(j);
-        // cpt.get_entries(instance_ind, per_class_cpt_entries);
+     // add the entries for each feature:
+     for (int j = 0; j < n; j++) { 
         model.get_mapped_cpt(j).get_entries(instance_ind, per_class_cpt_entries);
         for (int theta_ind = 0; theta_ind < nclass; theta_ind++) {
-             // output.at(ind_column + instance_ind) += per_class_cpt_entries[theta_ind];
              output(instance_ind, theta_ind) += per_class_cpt_entries[theta_ind];
-             // output.at(instance_ind, theta_ind) += theta_ind;
         }
      } // features
  } // instances
  NumericMatrix result = wrap(output);
  CharacterVector classes = class_cpt.names();
  colnames(result) = classes;
- return result; 
- // NumericMatrix out(2,2);
- // return out;
+ return result;  
 }  
 
 
 /*** R   
 kr <- foreign::read.arff('~/gd/phd/code/works-aug-semi-bayes/data/original/kr-vs-kp.arff')
-library(bnclassify)
+devtools::load_all()
 dbor <- kr
 t <- lp(nb('class', dbor), dbor, smooth = 1) 
 t$.params$bkblk  
@@ -149,45 +158,18 @@ outp <- compute_joint(t, dbor)
 head(outp)
 old <- bnclassify:::compute_anb_log_joint_per_class(t, dbor)
 head(old)
-stopifnot(all.equal(old, outp)) 
-
+stopifnot(all.equal(old, outp))  
 wrapped <- bnclassify:::compute_log_joint(t, dbor)
 head(wrapped)
-stopifnot(all.equal(wrapped, outp)) 
-
-
-get_row(t, dbor, 3)
-get_row(t, dbor, 35)
-
+stopifnot(all.equal(wrapped, outp))  
+  
 f <- features(t)
 cpt <- t$.params$bkblk
-cvar <- class_var(t)   
-
-# test_ind()  
-# for (i in 1:1e4 ) {
-#  test_ind() 
-# }
-# a <- replicate( 1e3, test_ind)   
-
-# microbenchmark::microbenchmark(  { g = do_mapped(t, dbor)} )
-# microbenchmark::microbenchmark(    { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  })
-# microbenchmark::microbenchmark(    { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  })
-# microbenchmark::microbenchmark(    { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  })
-
-simple_wrap <- function(x, dataset) {
-  if (!anyNA(dataset)) {
-    compute_joint(x, dataset)
-  }
-}
-
-
-microbenchmark::microbenchmark( { f = compute_joint(t, dbor)},
-                                  { h  = simple_wrap(t, dbor)},
-                                times = 1e3 )
+cvar <- class_var(t)       
 
 microbenchmark::microbenchmark( { f = compute_joint(t, dbor)},
                                   { h  = compute_log_joint(t, dbor)},
                                 { g = bnclassify:::compute_anb_log_joint_per_class(t, dbor)} ,
-                                times = 1e3 )
+                                times = 1e3 )    
 */
 

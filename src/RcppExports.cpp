@@ -94,7 +94,6 @@ NumericMatrix compute_joint(List x, DataFrame newdata);
 RcppExport SEXP _bnclassify_compute_joint(SEXP xSEXP, SEXP newdataSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type newdata(newdataSEXP);
     rcpp_result_gen = Rcpp::wrap(compute_joint(x, newdata));

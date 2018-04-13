@@ -28,4 +28,9 @@ test_ind <- function() {
   # print(all(index == target))
   stopifnot(all(index == target))
 }
+# test_ind()  
+# for (i in 1:1e4 ) {
+#  test_ind() 
+# }
+# a <- replicate( 1e3, test_ind)   
 */

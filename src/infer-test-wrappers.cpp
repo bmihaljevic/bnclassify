@@ -33,4 +33,18 @@ NumericVector get_row(List x, DataFrame df, int cptind) {
 # colnames(car)  
 # names(dimnames(cpt))
 # test_dims2columns(cpt,"class", columns_db = colnames(car))
+
+# microbenchmark::microbenchmark(  { g = do_mapped(t, dbor)} )
+# microbenchmark::microbenchmark(    { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  })
+# microbenchmark::microbenchmark(    { d = get_row(t$.params$bkblk, f, class_var(t), dbor)  })
+
+# simple_wrap <- function(x, dataset) {
+#   if (!anyNA(dataset)) {
+#     compute_joint(x, dataset)
+#   }
+# }  
+# microbenchmark::microbenchmark( { f = compute_joint(t, dbor)},
+#                                   { h  = simple_wrap(t, dbor)},
+#                                 times = 1e3 )
 */
+
