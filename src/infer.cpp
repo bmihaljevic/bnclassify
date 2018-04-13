@@ -17,18 +17,18 @@ Rcpp::CharacterVector call_features(const Rcpp::List& x){
    Rcpp::CharacterVector res = features(Rcpp::_["x"] = x);  
    return res;
 }
-
-IntegerVector Model::get_class_index() {  
-  const CharacterVector & vars_model = this->all_cpts.names(); 
-  IntegerVector index = match(class_var, vars_model );
-  if (index.size() != 1) stop("Class CPT missing.");
-  return index ;
-}
+// 
+// IntegerVector Model::get_class_index() {  
+//   const CharacterVector & vars_model = this->all_cpts.names(); 
+//   IntegerVector index = match(class_var, vars_model );
+//   if (index.size() != 1) stop("Class CPT missing.");
+//   return index ;
+// }
 /**
  * Wraps a bnc fit model.  Holds copies of its CPTs.
  * Takes log of CPTs for modelling. 
  */
-Model::Model(List x): model(x) { 
+Model::Model(List x)  { 
 // TODO: check model has basic bnc_fit properties. e.g., at least a class. 
 // TODO: no big checks; just calls back to R code; no need for re-implementing things. 
 // TODO: I should not hold a pointer to the underlying CPTs. Just the logged copies. 
@@ -38,14 +38,14 @@ Model::Model(List x): model(x) {
   // get the class name. 
   // could simply achieve this by calling back to R. This is done just once. 
 
-  this->class_var = model[".class"];
-  this->all_cpts = x[".params"];
+  this->class_var = x[".class"];
+  Rcpp::List all_cpts = x[".params"];
   this->log_cpts = std::vector<NumericVector>(); 
-  this->log_cpts.reserve(this->all_cpts.size());
-  for (int i = 0; i < this->all_cpts.size(); i++) {
+  this->log_cpts.reserve(all_cpts.size());
+  for (int i = 0; i < all_cpts.size(); i++) {
     // a copy so that log does not modify original 
    // this->log_cpts.push_back(as<std::vector<double> >(this->log_cpts.at(i)));
-   const NumericVector & cpt = this->all_cpts.at(i);
+   const NumericVector & cpt = all_cpts.at(i);
    NumericVector cloned = clone(cpt);
    float (*flog)(float) = &std::log;
    std::transform(cloned.begin(), cloned.end(), cloned.begin(), flog);
@@ -69,14 +69,15 @@ Model::Model(List x): model(x) {
   
   // this->features  = call_features(x);
   
-  IntegerVector class_index = get_class_index() ; 
-  allinds =  seq_along(this->all_cpts);
-  IntegerVector features_index = setdiff(allinds, class_index) - 1; 
-  const NumericVector & class_cpt = this->all_cpts.at(class_index[0] - 1);
-  // std::vector<double> class_cpt = as<std::vector <double>> (this->all_cpts[features_index]);
-  // this->nclass = class_cpt.size();
-  this->nclass = std::distance(class_cpt.begin(), class_cpt.end());
+  // IntegerVector class_index = get_class_index(all_cpts) ; 
+  // allinds =  seq_along(all_cpts);
+  // IntegerVector features_index = setdiff(allinds, class_index) - 1; 
+  // const NumericVector & class_cpt = all_cpts.at(class_index[0] - 1);
+  // // std::vector<double> class_cpt = as<std::vector <double>> (this->all_cpts[features_index]);
+  // // this->nclass = class_cpt.size();
+  // this->nclass = std::distance(class_cpt.begin(), class_cpt.end());
   // this->n = features.size();
+  this->nclass = 2;
 }             
 // needs not be a member function as it uses no members of CPT 
 // Get the DB indices of a family
@@ -163,6 +164,6 @@ NumericMatrix compute_joint(List x, DataFrame newdata) {
 
 
 /*** R   
-source('tests/infer-test.R')
+source('tests/infer-test.R', print.eval = TRUE)
 */
 

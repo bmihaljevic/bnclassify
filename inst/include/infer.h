@@ -18,11 +18,8 @@
  */
 class Model { 
   private:   
-    // TODO: remove model
-    Rcpp::List model;
     Rcpp::CharacterVector features;
     Rcpp::CharacterVector class_var;  
-    Rcpp::List all_cpts;
     std::vector<Rcpp::NumericVector> log_cpts;
     int nclass;
     Rcpp::IntegerVector get_class_index( ) ;
