@@ -4,6 +4,10 @@
 #include <Rcpp.h>
 
 bool are_disjoint(Rcpp::Nullable<Rcpp::CharacterVector> x, Rcpp::Nullable<Rcpp::CharacterVector> y); 
-bool hasna(const Rcpp::DataFrame & newdata);
+bool hasna(const Rcpp::DataFrame & newdata); 
+/**
+ * A comparison that does not raise a compiler warning.
+ */
+bool safediff(unsigned int x, int y);  
 
 #endif

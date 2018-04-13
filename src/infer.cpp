@@ -50,66 +50,7 @@ Model::Model(List x): model(x) {
   // this->nclass = class_cpt.size();
   this->nclass = std::distance(class_cpt.begin(), class_cpt.end());
   // this->n = features.size();
-}     
-
-// TODO: NEW NAME: dB_feature_cpt 
-// get_entries int row. db is a member of the cpt.  
-class CPT {
-// get entries for classes, passing simply the instance values
-// invariant: `rows` sum to one
-  // IntegerVector dim_prod; // this memory will reside in R rather than in c++ 
-  std::vector<int> dim_prod;
-  // IntegerVector db_indices;  //maps of columns to indices in a data set
-  std::vector<int> db_indices;
-  // NumericVector cpt; 
-  std::vector<double> cpt;
-  Newdata & test;
-  CharacterVector columns; 
-public: 
-  CPT(NumericVector cpt, const CharacterVector class_var,  Newdata & test) :
-                    test(test) {
-    // Do I want this to make a copy? Its OK to make a copy because it is a lightweight object.
-    this->cpt = as<std::vector <double> >(cpt); 
-    // check class is the last dimension of the cpt? 
-    // TODO: this could also be the class cpt!!! remember that. No, I do not need to do this for class cpt. Class is a special cpt.
-    const IntegerVector & dim = cpt.attr("dim");
-    IntegerVector dim_prods = cumprod(dim);
-    // note: i am using the local test here. it might do something non const to the object 
-    this->dim_prod = as<std::vector <int> >(dim_prods);
-    CharacterVector columns_db = test.getColumns();
-    IntegerVector dim_inds = dims2columns(cpt, class_var, columns_db);
-    this->db_indices = as<std::vector <int> >(dim_inds ); 
-    const List & dimnames = cpt.attr("dimnames");
-    columns  = dimnames.attr("names"); 
- }    
-  
-// get all classes entries, passing the index of the row 
-void get_entries(int row, std::vector<double> & cpt_entries) {
- int cpt_index = test.get(db_indices.at(0), row);
- int sum = cpt_index - 1;
- int ndb_inds = db_indices.size();
- for (int k = 1; k < ndb_inds ; k++) {
-   cpt_index = test.get(db_indices.at(k), row);
-   cpt_index -= 1;  // delete
-   sum += cpt_index * this->dim_prod.at(k  - 1);
- }
- // // Add an entry per each class 
- int per_class_entries   = this->dim_prod.at(this->dim_prod.size() - 2); 
- int ncpts = cpt_entries.size();
- for (int i = 0; i < ncpts ; i++ ) {
-   cpt_entries[i] =  this->cpt.at(sum + i * per_class_entries );
-   // cpt_entries[i] = this->cpt[sum];
- }   
-}
- 
-private:  
-  // matches the dims of the CPT to columns of the db 
-  IntegerVector dims2columns(const NumericVector cpt, const CharacterVector class_var,  const CharacterVector columns_db);
-};
-
-bool safediff(unsigned int x, int y) {
-  return (y >= 0) && (x != static_cast<unsigned int>(y));
-}
+}         
 
 std::vector<std::string> ordersetdiff(CharacterVector vector, CharacterVector remove) {
   std::vector<std::string> vec = as<std::vector<std::string>>(vector);
@@ -117,8 +58,7 @@ std::vector<std::string> ordersetdiff(CharacterVector vector, CharacterVector re
   std::vector<std::string>::iterator index = std::find(vec.begin(), vec.end(), move);
   vec.erase(index);
   return vec;
-}
-
+} 
 
 // [[Rcpp::export]]
 IntegerVector test_dims2columns(const NumericVector cpt, const CharacterVector class_var,  const CharacterVector columns_db) {  
@@ -156,7 +96,7 @@ class MappedModel {
  // class cpt is the only unmapped one 
  NumericVector class_cpt;
 public:
-  MappedModel(Model & x, Newdata & test): model(x) { 
+  MappedModel(Model & x, Evidence & test): model(x) { 
     const std::size_t n = x.get_n();
     cpts.reserve(n);  
     for (unsigned int i = 0; i < n; i++) {
@@ -180,7 +120,7 @@ public:
 // [[Rcpp::export]]
 NumericMatrix compute_joint(List x, DataFrame newdata) {  
  Model mod(x);
- Newdata test(newdata, mod.getFeatures());
+ Evidence test(newdata, mod.getFeatures());
  MappedModel model(mod, test);
  int N = test.getN();
  int n = mod.get_n();
@@ -219,7 +159,7 @@ NumericMatrix compute_joint(List x, DataFrame newdata) {
 //[[Rcpp::export]]
 NumericVector get_row(List x, DataFrame df, int cptind) { 
   Model mod(x);
-  Newdata ds(df, mod.getFeatures()); 
+  Evidence ds(df, mod.getFeatures()); 
   CPT c = CPT(mod.get_cpt(cptind), mod.getClassVar(), ds);
   std::vector<double> entries(mod.get_nclass());
   c.get_entries(1, entries);

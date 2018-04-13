@@ -1,6 +1,10 @@
 #include <basic-misc.h>
 using namespace Rcpp;  
 
+inline bool safediff(unsigned int x, int y) {
+  return (y >= 0) && (x != static_cast<unsigned int>(y));
+};
+
 // TODO: This should be called at instance level, not data frame! This way, if the data set is complete, it goes through it a couple of times.
 // [[Rcpp::export]]
 bool hasna(const DataFrame & newdata) {  
