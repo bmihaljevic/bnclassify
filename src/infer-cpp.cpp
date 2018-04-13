@@ -1,21 +1,11 @@
 #include <infer.h>
-
-using namespace Rcpp;
+#include <basic-misc.h>
 
 // [[Rcpp::depends(RcppEigen)]]
 // [[Rcpp::plugins(cpp11)]]
 
-using Eigen::MatrixXd;
-
-// This should be called at instance level, not data frame! This way, if the data set is complete, it goes through it a couple of times.
-// [[Rcpp::export]]
-bool hasna(const DataFrame & newdata) {  
-  for (int i = 0; i < newdata.size(); i++) { 
-   const IntegerVector & vec = newdata.at(i);
-   if (is_true(any(is_na(vec)))) return true;  
-  }  
-  return false;
-} 
+using namespace Rcpp;
+using Eigen::MatrixXd;     
 
 class Model { 
   public:

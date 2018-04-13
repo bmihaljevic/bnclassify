@@ -3,6 +3,7 @@
 
 #include <Rcpp.h>
 
-bool are_disjoint(Rcpp::Nullable<Rcpp::CharacterVector> x, Rcpp::Nullable<Rcpp::CharacterVector> y);
+bool are_disjoint(Rcpp::Nullable<Rcpp::CharacterVector> x, Rcpp::Nullable<Rcpp::CharacterVector> y); 
+bool hasna(const Rcpp::DataFrame & newdata);
 
 #endif

@@ -1,6 +1,15 @@
 #include <basic-misc.h>
 using namespace Rcpp;  
 
+// TODO: This should be called at instance level, not data frame! This way, if the data set is complete, it goes through it a couple of times.
+// [[Rcpp::export]]
+bool hasna(const DataFrame & newdata) {  
+  for (int i = 0; i < newdata.size(); i++) { 
+   const IntegerVector & vec = newdata.at(i);
+   if (is_true(any(is_na(vec)))) return true;  
+  }  
+  return false;
+} 
 
 // [[Rcpp::export]]
 bool are_disjoint(Rcpp::Nullable<Rcpp::CharacterVector> x, Rcpp::Nullable<Rcpp::CharacterVector> y) {

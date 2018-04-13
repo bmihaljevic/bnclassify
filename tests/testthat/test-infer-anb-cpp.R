@@ -38,4 +38,12 @@ test_that("No features", {
 # // make function log() that preserve attributes
 # 
 # // Consider a single row DF, an empty DF, etc.
+  
+# // find the list of my types. to which does Model correspond?? 
+# I need a function that lists all the types. 
+}) 
+
+test_that("C++ 11", {
+   # DESCRIPTION makes it build with 11. Update makevars?
+  expect_true(FALSE)
 })
