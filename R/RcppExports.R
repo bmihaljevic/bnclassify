@@ -5,6 +5,10 @@ entry_index <- function(indices, dim_prod) {
     .Call('_bnclassify_entry_index', PACKAGE = 'bnclassify', indices, dim_prod)
 }
 
+hasna <- function(newdata) {
+    .Call('_bnclassify_hasna', PACKAGE = 'bnclassify', newdata)
+}
+
 are_disjoint <- function(x, y) {
     .Call('_bnclassify_are_disjoint', PACKAGE = 'bnclassify', x, y)
 }
@@ -15,10 +19,6 @@ normalize <- function(x) {
 
 normalize_ctgt <- function(ctgt) {
     .Call('_bnclassify_normalize_ctgt', PACKAGE = 'bnclassify', ctgt)
-}
-
-hasna <- function(newdata) {
-    .Call('_bnclassify_hasna', PACKAGE = 'bnclassify', newdata)
 }
 
 test_dims2columns <- function(cpt, class_var, columns_db) {

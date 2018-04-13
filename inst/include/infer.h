@@ -6,12 +6,12 @@
 #include <cmath>
 
 /**
- *  Encapsulates a bnc model. 
+ *  Encapsulates a TODO bnc? model. 
  */
 class Model { 
   public:
-    Model(List model);    
-    const NumericVector & get_cpt(int i) const {
+    Model(Rcpp::List model);    
+    const Rcpp::NumericVector & get_cpt(int i) const {
       return this->log_cpts.at(i);
     }
     Rcpp::CharacterVector getFeatures() const {      
@@ -32,7 +32,7 @@ class Model {
     Rcpp::CharacterVector features;
     Rcpp::CharacterVector class_var;  
     Rcpp::List all_cpts;
-    std::vector<NumericVector> log_cpts;
+    std::vector<Rcpp::NumericVector> log_cpts;
     int nclass;
     Rcpp::IntegerVector get_class_index( ) ;
 };

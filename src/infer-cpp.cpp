@@ -7,38 +7,6 @@
 using namespace Rcpp;
 using Eigen::MatrixXd;     
 
-class Model { 
-  public:
-    Model(List model);   
-    // this should return a copy? how to return a const reference
-    // NumericVector get_cpt(int i) const {
-    //   return this->all_cpts.at(i);
-    // }
-    const NumericVector & get_cpt(int i) const {
-      return this->log_cpts.at(i);
-    }
-    CharacterVector getFeatures() const {      
-      return this->features;
-    } 
-    CharacterVector getClassVar() const {      
-      return this->class_var;
-    }  
-    //n excludes the class    
-    std::size_t get_n() const {
-      return features.size();  
-    }
-    int get_nclass() const { 
-      return nclass;
-    }
-  private:   
-    List model;
-    CharacterVector features;
-    CharacterVector class_var;  
-    List all_cpts;
-    std::vector<NumericVector> log_cpts;
-    int nclass;
-    IntegerVector get_class_index( ) ;
-};      
 IntegerVector Model::get_class_index() {  
   const CharacterVector & vars_model = this->all_cpts.names(); 
   IntegerVector index = match(class_var, vars_model );
