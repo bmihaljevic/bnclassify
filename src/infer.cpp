@@ -18,14 +18,17 @@ Rcpp::CharacterVector call_model_fun(const Rcpp::List& x, const std::string func
    return res;
 }    
 
+
+
+
 /**
- * Wraps a bnc fit model.  Holds copies of its CPTs.
- * Takes log of CPTs. 
+ * Wraps a bnc fit model.  Holds copies of its MappedCPTs.
+ * Takes log of MappedCPTs. 
  */
 Model::Model(List x)  { 
 // TODO: check model has basic bnc_fit properties. e.g., at least a class. 
 // TODO: no big checks; just calls back to R code; no need for re-implementing things. 
-// TODO: I should not hold a pointer to the underlying CPTs. Just the logged copies.  
+// TODO: I should not hold a pointer to the underlying MappedCPTs. Just the logged copies.  
   // makes a copy of cpts, and logs them 
   // gets list of features.
   // get the class name. 
@@ -55,10 +58,10 @@ Model::Model(List x)  {
   // take class cpt from log, not from original ones 
   // this-> class_cpt = log cpts [] 
 }             
-// needs not be a member function as it uses no members of CPT 
+// needs not be a member function as it uses no members of MappedCPT 
 // Get the DB indices of a family
 // maps the cpt inds to the columns of the data set 
-IntegerVector CPT::dims2columns(const NumericVector cpt, const CharacterVector class_var,  const CharacterVector columns_db) { 
+IntegerVector MappedCPT::dims2columns(const NumericVector cpt, const CharacterVector class_var,  const CharacterVector columns_db) { 
   const List & dimnames = cpt.attr("dimnames");
   const CharacterVector & fam = dimnames.attr("names"); 
   CharacterVector feature_fam = wrap(ordersetdiff(fam, class_var)); 
@@ -76,7 +79,7 @@ IntegerVector CPT::dims2columns(const NumericVector cpt, const CharacterVector c
 class MappedModel {
  const Model model;
   // no copies of the original cpts 
- std::vector<CPT> cpts;   
+ std::vector<MappedCPT> cpts;   
  // class cpt is the only unmapped one 
  NumericVector class_cpt;
 public:
@@ -85,18 +88,18 @@ public:
     cpts.reserve(n);  
     for (unsigned int i = 0; i < n; i++) {
       NumericVector cpt = x.get_cpt(i);
-      CPT c(cpt, model.getClassVar(), test);
+      MappedCPT c(cpt, model.getClassVar(), test);
       // cpts.push_back(std::move(c));
       cpts.push_back(c);
     }
     // // TODO: this must be better done!!! And must work with more cases, etc.
     // This will be copied and logged above; all must be logged. 
-    // But only features will go to  CPT; class stays as numeric vector.
-    // TODO:: This onw will not hold the class CPT; only original model will. 
+    // But only features will go to  MappedCPT; class stays as numeric vector.
+    // TODO:: This onw will not hold the class MappedCPT; only original model will. 
   //  This is just for evidence.
     this->class_cpt = x.get_cpt(n);
   }  
-  inline CPT& get_mapped_cpt(int i) {
+  inline MappedCPT& get_mapped_cpt(int i) {
     // TODO: change to []?
     return this->cpts.at(i);
   } 

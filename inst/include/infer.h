@@ -10,7 +10,7 @@
 //    Keep array dimnmes. 
 //    Make it a std::vector because it is faster access to than  Rcpp
 //    Copy and log 
-//        Making a vector of std::vector would solve all the later, but would lose the dimension data. Howvever, I could keep the dim data apart in the CPT.  
+//        Making a vector of std::vector would solve all the later, but would lose the dimension data. Howvever, I could keep the dim data apart in the MappedCPT.  
 //        Thus, I do not want gRbase code, as it works on Rcpp
 
 /**
@@ -44,9 +44,38 @@ class Model {
 }; 
 
 /**
+ * All CPT internal logics and rules here. 
+ * Users should not need to think of dimnames and similar, just of variables, features, etc.
+ * It hold the log of original CPT entries.
+ */
+class CPT {
+private:
+    std::vector<std::string> variables; 
+    std::vector<double> entries; 
+    std::vector<int> dimprod; 
+public: 
+  CPT(const Rcpp::NumericVector & cpt) { 
+    const Rcpp::List & dimnames = cpt.attr("dimnames");
+    const Rcpp::CharacterVector & fam = dimnames.attr("names"); 
+    this -> variables = Rcpp::as< std::vector<std::string> >(fam);
+  // CharacterVector feature_fam = wrap(ordersetdiff(fam, class_var)); 
+  // IntegerVector feature_fam_inds = match(feature_fam, columns_db);
+  // if (is_true(any(feature_fam_inds == 0)))  stop("All features must be in the dataset.");
+  // feature_fam_inds = feature_fam_inds - 1; 
+  // if (safediff(feature_fam_inds.size(), this->dim_prod.size() - 1)) stop("Wrong cpt size."); 
+  
+    entries.reserve(cpt.size());
+  // Copy entries 
+    std::copy(cpt.begin(), cpt.end(),   entries.begin()); 
+    float (*flog)(float) = &std::log;
+    std::transform(entries.begin(), entries.end(), entries.begin(), flog); 
+  }
+};
+
+/**
  *  Holds the data with evidence for inference. 
  *  Current implementation holds a copy of the underlying data and thus only a single instance should exist per call to predict (no copies). 
- *  If the data are factors, then the values returned will correspond to 1-based indices for the CPTs 
+ *  If the data are factors, then the values returned will correspond to 1-based indices for the MappedCPTs 
  */
 class Evidence {
   Rcpp::CharacterVector columns;
@@ -85,11 +114,11 @@ public:
 }; 
  
 /** 
- * EVdenceMappedCPT, which knows which CPT entry to return for a given instance.
+ * EVdenceMappedMappedCPT, which knows which MappedCPT entry to return for a given instance.
  * It actually returns nclass entries, one for each class. 
  * It assumes that a factor value i for n-th variable corresponds to i-1 th entry i n-th dimension
  */
-class CPT {
+class MappedCPT {
   // It was faster using c++ storage than Rcpp
   std::vector<int> dim_prod;
   std::vector<int> db_indices;
@@ -98,7 +127,7 @@ class CPT {
   Evidence & test;
   Rcpp::CharacterVector columns; 
 public: 
-  CPT(Rcpp::NumericVector cpt, const Rcpp::CharacterVector class_var,  Evidence & test) :
+  MappedCPT(Rcpp::NumericVector cpt, const Rcpp::CharacterVector class_var,  Evidence & test) :
                     test(test) {
     // Do I want this to make a copy? Its OK to make a copy because it is a lightweight object.
     this->cpt = Rcpp::as<std::vector <double> >(cpt); 
@@ -135,7 +164,7 @@ void get_entries(int row, std::vector<double> & cpt_entries) {
 }
  
 private:  
-  // matches the dims of the CPT to columns of the db 
+  // matches the dims of the MappedCPT to columns of the db 
   Rcpp::IntegerVector dims2columns(const Rcpp::NumericVector cpt, const Rcpp::CharacterVector class_var,  const Rcpp::CharacterVector columns_db);
 };
 

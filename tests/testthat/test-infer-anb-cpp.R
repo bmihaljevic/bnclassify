@@ -28,6 +28,11 @@ test_that("No features", {
   expect_equal(pt, pt2)
 })
 
+test_that("Make CPT", { 
+ tn <- nbcar()
+ make_cpt_object(tn$.params$buying) 
+})
+
 test_that("To check", {
   expect_true(FALSE)
 #   // TODO: class names for all cpts
