@@ -6,43 +6,6 @@
 #include <cmath> 
 #include <basic-misc.h>
 
-// TODO MODEL
-//    Keep array dimnmes. 
-//    Make it a std::vector because it is faster access to than  Rcpp
-//    Copy and log 
-//        Making a vector of std::vector would solve all the later, but would lose the dimension data. Howvever, I could keep the dim data apart in the MappedCPT.  
-//        Thus, I do not want gRbase code, as it works on Rcpp
-
-/**
- *  Encapsulates a TODO bnc? model. 
- */
-class Model { 
-  private:   
-    Rcpp::CharacterVector features;
-    Rcpp::CharacterVector class_var;  
-    std::vector<Rcpp::NumericVector> log_cpts;
-    int nclass;
-    Rcpp::IntegerVector get_class_index( ) ;
-  public:
-    Model(Rcpp::List model);    
-    const Rcpp::NumericVector & get_cpt(int i) const {
-      return this->log_cpts.at(i);
-    }
-    Rcpp::CharacterVector getFeatures() const {      
-      return this->features;
-    } 
-    Rcpp::CharacterVector getClassVar() const {      
-      return this->class_var;
-    }  
-    //n excludes the class    
-    std::size_t get_n() const {
-      return features.size();  
-    }
-    int get_nclass() const { 
-      return nclass;
-    } 
-}; 
-
 /**
  * All CPT internal logics and rules here. 
  * Users should not need to think of dimnames and similar, just of variables, features, etc.
@@ -71,6 +34,50 @@ public:
     std::transform(entries.begin(), entries.end(), entries.begin(), flog); 
   }
 };
+
+
+// Quaestions MODEL
+//    Keep array dimnmes. 
+//    Make it a std::vector because it is faster access to than  Rcpp
+//    Copy and log 
+//        Making a vector of std::vector would solve all the later, but would lose the dimension data. Howvever, I could keep the dim data apart in the MappedCPT.  
+//        Thus, I do not want gRbase code, as it works on Rcpp
+
+/**
+ *  Encapsulates a TODO bnc? model. 
+ */
+class Model { 
+  private:   
+    Rcpp::CharacterVector features;
+    Rcpp::CharacterVector class_var;  
+    std::vector<Rcpp::NumericVector> log_cpts;
+    std::vector<CPT> cpts;
+    int nclass = -1;
+    int ind_class = -1;
+    Rcpp::IntegerVector get_class_index( ) ;
+  public:
+    Model(Rcpp::List model);    
+    const Rcpp::NumericVector & get_cpt(int i) const {
+      return this->log_cpts.at(i);
+    }
+    Rcpp::CharacterVector getFeatures() const {      
+      return this->features;
+    } 
+    Rcpp::CharacterVector getClassVar() const {      
+      return this->class_var;
+    }   
+    const CPT & getClassCPT() const {
+      return this->cpts.at(ind_class);
+    }  
+    //n excludes the class    
+    std::size_t get_n() const {
+      return features.size();  
+    }
+    int get_nclass() const { 
+      return nclass;
+    } 
+}; 
+
 
 /**
  *  Holds the data with evidence for inference. 

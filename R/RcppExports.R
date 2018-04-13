@@ -21,6 +21,14 @@ normalize_ctgt <- function(ctgt) {
     .Call('_bnclassify_normalize_ctgt', PACKAGE = 'bnclassify', ctgt)
 }
 
+call_model_fun <- function(x, funct) {
+    .Call('_bnclassify_call_model_fun', PACKAGE = 'bnclassify', x, funct)
+}
+
+compute_joint <- function(x, newdata) {
+    .Call('_bnclassify_compute_joint', PACKAGE = 'bnclassify', x, newdata)
+}
+
 test_dims2columns <- function(cpt, class_var, columns_db) {
     .Call('_bnclassify_test_dims2columns', PACKAGE = 'bnclassify', cpt, class_var, columns_db)
 }
@@ -31,14 +39,6 @@ get_row <- function(x, df, cptind) {
 
 make_cpt_object <- function(x) {
     invisible(.Call('_bnclassify_make_cpt_object', PACKAGE = 'bnclassify', x))
-}
-
-call_model_fun <- function(x, funct) {
-    .Call('_bnclassify_call_model_fun', PACKAGE = 'bnclassify', x, funct)
-}
-
-compute_joint <- function(x, newdata) {
-    .Call('_bnclassify_compute_joint', PACKAGE = 'bnclassify', x, newdata)
 }
 
 table_cpp <- function(v) {

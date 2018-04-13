@@ -45,6 +45,7 @@ Model::Model(List x)  {
   Rcpp::List all_cpts = x[".params"];
   this->log_cpts = std::vector<NumericVector>(); 
   this->log_cpts.reserve(all_cpts.size());
+  this->cpts.reserve(all_cpts.size());
   for (int i = 0; i < all_cpts.size(); i++) {
     // a copy so that log does not modify original 
    const NumericVector & cpt = all_cpts.at(i);
@@ -52,6 +53,8 @@ Model::Model(List x)  {
    float (*flog)(float) = &std::log;
    std::transform(cloned.begin(), cloned.end(), cloned.begin(), flog);
    this->log_cpts.push_back(cloned);
+   
+   this->cpts.push_back(CPT(cpt));
   }        
   
   // get index of class in all cpts
@@ -72,7 +75,7 @@ IntegerVector MappedCPT::dims2columns(const NumericVector cpt, const CharacterVe
   return feature_fam_inds;
 }
 
-// Mapping of model to cpts
+// Mapping of model  cpts to evidence
 // check all features in data set. Well, I do not need class in data set.
 // this is done by each cpt check
 // make sure data levels and cpt levels match 
