@@ -19,13 +19,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // are_disjoint
-bool are_disjoint(Nullable<CharacterVector> x, Nullable<CharacterVector> y);
+bool are_disjoint(Rcpp::Nullable<Rcpp::CharacterVector> x, Rcpp::Nullable<Rcpp::CharacterVector> y);
 RcppExport SEXP _bnclassify_are_disjoint(SEXP xSEXP, SEXP ySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Nullable<CharacterVector> >::type x(xSEXP);
-    Rcpp::traits::input_parameter< Nullable<CharacterVector> >::type y(ySEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::CharacterVector> >::type x(xSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::CharacterVector> >::type y(ySEXP);
     rcpp_result_gen = Rcpp::wrap(are_disjoint(x, y));
     return rcpp_result_gen;
 END_RCPP

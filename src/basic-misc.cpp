@@ -1,16 +1,18 @@
-#include <Rcpp.h>
+#include <basic-misc.h>
 using namespace Rcpp;  
 
+
 // [[Rcpp::export]]
-bool are_disjoint(Nullable<CharacterVector> x, Nullable<CharacterVector> y) {
+bool are_disjoint(Rcpp::Nullable<Rcpp::CharacterVector> x, Rcpp::Nullable<Rcpp::CharacterVector> y) {
   if (x.isNotNull() & y.isNotNull()) {
     Rcpp::CharacterVector xx(x);
     Rcpp::CharacterVector yy(y);
-    LogicalVector init = in(xx, yy)  ;
+    Rcpp::LogicalVector init = in(xx, yy)  ;
     return  !is_true(any(init)); 
   }
   return true;
-}        
+}
+
 // Normalizes a vector or a segment. If division by the sum is Nan then returns a uniform distribution. 
 // Not checking the input for NAs for speed. Caller must do that. 
 void normalize(NumericVector::iterator begin, NumericVector::iterator end) {
@@ -27,7 +29,7 @@ void normalize(NumericVector::iterator begin, NumericVector::iterator end) {
       (*iter) = 1.0 / n.size();
     } 
   }
-}     
+}
 // [[Rcpp::export]]
 NumericVector normalize(NumericVector & x) {
   normalize(x.begin(), x.end());
@@ -60,7 +62,7 @@ NumericVector normalize_ctgt(NumericVector & ctgt) {
     stop("0 dimension of contigency table");
   } 
   return cpt; 
-}  
+}
 
 // Todo: ensure is is numeric; not integer, otherwise it won't be modified!!  
 /***R  
