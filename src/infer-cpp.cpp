@@ -1,5 +1,4 @@
 #include <infer.h>
-#include <basic-misc.h>
 
 // [[Rcpp::depends(RcppEigen)]]
 // [[Rcpp::plugins(cpp11)]]
@@ -64,10 +63,10 @@ class CPT {
   std::vector<int> db_indices;
   // NumericVector cpt; 
   std::vector<double> cpt;
-  Testdata & test;
+  Newdata & test;
   CharacterVector columns; 
 public: 
-  CPT(NumericVector cpt, const CharacterVector class_var,  Testdata & test) :
+  CPT(NumericVector cpt, const CharacterVector class_var,  Newdata & test) :
                     test(test) {
     // Do I want this to make a copy? Its OK to make a copy because it is a lightweight object.
     this->cpt = as<std::vector <double> >(cpt); 
@@ -157,7 +156,7 @@ class MappedModel {
  // class cpt is the only unmapped one 
  NumericVector class_cpt;
 public:
-  MappedModel(Model & x, Testdata & test): model(x) { 
+  MappedModel(Model & x, Newdata & test): model(x) { 
     const std::size_t n = x.get_n();
     cpts.reserve(n);  
     for (unsigned int i = 0; i < n; i++) {
@@ -181,7 +180,7 @@ public:
 // [[Rcpp::export]]
 NumericMatrix compute_joint(List x, DataFrame newdata) {  
  Model mod(x);
- Testdata test(newdata, mod.getFeatures());
+ Newdata test(newdata, mod.getFeatures());
  MappedModel model(mod, test);
  int N = test.getN();
  int n = mod.get_n();
@@ -220,7 +219,7 @@ NumericMatrix compute_joint(List x, DataFrame newdata) {
 //[[Rcpp::export]]
 NumericVector get_row(List x, DataFrame df, int cptind) { 
   Model mod(x);
-  Testdata ds(df, mod.getFeatures()); 
+  Newdata ds(df, mod.getFeatures()); 
   CPT c = CPT(mod.get_cpt(cptind), mod.getClassVar(), ds);
   std::vector<double> entries(mod.get_nclass());
   c.get_entries(1, entries);
