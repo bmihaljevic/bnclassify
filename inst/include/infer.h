@@ -6,6 +6,13 @@
 #include <cmath> 
 #include <basic-misc.h>
 
+// TODO MODEL
+//    Keep array dimnmes. 
+//    Make it a std::vector because it is faster access to than  Rcpp
+//    Copy and log 
+//        Making a vector of std::vector would solve all the later, but would lose the dimension data. Howvever, I could keep the dim data apart in the CPT.  
+//        Thus, I do not want gRbase code, as it works on Rcpp
+
 /**
  *  Encapsulates a TODO bnc? model. 
  */

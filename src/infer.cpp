@@ -6,6 +6,18 @@
 using namespace Rcpp;
 using Eigen::MatrixXd;     
 
+
+// [[Rcpp::export(rng=false)]]
+Rcpp::CharacterVector call_features(const Rcpp::List& x){ 
+   // Obtain environment containing function
+   Rcpp::Environment base("package:bnclassify");  
+   // Make function callable from C++
+   Rcpp::Function features = base["features"];     
+   // Call the function and receive its list output
+   Rcpp::CharacterVector res = features(Rcpp::_["x"] = x);  
+   return res;
+}
+
 IntegerVector Model::get_class_index() {  
   const CharacterVector & vars_model = this->all_cpts.names(); 
   IntegerVector index = match(class_var, vars_model );
@@ -53,7 +65,10 @@ Model::Model(List x): model(x) {
   index = setdiff(allinds, index) - 1;
   const List & feature_cpts = all_cpts[index];
   // I could get it in c++ and pass it to std::vector instead 
-  this->features = feature_cpts.names();   
+  this->features = feature_cpts.names();    
+  
+  // this->features  = call_features(x);
+  
   IntegerVector class_index = get_class_index() ; 
   allinds =  seq_along(this->all_cpts);
   IntegerVector features_index = setdiff(allinds, class_index) - 1; 
@@ -149,27 +164,12 @@ NumericMatrix compute_joint(List x, DataFrame newdata) {
 
 /*** R   
 kr <- foreign::read.arff('~/gd/phd/code/works-aug-semi-bayes/data/original/kr-vs-kp.arff')
-devtools::load_all()
+library(bnclassify)
+# devtools::load_all(".")
 dbor <- kr
 t <- lp(nb('class', dbor), dbor, smooth = 1) 
-t$.params$bkblk  
 
-outp <- compute_joint(t, dbor)  
-head(outp)
-old <- bnclassify:::compute_anb_log_joint_per_class(t, dbor)
-head(old)
-stopifnot(all.equal(old, outp))  
-wrapped <- bnclassify:::compute_log_joint(t, dbor)
-head(wrapped)
-stopifnot(all.equal(wrapped, outp))  
-  
-f <- features(t)
-cpt <- t$.params$bkblk
-cvar <- class_var(t)       
-
-microbenchmark::microbenchmark( { f = compute_joint(t, dbor)},
-                                  { h  = compute_log_joint(t, dbor)},
-                                { g = bnclassify:::compute_anb_log_joint_per_class(t, dbor)} ,
-                                times = 1e3 )    
+tinfer_consistent(t, dbor) 
+tinfer_benchmark(t, dbor)
 */
 

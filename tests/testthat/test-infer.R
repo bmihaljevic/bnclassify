@@ -1,5 +1,25 @@
 context("inference")
 
+tinfer_consistent <- function(t, dbor) {
+  outp <- compute_joint(t, dbor)  
+  old <- bnclassify:::compute_anb_log_joint_per_class(t, dbor)
+  stopifnot(all.equal(old, outp))  
+  wrapped <- bnclassify:::compute_log_joint(t, dbor)
+  stopifnot(all.equal(wrapped, outp))   
+} 
+tinfer_benchmark <- function(t, dbor) {
+  f <- features(t)
+  cpt <- t$.params$bkblk
+  cvar <- class_var(t)       
+  
+  # 1.152770
+  # 1029.943 
+  microbenchmark::microbenchmark( { f = compute_joint(t, dbor)},
+                                    { h  = compute_log_joint(t, dbor)},
+                                  { g = bnclassify:::compute_anb_log_joint_per_class(t, dbor)} ,
+                                  times = 1e3 )    
+}  
+
 check_cp <- function(x, nrow, colnames) {
   expect_true(is.numeric(x))
   expect_equal(dimnames(x), list(NULL, colnames))
@@ -111,3 +131,5 @@ test_that("Nominal log-likelihood 7 vars", {
   ll <- compute_ll(nb, car)
   expect_equal(ll, -13503.69, tolerance = 1e-6)
 })
+
+
