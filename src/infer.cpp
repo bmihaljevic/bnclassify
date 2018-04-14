@@ -6,6 +6,12 @@
 using namespace Rcpp;
 using Eigen::MatrixXd;      
 
+// Debug stuff
+void printv(std::vector<double> v) { 
+ Rcpp::NumericVector nv = Rcpp::wrap(v);
+ Rcpp::Rcout << nv << "." << std::endl; 
+}
+
 // A function with the bnc model ( a list) as only parameter and CharacterVector output
 // [[Rcpp::export(rng=false)]]
 Rcpp::CharacterVector call_model_fun(const Rcpp::List& x, const std::string funct) { 
@@ -18,27 +24,31 @@ Rcpp::CharacterVector call_model_fun(const Rcpp::List& x, const std::string func
    return res;
 }    
 
-
-
+// TODO: probably remove this and use some code in R
+// TODO: or this should just do search but know nothing about classes and such
+int get_class_index(const CharacterVector & class_var, const List & cpts) { 
+  const CharacterVector & vars_model = cpts.names(); 
+  IntegerVector index = match(class_var, vars_model );
+  if (index.size() != 1) stop("Class CPT missing.");
+  return as<int> (index) ;
+}      
 
 /**
  * Wraps a bnc fit model.  Holds copies of its MappedCPTs.
  * Takes log of MappedCPTs. 
  */
 Model::Model(List x)  { 
-// TODO: check model has basic bnc_fit properties. e.g., at least a class. 
-// TODO: no big checks; just calls back to R code; no need for re-implementing things. 
+// Maybe just check this is a bnc_fit. All other logic kept in already available checks. just calls back to R code; no need for re-implementing things. 
 // TODO: I should not hold a pointer to the underlying MappedCPTs. Just the logged copies.  
-  // makes a copy of cpts, and logs them 
+  // makes a copy of cpts
+  // Log after the copies. The class should point to that copy and never have access to original.
   // gets list of features.
   // get the class name. 
-  // could simply achieve this by calling back to R. This is done just once.  
-  // Log after the copies. The class should point to that copy and never have access to original.
   
   // TODO: call class()
   this->class_var = x[".class"];
   this->features  = call_model_fun(x, "features");
-  CharacterVector classes = call_model_fun(x, "classes");
+  this->classes = call_model_fun(x, "classes");
   this->nclass = classes.size();
   
   // TODO: call function. params()
@@ -60,6 +70,9 @@ Model::Model(List x)  {
   // get index of class in all cpts
   // take class cpt from log, not from original ones 
   // this-> class_cpt = log cpts [] 
+  this->ind_class = get_class_index(class_var, all_cpts);
+  // The above is a 1-based index. Fix it.  
+  this->ind_class = this->ind_class  - 1;
 }             
 // needs not be a member function as it uses no members of MappedCPT 
 // Get the DB indices of a family
@@ -121,8 +134,9 @@ NumericMatrix compute_joint(List x, DataFrame newdata) {
  int nclass = mod.get_nclass();
  // NumericMatrix output(N, nclass);
  MatrixXd output(N, nclass);
- NumericVector & class_cpt = model.get_class_cpt();
- // TODO: class cpt should be a std::vector.
+ // NumericVector & class_cpt = model.get_class_cpt();
+ // TODO: class cpt should be a std::vector. 
+ const std::vector<double> & class_cpt = mod.getClassCPT().get_entries();
  std::vector<int> instance(n);
  std::vector<double> per_class_cpt_entries(nclass);
  for (int instance_ind = 0; instance_ind  < N ; instance_ind++) {
@@ -139,7 +153,7 @@ NumericMatrix compute_joint(List x, DataFrame newdata) {
      } // features
  } // instances
  NumericMatrix result = wrap(output);
- CharacterVector classes = class_cpt.names();
+ const CharacterVector classes = mod.get_classes(); 
  colnames(result) = classes;
  return result;  
 }  

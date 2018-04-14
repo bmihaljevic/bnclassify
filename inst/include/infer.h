@@ -6,6 +6,10 @@
 #include <cmath> 
 #include <basic-misc.h>
 
+// Debug stuff
+void printv(std::vector<double> v); 
+
+
 /**
  * All CPT internal logics and rules here. 
  * Users should not need to think of dimnames and similar, just of variables, features, etc.
@@ -20,19 +24,23 @@ public:
   CPT(const Rcpp::NumericVector & cpt) { 
     const Rcpp::List & dimnames = cpt.attr("dimnames");
     const Rcpp::CharacterVector & fam = dimnames.attr("names"); 
-    this -> variables = Rcpp::as< std::vector<std::string> >(fam);
-  // CharacterVector feature_fam = wrap(ordersetdiff(fam, class_var)); 
-  // IntegerVector feature_fam_inds = match(feature_fam, columns_db);
-  // if (is_true(any(feature_fam_inds == 0)))  stop("All features must be in the dataset.");
-  // feature_fam_inds = feature_fam_inds - 1; 
-  // if (safediff(feature_fam_inds.size(), this->dim_prod.size() - 1)) stop("Wrong cpt size."); 
+    this -> variables = Rcpp::as< std::vector<std::string> >(fam); 
   
-    entries.reserve(cpt.size());
-  // Copy entries 
-    std::copy(cpt.begin(), cpt.end(),   entries.begin()); 
+    // Copy and log entries 
+    entries.resize(cpt.size());
+    std::copy(cpt.begin(), cpt.end(),   entries.begin());    
     float (*flog)(float) = &std::log;
-    std::transform(entries.begin(), entries.end(), entries.begin(), flog); 
+    std::transform(entries.begin(), entries.end(), entries.begin(), flog);  
   }
+  
+  const std::vector<double> & get_entries() const {
+    return  entries; 
+  }
+  
+  const std::vector<std::string> & get_variables() const { 
+    return variables; 
+  } 
+  
 };
 
 
@@ -50,21 +58,25 @@ class Model {
   private:   
     Rcpp::CharacterVector features;
     Rcpp::CharacterVector class_var;  
+    Rcpp::CharacterVector classes;  
     std::vector<Rcpp::NumericVector> log_cpts;
     std::vector<CPT> cpts;
     int nclass = -1;
     int ind_class = -1;
-    Rcpp::IntegerVector get_class_index( ) ;
   public:
     Model(Rcpp::List model);    
     const Rcpp::NumericVector & get_cpt(int i) const {
       return this->log_cpts.at(i);
     }
+    // TODO: const return and reference! 
     Rcpp::CharacterVector getFeatures() const {      
       return this->features;
     } 
     Rcpp::CharacterVector getClassVar() const {      
       return this->class_var;
+    }    
+    const Rcpp::CharacterVector & get_classes() const {      
+      return this->classes;
     }   
     const CPT & getClassCPT() const {
       return this->cpts.at(ind_class);

@@ -29,6 +29,8 @@ NumericVector get_row(List x, DataFrame df, int cptind) {
 //[[Rcpp::export]]
 void make_cpt_object(const NumericVector & x) {
  CPT cpt(x); 
+ NumericVector nv = wrap(cpt.get_entries());
+ Rcout << nv << std::endl; 
 }
 
 
