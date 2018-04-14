@@ -92,12 +92,12 @@ IntegerVector MappedCPT::dims2columns(const NumericVector cpt, const CharacterVe
 // check all features in data set. Well, I do not need class in data set.
 // this is done by each cpt check
 // make sure data levels and cpt levels match 
+// Only features mapped, not class.
 class MappedModel {
  const Model model;
   // no copies of the original cpts 
  std::vector<MappedCPT> cpts;   
- // class cpt is the only unmapped one 
- NumericVector class_cpt;
+ 
 public:
   MappedModel(Model & x, Evidence & test): model(x) { 
     const std::size_t n = x.get_n();
@@ -105,23 +105,14 @@ public:
     for (unsigned int i = 0; i < n; i++) {
       NumericVector cpt = x.get_cpt(i);
       MappedCPT c(cpt, model.getClassVar(), test);
-      // cpts.push_back(std::move(c));
+      // With C++11 this moves, does not copy
       cpts.push_back(c);
-    }
-    // // TODO: this must be better done!!! And must work with more cases, etc.
-    // This will be copied and logged above; all must be logged. 
-    // But only features will go to  MappedCPT; class stays as numeric vector.
-    // TODO:: This onw will not hold the class MappedCPT; only original model will. 
-  //  This is just for evidence.
-    this->class_cpt = x.get_cpt(n);
+    }  
   }  
   inline MappedCPT& get_mapped_cpt(int i) {
     // TODO: change to []?
     return this->cpts.at(i);
-  } 
-  inline NumericVector& get_class_cpt() {
-    return this->class_cpt;
-  }
+  }  
 };     
 
 // [[Rcpp::export(rng=false)]]
