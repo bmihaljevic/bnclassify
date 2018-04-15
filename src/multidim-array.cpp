@@ -18,7 +18,7 @@ using namespace Rcpp;
   * It returns the index for fully specified entries.
   * TODO: the end is completely unused.
   */
-inline int entry_index(std::vector<int>::const_iterator begin, const std::vector<int> & dim_prod) {
+int entry_index(std::vector<int>::const_iterator begin, const std::vector<int> & dim_prod) {
   // TODO: inddices and dim prod same length. length > 0. entries positive (1-based indices.) 
 // TODO: faster with iterators? Try a second version of the function.
 // use variable as compiler does not cache the size 
