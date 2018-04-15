@@ -6,18 +6,6 @@
 
 using namespace Rcpp;
 
-// entry_index
-int entry_index(const std::vector<int>& indices, const std::vector<int>& dim_prod);
-RcppExport SEXP _bnclassify_entry_index(SEXP indicesSEXP, SEXP dim_prodSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const std::vector<int>& >::type indices(indicesSEXP);
-    Rcpp::traits::input_parameter< const std::vector<int>& >::type dim_prod(dim_prodSEXP);
-    rcpp_result_gen = Rcpp::wrap(entry_index(indices, dim_prod));
-    return rcpp_result_gen;
-END_RCPP
-}
 // match_zero_based
 std::vector<int> match_zero_based(const std::vector<std::string>& features, const CharacterVector& columns_db);
 RcppExport SEXP _bnclassify_match_zero_based(SEXP featuresSEXP, SEXP columns_dbSEXP) {
@@ -162,6 +150,18 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// entry_index
+int entry_index(const std::vector<int>& indices, const std::vector<int>& dim_prod);
+RcppExport SEXP _bnclassify_entry_index(SEXP indicesSEXP, SEXP dim_prodSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::vector<int>& >::type indices(indicesSEXP);
+    Rcpp::traits::input_parameter< const std::vector<int>& >::type dim_prod(dim_prodSEXP);
+    rcpp_result_gen = Rcpp::wrap(entry_index(indices, dim_prod));
+    return rcpp_result_gen;
+END_RCPP
+}
 // table_cpp
 Rcpp::IntegerVector table_cpp(const Rcpp::IntegerVector& v);
 RcppExport SEXP _bnclassify_table_cpp(SEXP vSEXP) {
@@ -186,7 +186,6 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_bnclassify_entry_index", (DL_FUNC) &_bnclassify_entry_index, 2},
     {"_bnclassify_match_zero_based", (DL_FUNC) &_bnclassify_match_zero_based, 2},
     {"_bnclassify_ordersetdiff", (DL_FUNC) &_bnclassify_ordersetdiff, 2},
     {"_bnclassify_hasna", (DL_FUNC) &_bnclassify_hasna, 1},
@@ -199,6 +198,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bnclassify_get_row", (DL_FUNC) &_bnclassify_get_row, 3},
     {"_bnclassify_fill_vector", (DL_FUNC) &_bnclassify_fill_vector, 6},
     {"_bnclassify_make_cpt_object", (DL_FUNC) &_bnclassify_make_cpt_object, 2},
+    {"_bnclassify_entry_index", (DL_FUNC) &_bnclassify_entry_index, 2},
     {"_bnclassify_table_cpp", (DL_FUNC) &_bnclassify_table_cpp, 1},
     {"_bnclassify_unidim_values", (DL_FUNC) &_bnclassify_unidim_values, 1},
     {NULL, NULL, 0}

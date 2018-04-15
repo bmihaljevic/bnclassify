@@ -80,7 +80,6 @@ NumericMatrix compute_joint(List x, DataFrame newdata) {
  int nclass = mod.get_nclass();
  MatrixXd output(N, nclass); 
  const std::vector<double> & class_cpt = mod.getClassCPT().get_entries();
- std::vector<int> instance(n);
  std::vector<double> per_class_cpt_entries(nclass);
  std::vector<int> instance_cpt_inds(n);
  for (int instance_ind = 0; instance_ind  < N ; instance_ind++) {
@@ -92,7 +91,7 @@ NumericMatrix compute_joint(List x, DataFrame newdata) {
      for (int j = 0; j < n; j++) { 
        // Get CPT indices from the instance: 
         std::vector<int>::iterator cpt_inds_end = model.get_mapped_cpt(j).fill_instance_indices(instance_ind, instance_cpt_inds.begin());
-       // get_entries(instance_ind, per_class_cpt_entries);
+        model.get_mapped_cpt(j).get_entries(instance_cpt_inds.begin(), cpt_inds_end, per_class_cpt_entries);
         for (int theta_ind = 0; theta_ind < nclass; theta_ind++) {
              output(instance_ind, theta_ind) += per_class_cpt_entries[theta_ind];
         }

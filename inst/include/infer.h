@@ -187,7 +187,18 @@ public:
      output_begin++; 
    } 
    return output_begin;
-  }  
+  }    
+  // get all classes entries, passing the index of the row
+  // TODO: this should be implemented in CPT. Not here.
+  void get_entries(std::vector<int>::iterator begin, std::vector<int>::iterator end, std::vector<double> & output) {
+    int sum = entry_index(begin, end, this->cpt.get_dimprod());  
+   // // Add an entry per each class
+   int per_class_entries   = this->cpt.get_dimprod().at(this->cpt.get_dimprod().size() - 2);
+   int ncpts = this->cpt.get_entries().size();
+   for (int i = 0; i < ncpts ; i++ ) {
+     output[i] =  this->cpt.get_entries().at(sum + i * per_class_entries );
+   }
+  }
 };  
 
 // Mapping of model  cpts to evidence
@@ -198,8 +209,7 @@ public:
 class MappedModel {
  const Model model;
   // no copies of the original cpts 
- std::vector<MappedCPT> cpts;   
- 
+ std::vector<MappedCPT> cpts;    
 public:
   MappedModel(Model & x, Evidence & test): model(x) { 
     const std::size_t n = x.get_n();

@@ -30,7 +30,7 @@ NumericVector get_row(List x, DataFrame df, int cptind) {
 NumericVector fill_vector(int size, int row, NumericVector rcpt, DataFrame df, CharacterVector features, std::string class_var) { 
   CPT cpt(rcpt, class_var);
   Evidence evidence(df, features);
-  MappedCPT2  m(cpt, evidence);
+  MappedCPT  m(cpt, evidence);
   std::vector<int> output(size);
   std::vector<int>::iterator end = m.fill_instance_indices(row, output.begin());
   NumericVector  nv(size);
