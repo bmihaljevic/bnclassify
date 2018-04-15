@@ -73,48 +73,9 @@ Model::Model(List x)  {
   this->ind_class = get_class_index(class_var, all_cpts);
   // The above is a 1-based index. Fix it.  
   this->ind_class = this->ind_class  - 1;
-}             
-// needs not be a member function as it uses no members of MappedCPT 
-// Get the DB indices of a family
-// maps the cpt inds to the columns of the data set 
-IntegerVector MappedCPT::dims2columns(const NumericVector cpt, const CharacterVector class_var,  const CharacterVector columns_db) { 
-  const List & dimnames = cpt.attr("dimnames");
-  const CharacterVector & fam = dimnames.attr("names"); 
-  CharacterVector feature_fam = wrap(ordersetdiff(fam, class_var)); 
-  IntegerVector feature_fam_inds = match(feature_fam, columns_db);
-  if (is_true(any(feature_fam_inds == 0)))  stop("All features must be in the dataset.");
-  feature_fam_inds = feature_fam_inds - 1; 
-  // TODO:: only temporarily commented:
-  // if (safediff(feature_fam_inds.size(), this->dim_prod.size() - 1)) stop("Wrong cpt size.");
-  return feature_fam_inds;
-} 
+}              
 
-// Mapping of model  cpts to evidence
-// check all features in data set. Well, I do not need class in data set.
-// this is done by each cpt check
-// make sure data levels and cpt levels match 
-// Only features mapped, not class.
-class MappedModel {
- const Model model;
-  // no copies of the original cpts 
- std::vector<MappedCPT> cpts;   
- 
-public:
-  MappedModel(Model & x, Evidence & test): model(x) { 
-    const std::size_t n = x.get_n();
-    cpts.reserve(n);  
-    for (unsigned int i = 0; i < n; i++) {
-      // NumericVector cpt = x.get_cpt(i).get_entries();
-      // MappedCPT c(cpt, model.getClassVar(), test);
-      // With C++11 this moves, does not copy
-      // cpts.push_back(c);
-    }  
-  }  
-  inline MappedCPT& get_mapped_cpt(int i) {
-    // TODO: change to []?
-    return this->cpts.at(i);
-  }  
-};     
+
 
 // [[Rcpp::export(rng=false)]]
 NumericMatrix compute_joint(List x, DataFrame newdata) {  

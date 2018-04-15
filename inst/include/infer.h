@@ -156,7 +156,10 @@ public:
   }
 }; 
 
-class MappedCPT2 {
+/**
+ * A proxy to the CPT, obtaining the CPT indices corresponding to a data instance.
+ */
+class MappedCPT {
   // It was faster using c++ storage than Rcpp
   // Are the indices 1-based or one based?  I think 0 based because they are in Rcpp.
   std::vector<int> db_indices;
@@ -164,20 +167,18 @@ class MappedCPT2 {
   // A reference to a unique instance of Evidence
   const Evidence & test;
 public: 
-  MappedCPT2(const CPT & cpt, const Evidence & test) :
+  MappedCPT(const CPT & cpt, const Evidence & test) :
                     test(test), cpt(cpt) 
   {  
     Rcpp::CharacterVector columns_db = test.getColumns();
     // Comment: this is because class in unobserved. if we have more unobserved, it would need a different procedure.
     this->db_indices = match_zero_based(cpt.get_features(), columns_db); 
- }    
-  
+  } 
   /**
    * Fills in the instance's entries into the sequence. Returns iterator to one after last added.
    * The number of elements added is that of the dimensions of the CPT. It adds them into the output sequence whose start is begin.
    */
   std::vector<int>::iterator fill_instance_indices(int row, std::vector<int>::iterator output_begin) {
-   int cpt_index = test.get(db_indices.at(0), row);
     // could store ndb_inds as member. But maybe not much speed up. 
    int ndb_inds = db_indices.size();
    for (int k = 0; k < ndb_inds ; k++) {
@@ -186,55 +187,32 @@ public:
    } 
    return output_begin;
   }  
-};
+};  
+
+// Mapping of model  cpts to evidence
+// check all features in data set. Well, I do not need class in data set.
+// this is done by each cpt check
+// make sure data levels and cpt levels match 
+// Only features mapped, not class.
+class MappedModel {
+ const Model model;
+  // no copies of the original cpts 
+ std::vector<MappedCPT> cpts;   
  
-/** 
- * EVdenceMappedMappedCPT, which knows which MappedCPT entry to return for a given instance.
- * It actually returns nclass entries, one for each class. 
- * It assumes that a factor value i for n-th variable corresponds to i-1 th entry i n-th dimension
- */
-class MappedCPT {
-  // It was faster using c++ storage than Rcpp
-  std::vector<int> db_indices;
-  std::vector<double> cpt;
-  // A reference to a unique instance of Evidence
-  Evidence & test;
-  Rcpp::CharacterVector columns; 
-public: 
-  MappedCPT(Rcpp::NumericVector cpt, const Rcpp::CharacterVector class_var,  Evidence & test) :
-                    test(test) {
-    // Do I want this to make a copy? Its OK to make a copy because it is a lightweight object.
-    this->cpt = Rcpp::as<std::vector <double> >(cpt); 
-    
-    Rcpp::CharacterVector columns_db = test.getColumns();
-    Rcpp::IntegerVector dim_inds = dims2columns(cpt, class_var, columns_db);
-    this->db_indices = Rcpp::as<std::vector <int> >(dim_inds ); 
-    const Rcpp::List & dimnames = cpt.attr("dimnames");
-    columns  = dimnames.attr("names"); 
- }    
-  
-// get all classes entries, passing the index of the row 
-void get_entries(int row, std::vector<double> & cpt_entries) {
- // int cpt_index = test.get(db_indices.at(0), row);
- // int sum = cpt_index - 1;
- // int ndb_inds = db_indices.size();
- // for (int k = 1; k < ndb_inds ; k++) {
- //   cpt_index = test.get(db_indices.at(k), row);
- //   cpt_index -= 1;  // delete
- //   sum += cpt_index * this->dim_prod.at(k  - 1);
- // }
- // // // Add an entry per each class 
- // int per_class_entries   = this->dim_prod.at(this->dim_prod.size() - 2); 
- // int ncpts = cpt_entries.size();
- // for (int i = 0; i < ncpts ; i++ ) {
- //   cpt_entries[i] =  this->cpt.at(sum + i * per_class_entries );
- //   // cpt_entries[i] = this->cpt[sum];
- // }   
-}
- 
-private:  
-  // matches the dims of the MappedCPT to columns of the db 
-  Rcpp::IntegerVector dims2columns(const Rcpp::NumericVector cpt, const Rcpp::CharacterVector class_var,  const Rcpp::CharacterVector columns_db);
-};
+public:
+  MappedModel(Model & x, Evidence & test): model(x) { 
+    const std::size_t n = x.get_n();
+    cpts.reserve(n);  
+    for (unsigned int i = 0; i < n; i++) {
+      MappedCPT c(x.get_cpt(i), test);
+      // With C++11 this moves, does not copy
+      cpts.push_back(c);
+    }  
+  }  
+  inline MappedCPT& get_mapped_cpt(int i) {
+    // TODO: change to []?
+    return this->cpts.at(i);
+  }  
+};     
 
 #endif
