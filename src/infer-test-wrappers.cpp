@@ -33,7 +33,7 @@ NumericVector fill_vector(int size, int row, NumericVector rcpt, DataFrame df, C
   MappedCPT  m(cpt, evidence);
   std::vector<int> output(size);
   std::vector<int>::iterator end = m.fill_instance_indices(row, output.begin());
-  NumericVector  nv(size);
+  NumericVector  nv(std::distance(output.begin(), end));
   std::copy(output.begin(), end, nv.begin());
   return nv;
 } 
@@ -72,6 +72,7 @@ void make_cpt_object(const NumericVector & x, std::string class_var) {
 
 sapply(t$.params, length)
 source('tests/infer-test-init.R')
-fill_vector(4, 22, t$.params$katri, dbor, features(t), class_var(t))
+fill_vector(4, 99, t$.params$katri, dbor, features(t), class_var(t))
+fill_vector(4, 409, t$.params[[3]], dbor, features(t), class_var(t))
 */
 
