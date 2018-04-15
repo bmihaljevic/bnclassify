@@ -31,6 +31,7 @@ test_that("No features", {
 test_that("Make CPT", { 
  tn <- nbcar()
  make_cpt_object(tn$.params$buying) 
+ # todo: need to somehow test this
 })
 
 test_that("To check", {

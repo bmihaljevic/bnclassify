@@ -103,10 +103,10 @@ public:
     const std::size_t n = x.get_n();
     cpts.reserve(n);  
     for (unsigned int i = 0; i < n; i++) {
-      NumericVector cpt = x.get_cpt(i);
-      MappedCPT c(cpt, model.getClassVar(), test);
+      // NumericVector cpt = x.get_cpt(i).get_entries();
+      // MappedCPT c(cpt, model.getClassVar(), test);
       // With C++11 this moves, does not copy
-      cpts.push_back(c);
+      // cpts.push_back(c);
     }  
   }  
   inline MappedCPT& get_mapped_cpt(int i) {

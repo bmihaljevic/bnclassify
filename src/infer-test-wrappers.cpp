@@ -17,12 +17,13 @@ IntegerVector test_dims2columns(const NumericVector cpt, const CharacterVector c
 // Delete?
 //[[Rcpp::export]]
 NumericVector get_row(List x, DataFrame df, int cptind) { 
-  Model mod(x);
-  Evidence ds(df, mod.getFeatures()); 
-  MappedCPT c = MappedCPT(mod.get_cpt(cptind), mod.getClassVar(), ds);
-  std::vector<double> entries(mod.get_nclass());
-  c.get_entries(1, entries);
-  return wrap(entries);
+  // Model mod(x);
+  // Evidence ds(df, mod.getFeatures()); 
+  // MappedCPT c = MappedCPT(mod.get_cpt(cptind), mod.getClassVar(), ds);
+  // std::vector<double> entries(mod.get_nclass());
+  // c.get_entries(1, entries);
+  // return wrap(entries);
+  return NumericVector::create(1);
 }   
 
 
@@ -31,6 +32,9 @@ void make_cpt_object(const NumericVector & x) {
  CPT cpt(x); 
  NumericVector nv = wrap(cpt.get_entries());
  Rcout << nv << std::endl; 
+ 
+ IntegerVector iv = wrap(cpt.get_dimprod());
+ Rcout << iv << std::endl; 
 }
 
 

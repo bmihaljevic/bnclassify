@@ -6,7 +6,7 @@
 #include <cmath> 
 #include <basic-misc.h>
 
-// Debug stuff
+// Debug stuff. TODO: remove.
 void printv(std::vector<double> v); 
 
 
@@ -24,13 +24,19 @@ public:
   CPT(const Rcpp::NumericVector & cpt) { 
     const Rcpp::List & dimnames = cpt.attr("dimnames");
     const Rcpp::CharacterVector & fam = dimnames.attr("names"); 
-    this -> variables = Rcpp::as< std::vector<std::string> >(fam); 
+    this -> variables = Rcpp::as< std::vector<std::string> >(fam);  
+    // TODO: check class is the last dimension of the cpt? 
+    // TODO: have the class here? Or only in model?
   
     // Copy and log entries 
     entries.resize(cpt.size());
     std::copy(cpt.begin(), cpt.end(),   entries.begin());    
     float (*flog)(float) = &std::log;
     std::transform(entries.begin(), entries.end(), entries.begin(), flog);  
+    
+    const Rcpp::IntegerVector & dim = cpt.attr("dim");
+    Rcpp::IntegerVector dimprod = Rcpp::cumprod(dim); 
+    this->dimprod = Rcpp::as<std::vector <int> >(dimprod);
   }
   
   const std::vector<double> & get_entries() const {
@@ -39,6 +45,10 @@ public:
   
   const std::vector<std::string> & get_variables() const { 
     return variables; 
+  } 
+  
+  const std::vector<int> & get_dimprod() const { 
+    return dimprod; 
   } 
   
 };
@@ -65,8 +75,8 @@ class Model {
     int ind_class = -1;
   public:
     Model(Rcpp::List model);    
-    const Rcpp::NumericVector & get_cpt(int i) const {
-      return this->log_cpts.at(i);
+    const CPT & get_cpt(int i) const {
+      return this->cpts.at(i);
     }
     // TODO: const return and reference! 
     Rcpp::CharacterVector getFeatures() const {      
@@ -116,6 +126,7 @@ public:
      // TODO:  Check all are factors?
      // I could also reduce all entries - 1 and make a transpose, that is, a matrix that goes by instance and then iterate that way.
      // If I go to integer, I ought to store the levels of the cpts somewhere.
+     // I could also try using an Eigen row matrix to see if access is faster.
      const Rcpp::CharacterVector & vec = test.names();
      if (!is_true(all(in(features, vec)))) {
        Rcpp::stop("Some features missing from data set.");
@@ -139,7 +150,6 @@ public:
  */
 class MappedCPT {
   // It was faster using c++ storage than Rcpp
-  std::vector<int> dim_prod;
   std::vector<int> db_indices;
   std::vector<double> cpt;
   // A reference to a unique instance of Evidence
@@ -150,12 +160,7 @@ public:
                     test(test) {
     // Do I want this to make a copy? Its OK to make a copy because it is a lightweight object.
     this->cpt = Rcpp::as<std::vector <double> >(cpt); 
-    // check class is the last dimension of the cpt? 
-    // TODO: this could also be the class cpt!!! remember that. No, I do not need to do this for class cpt. Class is a special cpt.
-    const Rcpp::IntegerVector & dim = cpt.attr("dim");
-    Rcpp::IntegerVector dim_prods = Rcpp::cumprod(dim);
-    // note: i am using the local test here. it might do something non const to the object 
-    this->dim_prod = Rcpp::as<std::vector <int> >(dim_prods);
+    
     Rcpp::CharacterVector columns_db = test.getColumns();
     Rcpp::IntegerVector dim_inds = dims2columns(cpt, class_var, columns_db);
     this->db_indices = Rcpp::as<std::vector <int> >(dim_inds ); 
