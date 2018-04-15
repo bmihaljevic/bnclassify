@@ -71,7 +71,7 @@ Model::Model(List x)  {
 }                
 
 // [[Rcpp::export(rng=false)]]
-NumericMatrix compute_joint(List x, DataFrame newdata) {  
+NumericMatrix compute_joint(List x, DataFrame newdata) {
  Model mod(x);
  Evidence test(newdata, mod.getFeatures());
  MappedModel model(mod, test);

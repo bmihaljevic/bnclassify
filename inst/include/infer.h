@@ -5,6 +5,7 @@
 #include <RcppEigen.h>
 #include <cmath> 
 #include <basic-misc.h>
+#include <multidim-array.h>
 
 // Debug stuff. TODO: remove.
 void printv(std::vector<double> v); 
