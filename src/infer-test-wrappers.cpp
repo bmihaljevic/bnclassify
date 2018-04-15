@@ -26,10 +26,21 @@ NumericVector get_row(List x, DataFrame df, int cptind) {
   return NumericVector::create(1);
 }   
 
+//[[Rcpp::export]]
+NumericVector fill_vector(int size, int row, NumericVector rcpt, DataFrame df, CharacterVector features, std::string class_var) { 
+  CPT cpt(rcpt, class_var);
+  Evidence evidence(df, features);
+  MappedCPT2  m(cpt, evidence);
+  std::vector<int> output(size);
+  std::vector<int>::iterator end = m.fill_instance_indices(row, output.begin());
+  NumericVector  nv(size);
+  std::copy(output.begin(), end, nv.begin());
+  return nv;
+} 
 
 //[[Rcpp::export]]
-void make_cpt_object(const NumericVector & x) {
- CPT cpt(x); 
+void make_cpt_object(const NumericVector & x, std::string class_var) { 
+ CPT cpt(x, class_var); 
  NumericVector nv = wrap(cpt.get_entries());
  Rcout << nv << std::endl; 
  
@@ -58,5 +69,9 @@ void make_cpt_object(const NumericVector & x) {
 # microbenchmark::microbenchmark( { f = compute_joint(t, dbor)},
 #                                   { h  = simple_wrap(t, dbor)},
 #                                 times = 1e3 )
+
+sapply(t$.params, length)
+source('tests/infer-test-init.R')
+fill_vector(4, 22, t$.params$katri, dbor, features(t), class_var(t))
 */
 

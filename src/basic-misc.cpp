@@ -1,6 +1,23 @@
 #include <basic-misc.h>
 using namespace Rcpp;  
 
+/**
+ * Maps the features to columns in the data frame.
+ * The indices are 0-based.
+ * TODO: probably should receive evidence or data frame as input, not columns_db character vector. Or it should be a vector of strings.
+ * TODO: make this comments generic. do not refer to columns.
+ */ 
+// [[Rcpp::export]]
+std::vector<int> match_zero_based(const std::vector<std::string> & features, const CharacterVector & columns_db) { 
+  CharacterVector feature_fam = wrap(features); 
+  IntegerVector feature_fam_inds = match(feature_fam, columns_db);
+  if (is_true(any(feature_fam_inds == 0)))  stop("All features must be in the dataset.");
+  feature_fam_inds = feature_fam_inds - 1; 
+  return as<std::vector<int> > (feature_fam_inds);
+}
+
+
+// [[Rcpp::export]]
 std::vector<std::string> ordersetdiff(CharacterVector vector, CharacterVector remove) {
   std::vector<std::string> vec = as<std::vector<std::string>>(vector);
   std::string move = as<std::string>(remove);

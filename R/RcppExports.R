@@ -5,6 +5,14 @@ entry_index <- function(indices, dim_prod) {
     .Call('_bnclassify_entry_index', PACKAGE = 'bnclassify', indices, dim_prod)
 }
 
+match_zero_based <- function(features, columns_db) {
+    .Call('_bnclassify_match_zero_based', PACKAGE = 'bnclassify', features, columns_db)
+}
+
+ordersetdiff <- function(vector, remove) {
+    .Call('_bnclassify_ordersetdiff', PACKAGE = 'bnclassify', vector, remove)
+}
+
 hasna <- function(newdata) {
     .Call('_bnclassify_hasna', PACKAGE = 'bnclassify', newdata)
 }
@@ -37,8 +45,12 @@ get_row <- function(x, df, cptind) {
     .Call('_bnclassify_get_row', PACKAGE = 'bnclassify', x, df, cptind)
 }
 
-make_cpt_object <- function(x) {
-    invisible(.Call('_bnclassify_make_cpt_object', PACKAGE = 'bnclassify', x))
+fill_vector <- function(size, row, rcpt, df, features, class_var) {
+    .Call('_bnclassify_fill_vector', PACKAGE = 'bnclassify', size, row, rcpt, df, features, class_var)
+}
+
+make_cpt_object <- function(x, class_var) {
+    invisible(.Call('_bnclassify_make_cpt_object', PACKAGE = 'bnclassify', x, class_var))
 }
 
 table_cpp <- function(v) {

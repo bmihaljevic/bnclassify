@@ -18,21 +18,26 @@ void printv(std::vector<double> v);
 class CPT {
 private:
     std::vector<std::string> variables; 
+    std::vector<std::string> features; 
     std::vector<double> entries; 
     std::vector<int> dimprod; 
 public: 
-  CPT(const Rcpp::NumericVector & cpt) { 
+  // Do not store the class, though. Just the features.
+  CPT(const Rcpp::NumericVector & cpt, const std::string & class_var) { 
     const Rcpp::List & dimnames = cpt.attr("dimnames");
     const Rcpp::CharacterVector & fam = dimnames.attr("names"); 
+    
     this -> variables = Rcpp::as< std::vector<std::string> >(fam);  
-    // TODO: check class is the last dimension of the cpt? 
-    // TODO: have the class here? Or only in model?
+    if (!(variables[variables.size() - 1] == class_var)) Rcpp::stop("Class not last dimension in CPT."); 
+    this -> features = this -> variables;
+    this -> features.pop_back();
   
     // Copy and log entries 
     entries.resize(cpt.size());
-    std::copy(cpt.begin(), cpt.end(),   entries.begin());    
-    float (*flog)(float) = &std::log;
-    std::transform(entries.begin(), entries.end(), entries.begin(), flog);  
+    std::copy(cpt.begin(), cpt.end(),   entries.begin());      
+    
+    double (*dlog)(double) = &std::log;
+    std::transform(entries.begin(), entries.end(), entries.begin(), dlog);  
     
     const Rcpp::IntegerVector & dim = cpt.attr("dim");
     Rcpp::IntegerVector dimprod = Rcpp::cumprod(dim); 
@@ -43,9 +48,15 @@ public:
     return  entries; 
   }
   
+  // TODO: maybe remove this one
   const std::vector<std::string> & get_variables() const { 
     return variables; 
   } 
+  
+  const std::vector<std::string> & get_features() const { 
+    return features; 
+  } 
+  
   
   const std::vector<int> & get_dimprod() const { 
     return dimprod; 
@@ -105,6 +116,8 @@ class Model {
  *  Holds the data with evidence for inference. 
  *  Current implementation holds a copy of the underlying data and thus only a single instance should exist per call to predict (no copies). 
  *  If the data are factors, then the values returned will correspond to 1-based indices for the MappedCPTs 
+ *  
+ * The indices for rows and columns are 0-based. 
  */
 class Evidence {
   Rcpp::CharacterVector columns;
@@ -116,7 +129,7 @@ public:
   inline double get(int i, int j) const {  
     return data.at(i).at(j); 
   }   
-  inline Rcpp::CharacterVector getColumns() {
+  inline Rcpp::CharacterVector getColumns() const {
    return  columns;
   } 
   inline int getN() const {
@@ -142,6 +155,38 @@ public:
      this->data = Rcpp::as<std::vector<std::vector<int> > > (test);   
   }
 }; 
+
+class MappedCPT2 {
+  // It was faster using c++ storage than Rcpp
+  // Are the indices 1-based or one based?  I think 0 based because they are in Rcpp.
+  std::vector<int> db_indices;
+  const CPT & cpt;
+  // A reference to a unique instance of Evidence
+  const Evidence & test;
+public: 
+  MappedCPT2(const CPT & cpt, const Evidence & test) :
+                    test(test), cpt(cpt) 
+  {  
+    Rcpp::CharacterVector columns_db = test.getColumns();
+    // Comment: this is because class in unobserved. if we have more unobserved, it would need a different procedure.
+    this->db_indices = match_zero_based(cpt.get_features(), columns_db); 
+ }    
+  
+  /**
+   * Fills in the instance's entries into the sequence. Returns iterator to one after last added.
+   * The number of elements added is that of the dimensions of the CPT. It adds them into the output sequence whose start is begin.
+   */
+  std::vector<int>::iterator fill_instance_indices(int row, std::vector<int>::iterator output_begin) {
+   int cpt_index = test.get(db_indices.at(0), row);
+    // could store ndb_inds as member. But maybe not much speed up. 
+   int ndb_inds = db_indices.size();
+   for (int k = 0; k < ndb_inds ; k++) {
+     *output_begin= test.get(db_indices.at(k), row);
+     output_begin++; 
+   } 
+   return output_begin;
+  }  
+};
  
 /** 
  * EVdenceMappedMappedCPT, which knows which MappedCPT entry to return for a given instance.
@@ -170,21 +215,21 @@ public:
   
 // get all classes entries, passing the index of the row 
 void get_entries(int row, std::vector<double> & cpt_entries) {
- int cpt_index = test.get(db_indices.at(0), row);
- int sum = cpt_index - 1;
- int ndb_inds = db_indices.size();
- for (int k = 1; k < ndb_inds ; k++) {
-   cpt_index = test.get(db_indices.at(k), row);
-   cpt_index -= 1;  // delete
-   sum += cpt_index * this->dim_prod.at(k  - 1);
- }
- // // Add an entry per each class 
- int per_class_entries   = this->dim_prod.at(this->dim_prod.size() - 2); 
- int ncpts = cpt_entries.size();
- for (int i = 0; i < ncpts ; i++ ) {
-   cpt_entries[i] =  this->cpt.at(sum + i * per_class_entries );
-   // cpt_entries[i] = this->cpt[sum];
- }   
+ // int cpt_index = test.get(db_indices.at(0), row);
+ // int sum = cpt_index - 1;
+ // int ndb_inds = db_indices.size();
+ // for (int k = 1; k < ndb_inds ; k++) {
+ //   cpt_index = test.get(db_indices.at(k), row);
+ //   cpt_index -= 1;  // delete
+ //   sum += cpt_index * this->dim_prod.at(k  - 1);
+ // }
+ // // // Add an entry per each class 
+ // int per_class_entries   = this->dim_prod.at(this->dim_prod.size() - 2); 
+ // int ncpts = cpt_entries.size();
+ // for (int i = 0; i < ncpts ; i++ ) {
+ //   cpt_entries[i] =  this->cpt.at(sum + i * per_class_entries );
+ //   // cpt_entries[i] = this->cpt[sum];
+ // }   
 }
  
 private:  

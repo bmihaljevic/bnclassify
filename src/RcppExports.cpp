@@ -7,14 +7,38 @@
 using namespace Rcpp;
 
 // entry_index
-int entry_index(const std::vector<double>& indices, const std::vector<double>& dim_prod);
+int entry_index(const std::vector<int>& indices, const std::vector<int>& dim_prod);
 RcppExport SEXP _bnclassify_entry_index(SEXP indicesSEXP, SEXP dim_prodSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const std::vector<double>& >::type indices(indicesSEXP);
-    Rcpp::traits::input_parameter< const std::vector<double>& >::type dim_prod(dim_prodSEXP);
+    Rcpp::traits::input_parameter< const std::vector<int>& >::type indices(indicesSEXP);
+    Rcpp::traits::input_parameter< const std::vector<int>& >::type dim_prod(dim_prodSEXP);
     rcpp_result_gen = Rcpp::wrap(entry_index(indices, dim_prod));
+    return rcpp_result_gen;
+END_RCPP
+}
+// match_zero_based
+std::vector<int> match_zero_based(const std::vector<std::string>& features, const CharacterVector& columns_db);
+RcppExport SEXP _bnclassify_match_zero_based(SEXP featuresSEXP, SEXP columns_dbSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::vector<std::string>& >::type features(featuresSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type columns_db(columns_dbSEXP);
+    rcpp_result_gen = Rcpp::wrap(match_zero_based(features, columns_db));
+    return rcpp_result_gen;
+END_RCPP
+}
+// ordersetdiff
+std::vector<std::string> ordersetdiff(CharacterVector vector, CharacterVector remove);
+RcppExport SEXP _bnclassify_ordersetdiff(SEXP vectorSEXP, SEXP removeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type vector(vectorSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type remove(removeSEXP);
+    rcpp_result_gen = Rcpp::wrap(ordersetdiff(vector, remove));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -111,13 +135,30 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// fill_vector
+NumericVector fill_vector(int size, int row, NumericVector rcpt, DataFrame df, CharacterVector features, std::string class_var);
+RcppExport SEXP _bnclassify_fill_vector(SEXP sizeSEXP, SEXP rowSEXP, SEXP rcptSEXP, SEXP dfSEXP, SEXP featuresSEXP, SEXP class_varSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type size(sizeSEXP);
+    Rcpp::traits::input_parameter< int >::type row(rowSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type rcpt(rcptSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type df(dfSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type features(featuresSEXP);
+    Rcpp::traits::input_parameter< std::string >::type class_var(class_varSEXP);
+    rcpp_result_gen = Rcpp::wrap(fill_vector(size, row, rcpt, df, features, class_var));
+    return rcpp_result_gen;
+END_RCPP
+}
 // make_cpt_object
-void make_cpt_object(const NumericVector& x);
-RcppExport SEXP _bnclassify_make_cpt_object(SEXP xSEXP) {
+void make_cpt_object(const NumericVector& x, std::string class_var);
+RcppExport SEXP _bnclassify_make_cpt_object(SEXP xSEXP, SEXP class_varSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
-    make_cpt_object(x);
+    Rcpp::traits::input_parameter< std::string >::type class_var(class_varSEXP);
+    make_cpt_object(x, class_var);
     return R_NilValue;
 END_RCPP
 }
@@ -146,6 +187,8 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_bnclassify_entry_index", (DL_FUNC) &_bnclassify_entry_index, 2},
+    {"_bnclassify_match_zero_based", (DL_FUNC) &_bnclassify_match_zero_based, 2},
+    {"_bnclassify_ordersetdiff", (DL_FUNC) &_bnclassify_ordersetdiff, 2},
     {"_bnclassify_hasna", (DL_FUNC) &_bnclassify_hasna, 1},
     {"_bnclassify_are_disjoint", (DL_FUNC) &_bnclassify_are_disjoint, 2},
     {"_bnclassify_normalize", (DL_FUNC) &_bnclassify_normalize, 1},
@@ -154,7 +197,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bnclassify_compute_joint", (DL_FUNC) &_bnclassify_compute_joint, 2},
     {"_bnclassify_test_dims2columns", (DL_FUNC) &_bnclassify_test_dims2columns, 3},
     {"_bnclassify_get_row", (DL_FUNC) &_bnclassify_get_row, 3},
-    {"_bnclassify_make_cpt_object", (DL_FUNC) &_bnclassify_make_cpt_object, 1},
+    {"_bnclassify_fill_vector", (DL_FUNC) &_bnclassify_fill_vector, 6},
+    {"_bnclassify_make_cpt_object", (DL_FUNC) &_bnclassify_make_cpt_object, 2},
     {"_bnclassify_table_cpp", (DL_FUNC) &_bnclassify_table_cpp, 1},
     {"_bnclassify_unidim_values", (DL_FUNC) &_bnclassify_unidim_values, 1},
     {NULL, NULL, 0}
