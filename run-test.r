@@ -1,2 +1,2 @@
 library(Rcpp)
-sourceCpp('src/classes-infer.cpp')
+sourceCpp('src/infer.cpp')

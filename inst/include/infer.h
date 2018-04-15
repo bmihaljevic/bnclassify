@@ -194,25 +194,10 @@ public:
     // Start with first class. Assumes that end is writable. That is why end should be part of Mapped Model or something, which is where this 
     // function should be
     *end = 1;
-    int sum = entry_index(begin, end, this->cpt.get_dimprod());  
+    int sum = entry_index(begin, this->cpt.get_dimprod());  
    // // Add an entry per each class
    int per_class_entries   = this->cpt.get_dimprod().at(this->cpt.get_dimprod().size() - 2);
-   int ncpts = output.size();
-   // TODO: remove this
-   // if (sum > this->cpt.get_entries().size()) { 
-   //   Rcout << "size" << this->cpt.get_entries().size() << std::endl;
-   //   Rcout << std::distance(begin, end) << std::endl;
-   //   Rcout << "sum " << sum << std::endl;
-   //   Rcout << "sum large " << (sum > 10 ) << std::endl;
-   //   Rcout << this->cpt.get_dimprod().size() << std::endl;
-   //   stop("sum too large.");
-   // } 
-   // if (sum + ncpts * per_class_entries > this->cpt.get_entries().size() )  {
-   //   Rcout << sum << std::endl;
-   //   Rcout << ncpts << std::endl;
-   //   Rcout << per_class_entries << std::endl;
-   //   stop("Stop");
-   // }
+   int ncpts = output.size(); 
    for (int i = 0; i < ncpts ; i++ ) {
      output[i] =  this->cpt.get_entries().at(sum + i * per_class_entries );
    }
