@@ -84,6 +84,7 @@ NumericMatrix compute_joint(List x, DataFrame newdata) {
  std::vector<int> instance_cpt_inds(n);
  for (int instance_ind = 0; instance_ind  < N ; instance_ind++) {
     // initialize output with log class prior 
+    // TODO: could simply use std::copy. the problem are the matrix indices, though.
      for (int theta_ind = 0; theta_ind < nclass; theta_ind++) { 
        output(instance_ind, theta_ind) = class_cpt[theta_ind];
      }

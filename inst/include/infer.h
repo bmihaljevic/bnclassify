@@ -194,7 +194,7 @@ public:
     int sum = entry_index(begin, end, this->cpt.get_dimprod());  
    // // Add an entry per each class
    int per_class_entries   = this->cpt.get_dimprod().at(this->cpt.get_dimprod().size() - 2);
-   int ncpts = this->cpt.get_entries().size();
+   int ncpts = output.size();
    for (int i = 0; i < ncpts ; i++ ) {
      output[i] =  this->cpt.get_entries().at(sum + i * per_class_entries );
    }
