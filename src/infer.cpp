@@ -54,6 +54,8 @@ Model::Model(List x)  {
   this->classes = call_model_fun(x, "classes");
   this->nclass = classes.size();
   
+  // TODO: names(t$.families)
+  
   // TODO: call function. params()
   Rcpp::List all_cpts = x[".params"]; 
   this->cpts.reserve(all_cpts.size()); 
@@ -64,9 +66,8 @@ Model::Model(List x)  {
   
   // get index of class in all cpts
   // take class cpt from log, not from original ones 
-  // this-> class_cpt = log cpts [] 
+  // TODO: The above is a 1-based index. Fix it.  
   this->ind_class = get_class_index(class_var, all_cpts);
-  // The above is a 1-based index. Fix it.  
   this->ind_class = this->ind_class  - 1;
 }                
 
@@ -76,23 +77,23 @@ NumericMatrix compute_joint(List x, DataFrame newdata) {
  Evidence test(newdata, mod.getFeatures());
  MappedModel model(mod, test);
  int N = test.getN();
- int n = mod.get_n();
  int nclass = mod.get_nclass();
  MatrixXd output(N, nclass); 
  const std::vector<double> & class_cpt = mod.getClassCPT().get_entries();
  std::vector<double> per_class_cpt_entries(nclass);
+ int n = mod.get_n();
  std::vector<int> instance_cpt_inds(n);
  for (int instance_ind = 0; instance_ind  < N ; instance_ind++) {
     // initialize output with log class prior 
-    // TODO: could simply use std::copy. the problem are the matrix indices, though.
      for (int theta_ind = 0; theta_ind < nclass; theta_ind++) { 
        output(instance_ind, theta_ind) = class_cpt[theta_ind];
      }
      // add the entries for each feature:
      for (int j = 0; j < n; j++) { 
        // Get CPT indices from the instance: 
-        std::vector<int>::iterator cpt_inds_end = model.get_mapped_cpt(j).fill_instance_indices(instance_ind, instance_cpt_inds.begin());
-        model.get_mapped_cpt(j).get_entries(instance_cpt_inds.begin(), cpt_inds_end, per_class_cpt_entries);
+        const MappedCPT & mcpt = model.get_mapped_cpt(j);
+        std::vector<int>::iterator cpt_inds_end = mcpt.fill_instance_indices(instance_ind, instance_cpt_inds.begin());
+        mcpt.get_entries(instance_cpt_inds.begin(), cpt_inds_end, per_class_cpt_entries);
         for (int theta_ind = 0; theta_ind < nclass; theta_ind++) {
              output(instance_ind, theta_ind) += per_class_cpt_entries[theta_ind];
         }

@@ -13,8 +13,9 @@ void printv(std::vector<double> v);
 
 /**
  * All CPT internal logics and rules here. 
- * Users should not need to think of dimnames and similar, just of variables, features, etc.
+ * Users of this class should not need to think of dimnames and similar, just of variables, features, etc.
  * It hold the log of original CPT entries.
+ * TODO: rather than giving access to entries, I should let them index thrugh the CPT, but not get to the underlying storage.
  */
 class CPT {
 private:
@@ -63,15 +64,8 @@ public:
     return dimprod; 
   } 
   
-};
+};   
 
-
-// Quaestions MODEL
-//    Keep array dimnmes. 
-//    Make it a std::vector because it is faster access to than  Rcpp
-//    Copy and log 
-//        Making a vector of std::vector would solve all the later, but would lose the dimension data. Howvever, I could keep the dim data apart in the MappedCPT.  
-//        Thus, I do not want gRbase code, as it works on Rcpp
 
 /**
  *  Encapsulates a TODO bnc? model. 
@@ -81,7 +75,6 @@ class Model {
     Rcpp::CharacterVector features;
     Rcpp::CharacterVector class_var;  
     Rcpp::CharacterVector classes;  
-    std::vector<Rcpp::NumericVector> log_cpts;
     std::vector<CPT> cpts;
     int nclass = -1;
     int ind_class = -1;
@@ -179,7 +172,7 @@ public:
    * Fills in the instance's entries into the sequence. Returns iterator to one after last added.
    * The number of elements added is that of the dimensions of the CPT. It adds them into the output sequence whose start is begin.
    */
-  std::vector<int>::iterator fill_instance_indices(int row, std::vector<int>::iterator output_begin) {
+  std::vector<int>::iterator fill_instance_indices(int row, std::vector<int>::iterator output_begin) const {
     // could store ndb_inds as member. But maybe not much speed up. 
    int ndb_inds = db_indices.size();
    for (int k = 0; k < ndb_inds ; k++) {
@@ -190,13 +183,14 @@ public:
   }    
   // get all classes entries, passing the index of the row
   // TODO: this should be implemented in CPT. Not here.
-  void get_entries(std::vector<int>::iterator begin, std::vector<int>::iterator end, std::vector<double> & output) {
+  void get_entries(std::vector<int>::iterator begin, std::vector<int>::iterator end, std::vector<double> & output) const {
     // Start with first class. Assumes that end is writable. That is why end should be part of Mapped Model or something, which is where this 
     // function should be
     *end = 1;
-    int sum = entry_index(begin, this->cpt.get_dimprod());  
+    const std::vector<int> & dimprod = this->cpt.get_dimprod();
+    int sum = entry_index(begin, dimprod);  
    // // Add an entry per each class
-   int per_class_entries   = this->cpt.get_dimprod().at(this->cpt.get_dimprod().size() - 2);
+   int per_class_entries   = dimprod.at(dimprod.size() - 2);
    int ncpts = output.size(); 
    for (int i = 0; i < ncpts ; i++ ) {
      output[i] =  this->cpt.get_entries().at(sum + i * per_class_entries );
