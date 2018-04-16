@@ -37,7 +37,7 @@ inline void subset_free_last_dim(const std::vector<double> & array, const std::v
   int ncpts = output.size();
   // most of the time is spent in this loop.
    for (int i = 0; i < ncpts; i++ ) {
-     output[i] =  array[sum];
+     output[i] =  array.at(sum);
      sum += per_class_entries; 
    }  
 }

@@ -163,5 +163,4 @@ NumericMatrix compute_joint(List x, DataFrame newdata) {
 
 /*** R   
 source('tests/infer-test.R', print.eval = TRUE)
-*/
-
+*/  
