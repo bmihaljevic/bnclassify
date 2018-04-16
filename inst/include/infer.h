@@ -129,7 +129,7 @@ public:
    * Fills in the instance's entries into the sequence. Returns iterator to one after last added.
    * The number of elements added is that of the dimensions of the CPT. It adds them into the output sequence whose start is begin.
    */
-  std::vector<int>::iterator fill_instance_indices(int row, std::vector<int>::iterator output_begin) const {
+  inline std::vector<int>::iterator fill_instance_indices(int row, std::vector<int>::iterator output_begin) const {
     // could store ndb_inds as member. But maybe not much speed up. 
    int ndb_inds = db_indices.size();
    for (int k = 0; k < ndb_inds ; k++) {
@@ -140,7 +140,7 @@ public:
   }    
   // get all classes entries, passing the index of the row
   // TODO: this should be implemented in CPT. Not here.
-  void get_entries(std::vector<int>::iterator begin, std::vector<int>::iterator end, std::vector<double> & output) const {
+  inline void get_entries(std::vector<int>::iterator begin, std::vector<int>::iterator end, std::vector<double> & output) const {
     // Start with first class. Assumes that end is writable. That is why end should be part of Mapped Model or something, which is where this 
     // function should be
     *end = 1;
@@ -149,8 +149,9 @@ public:
    // // Add an entry per each class
    int per_class_entries   = dimprod.at(dimprod.size() - 2);
    int ncpts = output.size(); 
+   const std::vector<double> & cpt_entries = this->cpt.get_entries();
    for (int i = 0; i < ncpts ; i++ ) {
-     output[i] =  this->cpt.get_entries().at(sum + i * per_class_entries );
+     output[i] =  cpt_entries.at(sum + i * per_class_entries );
    }
   }
 };  
@@ -174,13 +175,19 @@ class MappedModel {
  
 public: 
   MappedModel(const Model & x, const Evidence & test); 
+  inline void fill_class_entries(int row, int feature) {
+    // const MappedCPT & mcpt = get_mapped_cpt(j);
+    const MappedCPT & mcpt = this->cpts.at(feature);
+    std::vector<int>::iterator cpt_inds_end = mcpt.fill_instance_indices(row, instance_cpt_inds.begin());  
+    mcpt.get_entries(instance_cpt_inds.begin(), cpt_inds_end, per_class_cpt_entries);
+  }
   // TODO: dont know if this will make a copy? It will. 
   NumericMatrix predict();
   // TODO: remove?
-  inline const MappedCPT& get_mapped_cpt(int i) const {
-    // TODO: change to []?
-    return this->cpts.at(i);
-  }  
+  // inline const MappedCPT& get_mapped_cpt(int i) const {
+  //   // TODO: change to []?
+  //   return this->cpts.at(i);
+  // }  
 };     
 
 #endif

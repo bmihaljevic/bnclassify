@@ -144,10 +144,13 @@ MappedModel::MappedModel(const Model & x, const Evidence & evidence):
     instance_cpt_inds.resize(n);
   }    
 
+
+
 NumericMatrix MappedModel::predict() 
 { 
  int N = evidence.getN();
  MatrixXd output(N, nclass);  
+ 
  for (int instance_ind = 0; instance_ind  < N ; instance_ind++) { 
     // initialize output with log class prior 
      for (int theta_ind = 0; theta_ind < nclass; theta_ind++) { 
@@ -155,10 +158,8 @@ NumericMatrix MappedModel::predict()
      }
      // add the entries for each feature:
      for (int j = 0; j < n; j++) { 
-       // Get CPT indices from the instance: 
-        const MappedCPT & mcpt = get_mapped_cpt(j);
-        mcpt.fill_instance_indices(instance_ind, instance_cpt_inds.begin());  
-        // mcpt.get_entries(instance_cpt_inds.begin(), cpt_inds_end, per_class_cpt_entries);
+       // Get CPT indices from the instance:  
+        fill_class_entries(instance_ind, j);
         for (int theta_ind = 0; theta_ind < nclass; theta_ind++) {
              output(instance_ind, theta_ind) += per_class_cpt_entries[theta_ind];
         }

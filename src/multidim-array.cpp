@@ -14,25 +14,7 @@ using namespace Rcpp;
  // }
  // return sum; 
 
- /** 
-  * It returns the index for fully specified entries.
-  * TODO: the end is completely unused.
-  */
-int entry_index(std::vector<int>::const_iterator begin, const std::vector<int> & dim_prod) {
-  // TODO: inddices and dim prod same length. length > 0. entries positive (1-based indices.) 
-// TODO: faster with iterators? Try a second version of the function.
-// use variable as compiler does not cache the size 
- int index = *begin;
-  // -1 because indices are 1-based.
- int sum = index - 1;
- int ndb_inds = dim_prod.size();
- for (int k = 1; k < ndb_inds ; k++) {
-   int index = *(begin + k);
-   index = index - 1;  
-   sum += index * dim_prod.at(k - 1);
- }
- return sum; 
-} 
+
 
 // [[Rcpp::export]]
 int entry_index(const std::vector<int> & indices, const std::vector<int> & dim_prod) {
