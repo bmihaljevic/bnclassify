@@ -125,21 +125,23 @@ MappedModel::MappedModel(const Model & x, const Evidence & evidence):
       cpts.push_back(c);
     }   
     output_buffer.resize(nclass); 
-    instance_buffer.resize(n);
+    // We need n + 1 for a dummy class variable value at the last position of a of CPT with n + 1 dimensions.
+    // It is a hack and would be best to do it another way
+    instance_buffer.resize(n + 1);
 }       
 NumericMatrix MappedModel::predict() 
 { 
  int N = evidence.getN();
  MatrixXd output(N, nclass);  
  
- for (int instance_ind = 0; instance_ind  < N ; instance_ind++) { 
-    // initialize output with log class prior 
-     for (int theta_ind = 0; theta_ind < nclass; theta_ind++) { 
+ for (int instance_ind = 0; instance_ind  < N ; instance_ind++) {
+    // initialize output with log class prior
+     for (int theta_ind = 0; theta_ind < nclass; theta_ind++) {
        output(instance_ind, theta_ind) = class_cpt[theta_ind];
      }
      // add the entries for each feature:
-     for (int j = 0; j < n; j++) { 
-       // Get CPT indices from the instance:  
+     for (int j = 0; j < n; j++) {
+       // Get CPT indices from the instance:
         fill_class_entries(instance_ind, j);
         for (int theta_ind = 0; theta_ind < nclass; theta_ind++) {
              output(instance_ind, theta_ind) += output_buffer[theta_ind];
@@ -152,7 +154,7 @@ NumericMatrix MappedModel::predict()
   colnames(result) = classes;
   return result;   
 } 
-// [[Rcpp::export(rng=false)]]
+// [[Rcpp::export]]
 NumericMatrix compute_joint(List x, DataFrame newdata) {
  Model mod(x); 
  Evidence test(newdata, mod.getFeatures());

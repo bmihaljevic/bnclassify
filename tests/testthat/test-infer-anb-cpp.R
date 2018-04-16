@@ -63,3 +63,13 @@ test_that("C++ 11", {
    # DESCRIPTION makes it build with 11. Update makevars?
   expect_true(FALSE)
 })
+
+test_that("Bug", {
+ skip("Using rdata file")
+ load('tmp-debug.rdata') 
+ # TODO: make graph from model string. That would be good. Model string to families. That it possible. 
+ gr <- candidate_dags[[7]] 
+ gr <- lp_implement(gr, .mem_cpts = train[[1]])
+ predict(gr, test[[1]])
+})
+  
