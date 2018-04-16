@@ -32,9 +32,11 @@ NumericVector fill_vector(int size, int row, NumericVector rcpt, DataFrame df, C
   Evidence evidence(df, features);
   MappedCPT  m(cpt, evidence);
   std::vector<int> output(size);
-  std::vector<int>::iterator end = m.fill_instance_indices(row, output.begin());
-  NumericVector  nv(std::distance(output.begin(), end));
-  std::copy(output.begin(), end, nv.begin());
+  // std::vector<int>::iterator end = m.fill_instance_indices(row, output.begin());
+  // std::vector<int>::iterator end = m.fill_instance_indices(row, output));
+  // NumericVector  nv(std::distance(output.begin(), end));
+  // std::copy(output.begin(), end, nv.begin());
+  NumericVector  nv = NumericVector::create(2);
   return nv;
 } 
 

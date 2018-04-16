@@ -136,7 +136,7 @@ MappedModel::MappedModel(const Model & x, const Evidence & evidence):
     const std::size_t n = x.get_n();
     cpts.reserve(n);  
     for (unsigned int i = 0; i < n; i++) {
-      MappedCPT c(x.get_cpt(i), test);
+      MappedCPT c(x.get_cpt(i), evidence);
       // TODO: With C++11 this moves, does not copy
       cpts.push_back(c);
     }   
@@ -144,7 +144,7 @@ MappedModel::MappedModel(const Model & x, const Evidence & evidence):
     instance_cpt_inds.resize(n);
   }    
 
-NumericMatrix MappedModel::predict() const
+NumericMatrix MappedModel::predict() 
 { 
  int N = evidence.getN();
  MatrixXd output(N, nclass);  
@@ -157,8 +157,7 @@ NumericMatrix MappedModel::predict() const
      for (int j = 0; j < n; j++) { 
        // Get CPT indices from the instance: 
         const MappedCPT & mcpt = get_mapped_cpt(j);
-        // std::vector<int>::iterator cpt_inds_end = 
-          mcpt.fill_instance_indices(instance_ind, instance_cpt_inds.begin()); 
+        mcpt.fill_instance_indices(instance_ind, instance_cpt_inds.begin());  
         // mcpt.get_entries(instance_cpt_inds.begin(), cpt_inds_end, per_class_cpt_entries);
         for (int theta_ind = 0; theta_ind < nclass; theta_ind++) {
              output(instance_ind, theta_ind) += per_class_cpt_entries[theta_ind];
@@ -174,13 +173,10 @@ NumericMatrix MappedModel::predict() const
 
 // [[Rcpp::export(rng=false)]]
 NumericMatrix compute_joint(List x, DataFrame newdata) {
- Model mod(x);
-  // TODO: CPT does not need acess to evidence, just to columns.
+ Model mod(x); 
  Evidence test(newdata, mod.getFeatures());
  MappedModel model(mod, test);
- int nclass = mod.get_nclass(); 
- 
- 
+ return model.predict(); 
 }  
 
 

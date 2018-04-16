@@ -175,9 +175,9 @@ class MappedModel {
 public: 
   MappedModel(const Model & x, const Evidence & test); 
   // TODO: dont know if this will make a copy? It will. 
-  NumericMatrix MappedModel::predict()  const ;
+  NumericMatrix predict();
   // TODO: remove?
-  inline MappedCPT& get_mapped_cpt(int i) const {
+  inline const MappedCPT& get_mapped_cpt(int i) const {
     // TODO: change to []?
     return this->cpts.at(i);
   }  
