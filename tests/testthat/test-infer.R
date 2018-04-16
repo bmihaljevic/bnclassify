@@ -47,12 +47,12 @@ test_that("No rows returns empty matrix", {
 
 test_that("Missing features in the dataset", {
   tn <- nbcar()
-  expect_error(compute_cp(tn, car[, 1:2]), "undefined")
+  expect_error(compute_cp(tn, car[, 1:2]), "Some features missing from data set.")
 })
 
 test_that("Complete with incomplete data", {
   a <- nbvote()
-  expect_error(compute_log_joint_complete(a, voting), "anyNA")
+  expect_error(compute_log_joint_complete(a, voting), "NA entries in data set.")
 })
 
  

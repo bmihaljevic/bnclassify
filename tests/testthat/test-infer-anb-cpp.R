@@ -30,7 +30,7 @@ test_that("No features", {
 
 test_that("Make CPT", { 
  tn <- nbcar()
- make_cpt_object(tn$.params$buying) 
+ make_cpt_object(tn$.params$buying, class_var = class_var(t)) 
  # todo: need to somehow test this
 })
 
