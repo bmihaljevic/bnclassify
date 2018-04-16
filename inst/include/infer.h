@@ -141,18 +141,29 @@ public:
   // get all classes entries, passing the index of the row
   // TODO: this should be implemented in CPT. Not here.
   inline void get_entries(std::vector<int>::iterator begin, std::vector<int>::iterator end, std::vector<double> & output) const {
-    // Start with first class. Assumes that end is writable. That is why end should be part of Mapped Model or something, which is where this 
-    // function should be
-    *end = 1;
-    const std::vector<int> & dimprod = this->cpt.get_dimprod();
-    int sum = entry_index(begin, dimprod);  
+   //  // Start with first class. Assumes that end is writable. That is why end should be part of Mapped Model or something, which is where this 
+   //  // function should be
+   //  *end = 1;
+   //  const std::vector<int> & dimprod = this->cpt.get_dimprod();
+   //  int sum = entry_index(begin, dimprod);  
+   // // // Add an entry per each class
+   // int per_class_entries   = dimprod.at(dimprod.size() - 2);
+   // int ncpts = output.size(); 
+   // const std::vector<double> & cpt_entries = this->cpt.get_entries();
+   // for (int i = 0; i < ncpts ; i++ ) {
+   //   output[i] =  cpt_entries.at(sum + i * per_class_entries );
+   // }  
+   const std::vector<int> & dimprod = this->cpt.get_dimprod();
    // // Add an entry per each class
-   int per_class_entries   = dimprod.at(dimprod.size() - 2);
-   int ncpts = output.size(); 
+   // int per_class_entries   = dimprod.at(dimprod.size() - 2);
+   int ncpts = output.size();
    const std::vector<double> & cpt_entries = this->cpt.get_entries();
-   for (int i = 0; i < ncpts ; i++ ) {
-     output[i] =  cpt_entries.at(sum + i * per_class_entries );
+   for (int i = 0; i < ncpts ; i++ ) { 
+     *end = 0 + i;
+     int sum = entry_index(begin, dimprod); 
+     output[i] =  cpt_entries.at(sum);
    }
+
   }
 };  
 

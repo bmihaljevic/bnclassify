@@ -7,6 +7,7 @@ using namespace Rcpp;
 // TODO: maybe have an array class. Yet, it is possibly all in Eigen or Armadillo already.    
 // int entry_index(std::vector<int>::const_iterator begin, const std::vector<int> & dim_prod);
 
+
 // /**
 //  * Returns a subset of the array, when the last dimension of indices is not specified.
 //  */
@@ -25,11 +26,12 @@ inline int entry_index(std::vector<int>::const_iterator begin, const std::vector
 // use variable as compiler does not cache the size 
  int index = *begin;
   // -1 because indices are 1-based.
- int sum = index - 1;
+ // int sum = index - 1;
+ int sum = index;
  int ndb_inds = dim_prod.size();
  for (int k = 1; k < ndb_inds ; k++) {
-   int index = *(begin + k);
-   index = index - 1;  
+   index = *(begin + k);
+   // index = index - 1;  
    sum += index * dim_prod.at(k - 1);
  }
  return sum; 

@@ -119,6 +119,14 @@ Evidence::Evidence(Rcpp::DataFrame & test, const Rcpp::CharacterVector & feature
      this->columns = test.names();  
      this->N = test.nrow();
      this->data = Rcpp::as<std::vector<std::vector<int> > > (test);   
+    
+     for (int i = 0; i < data.size(); i++ ) {
+       std::vector<int> & vec = data.at(i);
+       for (std::vector<int>::iterator iter = vec.begin(); iter != vec.end(); iter ++ ) {
+        (*iter)--;
+       }
+       // std::transform(vec.begin(), vec.end(), vec.begin(), std::bind(std::minus<int>(), 1));       
+     } 
 }
 
 MappedCPT::MappedCPT(const CPT & cpt, const Evidence & test) :
