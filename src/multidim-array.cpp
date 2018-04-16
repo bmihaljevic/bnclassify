@@ -12,8 +12,7 @@ using namespace Rcpp;
  //   index = index - 1;  
  //   sum += index * dim_prod.at(k - 1);
  // }
- // return sum; 
-
+ // return sum;  
 
 
 // [[Rcpp::export]]

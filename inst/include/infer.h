@@ -25,29 +25,22 @@ private:
     std::vector<int> dimprod; 
 public: 
   // Do not store the class, though. Just the features.
-  CPT(const Rcpp::NumericVector & cpt, const std::string & class_var);
-  
+  CPT(const Rcpp::NumericVector & cpt, const std::string & class_var); 
   const std::vector<double> & get_entries() const {
     return  entries; 
-  }
-  
+  } 
   // TODO: maybe remove this one
   const std::vector<std::string> & get_variables() const { 
     return variables; 
-  } 
-  
+  }  
   const std::vector<std::string> & get_features() const { 
     return features; 
-  } 
-  
-  
+  }   
   const std::vector<int> & get_dimprod() const { 
     return dimprod; 
   } 
   
-};   
-
-
+};     
 /**
  *  Encapsulates a TODO bnc? model. 
  */
@@ -84,9 +77,7 @@ class Model {
     int get_nclass() const { 
       return nclass;
     } 
-}; 
-
-
+};   
 /**
  *  Holds the data with evidence for inference. 
  *  Current implementation holds a copy of the underlying data and thus only a single instance should exist per call to predict (no copies). 
@@ -140,30 +131,10 @@ public:
   }    
   // get all classes entries, passing the index of the row
   // TODO: this should be implemented in CPT. Not here.
-  inline void get_entries(std::vector<int>::iterator begin, std::vector<int>::iterator end, std::vector<double> & output) const {
-   //  // Start with first class. Assumes that end is writable. That is why end should be part of Mapped Model or something, which is where this 
-   //  // function should be
-   //  *end = 1;
-   //  const std::vector<int> & dimprod = this->cpt.get_dimprod();
-   //  int sum = entry_index(begin, dimprod);  
-   // // // Add an entry per each class
-   // int per_class_entries   = dimprod.at(dimprod.size() - 2);
-   // int ncpts = output.size(); 
-   // const std::vector<double> & cpt_entries = this->cpt.get_entries();
-   // for (int i = 0; i < ncpts ; i++ ) {
-   //   output[i] =  cpt_entries.at(sum + i * per_class_entries );
-   // }  
+  inline void get_entries(std::vector<int>::iterator begin, std::vector<int>::iterator end, std::vector<double> & output) const {   
    const std::vector<int> & dimprod = this->cpt.get_dimprod();
-   // // Add an entry per each class
-   // int per_class_entries   = dimprod.at(dimprod.size() - 2);
-   int ncpts = output.size();
    const std::vector<double> & cpt_entries = this->cpt.get_entries();
-   for (int i = 0; i < ncpts ; i++ ) { 
-     *end = 0 + i;
-     int sum = entry_index(begin, dimprod); 
-     output[i] =  cpt_entries.at(sum);
-   }
-
+   subset_free_last_dim(cpt_entries, dimprod, begin,  output);       
   }
 };  
 
@@ -187,18 +158,11 @@ class MappedModel {
 public: 
   MappedModel(const Model & x, const Evidence & test); 
   inline void fill_class_entries(int row, int feature) {
-    // const MappedCPT & mcpt = get_mapped_cpt(j);
     const MappedCPT & mcpt = this->cpts.at(feature);
     std::vector<int>::iterator cpt_inds_end = mcpt.fill_instance_indices(row, instance_cpt_inds.begin());  
     mcpt.get_entries(instance_cpt_inds.begin(), cpt_inds_end, per_class_cpt_entries);
   }
-  // TODO: dont know if this will make a copy? It will. 
-  NumericMatrix predict();
-  // TODO: remove?
-  // inline const MappedCPT& get_mapped_cpt(int i) const {
-  //   // TODO: change to []?
-  //   return this->cpts.at(i);
-  // }  
+  NumericMatrix predict(); 
 };     
 
 #endif

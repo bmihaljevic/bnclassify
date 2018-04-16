@@ -150,9 +150,7 @@ MappedModel::MappedModel(const Model & x, const Evidence & evidence):
     }   
     per_class_cpt_entries.resize(nclass); 
     instance_cpt_inds.resize(n);
-  }    
-
-
+  }      
 
 NumericMatrix MappedModel::predict() 
 { 
