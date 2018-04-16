@@ -25,26 +25,7 @@ private:
     std::vector<int> dimprod; 
 public: 
   // Do not store the class, though. Just the features.
-  CPT(const Rcpp::NumericVector & cpt, const std::string & class_var) { 
-    const Rcpp::List & dimnames = cpt.attr("dimnames");
-    const Rcpp::CharacterVector & fam = dimnames.attr("names"); 
-    
-    this -> variables = Rcpp::as< std::vector<std::string> >(fam);  
-    if (!(variables[variables.size() - 1] == class_var)) Rcpp::stop("Class not last dimension in CPT."); 
-    this -> features = this -> variables;
-    this -> features.pop_back();
-  
-    // Copy and log entries 
-    entries.resize(cpt.size());
-    std::copy(cpt.begin(), cpt.end(),   entries.begin());      
-    
-    double (*dlog)(double) = &std::log;
-    std::transform(entries.begin(), entries.end(), entries.begin(), dlog);  
-    
-    const Rcpp::IntegerVector & dim = cpt.attr("dim");
-    Rcpp::IntegerVector dimprod = Rcpp::cumprod(dim); 
-    this->dimprod = Rcpp::as<std::vector <int> >(dimprod);
-  }
+  CPT(const Rcpp::NumericVector & cpt, const std::string & class_var);
   
   const std::vector<double> & get_entries() const {
     return  entries; 
@@ -129,25 +110,7 @@ public:
   inline int getN() const {
    return  N;
   }
-  Evidence(Rcpp::DataFrame & test, const Rcpp::CharacterVector & features) {
-     // TODO:  Check all are factors?
-     // I could also reduce all entries - 1 and make a transpose, that is, a matrix that goes by instance and then iterate that way.
-     // If I go to integer, I ought to store the levels of the cpts somewhere.
-     // I could also try using an Eigen row matrix to see if access is faster.
-     const Rcpp::CharacterVector & vec = test.names();
-     if (!is_true(all(in(features, vec)))) {
-       Rcpp::stop("Some features missing from data set.");
-     }
-     // using intersect does not alter order of columns,  unlike test[features]. 
-     Rcpp::CharacterVector keep = Rcpp::intersect(vec, features);
-     test = test[keep];
-     // TODO: remove this from here. Do it at instance level. 
-     if (hasna(test)) Rcpp::stop("NA entries in data set.");  
-     
-     this->columns = test.names();  
-     this->N = test.nrow();
-     this->data = Rcpp::as<std::vector<std::vector<int> > > (test);   
-  }
+  Evidence(Rcpp::DataFrame & test, const Rcpp::CharacterVector & features);
 }; 
 
 /**
@@ -160,14 +123,8 @@ class MappedCPT {
   const CPT & cpt;
   // A reference to a unique instance of Evidence
   const Evidence & test;
-public: 
-  MappedCPT(const CPT & cpt, const Evidence & test) :
-                    test(test), cpt(cpt) 
-  {  
-    Rcpp::CharacterVector columns_db = test.getColumns();
-    // Comment: this is because class in unobserved. if we have more unobserved, it would need a different procedure.
-    this->db_indices = match_zero_based(cpt.get_features(), columns_db); 
-  } 
+public:  
+  MappedCPT(const CPT & cpt, const Evidence & test);
   /**
    * Fills in the instance's entries into the sequence. Returns iterator to one after last added.
    * The number of elements added is that of the dimensions of the CPT. It adds them into the output sequence whose start is begin.
@@ -207,16 +164,9 @@ class MappedModel {
  const Model model;
   // no copies of the original cpts 
  std::vector<MappedCPT> cpts;    
-public:
-  MappedModel(Model & x, Evidence & test): model(x) { 
-    const std::size_t n = x.get_n();
-    cpts.reserve(n);  
-    for (unsigned int i = 0; i < n; i++) {
-      MappedCPT c(x.get_cpt(i), test);
-      // With C++11 this moves, does not copy
-      cpts.push_back(c);
-    }  
-  }  
+public: 
+  MappedModel(Model & x, Evidence & test);
+  // TODO: const
   inline MappedCPT& get_mapped_cpt(int i) {
     // TODO: change to []?
     return this->cpts.at(i);

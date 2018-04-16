@@ -5,4 +5,4 @@ source('tests/infer-tests-utils.R')
 # devtools::load_all(".")
 dbor <- kr
 t <- lp(nb('class', dbor), dbor, smooth = 1)  
-t <- lp(tan_cl('class', dbor), dbor, smooth = 1)  
+t <- lp(tan_cl('class', dbor), dbor, smooth = 1)
