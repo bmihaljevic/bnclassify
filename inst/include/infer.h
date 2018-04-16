@@ -160,14 +160,24 @@ public:
 // this is done by each cpt check
 // make sure data levels and cpt levels match 
 // Only features mapped, not class.
+// no copies of the original cpts 
+// Know about n and nclass, but not about size of the data set.
 class MappedModel {
- const Model model;
-  // no copies of the original cpts 
- std::vector<MappedCPT> cpts;    
+ const Model & model;
+ const Evidence & evidence;
+ int nclass; 
+ int n;
+ std::vector<MappedCPT> cpts;     
+ const std::vector<double> & class_cpt; 
+ std::vector<double> per_class_cpt_entries; 
+ std::vector<int> instance_cpt_inds;
+ 
 public: 
-  MappedModel(Model & x, Evidence & test);
-  // TODO: const
-  inline MappedCPT& get_mapped_cpt(int i) {
+  MappedModel(const Model & x, const Evidence & test); 
+  // TODO: dont know if this will make a copy? It will. 
+  NumericMatrix MappedModel::predict()  const ;
+  // TODO: remove?
+  inline MappedCPT& get_mapped_cpt(int i) const {
     // TODO: change to []?
     return this->cpts.at(i);
   }  
