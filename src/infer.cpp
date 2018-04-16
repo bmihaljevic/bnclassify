@@ -6,12 +6,6 @@
 using namespace Rcpp;
 using Eigen::MatrixXd;      
 
-// Debug stuff
-void printv(std::vector<double> v) { 
- Rcpp::NumericVector nv = Rcpp::wrap(v);
- Rcpp::Rcout << nv << "." << std::endl; 
-}
-
 // A function with the bnc model ( a list) as only parameter and CharacterVector output
 // [[Rcpp::export(rng=false)]]
 Rcpp::CharacterVector call_model_fun(const Rcpp::List& x, const std::string funct) { 
@@ -52,21 +46,9 @@ CPT::CPT(const Rcpp::NumericVector & cpt, const std::string & class_var)
     const Rcpp::IntegerVector & dim = cpt.attr("dim");
     Rcpp::IntegerVector dimprod = Rcpp::cumprod(dim); 
     this->dimprod = Rcpp::as<std::vector <int> >(dimprod);
-  }
-
-/**
- * Wraps a bnc fit model.  Holds copies of its MappedCPTs.
- * Takes log of MappedCPTs. 
- * Provide features, class name. 
- */
-Model::Model(List x)  { 
-// Maybe just check this is a bnc_fit. All other logic kept in already available checks. just calls back to R code; no need for re-implementing things. 
-// TODO: I should not hold a pointer to the underlying MappedCPTs. Just the logged copies.  
-  // makes a copy of cpts
-  // Log after the copies. The class should point to that copy and never have access to original.
-  // gets list of features.
-  // get the class name. 
-  
+}  
+Model::Model(List x)  
+{ 
   // TODO: call class()
   this->class_var = x[".class"];
   // TODO: use just C++ types I guess
@@ -85,8 +67,8 @@ Model::Model(List x)  {
   // TODO: call R.
   // this->classes = call_model_fun(x, "classes");
   this->nclass = classes.size();
-  
   // TODO: names(t$.families)  
+  
   this->cpts.reserve(all_cpts.size()); 
   for (int i = 0; i < all_cpts.size(); i++) {
    const NumericVector & cpt = all_cpts.at(i); 
@@ -98,13 +80,9 @@ Model::Model(List x)  {
   // TODO: The above is a 1-based index. Fix it.  
   this->ind_class = get_class_index(class_var, vars_model);
   this->ind_class = this->ind_class  - 1;
-}                
-
+}                 
 Evidence::Evidence(Rcpp::DataFrame & test, const Rcpp::CharacterVector & features) 
-{
-     // TODO:  Check all are factors?
-     // I could also reduce all entries - 1 and make a transpose, that is, a matrix that goes by instance and then iterate that way.
-     // If I go to integer, I ought to store the levels of the cpts somewhere.
+{ 
      // I could also try using an Eigen row matrix to see if access is faster.
      const Rcpp::CharacterVector & vec = test.names();
      if (!is_true(all(in(features, vec)))) {
@@ -119,7 +97,8 @@ Evidence::Evidence(Rcpp::DataFrame & test, const Rcpp::CharacterVector & feature
      this->columns = test.names();  
      this->N = test.nrow();
      this->data = Rcpp::as<std::vector<std::vector<int> > > (test);   
-    
+  
+    // Reduce the entries by 1, so they could serve as 0-based indices.
      for (int i = 0; i < data.size(); i++ ) {
        std::vector<int> & vec = data.at(i);
        for (std::vector<int>::iterator iter = vec.begin(); iter != vec.end(); iter ++ ) {
@@ -127,20 +106,17 @@ Evidence::Evidence(Rcpp::DataFrame & test, const Rcpp::CharacterVector & feature
        }
        // std::transform(vec.begin(), vec.end(), vec.begin(), std::bind(std::minus<int>(), 1));       
      } 
-}
-
+} 
 MappedCPT::MappedCPT(const CPT & cpt, const Evidence & test) :
                     test(test), cpt(cpt) 
 {  
   Rcpp::CharacterVector columns_db = test.getColumns();
-  // Comment: this is because class in unobserved. if we have more unobserved, it would need a different procedure.
+  // this is because class in unobserved. if we have more unobserved, it would need a different procedure.
   this->db_indices = match_zero_based(cpt.get_features(), columns_db); 
-} 
-
-
+}   
 MappedModel::MappedModel(const Model & x, const Evidence & evidence): 
   model(x),  class_cpt(x.getClassCPT().get_entries()), nclass(x.get_nclass()), n(x.get_n()), evidence(evidence) 
-  { 
+{ 
     const std::size_t n = x.get_n();
     cpts.reserve(n);  
     for (unsigned int i = 0; i < n; i++) {
@@ -148,10 +124,9 @@ MappedModel::MappedModel(const Model & x, const Evidence & evidence):
       // TODO: With C++11 this moves, does not copy
       cpts.push_back(c);
     }   
-    per_class_cpt_entries.resize(nclass); 
-    instance_cpt_inds.resize(n);
-  }      
-
+    output_buffer.resize(nclass); 
+    instance_buffer.resize(n);
+}       
 NumericMatrix MappedModel::predict() 
 { 
  int N = evidence.getN();
@@ -167,7 +142,7 @@ NumericMatrix MappedModel::predict()
        // Get CPT indices from the instance:  
         fill_class_entries(instance_ind, j);
         for (int theta_ind = 0; theta_ind < nclass; theta_ind++) {
-             output(instance_ind, theta_ind) += per_class_cpt_entries[theta_ind];
+             output(instance_ind, theta_ind) += output_buffer[theta_ind];
         }
      } // features
   }// instances
@@ -176,8 +151,7 @@ NumericMatrix MappedModel::predict()
   const CharacterVector classes = model.get_classes(); 
   colnames(result) = classes;
   return result;   
-}
-
+} 
 // [[Rcpp::export(rng=false)]]
 NumericMatrix compute_joint(List x, DataFrame newdata) {
  Model mod(x); 

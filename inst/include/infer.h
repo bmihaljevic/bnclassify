@@ -5,11 +5,7 @@
 #include <RcppEigen.h>
 #include <cmath> 
 #include <basic-misc.h>
-#include <multidim-array.h>
-
-// Debug stuff. TODO: remove.
-void printv(std::vector<double> v); 
-
+#include <multidim-array.h>   
 
 /**
  * All CPT internal logics and rules here. 
@@ -38,11 +34,13 @@ public:
   }   
   const std::vector<int> & get_dimprod() const { 
     return dimprod; 
-  } 
-  
+  }  
 };     
 /**
- *  Encapsulates a TODO bnc? model. 
+ * Wraps a bnc fit model.  
+ * Provide features, class name. 
+ * makes a copy of cpts Log after the copies. The class should point to that copy and never have access to original.
+ * Just call R functions to get those data. All other logic kept in already available checks. just calls back to R code; no need for re-implementing things.    
  */
 class Model { 
   private:   
@@ -81,7 +79,7 @@ class Model {
 /**
  *  Holds the data with evidence for inference. 
  *  Current implementation holds a copy of the underlying data and thus only a single instance should exist per call to predict (no copies). 
- *  If the data are factors, then the values returned will correspond to 1-based indices for the MappedCPTs 
+ *  If the data are factors, then the values returned will correspond to 0-based indices for the MappedCPTs 
  *  
  * The indices for rows and columns are 0-based. 
  */
@@ -102,10 +100,11 @@ public:
    return  N;
   }
   Evidence(Rcpp::DataFrame & test, const Rcpp::CharacterVector & features);
-}; 
-
+};  
 /**
- * A proxy to the CPT, obtaining the CPT indices corresponding to a data instance.
+ * Obtains the CPT indices corresponding to a data instance.
+ * An option is to use it as a proxy for CPT, in order to subset it, but 
+ * CPT currently does not provide subsetting.
  */
 class MappedCPT {
   // It was faster using c++ storage than Rcpp
@@ -128,23 +127,12 @@ public:
      output_begin++; 
    } 
    return output_begin;
-  }    
-  // get all classes entries, passing the index of the row
-  // TODO: this should be implemented in CPT. Not here.
-  inline void get_entries(std::vector<int>::iterator begin, std::vector<int>::iterator end, std::vector<double> & output) const {   
-   const std::vector<int> & dimprod = this->cpt.get_dimprod();
-   const std::vector<double> & cpt_entries = this->cpt.get_entries();
-   subset_free_last_dim(cpt_entries, dimprod, begin,  output);       
-  }
-};  
-
-// Mapping of model  cpts to evidence
-// check all features in data set. Well, I do not need class in data set.
-// this is done by each cpt check
-// make sure data levels and cpt levels match 
-// Only features mapped, not class.
-// no copies of the original cpts 
-// Know about n and nclass, but not about size of the data set.
+  }      
+};     
+/** 
+ * Currently keep reference to both CPT and MappedCPT; i.e, the latter is not a proxy for the former.
+ * Maps feature CPTs to the evidence. 
+ */
 class MappedModel {
  const Model & model;
  const Evidence & evidence;
@@ -152,15 +140,20 @@ class MappedModel {
  int n;
  std::vector<MappedCPT> cpts;     
  const std::vector<double> & class_cpt; 
- std::vector<double> per_class_cpt_entries; 
- std::vector<int> instance_cpt_inds;
- 
+ // Buffer for a row of per-class probabilities
+ std::vector<double> output_buffer; 
+ // Buffer for an instance 
+ std::vector<int> instance_buffer; 
 public: 
   MappedModel(const Model & x, const Evidence & test); 
   inline void fill_class_entries(int row, int feature) {
     const MappedCPT & mcpt = this->cpts.at(feature);
-    std::vector<int>::iterator cpt_inds_end = mcpt.fill_instance_indices(row, instance_cpt_inds.begin());  
-    mcpt.get_entries(instance_cpt_inds.begin(), cpt_inds_end, per_class_cpt_entries);
+    mcpt.fill_instance_indices(row, instance_buffer.begin());  
+    const CPT & cpt = model.get_cpt(feature); 
+    const std::vector<int> & dimprod = cpt.get_dimprod();
+    const std::vector<double> & cpt_entries = cpt.get_entries();
+    // roughly half the time is spent here:
+    subset_free_last_dim(cpt_entries, dimprod, instance_buffer.begin(),  output_buffer);
   }
   NumericMatrix predict(); 
 };     
