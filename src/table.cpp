@@ -7,7 +7,7 @@ using namespace Rcpp;
 typedef std::pair<double, int>  ptype; 
 
 // A comparison function to rank values in descending order
-bool compare_values(const ptype &p1, const ptype &p2)
+inline bool compare_values(const ptype &p1, const ptype &p2)
 {
   return p1.second > p2.second;
 }
@@ -33,8 +33,8 @@ Rcpp::IntegerVector table_cpp(const Rcpp::IntegerVector & v)
 Rcpp::IntegerVector tabulate(const Rcpp::IntegerVector & v, int levels) { 
   std::vector<unsigned int> table(levels);   
   std::size_t n =  v.size();
-  for (int i = 0; i != n; ++i) { 
-    table[ v[i] - 1 ] ++;
+  for (int i = 0; i < n; ++i) { 
+    table.at( v.at(i) - 1 ) ++;
   }    
   return wrap(table); 
 }

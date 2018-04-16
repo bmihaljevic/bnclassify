@@ -62,7 +62,7 @@ Model::Model(List x)
   // TODO: I can move those accessor functions to Rcpp, not a problem.
   const NumericVector & class_cpt =  all_cpts[cpp_class_var];  
   const Rcpp::List & dimnames = class_cpt.attr("dimnames");
-  this->classes = dimnames[0];
+  this->classes = dimnames.at(0);
   // this->classes = call_model_fun(x, "classes");
   // TODO: call R.
   // this->classes = call_model_fun(x, "classes");
