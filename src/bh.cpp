@@ -17,12 +17,11 @@ using namespace Rcpp;
 
 // The graph type I will use
 typedef adjacency_list<vecS, vecS, directedS> Graph;
+// for connected components and such
+typedef adjacency_list <vecS, vecS, undirectedS> ugraph; 
 // typedef boost::directed_graph<> Graph;
 // this one did not work:
-// typedef adjacency_list<boost::directedS> Graph;
-
-// for connected components and such
-typedef adjacency_list <vecS, vecS, undirectedS> ugraph;
+// typedef adjacency_list<boost::directedS> Graph;  
 
 // TODO: Currently not sure what this is doing.
 void print_vertices(Graph g) {
@@ -62,7 +61,6 @@ void test_make(CharacterVector vertices, Rcpp::IntegerMatrix edges) {
 }      
 
 // Requires an undirected graph 
-// [[Rcpp::export]]
 NumericVector bh_connected_comp(ugraph g) 
 {   
   std::vector<int> component(num_vertices(g));

@@ -39,37 +39,24 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// make_nb
-void make_nb(std::string class_var, std::vector<std::string> features);
-RcppExport SEXP _bnclassify_make_nb(SEXP class_varSEXP, SEXP featuresSEXP) {
+// test_make
+void test_make(CharacterVector vertices, Rcpp::IntegerMatrix edges);
+RcppExport SEXP _bnclassify_test_make(SEXP verticesSEXP, SEXP edgesSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string >::type class_var(class_varSEXP);
-    Rcpp::traits::input_parameter< std::vector<std::string> >::type features(featuresSEXP);
-    make_nb(class_var, features);
+    Rcpp::traits::input_parameter< CharacterVector >::type vertices(verticesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerMatrix >::type edges(edgesSEXP);
+    test_make(vertices, edges);
     return R_NilValue;
 END_RCPP
 }
-// make_nb2
-void make_nb2(std::string class_var, std::vector<std::string> features);
-RcppExport SEXP _bnclassify_make_nb2(SEXP class_varSEXP, SEXP featuresSEXP) {
+// test_connected
+void test_connected();
+RcppExport SEXP _bnclassify_test_connected() {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string >::type class_var(class_varSEXP);
-    Rcpp::traits::input_parameter< std::vector<std::string> >::type features(featuresSEXP);
-    make_nb2(class_var, features);
+    test_connected();
     return R_NilValue;
-END_RCPP
-}
-// bh_connected_comp
-NumericVector bh_connected_comp(NumericVector x);
-RcppExport SEXP _bnclassify_bh_connected_comp(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(bh_connected_comp(x));
-    return rcpp_result_gen;
 END_RCPP
 }
 // make_cpt
@@ -168,9 +155,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bnclassify_are_disjoint", (DL_FUNC) &_bnclassify_are_disjoint, 2},
     {"_bnclassify_normalize", (DL_FUNC) &_bnclassify_normalize, 1},
     {"_bnclassify_normalize_ctgt", (DL_FUNC) &_bnclassify_normalize_ctgt, 1},
-    {"_bnclassify_make_nb", (DL_FUNC) &_bnclassify_make_nb, 2},
-    {"_bnclassify_make_nb2", (DL_FUNC) &_bnclassify_make_nb2, 2},
-    {"_bnclassify_bh_connected_comp", (DL_FUNC) &_bnclassify_bh_connected_comp, 1},
+    {"_bnclassify_test_make", (DL_FUNC) &_bnclassify_test_make, 2},
+    {"_bnclassify_test_connected", (DL_FUNC) &_bnclassify_test_connected, 0},
     {"_bnclassify_make_cpt", (DL_FUNC) &_bnclassify_make_cpt, 5},
     {"_bnclassify_df2matrix", (DL_FUNC) &_bnclassify_df2matrix, 1},
     {"_bnclassify_get_instance", (DL_FUNC) &_bnclassify_get_instance, 5},
