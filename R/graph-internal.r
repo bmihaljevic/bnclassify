@@ -29,6 +29,13 @@
 #  * }
 #  */
 
+graphNEL2_graph_nodes <- function(x) { 
+  stopifnot(is(object = x, "graphNEL"))
+}
+graph_nodes <- function(x) {
+  stopifnot(is(object = x, "bnc_graph_internal"))
+  x$nodes 
+}
 graph_internal <- function(nodes, edges) { 
     # TODO: call to internal here?
     dag <- list(nodes=nodes, edges=edges) 
@@ -43,9 +50,14 @@ graph_internal2bgl <- function(dag) {
   dag$edges <- matrix(c(from, to), ncol = 2)
   dag 
 } 
-connected_components <- function(x) {
-  ux <- graph::ugraph(x)
-  comps <- RBGL::connectedComp(ux)  
+#'  connected_components 
+#'  @param  x currently a graphNEL. TODO But will be a graph_internal.
+#'  @keywords internal
+connected_components <- function(x) { 
+  stopifnot(is(x, "bnc_graph_internal"))
+  connected <- bh_connected_components(x$nodes, x$edges)
+  comps <- split(graph_nodes(x), connected + 1)
+  # TODO remove this. 
   if (length(comps) > 0) {
     comps 
   } 

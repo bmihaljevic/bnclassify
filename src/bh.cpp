@@ -70,7 +70,7 @@ void test_make(CharacterVector vertices, Rcpp::IntegerMatrix edges) {
 
 // Requires an undirected graph   
 // [[Rcpp::export]]  
-NumericVector connected_components(CharacterVector vertices, Rcpp::IntegerMatrix edges) { 
+NumericVector bh_connected_components(CharacterVector vertices, Rcpp::IntegerMatrix edges) { 
   ugraph g  = make_graph<ugraph>(vertices,  edges);
   // print_vertices(g);
   std::vector<int> component(num_vertices(g));
@@ -79,7 +79,6 @@ NumericVector connected_components(CharacterVector vertices, Rcpp::IntegerMatrix
   // std::vector<int>::size_type i;   
   // TODO: the split done by RBGL!!! 
   return wrap(component);  
-  // Rcpp::split()? Do it in R. 
 }  
 
   
@@ -87,6 +86,8 @@ NumericVector connected_components(CharacterVector vertices, Rcpp::IntegerMatrix
 dag <- anb_make_nb('a', letters[2:6])
 dag <- graph_internal2bgl(dag)
 test_make(dag$nodes, dag$edges)
-connected_components(dag$nodes, dag$edges) 
+bh_connected_components(dag$nodes, dag$edges) 
 # For connected:  split(0:5, a)
+
+
 */
