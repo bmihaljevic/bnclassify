@@ -22,27 +22,35 @@ typedef adjacency_list <vecS, vecS, undirectedS> ugraph;
 // typedef boost::directed_graph<> Graph;
 // this one did not work:
 // typedef adjacency_list<boost::directedS> Graph;  
-
-// TODO: Currently not sure what this is doing.
-void print_vertices(Graph g) {
-  typedef graph_traits<Graph>::vertex_iterator vertex_iterator;
-  std::pair<vertex_iterator, vertex_iterator> viter;
-  for (viter = vertices(g); viter.first != viter.second; ++viter.first) {
-    Rcout << *viter.first << std::endl;
+ 
+void print_vertices(Graph g) {  
+  typedef graph_traits<Graph>::vertex_descriptor Vertex; 
+  // get the property map for vertex indices
+  typedef property_map<Graph, vertex_index_t>::type IndexMap;
+  IndexMap index = get(vertex_index, g);
+  
+  Rcout << "Num vert" << num_vertices(g) << std::endl;
+  Rcout << "vertices(g) = ";
+  typedef graph_traits<Graph>::vertex_iterator vertex_iter;
+  std::pair<vertex_iter, vertex_iter> vp;
+  for (vp = vertices(g); vp.first != vp.second; ++vp.first) {
+    Vertex v = *vp.first;
+    Rcout << index[v] <<  " ";
   }
-  Rcout << std::endl;
+  Rcout << std::endl;   
 } 
 
 /**
  * This is an internal function.   
  * Since not not all vertices need to be in edges, add vertices separately.
  */
-Graph make_graph(CharacterVector vertices, Rcpp::IntegerMatrix edges)
+template <class T>
+T make_graph(CharacterVector vertices, Rcpp::IntegerMatrix edges)
 {
   // any checks?
   // Add vertices, if any 
   int n = vertices.size(); 
-  Graph g(n);
+  T g;
   for (int i = 0; i < n; i++) { 
     add_vertex(g);
   } 
@@ -56,40 +64,29 @@ Graph make_graph(CharacterVector vertices, Rcpp::IntegerMatrix edges)
 
 // [[Rcpp::export]]  
 void test_make(CharacterVector vertices, Rcpp::IntegerMatrix edges) {
-  Graph g  = make_graph(vertices,  edges);
+  Graph g  = make_graph<Graph>(vertices,  edges);
   print_vertices(g); 
 }      
 
-// Requires an undirected graph 
-NumericVector bh_connected_comp(ugraph g) 
-{   
+// Requires an undirected graph   
+// [[Rcpp::export]]  
+NumericVector connected_components(CharacterVector vertices, Rcpp::IntegerMatrix edges) { 
+  ugraph g  = make_graph<ugraph>(vertices,  edges);
+  // print_vertices(g);
   std::vector<int> component(num_vertices(g));
   int num = connected_components(g, &component[0]); 
   // TODO:: see additional checks from RBGL. Maybe connected comp might fail?
-  std::vector<int>::size_type i;
-  Rcout << "Total number of components: " << num << std::endl;  
-  for (i = 0; i != component.size(); ++i)
-    Rcout << "Vertex " << i <<" is in component " << component[i] << std::endl;
-  Rcout << std::endl;
-  
- return wrap(component);
-}    
+  // std::vector<int>::size_type i;   
+  // TODO: the split done by RBGL!!! 
+  return wrap(component);  
+  // Rcpp::split()? Do it in R. 
+}  
 
-
-// NumericVector connected_components(CharacterVector vertices, Rcpp::IntegerMatrix edges) {
-//   
-// } 
-
-// [[Rcpp::export]]
-void test_connected() {
-  ugraph g(3);
-  add_edge(0, 1, g); 
-  bh_connected_comp(g);
-} 
   
 /*** R
 dag <- anb_make_nb('a', letters[2:6])
 dag <- graph_internal2bgl(dag)
 test_make(dag$nodes, dag$edges)
+connected_components(dag$nodes, dag$edges) 
 # For connected:  split(0:5, a)
 */
