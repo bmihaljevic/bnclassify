@@ -39,6 +39,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// match_zero_based
+std::vector<int> match_zero_based(const CharacterVector& subset, const CharacterVector& superset);
+RcppExport SEXP _bnclassify_match_zero_based(SEXP subsetSEXP, SEXP supersetSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const CharacterVector& >::type subset(subsetSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type superset(supersetSEXP);
+    rcpp_result_gen = Rcpp::wrap(match_zero_based(subset, superset));
+    return rcpp_result_gen;
+END_RCPP
+}
 // test_make
 void test_make(CharacterVector vertices, Rcpp::IntegerMatrix edges);
 RcppExport SEXP _bnclassify_test_make(SEXP verticesSEXP, SEXP edgesSEXP) {
@@ -170,6 +182,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bnclassify_are_disjoint", (DL_FUNC) &_bnclassify_are_disjoint, 2},
     {"_bnclassify_normalize", (DL_FUNC) &_bnclassify_normalize, 1},
     {"_bnclassify_normalize_ctgt", (DL_FUNC) &_bnclassify_normalize_ctgt, 1},
+    {"_bnclassify_match_zero_based", (DL_FUNC) &_bnclassify_match_zero_based, 2},
     {"_bnclassify_test_make", (DL_FUNC) &_bnclassify_test_make, 2},
     {"_bnclassify_bh_connected_components", (DL_FUNC) &_bnclassify_bh_connected_components, 2},
     {"_bnclassify_bh_subgraph", (DL_FUNC) &_bnclassify_bh_subgraph, 3},

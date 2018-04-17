@@ -36,11 +36,11 @@ graph_internal <- function(nodes, edges) {
     dag
 }
 graph_nodes <- function(x) {
-  stopifnot(is(object = x, "bnc_graph_internal"))
+  stopifnot(is( x, "bnc_graph_internal"))
   x$nodes 
 }
 graphNEL2_graph_internal <- function(x) { 
-  stopifnot(inherits(object = x, "graphNEL"))
+  stopifnot(inherits(x, "graphNEL"))
   nodes <- graph::nodes(x)
   # TODO: named_edge_matrix maybe should be refactored a bit
   edges <- named_edge_matrix(x)
@@ -81,14 +81,13 @@ graph_connected_components <- function(x) {
   else {
     NULL
   }
-}
-
+} 
 #'  Subgraph.  
 #'  Only for a directed graph?
 #'  @param  x currently a graphNEL. TODO But will be a graph_internal.
 #'  @keywords internal
-graph_subgraph <- function(x) { 
+graph_subgraph <- function(nodes, x) { 
   g <- graphNEL2_graph_internal(x)
-  stopifnot(inherits(g, "bnc_graph_internal"))  
-  
+  stopifnot(inherits(g, "bnc_graph_internal"))   
+  bh_subgraph(subgraph_vertices = nodes, vertices = g$nodes, edges  = g$edges) 
 }

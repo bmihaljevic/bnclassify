@@ -13,6 +13,10 @@ normalize_ctgt <- function(ctgt) {
     .Call('_bnclassify_normalize_ctgt', PACKAGE = 'bnclassify', ctgt)
 }
 
+match_zero_based <- function(subset, superset) {
+    .Call('_bnclassify_match_zero_based', PACKAGE = 'bnclassify', subset, superset)
+}
+
 test_make <- function(vertices, edges) {
     invisible(.Call('_bnclassify_test_make', PACKAGE = 'bnclassify', vertices, edges))
 }

@@ -2,12 +2,16 @@
 % Please edit documentation in R/graph-internal.r
 \name{graph_subgraph}
 \alias{graph_subgraph}
-\title{@param  x currently a graphNEL. TODO But will be a graph_internal.
+\title{Subgraph.  
+ Only for a directed graph?
+ @param  x currently a graphNEL. TODO But will be a graph_internal.
  @keywords internal}
 \usage{
 graph_subgraph(x)
 }
 \description{
-@param  x currently a graphNEL. TODO But will be a graph_internal.
+Subgraph.  
+ Only for a directed graph?
+ @param  x currently a graphNEL. TODO But will be a graph_internal.
  @keywords internal
 }
