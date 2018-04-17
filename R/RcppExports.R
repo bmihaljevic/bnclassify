@@ -13,16 +13,12 @@ normalize_ctgt <- function(ctgt) {
     .Call('_bnclassify_normalize_ctgt', PACKAGE = 'bnclassify', ctgt)
 }
 
-make_nb <- function(class_var, features) {
-    invisible(.Call('_bnclassify_make_nb', PACKAGE = 'bnclassify', class_var, features))
+test_make <- function(vertices, edges) {
+    invisible(.Call('_bnclassify_test_make', PACKAGE = 'bnclassify', vertices, edges))
 }
 
-make_nb2 <- function(class_var, features) {
-    invisible(.Call('_bnclassify_make_nb2', PACKAGE = 'bnclassify', class_var, features))
-}
-
-bh_connected_comp <- function(x) {
-    .Call('_bnclassify_bh_connected_comp', PACKAGE = 'bnclassify', x)
+test_connected <- function() {
+    invisible(.Call('_bnclassify_test_connected', PACKAGE = 'bnclassify'))
 }
 
 make_cpt <- function(cpt, features, class_var, columns_db, df) {

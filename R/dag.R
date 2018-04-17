@@ -13,13 +13,7 @@ graphNEL_parents <- function(g) {
                          identity, simplify = FALSE)
   parents[names(have_parents)] <- have_parents
   parents
-}
-#  Gets the parents of a node in the graph
-family <- function(x, g) {
-  parents <- parents(x, g)
-  stopifnot(is.character(parents))
-  c(x, parents)
-}
+} 
 subgraph <- function(vars, x) {
   graph::subGraph(snodes=vars, x)
 }
