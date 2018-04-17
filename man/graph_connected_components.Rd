@@ -3,6 +3,7 @@
 \name{graph_connected_components}
 \alias{graph_connected_components}
 \title{connected_components 
+ 
  @param  x currently a graphNEL. TODO But will be a graph_internal.
  @keywords internal}
 \usage{
@@ -10,6 +11,7 @@ graph_connected_components(x)
 }
 \description{
 connected_components 
+ 
  @param  x currently a graphNEL. TODO But will be a graph_internal.
  @keywords internal
 }

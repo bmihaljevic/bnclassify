@@ -62,6 +62,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// bh_subgraph
+void bh_subgraph(CharacterVector subgraph_vertices, CharacterVector vertices, Rcpp::IntegerMatrix edges);
+RcppExport SEXP _bnclassify_bh_subgraph(SEXP subgraph_verticesSEXP, SEXP verticesSEXP, SEXP edgesSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type subgraph_vertices(subgraph_verticesSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type vertices(verticesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerMatrix >::type edges(edgesSEXP);
+    bh_subgraph(subgraph_vertices, vertices, edges);
+    return R_NilValue;
+END_RCPP
+}
 // make_cpt
 NumericVector make_cpt(NumericVector cpt, const CharacterVector features, const CharacterVector class_var, const CharacterVector columns_db, DataFrame df);
 RcppExport SEXP _bnclassify_make_cpt(SEXP cptSEXP, SEXP featuresSEXP, SEXP class_varSEXP, SEXP columns_dbSEXP, SEXP dfSEXP) {
@@ -160,6 +172,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bnclassify_normalize_ctgt", (DL_FUNC) &_bnclassify_normalize_ctgt, 1},
     {"_bnclassify_test_make", (DL_FUNC) &_bnclassify_test_make, 2},
     {"_bnclassify_bh_connected_components", (DL_FUNC) &_bnclassify_bh_connected_components, 2},
+    {"_bnclassify_bh_subgraph", (DL_FUNC) &_bnclassify_bh_subgraph, 3},
     {"_bnclassify_make_cpt", (DL_FUNC) &_bnclassify_make_cpt, 5},
     {"_bnclassify_df2matrix", (DL_FUNC) &_bnclassify_df2matrix, 1},
     {"_bnclassify_get_instance", (DL_FUNC) &_bnclassify_get_instance, 5},

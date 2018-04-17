@@ -40,7 +40,7 @@ graph_nodes <- function(x) {
   x$nodes 
 }
 graphNEL2_graph_internal <- function(x) { 
-  stopifnot(is(object = x, "graphNEL"))
+  stopifnot(inherits(object = x, "graphNEL"))
   nodes <- graph::nodes(x)
   # TODO: named_edge_matrix maybe should be refactored a bit
   edges <- named_edge_matrix(x)
@@ -66,11 +66,12 @@ call_bh <- function(fun, g) {
  do.call(fun, args = list(vertices = g$nodes, edges  = g$edges)) 
 }
 #'  connected_components 
+#'  
 #'  @param  x currently a graphNEL. TODO But will be a graph_internal.
 #'  @keywords internal
 graph_connected_components <- function(x) {  
   g <- graphNEL2_graph_internal(x)
-  stopifnot(is(g, "bnc_graph_internal"))  
+  stopifnot(inherits(g, "bnc_graph_internal"))  
   connected <- call_bh('bh_connected_components', g)
   comps <- split(graph_nodes(g), connected + 1)
   # TODO remove this. 
@@ -80,4 +81,14 @@ graph_connected_components <- function(x) {
   else {
     NULL
   }
+}
+
+#'  Subgraph.  
+#'  Only for a directed graph?
+#'  @param  x currently a graphNEL. TODO But will be a graph_internal.
+#'  @keywords internal
+graph_subgraph <- function(x) { 
+  g <- graphNEL2_graph_internal(x)
+  stopifnot(inherits(g, "bnc_graph_internal"))  
+  
 }

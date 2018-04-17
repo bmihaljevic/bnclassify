@@ -5,6 +5,7 @@
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/connected_components.hpp>
 #include <boost/graph/directed_graph.hpp>
+#include <boost/graph/subgraph.hpp>
 
 /**
  * Boost uses integers as vertex ids, not names. 
@@ -22,6 +23,7 @@ typedef adjacency_list <vecS, vecS, undirectedS> ugraph;
 // typedef boost::directed_graph<> dgraph;
 // this one did not work:
 // typedef adjacency_list<boost::directedS> dgraph;  
+typedef subgraph< adjacency_list< vecS, vecS, directedS, no_property, property< edge_index_t, int > > > dsubgraph;
  
 void print_vertices(dgraph g) {  
   typedef graph_traits<dgraph>::vertex_descriptor Vertex; 
@@ -81,11 +83,35 @@ NumericVector bh_connected_components(CharacterVector vertices, Rcpp::IntegerMat
   return wrap(component);  
 }  
 
+
+// std::vector<int> match_zero_based
+// // -1 because we need 0-based indices
+//   IntegerVector  mtch = Rcpp::match(subgraph_vertices, vertices) - 1;
+//   std::vector<int> sgraph_vertices = as<std::vector<int> >(mtch );
+
+// [[Rcpp::export]]  
+void bh_subgraph(CharacterVector subgraph_vertices, CharacterVector vertices, Rcpp::IntegerMatrix edges) {  
+  
+  
+  Rcout << mtch << std::endl;
+  dsubgraph g  = bh_make_graph<dsubgraph>(vertices,  edges);
+  dsubgraph& subgraph = g.create_subgraph(); 
+//  If you add particular vertices from global, are they kept?
+  add_vertex(0, subgraph);
+  add_vertex(1, subgraph); 
+  Rcout << "Num edges" << num_edges(subgraph) << std::endl;
+  // vertices are ignored when building graph. 
+  // need to find vertices by their id.  Or need to simply map their names to their ids. 
+  // If these were int, it would be very simple.
+  // print_vertices(subgraph);
+}
+
   
 /*** R
 dag <- anb_make_nb('a', letters[2:6])
-dag <- graph_internal2bgl(dag)
 test_make(dag$nodes, dag$edges)
 bh_connected_components(dag$nodes, dag$edges) 
+bh_subgraph(dag$nodes, dag$nodes, dag$edges) 
+bh_subgraph('Bojan', dag$nodes, dag$edges) 
 # For connected:  split(0:5, a)  
 */
