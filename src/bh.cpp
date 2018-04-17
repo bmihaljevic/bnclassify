@@ -75,6 +75,11 @@ NumericVector bh_connected_comp(ugraph g)
  return wrap(component);
 }    
 
+
+// NumericVector connected_components(CharacterVector vertices, Rcpp::IntegerMatrix edges) {
+//   
+// } 
+
 // [[Rcpp::export]]
 void test_connected() {
   ugraph g(3);
@@ -83,8 +88,8 @@ void test_connected() {
 } 
   
 /*** R
-dag <- tmp_nb_dag('a', letters[2:6])
-dag <- dag_internal2bgl(dag)
-test(dag$nodes, dag$edges)
+dag <- anb_make_nb('a', letters[2:6])
+dag <- graph_internal2bgl(dag)
+test_make(dag$nodes, dag$edges)
 # For connected:  split(0:5, a)
 */
