@@ -16,22 +16,22 @@ using namespace boost;
 using namespace Rcpp;       
 
 // The graph type I will use
-typedef adjacency_list<vecS, vecS, directedS> Graph;
+typedef adjacency_list<vecS, vecS, directedS> dgraph;
 // for connected components and such
 typedef adjacency_list <vecS, vecS, undirectedS> ugraph; 
-// typedef boost::directed_graph<> Graph;
+// typedef boost::directed_graph<> dgraph;
 // this one did not work:
-// typedef adjacency_list<boost::directedS> Graph;  
+// typedef adjacency_list<boost::directedS> dgraph;  
  
-void print_vertices(Graph g) {  
-  typedef graph_traits<Graph>::vertex_descriptor Vertex; 
+void print_vertices(dgraph g) {  
+  typedef graph_traits<dgraph>::vertex_descriptor Vertex; 
   // get the property map for vertex indices
-  typedef property_map<Graph, vertex_index_t>::type IndexMap;
+  typedef property_map<dgraph, vertex_index_t>::type IndexMap;
   IndexMap index = get(vertex_index, g);
   
   Rcout << "Num vert" << num_vertices(g) << std::endl;
   Rcout << "vertices(g) = ";
-  typedef graph_traits<Graph>::vertex_iterator vertex_iter;
+  typedef graph_traits<dgraph>::vertex_iterator vertex_iter;
   std::pair<vertex_iter, vertex_iter> vp;
   for (vp = vertices(g); vp.first != vp.second; ++vp.first) {
     Vertex v = *vp.first;
@@ -64,7 +64,7 @@ T make_graph(CharacterVector vertices, Rcpp::IntegerMatrix edges)
 
 // [[Rcpp::export]]  
 void test_make(CharacterVector vertices, Rcpp::IntegerMatrix edges) {
-  Graph g  = make_graph<Graph>(vertices,  edges);
+  dgraph g  = make_graph<dgraph>(vertices,  edges);
   print_vertices(g); 
 }      
 
