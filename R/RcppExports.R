@@ -13,3 +13,43 @@ normalize_ctgt <- function(ctgt) {
     .Call('_bnclassify_normalize_ctgt', PACKAGE = 'bnclassify', ctgt)
 }
 
+make_nb <- function(class_var, features) {
+    invisible(.Call('_bnclassify_make_nb', PACKAGE = 'bnclassify', class_var, features))
+}
+
+make_nb2 <- function(class_var, features) {
+    invisible(.Call('_bnclassify_make_nb2', PACKAGE = 'bnclassify', class_var, features))
+}
+
+bh_connected_comp <- function(x) {
+    .Call('_bnclassify_bh_connected_comp', PACKAGE = 'bnclassify', x)
+}
+
+make_cpt <- function(cpt, features, class_var, columns_db, df) {
+    .Call('_bnclassify_make_cpt', PACKAGE = 'bnclassify', cpt, features, class_var, columns_db, df)
+}
+
+df2matrix <- function(x) {
+    .Call('_bnclassify_df2matrix', PACKAGE = 'bnclassify', x)
+}
+
+get_instance <- function(cpt, features, class_var, columns_db, df) {
+    .Call('_bnclassify_get_instance', PACKAGE = 'bnclassify', cpt, features, class_var, columns_db, df)
+}
+
+get_row <- function(cpt, features, class_var, columns_db, df) {
+    .Call('_bnclassify_get_row', PACKAGE = 'bnclassify', cpt, features, class_var, columns_db, df)
+}
+
+predict_rcpp <- function(model, dataset) {
+    .Call('_bnclassify_predict_rcpp', PACKAGE = 'bnclassify', model, dataset)
+}
+
+make_dataset <- function(df) {
+    invisible(.Call('_bnclassify_make_dataset', PACKAGE = 'bnclassify', df))
+}
+
+get_dataset <- function(df, i, j) {
+    .Call('_bnclassify_get_dataset', PACKAGE = 'bnclassify', df, i, j)
+}
+
