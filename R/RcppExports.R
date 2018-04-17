@@ -17,8 +17,8 @@ test_make <- function(vertices, edges) {
     invisible(.Call('_bnclassify_test_make', PACKAGE = 'bnclassify', vertices, edges))
 }
 
-test_connected <- function() {
-    invisible(.Call('_bnclassify_test_connected', PACKAGE = 'bnclassify'))
+bh_connected_components <- function(vertices, edges) {
+    .Call('_bnclassify_bh_connected_components', PACKAGE = 'bnclassify', vertices, edges)
 }
 
 make_cpt <- function(cpt, features, class_var, columns_db, df) {

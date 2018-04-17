@@ -7,7 +7,7 @@ complete_graph <- function(nodes) {
   g <- graph::graphNEL(nodes)
   graph::complement(g)
 } 
-bh_make_graph <- function(nodes, from, to, weights) {  
+make_graph <- function(nodes, from, to, weights) {  
 # Check nodes is character 
   stopifnot(is.character(nodes))
 #  Make graph from nodes 

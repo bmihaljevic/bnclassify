@@ -17,15 +17,9 @@ graphNEL_parents <- function(g) {
 subgraph <- function(vars, x) {
   graph::subGraph(snodes=vars, x)
 }
+# TODO: keep only graph_connected_components
 connected_components <- function(x) {
-  ux <- graph::ugraph(x)
-  comps <- RBGL::connectedComp(ux)  
-  if (length(comps) > 0) {
-    comps 
-  } 
-  else {
-    NULL
-  }
+ graph_connected_components(x)
 }
 # Adds arcs from parents to node
 condition_on <- function(parents, nodes, x) {

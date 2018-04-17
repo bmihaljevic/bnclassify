@@ -45,7 +45,7 @@ void print_vertices(dgraph g) {
  * Since not not all vertices need to be in edges, add vertices separately.
  */
 template <class T>
-T make_graph(CharacterVector vertices, Rcpp::IntegerMatrix edges)
+T bh_make_graph(CharacterVector vertices, Rcpp::IntegerMatrix edges)
 {
   // any checks?
   // Add vertices, if any 
@@ -64,14 +64,14 @@ T make_graph(CharacterVector vertices, Rcpp::IntegerMatrix edges)
 
 // [[Rcpp::export]]  
 void test_make(CharacterVector vertices, Rcpp::IntegerMatrix edges) {
-  dgraph g  = make_graph<dgraph>(vertices,  edges);
+  dgraph g  = bh_make_graph<dgraph>(vertices,  edges);
   print_vertices(g); 
 }      
 
 // Requires an undirected graph   
 // [[Rcpp::export]]  
 NumericVector bh_connected_components(CharacterVector vertices, Rcpp::IntegerMatrix edges) { 
-  ugraph g  = make_graph<ugraph>(vertices,  edges);
+  ugraph g  = bh_make_graph<ugraph>(vertices,  edges);
   // print_vertices(g);
   std::vector<int> component(num_vertices(g));
   int num = connected_components(g, &component[0]); 
@@ -87,7 +87,5 @@ dag <- anb_make_nb('a', letters[2:6])
 dag <- graph_internal2bgl(dag)
 test_make(dag$nodes, dag$edges)
 bh_connected_components(dag$nodes, dag$edges) 
-# For connected:  split(0:5, a)
-
-
+# For connected:  split(0:5, a)  
 */

@@ -27,36 +27,52 @@
 #  *    edgeMatrix(names=FALSE): uses names as entries
 #  *    print(): print nicely
 #  * }
-#  */
-
-graphNEL2_graph_nodes <- function(x) { 
-  stopifnot(is(object = x, "graphNEL"))
+#  */   
+graph_internal <- function(nodes, edges) {  
+    stopifnot(is.character(nodes), is.character(edges))
+    edges <- graph_make_edges(nodes, edges)
+    dag <- list(nodes=nodes, edges=edges) 
+    class(dag) <- 'bnc_graph_internal'
+    dag
 }
 graph_nodes <- function(x) {
   stopifnot(is(object = x, "bnc_graph_internal"))
   x$nodes 
 }
-graph_internal <- function(nodes, edges) { 
-    # TODO: call to internal here?
-    dag <- list(nodes=nodes, edges=edges) 
-    class(dag) <- 'bnc_graph_internal'
-    dag
-}
-graph_internal2bgl <- function(dag) {
-  nodes <- dag$nodes 
-  # - 1 because it is 0-based
-  from <- match(dag$edges[, 1], nodes) - 1
-  to <- match(dag$edges[, 2], nodes) - 1
-  dag$edges <- matrix(c(from, to), ncol = 2)
-  dag 
+graphNEL2_graph_internal <- function(x) { 
+  stopifnot(is(object = x, "graphNEL"))
+  nodes <- graph::nodes(x)
+  # TODO: named_edge_matrix maybe should be refactored a bit
+  edges <- named_edge_matrix(x)
+  graph_internal(nodes, edges ) 
 } 
+graph_make_edges <- function(nodes, edges) { 
+  stopifnot(is.character(nodes), is.character(edges), nrow(edges) == 2)
+  from <- match(edges[1, ], nodes) - 1
+  to <- match(edges[2, ], nodes) - 1
+  edges <- matrix(c(from, to), ncol = 2)
+  edges 
+}
+# graph_internal2bgl <- function(dag) {
+#   nodes <- dag$nodes 
+#   # - 1 because it is 0-based
+#   from <- match(dag$edges[, 1], nodes) - 1
+#   to <- match(dag$edges[, 2], nodes) - 1
+#   edges <- matrix(c(from, to), ncol = 2)
+#   # do not retain class information
+#   list(nodes = nodes, edges  = edges)
+# } 
+call_bh <- function(fun, g) { 
+ do.call(fun, args = list(vertices = g$nodes, edges  = g$edges)) 
+}
 #'  connected_components 
 #'  @param  x currently a graphNEL. TODO But will be a graph_internal.
 #'  @keywords internal
-connected_components <- function(x) { 
-  stopifnot(is(x, "bnc_graph_internal"))
-  connected <- bh_connected_components(x$nodes, x$edges)
-  comps <- split(graph_nodes(x), connected + 1)
+graph_connected_components <- function(x) {  
+  g <- graphNEL2_graph_internal(x)
+  stopifnot(is(g, "bnc_graph_internal"))  
+  connected <- call_bh('bh_connected_components', g)
+  comps <- split(graph_nodes(g), connected + 1)
   # TODO remove this. 
   if (length(comps) > 0) {
     comps 
