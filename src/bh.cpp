@@ -27,7 +27,6 @@ std::vector<int> match_zero_based(const CharacterVector & subset, const Characte
   int min = *std::min_element(subset_inds.begin(), subset_inds.end());
   if (min <= 0)  stop("All subset must be in the superset.");
   subset_inds = subset_inds - 1; 
-  Rcout << subset_inds << std::endl;
   return as<std::vector<int> > (subset_inds);
 } 
 
@@ -52,13 +51,31 @@ Rcpp::List graph2R(dsubgraph g) {
   std::pair<vertex_iter, vertex_iter> vp;
   std::vector<int> nodes;
   nodes.reserve(num_vertices(g)); 
+  
+  Rcout << num_vertices(g) << std::endl;
   for (vp = vertices(g); vp.first != vp.second; ++vp.first) {
     Vertex v = *vp.first;
     nodes.push_back(index[v]);
   } 
-  // TODO: add the edges.  
   
-  List output = List::create(Named("nodes") = nodes);
+  typedef graph_traits<dsubgraph>::edge_descriptor edge; 
+  typedef graph_traits<dsubgraph>::edge_iterator edge_iter;
+  std::pair<edge_iter, edge_iter> ep; 
+  int nedges = num_edges(g);
+  Rcout << nedges << std::endl;
+  Rcpp::IntegerMatrix edges_matrix(nedges, 2);
+  Vertex u, v;
+  int row  = 0;
+  for (ep = edges(g); ep.first != ep.second; ++ep.first) {
+    edge e = *ep.first;
+    u = source(*ep.first,g);
+    v = target(*ep.first,g);
+    row++;
+    edges_matrix(row, 1) = u;
+    edges_matrix(row, 2) = v;
+  }
+  
+  List output = List::create(Named("nodes") = nodes, Named("edges") = edges_matrix);
   return output;
 }
 
@@ -87,7 +104,7 @@ T bh_make_graph(CharacterVector vertices, Rcpp::IntegerMatrix edges)
 // [[Rcpp::export]]  
 void test_make(CharacterVector vertices, Rcpp::IntegerMatrix edges) {
   dgraph g  = bh_make_graph<dgraph>(vertices,  edges);
-  print_vertices(g); 
+  // print_vertices(g); 
 }      
 
 // Requires an undirected graph   
@@ -104,21 +121,24 @@ NumericVector bh_connected_components(CharacterVector vertices, Rcpp::IntegerMat
 }     
 
 
-dsubgraph  make_subgraph(CharacterVector subgraph_vertices, CharacterVector vertices, Rcpp::IntegerMatrix edges)  {
-  dsubgraph g  = bh_make_graph<dsubgraph>(vertices,  edges);
+dsubgraph  make_subgraph(dsubgraph g, CharacterVector subgraph_vertices, CharacterVector vertices)  {
   dsubgraph& subgraph = g.create_subgraph(); 
 //  If you add particular vertices from global, are they kept?
   std::vector<int> sgraph_vertices = match_zero_based(subgraph_vertices, vertices);
   for (int i = 0; i < sgraph_vertices.size(); i++) {
-    add_vertex(sgraph_vertices.at(i), subgraph);
+    Rcout << "adding vertex";
+    add_vertex(sgraph_vertices.at(i), subgraph); 
+    Rcout << num_vertices(subgraph) << std::endl;
   }
   return subgraph;  
 }
 
 // [[Rcpp::export]]  
-void bh_subgraph(CharacterVector subgraph_vertices, CharacterVector vertices, Rcpp::IntegerMatrix edges) {
-  const dsubgraph  & subgraph = make_subgraph (subgraph_vertices, vertices, edges) ;
-  graph2R(subgraph );
+Rcpp::List bh_subgraph(CharacterVector subgraph_vertices, CharacterVector vertices, Rcpp::IntegerMatrix edges) { 
+  dsubgraph g  = bh_make_graph<dsubgraph>(vertices,  edges);
+  dsubgraph  subgraph = make_subgraph (g, subgraph_vertices, vertices) ; 
+  Rcout << num_vertices(subgraph) << std::endl;
+  return graph2R(subgraph );
 } 
 
   
