@@ -128,7 +128,7 @@ dgraph  make_subgraph(dgraph & g, const CharacterVector & subgraph_vertices, con
 }
 
 // [[Rcpp::export]]  
-Rcpp::List bh_subgraph(CharacterVector subgraph_vertices, CharacterVector vertices, Rcpp::IntegerMatrix edges) {
+Rcpp::List bh_subgraph(const CharacterVector & subgraph_vertices, const CharacterVector & vertices, const Rcpp::IntegerMatrix & edges) {
   dgraph g  = bh_make_graph<dgraph>(vertices,  edges); 
   dgraph subgraph = make_subgraph (g, subgraph_vertices, vertices) ;   
   // print_graph(subgraph); 
