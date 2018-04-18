@@ -49,7 +49,8 @@ add_node <- function(node, x) {
   graph_add_node(node, x)
 }
 remove_node <- function(node, x) {
-  graph::removeNode(node, x)
+  # graph::removeNode(node, x) 
+  graph_remove_node(node, x)
 }
 num_arcs <- function(x) {
   # graph::numEdges(x)

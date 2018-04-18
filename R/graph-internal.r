@@ -106,9 +106,10 @@ graph_add_node <- function(node, x) {
 graph_remove_node <- function(node, x) {
   g <- graphNEL2_graph_internal(x) 
   stopifnot(inherits( g, "bnc_graph_internal"), is.character(node))  
-  if (!node %in% g$nodes) stop("Node not in graph") 
-  # graph::removeNode(node, g) 
-  graph_internal2graph_NEL(g) 
+  if (!node %in% g$nodes) stop("Node not in graph")  
+  removed <- call_bh('bh_remove_node', g = g, remove = node)  
+  removed <- graph_internal_make(removed$nodes, removed$edges)
+  graph_internal2graph_NEL(removed) 
 }
 graph_num_arcs <- function(x) { 
   g <- graphNEL2_graph_internal(x)

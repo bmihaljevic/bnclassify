@@ -179,20 +179,7 @@ Rcpp::List bh_remove_node(const CharacterVector & vertices, const Rcpp::IntegerM
   if (remove_ind.size() > 1) stop("More than one match!");
   int remove_index = remove_ind.at(0);
   clear_vertex(remove_index, g);
-  
-  graph_traits<dgraph>::vertex_iterator vi;  
-  // remove_vertex(*vi, g);
-  // remove_vertex(remove_index, g);
-  //  
-  
-  typedef adjacency_list<vecS, vecS, directedS, VertexProperty, EdgeProperty > Graph; // VertexList=listS
-  Graph G(3);
-  // Fill in the graph...
-  
-  // Attempt to remove all the vertices. Wrong!
-  graph_traits<Graph>::vertex_iterator vi_end; 
-  remove_vertex(*vi_end, G);
-  
+  remove_vertex(remove_index, g);    
   return graph2R(g);
 }
 
