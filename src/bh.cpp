@@ -6,6 +6,7 @@
 #include <boost/graph/connected_components.hpp>
 #include <boost/graph/directed_graph.hpp>
 #include <boost/graph/subgraph.hpp>
+#include <boost/graph/graph_utility.hpp>
 
 // TODO: pass from R by const reference!! 
 
@@ -41,8 +42,9 @@ typedef subgraph< adjacency_list< vecS, vecS, directedS, vertex_index_t, propert
 
 /**
  * Will return a list with nodes and edges. Does not have the names though unless I save them somewhere.
+ * If I did not pass the subgraph by reference here, it would not print.
  */
-Rcpp::List graph2R(dsubgraph g) {
+Rcpp::List graph2R(dsubgraph & g) {
   typedef graph_traits<dsubgraph>::vertex_descriptor Vertex; 
   typedef property_map<dsubgraph, vertex_index_t>::type IndexMap;
   IndexMap index = get(vertex_index, g);
@@ -52,7 +54,6 @@ Rcpp::List graph2R(dsubgraph g) {
   std::vector<int> nodes;
   nodes.reserve(num_vertices(g)); 
   
-  Rcout << num_vertices(g) << std::endl;
   for (vp = vertices(g); vp.first != vp.second; ++vp.first) {
     Vertex v = *vp.first;
     nodes.push_back(index[v]);
@@ -62,7 +63,6 @@ Rcpp::List graph2R(dsubgraph g) {
   typedef graph_traits<dsubgraph>::edge_iterator edge_iter;
   std::pair<edge_iter, edge_iter> ep; 
   int nedges = num_edges(g);
-  Rcout << nedges << std::endl;
   Rcpp::IntegerMatrix edges_matrix(nedges, 2);
   Vertex u, v;
   int row  = 0;
@@ -121,23 +121,21 @@ NumericVector bh_connected_components(CharacterVector vertices, Rcpp::IntegerMat
 }     
 
 
-dsubgraph  make_subgraph(dsubgraph g, CharacterVector subgraph_vertices, CharacterVector vertices)  {
-  dsubgraph& subgraph = g.create_subgraph(); 
+dsubgraph  make_subgraph(dsubgraph & g, const CharacterVector & subgraph_vertices, const CharacterVector & vertices)  { 
+  dsubgraph subgraph = g.create_subgraph(); 
 //  If you add particular vertices from global, are they kept?
   std::vector<int> sgraph_vertices = match_zero_based(subgraph_vertices, vertices);
   for (int i = 0; i < sgraph_vertices.size(); i++) {
-    Rcout << "adding vertex";
-    add_vertex(sgraph_vertices.at(i), subgraph); 
-    Rcout << num_vertices(subgraph) << std::endl;
+    int a = add_vertex(sgraph_vertices.at(i), subgraph); 
   }
   return subgraph;  
 }
 
 // [[Rcpp::export]]  
-Rcpp::List bh_subgraph(CharacterVector subgraph_vertices, CharacterVector vertices, Rcpp::IntegerMatrix edges) { 
-  dsubgraph g  = bh_make_graph<dsubgraph>(vertices,  edges);
-  dsubgraph  subgraph = make_subgraph (g, subgraph_vertices, vertices) ; 
-  Rcout << num_vertices(subgraph) << std::endl;
+Rcpp::List bh_subgraph(CharacterVector subgraph_vertices, CharacterVector vertices, Rcpp::IntegerMatrix edges) {
+  dsubgraph g  = bh_make_graph<dsubgraph>(vertices,  edges); 
+  dsubgraph subgraph = make_subgraph (g, subgraph_vertices, vertices) ;   
+  // print_graph(subgraph); 
   return graph2R(subgraph );
 } 
 

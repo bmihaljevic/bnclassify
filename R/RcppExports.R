@@ -26,7 +26,7 @@ bh_connected_components <- function(vertices, edges) {
 }
 
 bh_subgraph <- function(subgraph_vertices, vertices, edges) {
-    invisible(.Call('_bnclassify_bh_subgraph', PACKAGE = 'bnclassify', subgraph_vertices, vertices, edges))
+    .Call('_bnclassify_bh_subgraph', PACKAGE = 'bnclassify', subgraph_vertices, vertices, edges)
 }
 
 make_cpt <- function(cpt, features, class_var, columns_db, df) {

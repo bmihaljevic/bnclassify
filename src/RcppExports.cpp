@@ -75,15 +75,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // bh_subgraph
-void bh_subgraph(CharacterVector subgraph_vertices, CharacterVector vertices, Rcpp::IntegerMatrix edges);
+Rcpp::List bh_subgraph(CharacterVector subgraph_vertices, CharacterVector vertices, Rcpp::IntegerMatrix edges);
 RcppExport SEXP _bnclassify_bh_subgraph(SEXP subgraph_verticesSEXP, SEXP verticesSEXP, SEXP edgesSEXP) {
 BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< CharacterVector >::type subgraph_vertices(subgraph_verticesSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type vertices(verticesSEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerMatrix >::type edges(edgesSEXP);
-    bh_subgraph(subgraph_vertices, vertices, edges);
-    return R_NilValue;
+    rcpp_result_gen = Rcpp::wrap(bh_subgraph(subgraph_vertices, vertices, edges));
+    return rcpp_result_gen;
 END_RCPP
 }
 // make_cpt

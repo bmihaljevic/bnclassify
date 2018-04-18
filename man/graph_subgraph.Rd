@@ -7,7 +7,7 @@
  @param  x currently a graphNEL. TODO But will be a graph_internal.
  @keywords internal}
 \usage{
-graph_subgraph(x)
+graph_subgraph(nodes, x)
 }
 \description{
 Subgraph.  

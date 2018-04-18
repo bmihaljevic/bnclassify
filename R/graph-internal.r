@@ -52,18 +52,10 @@ graph_make_edges <- function(nodes, edges) {
   to <- match(edges[2, ], nodes) - 1
   edges <- matrix(c(from, to), ncol = 2)
   edges 
-}
-# graph_internal2bgl <- function(dag) {
-#   nodes <- dag$nodes 
-#   # - 1 because it is 0-based
-#   from <- match(dag$edges[, 1], nodes) - 1
-#   to <- match(dag$edges[, 2], nodes) - 1
-#   edges <- matrix(c(from, to), ncol = 2)
-#   # do not retain class information
-#   list(nodes = nodes, edges  = edges)
-# } 
+}  
 call_bh <- function(fun, g) { 
  do.call(fun, args = list(vertices = g$nodes, edges  = g$edges)) 
+  # TODO: back to my object type.
 }
 #'  connected_components 
 #'  
