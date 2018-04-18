@@ -23,14 +23,7 @@ subgraph <- function(vars, x) {
 connected_components <- function(x) {
  graph_connected_components(x)
 }
-# Adds arcs from parents to node
-condition_on <- function(parents, nodes, x) {
-#   Replicate parents for each node 
-  wparents <- rep(parents, length(nodes))
-  wnodes <- rep(nodes, each = length(parents))
-#   Add edges
-  add_edges(wparents, wnodes, x)
-}
+
 add_edges <- function(from, to, x) {
   # check from and to are disjoint and same length
   stopifnot(is.character(from), is.character(to))
@@ -42,7 +35,6 @@ add_edges <- function(from, to, x) {
   adj <- any(graph::isAdjacent(x, from = undirected_from, to = undirected_to))
   stopifnot(!adj)
   nx <- graph::addEdge(from = from, to = to, graph = x)
-  stopifnot(is_dag_graph(nx))
   nx
 } 
 add_node <- function(node, x) {
