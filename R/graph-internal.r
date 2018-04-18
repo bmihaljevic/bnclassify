@@ -29,12 +29,12 @@
 #  * }
 #  */   
 graph_internal <- function(nodes, edges) {  
-    stopifnot(is.character(nodes), is.character(edges))
+    stopifnot(is.character(nodes), is.character(edges), is.matrix(edges))
     edges <- graph_make_edges(nodes, edges)
     graph_internal_make (nodes, edges) 
 }
 graph_internal_make <- function(nodes, edges) {   
-    stopifnot(is.character(nodes), is.numeric(edges))
+    stopifnot(is.character(nodes), is.numeric(edges), is.matrix(edges))
     dag <- list(nodes=nodes, edges=edges) 
     class(dag) <- 'bnc_graph_internal'
     dag
@@ -104,10 +104,14 @@ graph_add_node <- function(node, x) {
   graph_internal2graph_NEL(g) 
 }
 graph_remove_node <- function(node, x) {
-  stopifnot(inherits( x, "bnc_graph_internal")) 
-  graph::removeNode(node, x)
+  g <- graphNEL2_graph_internal(x) 
+  stopifnot(inherits( g, "bnc_graph_internal"), is.character(node))  
+  if (!node %in% g$nodes) stop("Node not in graph") 
+  # graph::removeNode(node, g) 
+  graph_internal2graph_NEL(g) 
 }
 graph_num_arcs <- function(x) { 
-  stopifnot(inherits( x, "bnc_graph_internal")) 
-  graph::numEdges(x)
+  g <- graphNEL2_graph_internal(x)
+  stopifnot(inherits( g, "bnc_graph_internal")) 
+  nrow(g$edges)
 }

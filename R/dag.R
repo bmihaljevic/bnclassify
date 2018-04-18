@@ -52,5 +52,6 @@ remove_node <- function(node, x) {
   graph::removeNode(node, x)
 }
 num_arcs <- function(x) {
-  graph::numEdges(x)
+  # graph::numEdges(x)
+  graph_num_arcs(x)
 }
