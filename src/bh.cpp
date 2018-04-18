@@ -6,9 +6,7 @@
 #include <boost/graph/connected_components.hpp>
 #include <boost/graph/directed_graph.hpp>
 #include <boost/graph/subgraph.hpp>
-#include <boost/graph/graph_utility.hpp>
-
-// TODO: pass from R by const reference!! 
+#include <boost/graph/graph_utility.hpp> 
 
 /**
  * Boost uses integers as vertex ids, not names. 
