@@ -45,7 +45,8 @@ add_edges <- function(from, to, x) {
   nx
 } 
 add_node <- function(node, x) {
-  graph::addNode(node, x)
+  # graph::addNode(node, x) 
+  graph_add_node(node, x)
 }
 remove_node <- function(node, x) {
   graph::removeNode(node, x)

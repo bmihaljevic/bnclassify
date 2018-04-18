@@ -51,7 +51,7 @@ graphNEL2_graph_internal <- function(x) {
   graph_internal(nodes, edges ) 
 }  
 graph_internal2graph_NEL <- function(x) {  
-  stopifnot(is( x, "bnc_graph_internal")) 
+  stopifnot(inherits( x, "bnc_graph_internal")) 
   edges <- x$edges
   edges[] <- x$nodes[x$edges + 1]
   graph::ftM2graphNEL(ft = edges, W = NULL, V = x$nodes, edgemode = "directed")  
@@ -94,4 +94,20 @@ graph_subgraph <- function(nodes, x) {
   subgraph <- graph_internal_make(subgraph$nodes, subgraph$edges)
   # TODO remove:
   graph_internal2graph_NEL(subgraph ) 
+}  
+# No need to call BGL for this. 
+graph_add_node <- function(node, x) { 
+  g <- graphNEL2_graph_internal(x)
+  stopifnot(inherits( g, "bnc_graph_internal"), is.character(node)) 
+  if (node %in% g$nodes) stop("Node already in graph") 
+  g$nodes <- c(g$nodes, node)  
+  graph_internal2graph_NEL(g) 
+}
+graph_remove_node <- function(node, x) {
+  stopifnot(inherits( x, "bnc_graph_internal")) 
+  graph::removeNode(node, x)
+}
+graph_num_arcs <- function(x) { 
+  stopifnot(inherits( x, "bnc_graph_internal")) 
+  graph::numEdges(x)
 }
