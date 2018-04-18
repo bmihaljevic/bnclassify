@@ -50,7 +50,7 @@ graph_nodes <- function(x) {
 graphNEL2_graph_internal <- function(x) { 
   stopifnot(inherits(x, "graphNEL"))
   nodes <- graph::nodes(x)
-  edges <- named_edge_matrix(x)
+  edges <- t(named_edge_matrix(x))
   graph_internal(nodes, edges ) 
 }  
 graph_internal2graph_NEL <- function(x) {  
@@ -59,12 +59,15 @@ graph_internal2graph_NEL <- function(x) {
   graph::ftM2graphNEL(ft = edges, W = NULL, V = x$nodes, edgemode = "directed")  
 } 
 graph_make_edges <- function(nodes, edges) { 
-  stopifnot(is.character(nodes), is.character(edges), nrow(edges) == 2)
-  from <- match(edges[1, ], nodes) - 1
-  to <- match(edges[2, ], nodes) - 1
-  edges <- matrix(c(from, to), ncol = 2)
-  edges 
+  stopifnot(is.character(nodes), is.character(edges), ncol(edges) == 2,
+            all(edges[] %in% nodes))
+  from <- match(edges[, 1], nodes) - 1
+  to <- match(edges[, 2], nodes) - 1
+  graph_from_to_to_edges (from = from, to = to)
 }  
+graph_from_to_to_edges <- function(from, to) { 
+  matrix(c(from = from, to = to), ncol = 2)
+}
 call_bh <- function(fun, g, ...) { 
  do.call(fun, args = list(vertices = g$nodes, edges  = g$edges, ...)) 
 }
@@ -113,6 +116,27 @@ graph_remove_node <- function(node, x) {
   removed <- graph_internal_make(removed$nodes, removed$edges)
   graph_internal2graph_NEL(removed) 
 }
+#' Add edges
+#' Does not allow edges among adjacent nodes
+#' @keywords  internal
+graph_add_edges <- function(from = from, to = to, graph = x) {  
+  stopifnot(inherits( x, "bnc_graph_internal")) 
+  # check from and to are disjoint and same length
+  stopifnot(is.character(from),     is.character(to),
+            are_disjoint(from, to), length(from) == length(to))
+#   Consider both directions when checking the edges are not in graph already
+  # TODO: check_adjacent
+  # undirected_from <- c(from, to)
+  # undirected_to <- c(to, from)
+  # adj <- any(graph::isAdjacent(x, from = undirected_from, to = undirected_to))
+  # stopifnot(!adj)
+  # just simply convert the edges to numbers and then add to existing matrix. 
+  # all nodes must be already in matrix.
+  edges <- graph_from_to_to_edges(from, to)
+  edges <- graph_make_edges(x$nodes, edges )
+  edges <- rbind(x$edges, edges)
+  graph_internal(nodes = x$nodes, edges = edges) 
+}
 graph_num_arcs <- function(x) {
   g <- x 
   if (!inherits( g, "bnc_graph_internal"))  {
@@ -141,12 +165,13 @@ graph_parents <- function(x) {
                          identity, simplify = FALSE)
   parents[names(have_parents)] <- have_parents
   parents  
-}   
+}
 #' Returns an edge matrix with node names (instead of node indices).
 #' 
 #' @return A character matrix. 
 #' @keywords internal
-graph_named_edge_matrix <- function(x) { 
+graph_named_edge_matrix <- function(x) {  
+  stopifnot(inherits( x, "bnc_graph_internal"))  
   u <-  x$edges
   u[] <- x$nodes[as.vector(u) + 1]
   if (length(u) == 0) mode(u) <- 'character'
