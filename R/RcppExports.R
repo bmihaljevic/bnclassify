@@ -29,6 +29,10 @@ bh_subgraph <- function(vertices, edges, subgraph_vertices) {
     .Call('_bnclassify_bh_subgraph', PACKAGE = 'bnclassify', vertices, edges, subgraph_vertices)
 }
 
+bh_remove_node <- function(vertices, edges, remove) {
+    .Call('_bnclassify_bh_remove_node', PACKAGE = 'bnclassify', vertices, edges, remove)
+}
+
 make_cpt <- function(cpt, features, class_var, columns_db, df) {
     .Call('_bnclassify_make_cpt', PACKAGE = 'bnclassify', cpt, features, class_var, columns_db, df)
 }
