@@ -127,13 +127,9 @@ graph_add_edges <- function(from, to, g) {
   stopifnot(inherits( g, "bnc_graph_internal")) 
   # check from and to are disjoint and same length
   stopifnot(is.character(from),     is.character(to),
-            are_disjoint(from, to), length(from) == length(to))
-#   Consider both directions when checking the edges are not in graph already
-  # TODO: check_adjacent
-  # undirected_from <- c(from, to)
-  # undirected_to <- c(to, from)
-  # adj <- any(graph::isAdjacent(g, from = undirected_from, to = undirected_to))
-  # stopifnot(!adj)
+            are_disjoint(from, to), length(from) == length(to)) 
+  adj <- any(graph_is_adjacent(g, from = undirected_from, to = undirected_to))
+  stopifnot(!adj)
   # just simply convert the edges to numbers and then add to egisting matrig. 
   # all nodes must be already in matrig.
   edges <- graph_from_to_to_edges(from, to)
@@ -141,6 +137,21 @@ graph_add_edges <- function(from, to, g) {
   edges <- rbind(g$edges, edges)
   augmented <- graph_internal_make(nodes = g$nodes, edges = edges)  
   graph_internal2graph_NEL(augmented) 
+}
+#' Checks whether nodes are adjacent
+#' @keywords  internal
+graph_is_adjacent <- function(from, to, x) { 
+  g <- x 
+  if (!inherits( g, "bnc_graph_internal"))  {
+    g <- graphNEL2_graph_internal(x) 
+  }
+  stopifnot(inherits( g, "bnc_graph_internal")) 
+#   Consider both directions when checking the edges are not in graph already
+  # undirected_from <- c(from, to)
+  # undirected_to <- c(to, from)
+  # CHeck any of these are found in the matrix
+  warning("bnclassify not implemented")
+  FALSE
 }
 graph_num_arcs <- function(x) {
   g <- x 
