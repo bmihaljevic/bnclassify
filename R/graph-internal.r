@@ -119,8 +119,12 @@ graph_remove_node <- function(node, x) {
 #' Add edges
 #' Does not allow edges among adjacent nodes
 #' @keywords  internal
-graph_add_edges <- function(from = from, to = to, graph = x) {  
-  stopifnot(inherits( x, "bnc_graph_internal")) 
+graph_add_edges <- function(from, to, g) {   
+  g <- g 
+  if (!inherits( g, "bnc_graph_internal"))  {
+    g <- graphNEL2_graph_internal(g) 
+  }
+  stopifnot(inherits( g, "bnc_graph_internal")) 
   # check from and to are disjoint and same length
   stopifnot(is.character(from),     is.character(to),
             are_disjoint(from, to), length(from) == length(to))
@@ -128,14 +132,15 @@ graph_add_edges <- function(from = from, to = to, graph = x) {
   # TODO: check_adjacent
   # undirected_from <- c(from, to)
   # undirected_to <- c(to, from)
-  # adj <- any(graph::isAdjacent(x, from = undirected_from, to = undirected_to))
+  # adj <- any(graph::isAdjacent(g, from = undirected_from, to = undirected_to))
   # stopifnot(!adj)
-  # just simply convert the edges to numbers and then add to existing matrix. 
-  # all nodes must be already in matrix.
+  # just simply convert the edges to numbers and then add to egisting matrig. 
+  # all nodes must be already in matrig.
   edges <- graph_from_to_to_edges(from, to)
-  edges <- graph_make_edges(x$nodes, edges )
-  edges <- rbind(x$edges, edges)
-  graph_internal(nodes = x$nodes, edges = edges) 
+  edges <- graph_make_edges(g$nodes, edges )
+  edges <- rbind(g$edges, edges)
+  augmented <- graph_internal_make(nodes = g$nodes, edges = edges)  
+  graph_internal2graph_NEL(augmented) 
 }
 graph_num_arcs <- function(x) {
   g <- x 
