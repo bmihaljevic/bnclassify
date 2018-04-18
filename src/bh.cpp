@@ -71,9 +71,9 @@ Rcpp::List graph2R(dgraph & g) {
     edge e = *ep.first;
     u = source(*ep.first,g);
     v = target(*ep.first,g);
+    edges_matrix(row, 0) = u;
+    edges_matrix(row, 1) = v;
     row++;
-    edges_matrix(row, 1) = u;
-    edges_matrix(row, 2) = v;
   }
   
   List output = List::create(Named("nodes") = nodes, Named("edges") = edges_matrix);
@@ -103,6 +103,31 @@ dgraph bh_make_graph(CharacterVector vertices, Rcpp::IntegerMatrix edges)
   return g; 
 }
 
+
+/**
+ * This is an internal function.   
+ * Since not not all vertices need to be in edges, add vertices separately.
+ * This is currently separate because I needed to specify the type in order for name property access to compile. 
+ * Do not know how to make a common type with shared properties for dgraph and ugraph.
+ */
+ugraph bh_make_ugraph(CharacterVector vertices, Rcpp::IntegerMatrix edges)
+{ 
+  // any checks?
+  // Add vertices, if any 
+  int n = vertices.size(); 
+  ugraph g; 
+  for (int i = 0; i < n; i++) { 
+    add_vertex(g);
+  } 
+  // Add edges, if any 
+  int nedges = edges.nrow();
+  for (int i = 0; i < nedges; i++) { 
+    add_edge(edges(i, 0), edges(i, 1), g);
+  }  
+  return g; 
+}
+
+
 // [[Rcpp::export]]  
 void test_make(CharacterVector vertices, Rcpp::IntegerMatrix edges) {
   dgraph g  = bh_make_graph(vertices,  edges);
@@ -112,14 +137,12 @@ void test_make(CharacterVector vertices, Rcpp::IntegerMatrix edges) {
 // Requires an undirected graph   
 // [[Rcpp::export]]  
 NumericVector bh_connected_components(CharacterVector vertices, Rcpp::IntegerMatrix edges) { 
-  // ugraph g  = bh_make_graph<ugraph>(vertices,  edges);
-  // // print_vertices(g);
-  // std::vector<int> component(num_vertices(g));
-  // int num = connected_components(g, &component[0]); 
-  // // TODO:: see additional checks from RBGL. Maybe connected comp might fail?
-  // // std::vector<int>::size_type i;   
-  // return wrap(component);  
-  return NumericVector::create(1); 
+  ugraph g  = bh_make_ugraph(vertices,  edges);
+  std::vector<int> component(num_vertices(g));
+  int num = connected_components(g, &component[0]);
+  // TODO:: see additional checks from RBGL. Maybe connected comp might fail?
+  // std::vector<int>::size_type i;
+  return wrap(component);
 }      
 
 dgraph  make_subgraph(dgraph & g, const CharacterVector & subgraph_vertices, const CharacterVector & vertices)  { 
@@ -133,19 +156,23 @@ dgraph  make_subgraph(dgraph & g, const CharacterVector & subgraph_vertices, con
 }
 
 // [[Rcpp::export]]  
-Rcpp::List bh_subgraph(const CharacterVector & subgraph_vertices, const CharacterVector & vertices, const Rcpp::IntegerMatrix & edges) {
+Rcpp::List bh_subgraph(const CharacterVector & vertices, const Rcpp::IntegerMatrix & edges, const CharacterVector & subgraph_vertices) {
   dgraph g  = bh_make_graph(vertices,  edges); 
-  print_graph(g);
   dgraph subgraph = make_subgraph (g, subgraph_vertices, vertices) ;   
-  // print_graph(subgraph); 
+  // print_graph(subgraph);
   return graph2R(subgraph );
 } 
 
   
 /*** R
+
+
 dag <- anb_make_nb('a', letters[2:6])
 test_make(dag$nodes, dag$edges)
 bh_connected_components(dag$nodes, dag$edges) 
-bh_subgraph(dag$nodes, dag$nodes, dag$edges)
-bh_subgraph('Bojan', dag$nodes, dag$edges)
+bh_subgraph( dag$nodes, dag$edges, dag$nodes)
+# bh_subgraph( dag$nodes, dag$edges, 'Bojan')
+
+# load('tmp-g-subgraph.rdata') 
+# bh_subgraph( g$nodes, g$edges, setdiff(g$nodes, "class"))
 */

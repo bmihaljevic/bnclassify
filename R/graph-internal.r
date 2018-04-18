@@ -31,6 +31,10 @@
 graph_internal <- function(nodes, edges) {  
     stopifnot(is.character(nodes), is.character(edges))
     edges <- graph_make_edges(nodes, edges)
+    graph_internal_make (nodes, edges) 
+}
+graph_internal_make <- function(nodes, edges) {   
+    stopifnot(is.character(nodes), is.numeric(edges))
     dag <- list(nodes=nodes, edges=edges) 
     class(dag) <- 'bnc_graph_internal'
     dag
@@ -45,6 +49,12 @@ graphNEL2_graph_internal <- function(x) {
   # TODO: named_edge_matrix maybe should be refactored a bit
   edges <- named_edge_matrix(x)
   graph_internal(nodes, edges ) 
+}  
+graph_internal2graph_NEL <- function(x) {  
+  stopifnot(is( x, "bnc_graph_internal")) 
+  edges <- x$edges
+  edges[] <- x$nodes[x$edges + 1]
+  graph::ftM2graphNEL(ft = edges, W = NULL, V = x$nodes, edgemode = "directed")  
 } 
 graph_make_edges <- function(nodes, edges) { 
   stopifnot(is.character(nodes), is.character(edges), nrow(edges) == 2)
@@ -53,9 +63,8 @@ graph_make_edges <- function(nodes, edges) {
   edges <- matrix(c(from, to), ncol = 2)
   edges 
 }  
-call_bh <- function(fun, g) { 
- do.call(fun, args = list(vertices = g$nodes, edges  = g$edges)) 
-  # TODO: back to my object type.
+call_bh <- function(fun, g, ...) { 
+ do.call(fun, args = list(vertices = g$nodes, edges  = g$edges, ...)) 
 }
 #'  connected_components 
 #'  
@@ -81,5 +90,8 @@ graph_connected_components <- function(x) {
 graph_subgraph <- function(nodes, x) { 
   g <- graphNEL2_graph_internal(x)
   stopifnot(inherits(g, "bnc_graph_internal"))   
-  bh_subgraph(subgraph_vertices = nodes, vertices = g$nodes, edges  = g$edges) 
+  subgraph <- call_bh('bh_subgraph', g = g,  subgraph_vertices = nodes) 
+  subgraph <- graph_internal_make(subgraph$nodes, subgraph$edges)
+  # TODO remove:
+  graph_internal2graph_NEL(subgraph ) 
 }
