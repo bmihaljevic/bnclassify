@@ -194,14 +194,11 @@ graph_named_edge_matrix <- function(x) {
   stopifnot(is.character(u))
   u
 }
-graph_mstree_kruskal <- function(g) { 
+graph_mstree_kruskal <- function(x) { 
   g <- x 
   if (!inherits( g, "bnc_graph_internal"))  {
     g <- graphNEL2_graph_internal(x) 
-  }
-  # for each, edges to named. 
-  # ans[[1]] <- apply(ans[[1]], 2, function(x, y) y[x + 1], nodes(x))
-  # rownames(ans[[1]]) <- c("from", "to")
-  # rownames(ans[[2]]) <- c("weight")
-  # names(ans) <- c("edgeList", "weights") 
+  } 
+  kruskal <- call_bh('bh_mstree_kruskal', g, weights = g$weights) 
+  graph_internal2graph_NEL(kruskal)  
 }

@@ -5,7 +5,7 @@
 \title{Add edges
 Does not allow edges among adjacent nodes}
 \usage{
-graph_add_edges(from = from, to = to, graph = x)
+graph_add_edges(from, to, g)
 }
 \description{
 Add edges

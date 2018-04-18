@@ -197,7 +197,7 @@ Rcpp::List bh_remove_node(const CharacterVector & vertices, const Rcpp::IntegerM
 }
 
 // [[Rcpp::export]]   
-Rcpp::List kruskal(CharacterVector vertices, Rcpp::IntegerMatrix edges, NumericVector weights) {
+Rcpp::List bh_mstree_kruskal(CharacterVector vertices, Rcpp::IntegerMatrix edges, NumericVector weights) {
   ugraph g = bh_make_ugraph(vertices, edges, weights);
   typedef graph_traits < ugraph >::edge_descriptor Edge;
   property_map < ugraph, edge_weight_t >::type weight = get(edge_weight, g);
@@ -235,7 +235,7 @@ test_sgraph <- function(feature) {
 }  
 a <- replicate(n = 1000, test_sgraph('f') )
 nedges <- length(dag$edges)
-kruskal(dag$nodes, dag$edges, rep(1:nedges))
+bh_mstree_kruskal(dag$nodes, dag$edges, rep(1:nedges))
 
 # load('tmp-g-subgraph.rdata')
 # bh_subgraph( g$nodes, g$edges, setdiff(g$nodes, "class"))
