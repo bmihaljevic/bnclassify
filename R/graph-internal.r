@@ -28,18 +28,21 @@
 #  *    print(): print nicely
 #  * }
 #  */   
-graph_internal <- function(nodes, edges) {  
-    stopifnot(is.character(nodes), is.character(edges), is.matrix(edges))
-    edges <- graph_make_edges(nodes, edges)
-    graph_internal_make (nodes, edges) 
+valid_weights <- function(weights, edges) {
+  is.null(weights) || (is.numeric(weights) && is.vector(weights) && length(weights) == nrow(edges))
 }
-graph_internal_make <- function(nodes, edges) {   
-    stopifnot(is.character(nodes), is.numeric(edges), is.matrix(edges))
+graph_internal <- function(nodes, edges, weights = NULL) {  
+    stopifnot(is.character(nodes), is.character(edges), is.matrix(edges), valid_weights(weights, edges))
+    edges <- graph_make_edges(nodes, edges)
+    graph_internal_make (nodes, edges, weights) 
+}
+graph_internal_make <- function(nodes, edges, weights) {
+    stopifnot(is.character(nodes), is.numeric(edges), is.matrix(edges), valid_weights(weights, edges))
     fromto <- c('from', 'to')
     colnms <- colnames(edges) 
     stopifnot(length(colnms) == 0 || identical(colnms, fromto))
     colnames(edges) <- fromto
-    dag <- list(nodes=nodes, edges=edges) 
+    dag <- list(nodes=nodes, edges=edges, weights = weights ) 
     class(dag) <- 'bnc_graph_internal'
     dag
 }
@@ -47,11 +50,16 @@ graph_nodes <- function(x) {
   stopifnot(is( x, "bnc_graph_internal"))
   x$nodes 
 }
+# TODO: will use this function for conversion to graphNEL
 graphNEL2_graph_internal <- function(x) { 
   stopifnot(inherits(x, "graphNEL"))
   nodes <- graph::nodes(x)
-  edges <- t(named_edge_matrix(x))
-  graph_internal(nodes, edges ) 
+  edges <- t(named_edge_matrix(x)) 
+  # Will fail if it does not have the attribute.
+  weights <- graph::edgeData(self = x, from = edges[, 1], to = edges[, 2], 
+                             attr = "weight") 
+  weights <- unlist(weights)
+  graph_internal(nodes, edges, weights ) 
 }  
 graph_internal2graph_NEL <- function(x) {  
   stopifnot(inherits( x, "bnc_graph_internal")) 
@@ -96,7 +104,7 @@ graph_subgraph <- function(nodes, x) {
   g <- graphNEL2_graph_internal(x)
   stopifnot(inherits(g, "bnc_graph_internal"))   
   subgraph <- call_bh('bh_subgraph', g = g,  subgraph_vertices = nodes) 
-  subgraph <- graph_internal_make(subgraph$nodes, subgraph$edges)
+  subgraph <- graph_internal_make(subgraph$nodes, subgraph$edges, NULL)
   # TODO remove:
   graph_internal2graph_NEL(subgraph ) 
 }  
@@ -113,7 +121,7 @@ graph_remove_node <- function(node, x) {
   stopifnot(inherits( g, "bnc_graph_internal"), is.character(node))  
   if (!node %in% g$nodes) stop("Node not in graph")  
   removed <- call_bh('bh_remove_node', g = g, remove = node)  
-  removed <- graph_internal_make(removed$nodes, removed$edges)
+  removed <- graph_internal_make(removed$nodes, removed$edges, NULL)
   graph_internal2graph_NEL(removed) 
 }
 #' Add edges
@@ -135,7 +143,7 @@ graph_add_edges <- function(from, to, g) {
   edges <- graph_from_to_to_edges(from, to)
   edges <- graph_make_edges(g$nodes, edges )
   edges <- rbind(g$edges, edges)
-  augmented <- graph_internal_make(nodes = g$nodes, edges = edges)  
+  augmented <- graph_internal_make(nodes = g$nodes, edges = edges, NULL)  
   graph_internal2graph_NEL(augmented) 
 }
 #' Checks whether nodes are adjacent
