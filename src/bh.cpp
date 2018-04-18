@@ -7,6 +7,7 @@
 #include <boost/graph/directed_graph.hpp>
 #include <boost/graph/subgraph.hpp>
 #include <boost/graph/graph_utility.hpp> 
+#include <boost/property_map/property_map.hpp>
 
 /**
  * Boost uses integers as vertex ids, not names. 
@@ -42,16 +43,21 @@ typedef adjacency_list <vecS, vecS, undirectedS> ugraph;
 Rcpp::List graph2R(dgraph & g) {
   typedef graph_traits<dgraph>::vertex_descriptor Vertex; 
   typedef property_map<dgraph, vertex_index_t>::type IndexMap;
+  typedef property_map<dgraph, vertex_name_t>::type NameMap;
   IndexMap index = get(vertex_index, g);
+  NameMap names = get(vertex_name, g);
   
   typedef graph_traits<dgraph>::vertex_iterator vertex_iter;
   std::pair<vertex_iter, vertex_iter> vp;
-  std::vector<int> nodes;
-  nodes.reserve(num_vertices(g)); 
+  // std::vector<int> nodes;
+  std::vector<std::string> nodes;
+  nodes.reserve(num_vertices(g));  
   
-  for (vp = vertices(g); vp.first != vp.second; ++vp.first) {
-    Vertex v = *vp.first;
-    nodes.push_back(index[v]);
+  for (vp = vertices(g); vp.first != vp.second; ++vp.first) {    
+    Vertex v = *vp.first; 
+    // nodes.push_back(index[v]);
+    std::string vname = names[v];
+    nodes.push_back(vname);
   } 
   
   typedef graph_traits<dgraph>::edge_descriptor edge; 
@@ -78,15 +84,16 @@ Rcpp::List graph2R(dgraph & g) {
  * This is an internal function.   
  * Since not not all vertices need to be in edges, add vertices separately.
  */
-template <class T>
-T bh_make_graph(CharacterVector vertices, Rcpp::IntegerMatrix edges)
-{
+dgraph bh_make_graph(CharacterVector vertices, Rcpp::IntegerMatrix edges)
+{ 
   // any checks?
   // Add vertices, if any 
   int n = vertices.size(); 
-  T g;
+  dgraph g; 
+  property_map<dgraph, vertex_name_t>::type name = get(vertex_name_t(), g);  
   for (int i = 0; i < n; i++) { 
     add_vertex(g);
+    name[i] = vertices[i];
   } 
   // Add edges, if any 
   int nedges = edges.nrow();
@@ -98,22 +105,22 @@ T bh_make_graph(CharacterVector vertices, Rcpp::IntegerMatrix edges)
 
 // [[Rcpp::export]]  
 void test_make(CharacterVector vertices, Rcpp::IntegerMatrix edges) {
-  dgraph g  = bh_make_graph<dgraph>(vertices,  edges);
+  dgraph g  = bh_make_graph(vertices,  edges);
   // print_vertices(g); 
 }      
 
 // Requires an undirected graph   
 // [[Rcpp::export]]  
 NumericVector bh_connected_components(CharacterVector vertices, Rcpp::IntegerMatrix edges) { 
-  ugraph g  = bh_make_graph<ugraph>(vertices,  edges);
-  // print_vertices(g);
-  std::vector<int> component(num_vertices(g));
-  int num = connected_components(g, &component[0]); 
-  // TODO:: see additional checks from RBGL. Maybe connected comp might fail?
-  // std::vector<int>::size_type i;   
-  return wrap(component);  
-}     
-
+  // ugraph g  = bh_make_graph<ugraph>(vertices,  edges);
+  // // print_vertices(g);
+  // std::vector<int> component(num_vertices(g));
+  // int num = connected_components(g, &component[0]); 
+  // // TODO:: see additional checks from RBGL. Maybe connected comp might fail?
+  // // std::vector<int>::size_type i;   
+  // return wrap(component);  
+  return NumericVector::create(1); 
+}      
 
 dgraph  make_subgraph(dgraph & g, const CharacterVector & subgraph_vertices, const CharacterVector & vertices)  { 
   dgraph subgraph = g.create_subgraph(); 
@@ -127,7 +134,8 @@ dgraph  make_subgraph(dgraph & g, const CharacterVector & subgraph_vertices, con
 
 // [[Rcpp::export]]  
 Rcpp::List bh_subgraph(const CharacterVector & subgraph_vertices, const CharacterVector & vertices, const Rcpp::IntegerMatrix & edges) {
-  dgraph g  = bh_make_graph<dgraph>(vertices,  edges); 
+  dgraph g  = bh_make_graph(vertices,  edges); 
+  print_graph(g);
   dgraph subgraph = make_subgraph (g, subgraph_vertices, vertices) ;   
   // print_graph(subgraph); 
   return graph2R(subgraph );
