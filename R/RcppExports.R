@@ -33,6 +33,10 @@ bh_remove_node <- function(vertices, edges, remove) {
     .Call('_bnclassify_bh_remove_node', PACKAGE = 'bnclassify', vertices, edges, remove)
 }
 
+kruskal <- function(vertices, edges, weights) {
+    .Call('_bnclassify_kruskal', PACKAGE = 'bnclassify', vertices, edges, weights)
+}
+
 make_cpt <- function(cpt, features, class_var, columns_db, df) {
     .Call('_bnclassify_make_cpt', PACKAGE = 'bnclassify', cpt, features, class_var, columns_db, df)
 }

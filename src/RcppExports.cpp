@@ -100,6 +100,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// kruskal
+Rcpp::List kruskal(CharacterVector vertices, Rcpp::IntegerMatrix edges, NumericVector weights);
+RcppExport SEXP _bnclassify_kruskal(SEXP verticesSEXP, SEXP edgesSEXP, SEXP weightsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type vertices(verticesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerMatrix >::type edges(edgesSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type weights(weightsSEXP);
+    rcpp_result_gen = Rcpp::wrap(kruskal(vertices, edges, weights));
+    return rcpp_result_gen;
+END_RCPP
+}
 // make_cpt
 NumericVector make_cpt(NumericVector cpt, const CharacterVector features, const CharacterVector class_var, const CharacterVector columns_db, DataFrame df);
 RcppExport SEXP _bnclassify_make_cpt(SEXP cptSEXP, SEXP featuresSEXP, SEXP class_varSEXP, SEXP columns_dbSEXP, SEXP dfSEXP) {
@@ -201,6 +214,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bnclassify_bh_connected_components", (DL_FUNC) &_bnclassify_bh_connected_components, 2},
     {"_bnclassify_bh_subgraph", (DL_FUNC) &_bnclassify_bh_subgraph, 3},
     {"_bnclassify_bh_remove_node", (DL_FUNC) &_bnclassify_bh_remove_node, 3},
+    {"_bnclassify_kruskal", (DL_FUNC) &_bnclassify_kruskal, 3},
     {"_bnclassify_make_cpt", (DL_FUNC) &_bnclassify_make_cpt, 5},
     {"_bnclassify_df2matrix", (DL_FUNC) &_bnclassify_df2matrix, 1},
     {"_bnclassify_get_instance", (DL_FUNC) &_bnclassify_get_instance, 5},

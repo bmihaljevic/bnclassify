@@ -18,7 +18,6 @@ anb_make_nb <- function(class, features) {
     if (narcs > 0) { 
       arcs <- cbind(from = class, to = features)
     }
-    arcs  <- t(arcs) 
 #   Set nodes as class + features 
     nodes <- c(class, features)
     graph_internal(nodes, arcs) 
