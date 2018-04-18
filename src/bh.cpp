@@ -119,30 +119,24 @@ dgraph bh_make_graph(CharacterVector vertices, Rcpp::IntegerMatrix edges)
  * Since not not all vertices need to be in edges, add vertices separately.
  * This is currently separate because I needed to specify the type in order for name property access to compile. 
  * Do not know how to make a common type with shared properties for dgraph and ugraph.
- */
-
-
+ */  
 ugraph bh_make_ugraph(CharacterVector vertices, Rcpp::IntegerMatrix edges, NumericVector weights)
 { 
   // any checks?
   // Add vertices, if any 
   int n = vertices.size(); 
-  ugraph g(n);   
+  ugraph g(n);    
+  
+  property_map<ugraph, vertex_name_t>::type name = get(vertex_name_t(), g);  
+  for (int i = 0; i < n; i++) { 
+    name[i] = vertices[i];
+  } 
 
   // Add edges, if any 
   int nedges = edges.nrow();
   for (std::size_t i = 0; i < nedges; i++) { 
     add_edge(edges(i, 0), edges(i, 1), weights.at(i), g);
-  }  
-  
-  // 
-  // Graph g(num_nodes);
-  // property_map<Graph, edge_weight_t>::type weightmap = get(edge_weight, g);
-  // for (j = 0; j < num_edges; ++j) {
-  //   Edge e; bool inserted;
-  //   tie(e, inserted) = add_edge(edge_array[j].first, edge_array[j].second, g);
-  //   weightmap[e] = weights[j];
-  // }
+  }    
   
   return g; 
 }
@@ -220,19 +214,10 @@ Rcpp::List kruskal(CharacterVector vertices, Rcpp::IntegerMatrix edges, NumericV
       kruskal_edges(row, 0) = source(*ei, g);
       kruskal_edges(row, 1) = target(*ei, g);
       row++;
-    // add_edge(source(*ei, g), target(*ei, g), weight[*ei], krusk);
   }   
   
   ugraph krusk = bh_make_ugraph(vertices, kruskal_edges);
-  return graph2R(krusk);    
-  
-  // int n = num_vertices(g);
-  // ugraph krusk(n);  
-  // property_map<ugraph, vertex_name_t>::type name = get(vertex_name_t(), krusk);  
-  // for (int i = 0; i < n; i++) { 
-  //   name[i] = vertices[i];
-  // } 
-  
+  return graph2R(krusk);       
 }
 
   
