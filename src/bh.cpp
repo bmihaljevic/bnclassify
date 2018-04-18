@@ -29,27 +29,24 @@ std::vector<int> match_zero_based(const CharacterVector & subset, const Characte
   if (min <= 0)  stop("All subset must be in the superset.");
   subset_inds = subset_inds - 1; 
   return as<std::vector<int> > (subset_inds);
-} 
+}     
 
-// The graph type I will use
-typedef adjacency_list<vecS, vecS, directedS> dgraph;
+typedef property<vertex_index_t, int, property<vertex_name_t, std::string> > VertexProperty;
+typedef property<edge_index_t, int> EdgeProperty; 
+typedef subgraph< adjacency_list< vecS, vecS, directedS, VertexProperty, EdgeProperty > > dgraph;   
 // for connected components and such
 typedef adjacency_list <vecS, vecS, undirectedS> ugraph; 
-// typedef boost::directed_graph<> dgraph;
-// this one did not work:
-// typedef adjacency_list<boost::directedS> dgraph;  
-typedef subgraph< adjacency_list< vecS, vecS, directedS, vertex_index_t, property< edge_index_t, int > > > dsubgraph;   
 
 /**
  * Will return a list with nodes and edges. Does not have the names though unless I save them somewhere.
  * If I did not pass the subgraph by reference here, it would not print.
  */
-Rcpp::List graph2R(dsubgraph & g) {
-  typedef graph_traits<dsubgraph>::vertex_descriptor Vertex; 
-  typedef property_map<dsubgraph, vertex_index_t>::type IndexMap;
+Rcpp::List graph2R(dgraph & g) {
+  typedef graph_traits<dgraph>::vertex_descriptor Vertex; 
+  typedef property_map<dgraph, vertex_index_t>::type IndexMap;
   IndexMap index = get(vertex_index, g);
   
-  typedef graph_traits<dsubgraph>::vertex_iterator vertex_iter;
+  typedef graph_traits<dgraph>::vertex_iterator vertex_iter;
   std::pair<vertex_iter, vertex_iter> vp;
   std::vector<int> nodes;
   nodes.reserve(num_vertices(g)); 
@@ -59,8 +56,8 @@ Rcpp::List graph2R(dsubgraph & g) {
     nodes.push_back(index[v]);
   } 
   
-  typedef graph_traits<dsubgraph>::edge_descriptor edge; 
-  typedef graph_traits<dsubgraph>::edge_iterator edge_iter;
+  typedef graph_traits<dgraph>::edge_descriptor edge; 
+  typedef graph_traits<dgraph>::edge_iterator edge_iter;
   std::pair<edge_iter, edge_iter> ep; 
   int nedges = num_edges(g);
   Rcpp::IntegerMatrix edges_matrix(nedges, 2);
@@ -116,13 +113,12 @@ NumericVector bh_connected_components(CharacterVector vertices, Rcpp::IntegerMat
   int num = connected_components(g, &component[0]); 
   // TODO:: see additional checks from RBGL. Maybe connected comp might fail?
   // std::vector<int>::size_type i;   
-  // TODO: the split done by RBGL!!! 
   return wrap(component);  
 }     
 
 
-dsubgraph  make_subgraph(dsubgraph & g, const CharacterVector & subgraph_vertices, const CharacterVector & vertices)  { 
-  dsubgraph subgraph = g.create_subgraph(); 
+dgraph  make_subgraph(dgraph & g, const CharacterVector & subgraph_vertices, const CharacterVector & vertices)  { 
+  dgraph subgraph = g.create_subgraph(); 
 //  If you add particular vertices from global, are they kept?
   std::vector<int> sgraph_vertices = match_zero_based(subgraph_vertices, vertices);
   for (int i = 0; i < sgraph_vertices.size(); i++) {
@@ -133,8 +129,8 @@ dsubgraph  make_subgraph(dsubgraph & g, const CharacterVector & subgraph_vertice
 
 // [[Rcpp::export]]  
 Rcpp::List bh_subgraph(CharacterVector subgraph_vertices, CharacterVector vertices, Rcpp::IntegerMatrix edges) {
-  dsubgraph g  = bh_make_graph<dsubgraph>(vertices,  edges); 
-  dsubgraph subgraph = make_subgraph (g, subgraph_vertices, vertices) ;   
+  dgraph g  = bh_make_graph<dgraph>(vertices,  edges); 
+  dgraph subgraph = make_subgraph (g, subgraph_vertices, vertices) ;   
   // print_graph(subgraph); 
   return graph2R(subgraph );
 } 
