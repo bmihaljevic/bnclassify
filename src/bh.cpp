@@ -192,6 +192,13 @@ bh_subgraph( dag$nodes, dag$edges, dag$nodes)
 bh_subgraph( dag$nodes, dag$edges, setdiff(dag$nodes, 'a'))
 bh_subgraph( dag$nodes, dag$edges, setdiff(dag$nodes, 'f'))
 # bh_subgraph( dag$nodes, dag$edges, 'Bojan')
+test_sgraph <- function(feature) { 
+  bh_subgraph( dag$nodes, dag$edges, setdiff(dag$nodes, feature))
+  print(a$nodes)
+  stopifnot(all(sapply(a$nodes, nchar) >  0))
+}  
+a <- replicate(n = 9000, test_sgraph('f') )
+
 
 # load('tmp-g-subgraph.rdata')
 # bh_subgraph( g$nodes, g$edges, setdiff(g$nodes, "class"))

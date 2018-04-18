@@ -57,8 +57,8 @@ direct_forest <- function(g, root = NULL) {
     return(direct_graph(g))
   }
   if (length(root)) stopifnot(root %in% graph::nodes(g))
-  components <- RBGL::connectedComp(g) 
-  components <- lapply(components, graph::subGraph, g)
+  components <- connected_components(g) 
+  components <- lapply(components, subgraph, g)
   trees <- lapply(components, direct_tree, root)
   graph_union(g = trees)  
 }
