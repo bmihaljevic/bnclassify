@@ -10,6 +10,7 @@
 #include <boost/graph/copy.hpp> 
 #include <boost/property_map/property_map.hpp>
 #include <boost/graph/kruskal_min_spanning_tree.hpp>
+#include <boost/graph/topological_sort.hpp>
 
 /**
  * Boost uses integers as vertex ids, not names. 
@@ -218,6 +219,14 @@ Rcpp::List bh_mstree_kruskal(CharacterVector vertices, Rcpp::IntegerMatrix edges
   
   ugraph krusk = bh_make_ugraph(vertices, kruskal_edges);
   return graph2R(krusk);       
+} 
+
+// [[Rcpp::export]]   
+NumericVector bh_tsort(CharacterVector vertices, Rcpp::IntegerMatrix edges) { 
+  dgraph g = bh_make_graph(vertices, edges);
+  std::vector<int> sorted;
+  topological_sort(g, std::back_inserter(sorted)); 
+  return wrap(sorted);
 }
 
   
@@ -236,7 +245,7 @@ test_sgraph <- function(feature) {
 a <- replicate(n = 1000, test_sgraph('f') )
 nedges <- length(dag$edges)
 bh_mstree_kruskal(dag$nodes, dag$edges, rep(1:nedges))
-
+bh_tsort(dag$nodes, dag$edges) 
 # load('tmp-g-subgraph.rdata')
 # bh_subgraph( g$nodes, g$edges, setdiff(g$nodes, "class"))
 */
