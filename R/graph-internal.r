@@ -35,6 +35,10 @@ graph_internal <- function(nodes, edges) {
 }
 graph_internal_make <- function(nodes, edges) {   
     stopifnot(is.character(nodes), is.numeric(edges), is.matrix(edges))
+    fromto <- c('from', 'to')
+    colnms <- colnames(edges) 
+    stopifnot(length(colnms) == 0 || identical(colnms, fromto))
+    colnames(edges) <- fromto
     dag <- list(nodes=nodes, edges=edges) 
     class(dag) <- 'bnc_graph_internal'
     dag
@@ -109,14 +113,19 @@ graph_remove_node <- function(node, x) {
   removed <- graph_internal_make(removed$nodes, removed$edges)
   graph_internal2graph_NEL(removed) 
 }
-graph_num_arcs <- function(x) { 
-  g <- graphNEL2_graph_internal(x)
+graph_num_arcs <- function(x) {
+  g <- x 
+  if (!inherits( g, "bnc_graph_internal"))  {
+    g <- graphNEL2_graph_internal(x) 
+  }
   stopifnot(inherits( g, "bnc_graph_internal")) 
   nrow(g$edges)
 }
 graph_num_nodes <- function(x) { 
-  # TODO: if not...
-  g <- graphNEL2_graph_internal(x)
+  g <- x 
+  if (!inherits( g, "bnc_graph_internal"))  {
+    g <- graphNEL2_graph_internal(x) 
+  }
   stopifnot(inherits( g, "bnc_graph_internal")) 
   length(g$nodes)
 }
@@ -128,7 +137,7 @@ graph_parents <- function(x) {
   parents <- setNames(replicate(nnodes, character()), graph_nodes(g))
   if (graph_num_arcs(g) == 0) return(parents)
   edges <- graph_named_edge_matrix(g) 
-  have_parents <- tapply(unname(edges['from',]), unname(edges['to', ]),
+  have_parents <- tapply(unname(edges[, 'from']), unname(edges[, 'to']),
                          identity, simplify = FALSE)
   parents[names(have_parents)] <- have_parents
   parents  

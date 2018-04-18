@@ -2,17 +2,18 @@
 # Eeach nodes' parents.
 # return Named list of characters.
 graphNEL_parents <- function(g) {
-  nnodes <- graph::numNodes(g)
-  if (nnodes == 0) return(list())
-  parents <- setNames(replicate(nnodes, character()), graph::nodes(g))
-  if (graph::numEdges(g) == 0) return(parents)
-  # There may be no edgemode if no edges. 
-  stopifnot(graph::edgemode(g) == "directed") 
-  edges <- named_edge_matrix(g) # Maybe the check should be in here?
-  have_parents <- tapply(unname(edges['from',]), unname(edges['to', ]),
-                         identity, simplify = FALSE)
-  parents[names(have_parents)] <- have_parents
-  parents
+  # nnodes <- graph::numNodes(g)
+  # if (nnodes == 0) return(list())
+  # parents <- setNames(replicate(nnodes, character()), graph::nodes(g))
+  # if (graph::numEdges(g) == 0) return(parents)
+  # # There may be no edgemode if no edges. 
+  # stopifnot(graph::edgemode(g) == "directed") 
+  # edges <- named_edge_matrix(g) # Maybe the check should be in here?
+  # have_parents <- tapply(unname(edges['from',]), unname(edges['to', ]),
+  #                        identity, simplify = FALSE)
+  # parents[names(have_parents)] <- have_parents
+  # parents
+  graph_parents(g)
 } 
 subgraph <- function(vars, x) {
   # graph_subgraph(vars, x)
