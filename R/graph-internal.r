@@ -46,14 +46,12 @@ graph_nodes <- function(x) {
 graphNEL2_graph_internal <- function(x) { 
   stopifnot(inherits(x, "graphNEL"))
   nodes <- graph::nodes(x)
-  # TODO: named_edge_matrix maybe should be refactored a bit
   edges <- named_edge_matrix(x)
   graph_internal(nodes, edges ) 
 }  
 graph_internal2graph_NEL <- function(x) {  
   stopifnot(inherits( x, "bnc_graph_internal")) 
-  edges <- x$edges
-  edges[] <- x$nodes[x$edges + 1]
+  edges <- graph_named_edge_matrix(x) 
   graph::ftM2graphNEL(ft = edges, W = NULL, V = x$nodes, edgemode = "directed")  
 } 
 graph_make_edges <- function(nodes, edges) { 
@@ -115,4 +113,34 @@ graph_num_arcs <- function(x) {
   g <- graphNEL2_graph_internal(x)
   stopifnot(inherits( g, "bnc_graph_internal")) 
   nrow(g$edges)
+}
+graph_num_nodes <- function(x) { 
+  # TODO: if not...
+  g <- graphNEL2_graph_internal(x)
+  stopifnot(inherits( g, "bnc_graph_internal")) 
+  length(g$nodes)
+}
+graph_parents <- function(x) {  
+  g <- graphNEL2_graph_internal(x)
+  stopifnot(inherits( g, "bnc_graph_internal"))  
+  nnodes <- graph_num_nodes(g)
+  if (nnodes == 0) return(list())
+  parents <- setNames(replicate(nnodes, character()), graph_nodes(g))
+  if (graph_num_arcs(g) == 0) return(parents)
+  edges <- graph_named_edge_matrix(g) 
+  have_parents <- tapply(unname(edges['from',]), unname(edges['to', ]),
+                         identity, simplify = FALSE)
+  parents[names(have_parents)] <- have_parents
+  parents  
+}   
+#' Returns an edge matrix with node names (instead of node indices).
+#' 
+#' @return A character matrix. 
+#' @keywords internal
+graph_named_edge_matrix <- function(x) { 
+  u <-  x$edges
+  u[] <- x$nodes[as.vector(u) + 1]
+  if (length(u) == 0) mode(u) <- 'character'
+  stopifnot(is.character(u))
+  u
 }
