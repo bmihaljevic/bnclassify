@@ -110,9 +110,13 @@ graph_connected_components <- function(x) {
 #'  Only for a directed graph?
 #'  @param  x currently a graphNEL. TODO But will be a graph_internal.
 #'  @keywords internal
-graph_subgraph <- function(nodes, x) { 
-  g <- graphNEL2_graph_internal(x)
-  stopifnot(inherits(g, "bnc_graph_internal"))   
+graph_subgraph <- function(nodes, x) {  
+  g <- x 
+  if (!inherits( g, "bnc_graph_internal"))  {
+    g <- graphNEL2_graph_internal(g) 
+    rm(x)
+  }
+  stopifnot(inherits( g, "bnc_graph_internal"))   
   subgraph <- call_bh('bh_subgraph', g = g,  subgraph_vertices = nodes) 
   subgraph <- graph_internal_make(subgraph$nodes, subgraph$edges, NULL)
   # TODO remove:
@@ -361,4 +365,20 @@ graph_direct <- function(x) {
   } 
   g$edgemode = "directed"
   graph_internal2graph_NEL (g) 
+}   
+graph_direct_forest <- function(x, root = NULL) { 
+  g <- x 
+  if (!inherits( g, "bnc_graph_internal"))  {
+    g <- graphNEL2_graph_internal(x) 
+    rm(x)
+  }  
+  if (graph_num_nodes(g) == 0L) {
+    return(direct_graph(g))
+  }
+  if (length(root)) stopifnot(root %in% graph_nodes(g))
+  components <- connected_components(g) 
+  components <- lapply(components, subgraph, g)
+  trees <- lapply(components, direct_tree, root)
+  g <- graph_union(g = trees)  
+  graph_internal2graph_NEL(g)
 }
