@@ -213,18 +213,19 @@ Rcpp::List bh_mstree_kruskal(CharacterVector vertices, Rcpp::IntegerMatrix edges
   kruskal_minimum_spanning_tree(g, std::back_inserter(spanning_tree));
   
   int nedges = std::distance(spanning_tree.begin(), spanning_tree.end());
-  Rcpp::IntegerMatrix  kruskal_edges(nedges, 2); 
+  Rcpp::IntegerMatrix  kruskal_edges(nedges, 2);    
+  Rcpp::NumericVector weights_vector(nedges);          
+  
   int row = 0;
   for (std::vector < Edge >::iterator ei = spanning_tree.begin();
        // TODO: this is replacated above. Extract to a function.
        ei != spanning_tree.end(); ++ei) {  
       kruskal_edges(row, 0) = source(*ei, g);
-      kruskal_edges(row, 1) = target(*ei, g);
+      kruskal_edges(row, 1) = target(*ei, g); 
+      weights_vector[row] = get(weight, *ei);
       row++;
-  }   
-  // TODO: I need to return the weights here.
-  
-  ugraph krusk = bh_make_ugraph(vertices, kruskal_edges);
+  }    
+  ugraph krusk = bh_make_ugraph(vertices, kruskal_edges, weights_vector );
   return graph2R(krusk);       
 } 
 
