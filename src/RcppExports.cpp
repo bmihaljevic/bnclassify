@@ -51,17 +51,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// test_make
-void test_make(CharacterVector vertices, Rcpp::IntegerMatrix edges);
-RcppExport SEXP _bnclassify_test_make(SEXP verticesSEXP, SEXP edgesSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type vertices(verticesSEXP);
-    Rcpp::traits::input_parameter< Rcpp::IntegerMatrix >::type edges(edgesSEXP);
-    test_make(vertices, edges);
-    return R_NilValue;
-END_RCPP
-}
 // bh_connected_components
 NumericVector bh_connected_components(CharacterVector vertices, Rcpp::IntegerMatrix edges);
 RcppExport SEXP _bnclassify_bh_connected_components(SEXP verticesSEXP, SEXP edgesSEXP) {
@@ -222,7 +211,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bnclassify_normalize", (DL_FUNC) &_bnclassify_normalize, 1},
     {"_bnclassify_normalize_ctgt", (DL_FUNC) &_bnclassify_normalize_ctgt, 1},
     {"_bnclassify_match_zero_based", (DL_FUNC) &_bnclassify_match_zero_based, 2},
-    {"_bnclassify_test_make", (DL_FUNC) &_bnclassify_test_make, 2},
     {"_bnclassify_bh_connected_components", (DL_FUNC) &_bnclassify_bh_connected_components, 2},
     {"_bnclassify_bh_subgraph", (DL_FUNC) &_bnclassify_bh_subgraph, 3},
     {"_bnclassify_bh_remove_node", (DL_FUNC) &_bnclassify_bh_remove_node, 3},

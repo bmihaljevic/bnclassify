@@ -21,6 +21,8 @@
 using namespace boost; 
 using namespace Rcpp;        
 
+
+
 // TODO: move this to basic-misc one moved to a header
 // TODO: R match was returning -2147483648 when not finding the value, and the any() test was failing. 
 // Thus, avoid Rcpp for the test 
@@ -35,11 +37,10 @@ std::vector<int> match_zero_based(const CharacterVector & subset, const Characte
 
 typedef property<vertex_index_t, int, property<vertex_name_t, std::string> > VertexProperty;
 typedef property<edge_index_t, int, property<edge_weight_t, double> > EdgeProperty; 
-typedef adjacency_list< vecS, vecS, directedS, VertexProperty, EdgeProperty >  dgraph;  
-
+typedef adjacency_list< vecS, vecS, directedS, VertexProperty, EdgeProperty >  dgraph;   
 
 typedef subgraph< adjacency_list< vecS, vecS, directedS, VertexProperty, EdgeProperty > > dsubgraph;
-  
+
 // for connected components and such
 // typedef adjacency_list <vecS, vecS, property < edge_weight_t, double >, undirectedS> ugraph;  
 typedef adjacency_list < vecS, vecS, undirectedS, VertexProperty, property < edge_weight_t, double > > ugraph;
@@ -97,44 +98,19 @@ Rcpp::List graph2R(T & g) {
   return output;
 }
 
-/**
- * This is an internal function.   
- * Since not not all vertices need to be in edges, add vertices separately.
- */
-dgraph bh_make_graph(CharacterVector vertices, Rcpp::IntegerMatrix edges)
-{ 
-  // any checks?
-  // Add vertices, if any 
-  int n = vertices.size(); 
-  dgraph g; 
-  property_map<dgraph, vertex_name_t>::type name = get(vertex_name_t(), g);  
-  for (int i = 0; i < n; i++) { 
-    add_vertex(g);
-    name[i] = vertices[i];
-  } 
-  // Add edges, if any 
-  int nedges = edges.nrow();
-  for (int i = 0; i < nedges; i++) { 
-    add_edge(edges(i, 0), edges(i, 1), g);
-  }  
-  return g; 
-}
 
 
 /**
- * This is an internal function.   
- * Since not not all vertices need to be in edges, add vertices separately.
- * This is currently separate because I needed to specify the type in order for name property access to compile. 
- * Do not know how to make a common type with shared properties for dgraph and ugraph.
- */  
-ugraph bh_make_ugraph(CharacterVector vertices, Rcpp::IntegerMatrix edges, NumericVector weights)
-{ 
-  // any checks?
+ *  Since not not all vertices need to be in edges, add vertices separately.
+ */ 
+template <class T>
+T r2graph(CharacterVector vertices, Rcpp::IntegerMatrix edges, NumericVector weights) {   
   // Add vertices, if any 
   int n = vertices.size(); 
-  ugraph g(n);    
+  T g(n);    
   
-  property_map<ugraph, vertex_name_t>::type name = get(vertex_name_t(), g);  
+  typedef typename property_map<T, vertex_name_t>::type NameMap; 
+  NameMap name = get(vertex_name_t(), g);  
   for (int i = 0; i < n; i++) { 
     name[i] = vertices[i];
   } 
@@ -145,24 +121,19 @@ ugraph bh_make_ugraph(CharacterVector vertices, Rcpp::IntegerMatrix edges, Numer
     add_edge(edges(i, 0), edges(i, 1), weights.at(i), g);
   }    
   
-  return g; 
-}
-ugraph bh_make_ugraph(CharacterVector vertices, Rcpp::IntegerMatrix edges) {
+  return g;  
+} 
+
+template <class T>
+T r2graph(CharacterVector vertices, Rcpp::IntegerMatrix edges) {    
   NumericVector weights(edges.size());
-  return bh_make_ugraph(vertices, edges, weights);
-}
-
-
-// [[Rcpp::export]]  
-void test_make(CharacterVector vertices, Rcpp::IntegerMatrix edges) {
-  dgraph g  = bh_make_graph(vertices,  edges);
-  // print_vertices(g); 
+  return r2graph<T>(vertices, edges, weights);   
 }      
 
 // Requires an undirected graph   
 // [[Rcpp::export]]  
 NumericVector bh_connected_components(CharacterVector vertices, Rcpp::IntegerMatrix edges) { 
-  ugraph g  = bh_make_ugraph(vertices,  edges);
+  ugraph g  =  r2graph<ugraph>(vertices,  edges);
   std::vector<int> component(num_vertices(g));
   int num = connected_components(g, &component[0]);
   // TODO:: see additional checks from RBGL. Maybe connected comp might fail?
@@ -184,7 +155,7 @@ dsubgraph make_subgraph(dgraph & g, const CharacterVector & subgraph_vertices, c
 
 // [[Rcpp::export]]  
 Rcpp::List bh_subgraph(const CharacterVector & vertices, const Rcpp::IntegerMatrix & edges, const CharacterVector & subgraph_vertices) {
-  dgraph g  = bh_make_graph(vertices,  edges); 
+  dgraph g  = r2graph<dgraph>(vertices,  edges); 
   dsubgraph subgraph = make_subgraph (g, subgraph_vertices, vertices) ;   
   // workaround, i do not know have to make graph2R generic enough
   dgraph output;
@@ -194,7 +165,7 @@ Rcpp::List bh_subgraph(const CharacterVector & vertices, const Rcpp::IntegerMatr
 
 // [[Rcpp::export]]  
 Rcpp::List bh_remove_node(const CharacterVector & vertices, const Rcpp::IntegerMatrix & edges, const CharacterVector & remove) { 
-  dgraph g  = bh_make_graph(vertices,  edges);  
+  dgraph g  = r2graph<dgraph>(vertices,  edges);  
   std::vector<int> remove_ind = match_zero_based(remove, vertices);
   if (remove_ind.size() > 1) stop("More than one match!");
   int remove_index = remove_ind.at(0);
@@ -205,7 +176,7 @@ Rcpp::List bh_remove_node(const CharacterVector & vertices, const Rcpp::IntegerM
 
 // [[Rcpp::export]]   
 Rcpp::List bh_mstree_kruskal(CharacterVector vertices, Rcpp::IntegerMatrix edges, NumericVector weights) {
-  ugraph g = bh_make_ugraph(vertices, edges, weights);
+  ugraph g = r2graph<ugraph>(vertices, edges, weights);
   typedef graph_traits < ugraph >::edge_descriptor Edge;
   property_map < ugraph, edge_weight_t >::type weight = get(edge_weight, g);
   std::vector < Edge > spanning_tree;
@@ -225,22 +196,22 @@ Rcpp::List bh_mstree_kruskal(CharacterVector vertices, Rcpp::IntegerMatrix edges
       weights_vector[row] = get(weight, *ei);
       row++;
   }    
-  ugraph krusk = bh_make_ugraph(vertices, kruskal_edges, weights_vector );
+  ugraph krusk = r2graph<ugraph>(vertices, kruskal_edges, weights_vector );
   return graph2R(krusk);       
 } 
 
 // I think tsort may throw an exception
 // [[Rcpp::export]]   
 NumericVector bh_tsort(CharacterVector vertices, Rcpp::IntegerMatrix edges) {  
-  dgraph g = bh_make_graph(vertices, edges);
+  dgraph g = r2graph<dgraph>(vertices, edges);
   std::vector<int> sorted;
   topological_sort(g, std::back_inserter(sorted)); 
   return wrap(sorted);
 }
-
   
 /*** R  
 dag <- anb_make_nb('a', letters[2:6])
+dag <- graphNEL2_graph_internal(dag)
 test_make(dag$nodes, dag$edges)
 bh_connected_components(dag$nodes, dag$edges) 
 bh_subgraph( dag$nodes, dag$edges, dag$nodes)
