@@ -90,12 +90,15 @@ graph_internal2graph_NEL <- function(x) {
 } 
 graph_make_edges <- function(nodes, edges) { 
   stopifnot(valid_nodes(nodes), valid_edges(edges, numeric = FALSE), 
-            all(edges[] %in% nodes))
+            all(edges[] %in% nodes), all(edges[, 1] != edges[, 2]))
   from <- match(edges[, 1], nodes) - 1
   to <- match(edges[, 2], nodes) - 1
   graph_from_to_to_edges (from = from, to = to)
 }  
 graph_from_to_to_edges <- function(from, to) { 
+  # TODO: a hack. depending from where it is called, i might return a character or integer matrix. must specify pre and post conditions.
+  if (is.null(from)) from <- character()
+  if (is.null(to)) to <- character()
   m <- matrix(c(from = from, to = to), ncol = 2)
   colnames(m) <- c('from', 'to')
   m
@@ -244,6 +247,12 @@ graph_empty_undirected <- function() {
   # TODO remove this function. call graph_internal directly.
   g <- graph_internal(edgemode = "undirected")
   graph_internal2graph_NEL(g) 
+} 
+graph_complete_undirected <- function(nodes) {
+  all_pairs <- t(combn(nodes, 2))
+  colnames(all_pairs) <- c('from', 'to')
+  g <- graph_internal(nodes, all_pairs, NULL, "undirected")
+  graph_internal2graph_NEL(g)
 }
 # graph_max_weight_forest <- function(g) {
 #   stopifnot(!graph::isDirected(g))

@@ -28,39 +28,20 @@ remove_node <- function(node, x) {
 num_arcs <- function(x) {
   # graph::numEdges(x)
   graph_num_arcs(x)
-}
-
+} 
 #' Returns a complete unweighted graph with the given nodes.
 #' 
 #' @param nodes A character vector.
 #' @return a \code{graphNEL} object.
 #' @keywords internal
 complete_graph <- function(nodes) {   
-  g <- graph::graphNEL(nodes)
-  graph::complement(g)
+  graph_complete_undirected(nodes) 
 } 
-make_graph <- function(nodes, from, to, weights) {  
-# Check nodes is character 
-  stopifnot(is.character(nodes))
-#  Make graph from nodes 
-  g <- graph::graphNEL(nodes)  
-#  Check lengths of from, to, weights all the same
-  stopifnot(length(from) == length(to))
-  stopifnot(length(to) == length(weights))
-# If no edges to add, return graph 
-  if (length(from) == 0)  { return (g) }    
-#  Check from, to character and weights numeric
-  stopifnot(is.character(from))
-  stopifnot(is.character(to))
-  stopifnot(is.numeric(weights))
-#  Add edges from to with weights   
-  g <- graph::addEdge(from = from, to = to, graph = g, weights = weights)
-#  Check sum of weights in g is sum of weights
-  w <- unlist(graph::edgeWeights(g))
-  weights_correct <- all.equal(sum(w), sum(weights) * 2, tolerance = 1E-10)
-  stopifnot(weights_correct)
-# Return graph   
-  g
+make_graph <- function(nodes, from, to, weights) {      
+  edges <- graph_from_to_to_edges(from, to) 
+  # TODO: change name to make_ugraph
+  g <- graph_internal(nodes, edges, weights, "undirected") 
+  graph_internal2graph_NEL(g)
 }  
 #' Returns an edge matrix with node names (instead of node indices).
 #' 
