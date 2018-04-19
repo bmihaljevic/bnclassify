@@ -82,15 +82,8 @@ max_weight_forest <- function(g) {
 #' @param g A \code{\link{graphNEL}}
 #' @return A \code{\link{graphNEL}}. 
 #' @keywords internal
-graph_union <- function(g) {
-  stopifnot(is.list(g))
-  edges <- lapply(g, named_edge_matrix)
-  edges <- Reduce(cbind, edges)
-  nodes <- sapply(g, graph::nodes)
-  nodes <- as.vector(unlist(nodes))
-  stopifnot(all(sort(nodes) == sort(unique(nodes))))
-  union <- graph::graphNEL(nodes = nodes, edgemode = "directed")
-  graph::addEdge(from = edges[1,], to = edges[2,], graph = union)
+graph_union <- function(g) { 
+  graph_internal_union(g)
 }
 # Adds a node to DAG as root and parent of all nodes.
 superimpose_node <- function(dag, node) {

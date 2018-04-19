@@ -269,7 +269,7 @@ graph_internal_union <- function(g) {
   stopifnot(is.list(g))
   g <- lapply(g, graphNEL2_graph_internal) 
   edges <- lapply(g, graph_named_edge_matrix)
-  edges <- Reduce(cbind, edges)
+  edges <- Reduce(rbind, edges)
   nodes <- sapply(g, graph_nodes)
   nodes <- as.vector(unlist(nodes))
   stopifnot(all(sort(nodes) == sort(unique(nodes))))
