@@ -192,15 +192,16 @@ Rcpp::List bh_subgraph(const CharacterVector & vertices, const Rcpp::IntegerMatr
 }  
 
 template <typename NameMap>
-struct positive_edge_weight {
-  positive_edge_weight() { }
-  positive_edge_weight(NameMap weight, std::string name) : m_weight(weight), m_name(name) { }
+struct remove_names {
+  remove_names() { }
+  remove_names(NameMap weight, std::vector<std::string> remove) : m_weight(weight), m_remove(remove) { }
   template <typename Vertex>
   bool operator()(const Vertex& e) const {
-    return get(m_weight, e) == m_name;
+    std::string name =  get(m_weight, e);
+    return  m_remove.end() == std::find(m_remove.begin(), m_remove.end(), name );
   }
   NameMap m_weight;
-  std::string m_name;
+  std::vector<std::string> m_remove;
 };
 
 // TODO rename bh_remove_nodeS
@@ -209,9 +210,10 @@ Rcpp::List bh_remove_node(const CharacterVector & vertices, const Rcpp::IntegerM
   dgraph g  = r2graph<dgraph>(vertices,  edges);
   
   typedef property_map<dgraph, vertex_name_t>::type NameMap ;
-  positive_edge_weight<NameMap> filter(get(vertex_name, g), "b");
+  std::vector<std::string> remove_vec = Rcpp::as<std::vector<std::string> >(remove);
+  remove_names<NameMap> filter(get(vertex_name, g), remove_vec);
 
-  typedef filtered_graph<dgraph, keep_all, positive_edge_weight<NameMap> > fgraph;
+  typedef filtered_graph<dgraph, keep_all, remove_names<NameMap> > fgraph;
   typedef graph_traits<fgraph>::vertex_iterator vertex_iter;
   fgraph fg(g, keep_all(), filter);
   return graph2R(fg);
@@ -290,6 +292,7 @@ a <- replicate(n = 1e3, test_sgraph('f') )
 
 bh_subgraph( dag$nodes, dag$edges, setdiff(dag$nodes, 'f'))
 bh_subgraph2( dag$nodes, dag$edges, setdiff(dag$nodes, 'f'))
+bh_subgraph2( dag$nodes, dag$edges, setdiff(dag$nodes, 'c'))
 
 nedges <- length(dag$edges)
 bh_mstree_kruskal(dag$nodes, dag$edges, rep(1:nedges))
