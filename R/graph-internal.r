@@ -85,10 +85,10 @@ graph_from_to_to_edges <- function(from, to) {
 call_bh <- function(fun, g, ...) { 
  do.call(fun, args = list(vertices = g$nodes, edges  = g$edges, ...)) 
 }
-#'  connected_components 
+#' connected_components 
 #'  
-#'  @param  x currently a graphNEL. TODO But will be a graph_internal.
-#'  @keywords internal
+#' @param x currently a graphNEL. TODO But will be a graph_internal.
+#' @keywords internal
 graph_connected_components <- function(x) {   
   g <- x 
   if (!inherits( g, "bnc_graph_internal"))  {
@@ -106,10 +106,12 @@ graph_connected_components <- function(x) {
     NULL
   }
 } 
-#'  Subgraph.  
-#'  Only for a directed graph?
-#'  @param  x currently a graphNEL. TODO But will be a graph_internal.
-#'  @keywords internal
+#' Subgraph.  
+#' Only for a directed graph?
+#' 
+#' @param nodes character 
+#' @param  x currently a graphNEL. TODO But will be a graph_internal.
+#' @keywords internal
 graph_subgraph <- function(nodes, x) {  
   g <- x 
   if (!inherits( g, "bnc_graph_internal"))  {
@@ -152,7 +154,7 @@ graph_add_edges <- function(from, to, g) {
   # check from and to are disjoint and same length
   stopifnot(is.character(from),     is.character(to),
             are_disjoint(from, to), length(from) == length(to)) 
-  adj <- any(graph_is_adjacent(g, from = undirected_from, to = undirected_to))
+  adj <- any(graph_is_adjacent(g, from = from, to = to))
   stopifnot(!adj)
   # just simply convert the edges to numbers and then add to egisting matrig. 
   # all nodes must be already in matrig.

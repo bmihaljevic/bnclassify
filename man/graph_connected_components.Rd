@@ -2,16 +2,14 @@
 % Please edit documentation in R/graph-internal.r
 \name{graph_connected_components}
 \alias{graph_connected_components}
-\title{connected_components 
- 
- @param  x currently a graphNEL. TODO But will be a graph_internal.
- @keywords internal}
+\title{connected_components}
 \usage{
 graph_connected_components(x)
 }
-\description{
-connected_components 
- 
- @param  x currently a graphNEL. TODO But will be a graph_internal.
- @keywords internal
+\arguments{
+\item{x}{currently a graphNEL. TODO But will be a graph_internal.}
 }
+\description{
+connected_components
+}
+\keyword{internal}

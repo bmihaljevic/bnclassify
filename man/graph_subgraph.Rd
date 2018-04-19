@@ -3,15 +3,17 @@
 \name{graph_subgraph}
 \alias{graph_subgraph}
 \title{Subgraph.  
- Only for a directed graph?
- @param  x currently a graphNEL. TODO But will be a graph_internal.
- @keywords internal}
+Only for a directed graph?}
 \usage{
 graph_subgraph(nodes, x)
 }
+\arguments{
+\item{nodes}{character}
+
+\item{x}{currently a graphNEL. TODO But will be a graph_internal.}
+}
 \description{
 Subgraph.  
- Only for a directed graph?
- @param  x currently a graphNEL. TODO But will be a graph_internal.
- @keywords internal
+Only for a directed graph?
 }
+\keyword{internal}
