@@ -168,7 +168,22 @@ graph_is_adjacent <- function(from, to, x) {
   # CHeck any of these are found in the matrix
   warning("bnclassify not implemented")
   FALSE
-}
+} 
+#' Finds adjacent nodes. Has not been tested much
+#' @keywords  internal
+graph_get_adjacent <- function(node, x) { 
+  g <- x 
+  if (!inherits( g, "bnc_graph_internal"))  {
+    g <- graphNEL2_graph_internal(x) 
+  }
+  stopifnot(inherits( g, "bnc_graph_internal")) 
+  stopifnot(node %in% x$nodes)
+  # unfortunately, node is in numbers internally. TODO: better use strings definitely. simpler.
+  edges <- graph_named_edge_matrix(x)
+  row_inds <- apply(edges, 1, function(x) node %in% x)
+  nodes <- unique(edges[row_inds,  ] )
+  setdiff(nodes, node)   
+}    
 graph_num_arcs <- function(x) {
   g <- x 
   if (!inherits( g, "bnc_graph_internal"))  {
@@ -223,6 +238,13 @@ graph_is_directed <- function(x) {
   stopifnot(inherits( x, "bnc_graph_internal"), x$edgemode %in% c("directed", "undirected"))  
   x$edgemode == "directed" 
 } 
+# TODO: have not tested this one much
+graph_is_connected <- function(x) { 
+  stopifnot(inherits( x, "bnc_graph_internal"), x$edgemode %in% c("directed", "undirected"))  
+  conn <- graph_connected_components(x) 
+  # TODO Assuming  that an empty graph is connected, not sure if that is correct
+  length(conn) < 2
+}
 graph_is_undirected <- function(x) { 
   stopifnot(inherits( x, "bnc_graph_internal"), x$edgemode %in% c("directed", "undirected"))  
   x$edgemode == "undirected" 
@@ -278,7 +300,7 @@ graph_internal_union <- function(g) {
   graph_internal2graph_NEL(g) 
 }
 
-graph_direct_tree <- function(x, root = NULL) {  
+graph_direct_tree <- function(x, root = NULL) {
   g <- x 
   if (!inherits( g, "bnc_graph_internal"))  {
     g <- graphNEL2_graph_internal(x) 
@@ -288,22 +310,22 @@ graph_direct_tree <- function(x, root = NULL) {
     return(graph_direct( g)) 
   }
   stopifnot(graph_is_undirected(g))  
-  stopifnot(graph::isConnected(g))
-  current_root <- graph::nodes(g)[1]  
-  if (length(root) && root %in% graph::nodes(g)) {
+  stopifnot(graph_is_connected(g))
+  current_root <- graph_nodes(g)[1]  
+  if (length(root) && root %in% graph_nodes(g)) {
 #   if root is not in tree keep silent as it might be in another tree 
 #   of the forest    
     current_root <- root
   }
-  directed <- graph::graphNEL(nodes=graph::nodes(g), edgemode='directed')
+  directed <- graph_internal(nodes=graph_nodes(g), edgemode='directed')
   direct_away_queue <- current_root
   while (length(direct_away_queue)) {
     current_root <- direct_away_queue[1]
     #   convert edges reaching current_root into arcs leaving current_root 
-    adjacent <- graph::edges(g, current_root)[[1]]
+    adjacent <- graph_get_adjacent(current_root, g) 
     if (length(adjacent)) {      
-      directed <- graph::addEdge(from=current_root, to=adjacent, directed)
-      g <- graph::removeEdge(from=current_root, to=adjacent, g)
+      directed <- graph_add_edges(from=current_root, to=adjacent, g = directed)
+      g <-  graph_remove_edges(from=current_root, to=adjacent, g)
     }
     direct_away_queue <- direct_away_queue[-1]
     direct_away_queue <- c(direct_away_queue, adjacent)
