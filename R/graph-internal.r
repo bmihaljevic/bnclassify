@@ -249,8 +249,5 @@ graph_max_weight_forest <- function(x) {
   #   change weights sign because Kruskal only searches for minimal tree 
   g$weights <-  -1 * g$weights   
   mstree <- graph_mstree_kruskal(x=g)
-  #   make a graphNEL
-  gr <- graph::graphNEL(mstree$nodes)
-  weights <- -1 * as.vector(mstree$weights)
-  graph::addEdge(mstree$edgeList[1,], mstree$edgeList[2,], gr, weights= weights)
+  mstree  
 }
