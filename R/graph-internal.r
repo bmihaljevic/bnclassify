@@ -118,7 +118,7 @@ graph_subgraph <- function(nodes, x) {
   }
   stopifnot(inherits( g, "bnc_graph_internal"))   
   subgraph <- call_bh('bh_subgraph', g = g,  subgraph_vertices = nodes) 
-  subgraph <- graph_internal_make(subgraph$nodes, subgraph$edges, NULL, g$edgemode)
+  subgraph <- graph_internal(subgraph$nodes, subgraph$edges, NULL, g$edgemode)
   # TODO remove:
   graph_internal2graph_NEL(subgraph ) 
 }  
@@ -136,7 +136,7 @@ graph_remove_node <- function(node, x) {
   if (!node %in% g$nodes) stop("Node not in graph")  
   removed <- call_bh('bh_remove_node', g = g, remove = node)  
   # TODO: currently this does not preserve node weights!!!  Yet is it not used now for weighted graphs.
-  removed <- graph_internal_make(removed$nodes, removed$edges, NULL, g$edgemode)
+  removed <- graph_internal(removed$nodes, removed$edges, NULL, g$edgemode)
   graph_internal2graph_NEL(removed) 
 }
 #' Add edges
@@ -174,7 +174,7 @@ graph_remove_edges <- function(from, to, g) {
   if (!all(to %in% g$nodes)) stop("Node not in graph")  
   removed <- call_bh('bh_remove_edges', g = g, remove_from = from, remove_to = to, edgemode = g$edgemode)  
   # TODO: currently this does not preserve node weights!!!  Yet is it not used now for weighted graphs.
-  removed <- graph_internal_make(removed$nodes, removed$edges, NULL, g$edgemode)
+  removed <- graph_internal(removed$nodes, removed$edges, NULL, g$edgemode)
   graph_internal2graph_NEL(removed)  
 }  
 #' Checks whether nodes are adjacent
@@ -256,7 +256,7 @@ graph_mstree_kruskal <- function(x) {
     g <- graphNEL2_graph_internal(x) 
   } 
   kruskal <- call_bh('bh_mstree_kruskal', g, weights = g$weights)  
-  kruskal <- graph_internal_make(kruskal$nodes, kruskal$edges, kruskal$weights, "undirected")
+  kruskal <- graph_internal(kruskal$nodes, kruskal$edges, kruskal$weights, "undirected")
   graph_internal2graph_NEL(kruskal)  
 } 
 graph_is_directed <- function(x) { 
