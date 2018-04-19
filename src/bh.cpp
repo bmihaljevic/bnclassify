@@ -34,7 +34,7 @@ std::vector<int> match_zero_based(const CharacterVector & subset, const Characte
 }     
 
 typedef property<vertex_index_t, int, property<vertex_name_t, std::string> > VertexProperty;
-typedef property<edge_index_t, int> EdgeProperty; 
+typedef property<edge_index_t, int, property<edge_weight_t, double> > EdgeProperty; 
 typedef adjacency_list< vecS, vecS, directedS, VertexProperty, EdgeProperty >  dgraph;  
 
 
@@ -54,10 +54,12 @@ Rcpp::List graph2R(T & g) {
   typedef typename property_map<T, vertex_index_t>::type IndexMap;
   typedef typename property_map<T, vertex_name_t>::type NameMap;
   typedef typename graph_traits<T>::vertex_iterator vertex_iter;
-  typedef typename graph_traits<T>::edge_iterator edge_iter;
+  typedef typename graph_traits<T>::edge_iterator edge_iter; 
+  typedef typename property_map<T, edge_weight_t>::type WeightMap;
 
   IndexMap index = get(vertex_index, g);
   NameMap names = get(vertex_name, g);
+  WeightMap weight = get(edge_weight, g);
   
   std::pair<vertex_iter, vertex_iter> vp;
   // std::vector<int> nodes;
@@ -78,6 +80,8 @@ Rcpp::List graph2R(T & g) {
   Vertex u, v;
   int row  = 0;
   
+  Rcpp::NumericVector weights(nedges);
+  
   typedef typename graph_traits<T>::edge_descriptor edge; 
   for (ep = edges(g); ep.first != ep.second; ++ep.first) {
     edge e = *ep.first;
@@ -85,10 +89,11 @@ Rcpp::List graph2R(T & g) {
     v = target(*ep.first,g);
     edges_matrix(row, 0) = u;
     edges_matrix(row, 1) = v;
+    weights[row] = get(weight, e);
     row++;
   }
   
-  List output = List::create(Named("nodes") = nodes, Named("edges") = edges_matrix);
+  List output = List::create(Named("nodes") = nodes, Named("edges") = edges_matrix, Named("weights") = weights);
   return output;
 }
 

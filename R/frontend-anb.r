@@ -75,20 +75,21 @@ direct_graph <- function(g) {
 #'   MIT Press. pp. 912-914.
 #' @keywords internal
 max_weight_forest <- function(g) {         
-  stopifnot(!graph::isDirected(g))
-  if (graph::numEdges(g) < 1) return(g)
-  #   change weights sign because Kruskal only searches for minimal tree
-  e <- named_edge_matrix(g = g)
-  weights <- graph::edgeData(self = g, from = e[1, ], to = e[2, ], 
-                             attr = "weight")
-  weights <- unlist(weights)
-  graph::edgeData(self = g, from = e[1, ], 
-                  to = e[2, ], attr = "weight") <- -1 * weights
-  mstree <- RBGL::mstree.kruskal(x=g)
-  #   make a graphNEL 
-  gr <- graph::graphNEL(mstree$nodes)
-  weights <- -1 * as.vector(mstree$weights)
-  graph::addEdge(mstree$edgeList[1,], mstree$edgeList[2,], gr, weights= weights)    
+  # stopifnot(!graph::isDirected(g))
+  # if (graph::numEdges(g) < 1) return(g)
+  # #   change weights sign because Kruskal only searches for minimal tree
+  # e <- named_edge_matrix(g = g)
+  # weights <- graph::edgeData(self = g, from = e[1, ], to = e[2, ], 
+  #                            attr = "weight")
+  # weights <- unlist(weights)
+  # graph::edgeData(self = g, from = e[1, ], 
+  #                 to = e[2, ], attr = "weight") <- -1 * weights
+  # mstree <- RBGL::mstree.kruskal(x=g)
+  # #   make a graphNEL 
+  # gr <- graph::graphNEL(mstree$nodes)
+  # weights <- -1 * as.vector(mstree$weights)
+  # graph::addEdge(mstree$edgeList[1,], mstree$edgeList[2,], gr, weights= weights)     
+  graph_max_weight_forest(g)
 }
 #' Merges multiple disjoint graphs into a single one.
 #' 

@@ -66,27 +66,6 @@ graph_internal_make <- function(nodes, edges, weights, edgemode) {
 graph_nodes <- function(x) {
   stopifnot(is( x, "bnc_graph_internal"))
   x$nodes 
-}
-# TODO: will use this function for conversion to graphNEL
-graphNEL2_graph_internal <- function(x) { 
-  stopifnot(inherits(x, "graphNEL"))
-  nodes <- graph::nodes(x)
-  edges <- t(named_edge_matrix(x)) 
-  weights <- NULL 
-  tryCatch({
-  # Will fail if it does not have the attribute.
-   weights <- graph::edgeData(self = x, from = edges[, 1], to = edges[, 2], 
-                             attr = "weight")  
-  }, error = function(e) {}) 
-  weights <- unlist(weights)
-  edgemode <- graph::edgemode(x)
-  graph_internal(nodes, edges, weights, edgemode) 
-}  
-graph_internal2graph_NEL <- function(x) {  
-  stopifnot(inherits( x, "bnc_graph_internal")) 
-  edges <- graph_named_edge_matrix(x) 
-  # TODO: handle undirected. If directed, then build directed graph in BH.
-  graph::ftM2graphNEL(ft = edges, W = x$weights, V = x$nodes, edgemode = x$edgemode)  
 } 
 graph_make_edges <- function(nodes, edges) { 
   stopifnot(valid_nodes(nodes), valid_edges(edges, numeric = FALSE), 
@@ -236,12 +215,17 @@ graph_mstree_kruskal <- function(x) {
   if (!inherits( g, "bnc_graph_internal"))  {
     g <- graphNEL2_graph_internal(x) 
   } 
-  kruskal <- call_bh('bh_mstree_kruskal', g, weights = g$weights) 
+  kruskal <- call_bh('bh_mstree_kruskal', g, weights = g$weights)  
+  kruskal <- graph_internal_make(kruskal$nodes, kruskal$edges, kruskal$weights, "undirected")
   graph_internal2graph_NEL(kruskal)  
 } 
 graph_is_directed <- function(x) { 
   stopifnot(inherits( x, "bnc_graph_internal"), x$edgemode %in% c("directed", "undirected"))  
   x$edgemode == "directed" 
+} 
+graph_is_undirected <- function(x) { 
+  stopifnot(inherits( x, "bnc_graph_internal"), x$edgemode %in% c("directed", "undirected"))  
+  x$edgemode == "undirected" 
 }
 graph_empty_undirected <- function() {
   # TODO remove this function. call graph_internal directly.
@@ -254,19 +238,19 @@ graph_complete_undirected <- function(nodes) {
   g <- graph_internal(nodes, all_pairs, NULL, "undirected")
   graph_internal2graph_NEL(g)
 }
-# graph_max_weight_forest <- function(g) {
-#   stopifnot(!graph::isDirected(g))
-#   if (graph::numEdges(g) < 1) return(g)
-#   #   change weights sign because Kruskal only searches for minimal tree
-#   e <- named_edge_matrix(g = g)
-#   weights <- graph::edgeData(self = g, from = e[1, ], to = e[2, ], 
-#                              attr = "weight")
-#   weights <- unlist(weights)
-#   graph::edgeData(self = g, from = e[1, ], 
-#                   to = e[2, ], attr = "weight") <- -1 * weights
-#   mstree <- RBGL::mstree.kruskal(x=g)
-#   #   make a graphNEL 
-#   gr <- graph::graphNEL(mstree$nodes)
-#   weights <- -1 * as.vector(mstree$weights)
-#   graph::addEdge(mstree$edgeList[1,], mstree$edgeList[2,], gr, weights= weights)    
-# }
+graph_max_weight_forest <- function(x) { 
+  g <- x 
+  if (!inherits( g, "bnc_graph_internal"))  {
+    g <- graphNEL2_graph_internal(x) 
+  }
+  stopifnot(inherits( g, "bnc_graph_internal"))  
+  stopifnot(graph_is_undirected(g))
+  if (graph_num_arcs(g) < 1) return( graph_internal2graph_NEL( g )  )
+  #   change weights sign because Kruskal only searches for minimal tree 
+  g$weights <-  -1 * g$weights   
+  mstree <- graph_mstree_kruskal(x=g)
+  #   make a graphNEL
+  gr <- graph::graphNEL(mstree$nodes)
+  weights <- -1 * as.vector(mstree$weights)
+  graph::addEdge(mstree$edgeList[1,], mstree$edgeList[2,], gr, weights= weights)
+}
