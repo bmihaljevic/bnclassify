@@ -25,31 +25,32 @@ direct_forest <- function(g, root = NULL) {
 #' @return A \code{\link{graphNEL}}. The directed tree.
 #' @keywords internal
 direct_tree <- function(g, root = NULL) {
-  if (graph::numEdges(g) < 1) {
-    return(direct_graph(g))
-  }
-  stopifnot(!graph::isDirected(g))  
-  stopifnot(graph::isConnected(g))
-  current_root <- graph::nodes(g)[1]  
-  if (length(root) && root %in% graph::nodes(g)) {
-#   if root is not in tree keep silent as it might be in another tree 
-#   of the forest    
-    current_root <- root
-  }
-  directed <- graph::graphNEL(nodes=graph::nodes(g), edgemode='directed')
-  direct_away_queue <- current_root
-  while (length(direct_away_queue)) {
-    current_root <- direct_away_queue[1]
-    #   convert edges reaching current_root into arcs leaving current_root 
-    adjacent <- graph::edges(g, current_root)[[1]]
-    if (length(adjacent)) {      
-      directed <- graph::addEdge(from=current_root, to=adjacent, directed)
-      g <- graph::removeEdge(from=current_root, to=adjacent, g)
-    }
-    direct_away_queue <- direct_away_queue[-1]
-    direct_away_queue <- c(direct_away_queue, adjacent)
-  }
-  directed
+#   if (graph::numEdges(g) < 1) {
+#     return(direct_graph(g))
+#   }
+#   stopifnot(!graph::isDirected(g))  
+#   stopifnot(graph::isConnected(g))
+#   current_root <- graph::nodes(g)[1]  
+#   if (length(root) && root %in% graph::nodes(g)) {
+# #   if root is not in tree keep silent as it might be in another tree 
+# #   of the forest    
+#     current_root <- root
+#   }
+#   directed <- graph::graphNEL(nodes=graph::nodes(g), edgemode='directed')
+#   direct_away_queue <- current_root
+#   while (length(direct_away_queue)) {
+#     current_root <- direct_away_queue[1]
+#     #   convert edges reaching current_root into arcs leaving current_root 
+#     adjacent <- graph::edges(g, current_root)[[1]]
+#     if (length(adjacent)) {      
+#       directed <- graph::addEdge(from=current_root, to=adjacent, directed)
+#       g <- graph::removeEdge(from=current_root, to=adjacent, g)
+#     }
+#     direct_away_queue <- direct_away_queue[-1]
+#     direct_away_queue <- c(direct_away_queue, adjacent)
+#   }
+#   directed
+  graph_direct_tree(g, root) 
 }
 direct_graph <- function(g) {
   # graph::edgemode(g) <- 'directed'
