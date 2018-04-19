@@ -11,6 +11,7 @@
 #include <boost/property_map/property_map.hpp>
 #include <boost/graph/kruskal_min_spanning_tree.hpp>
 #include <boost/graph/topological_sort.hpp>
+#include <boost/graph/filtered_graph.hpp>
 
 /**
  * Boost uses integers as vertex ids, not names. 
@@ -37,14 +38,39 @@ std::vector<int> match_zero_based(const CharacterVector & subset, const Characte
 
 typedef property<vertex_index_t, int, property<vertex_name_t, std::string> > VertexProperty;
 typedef property<edge_index_t, int, property<edge_weight_t, double> > EdgeProperty; 
-typedef adjacency_list< vecS, vecS, directedS, VertexProperty, EdgeProperty >  dgraph;   
-// modifiable directed graph. Uses listS instead of vecS. vecS could lead to invalidated descriptors. <https://www.boost.org/doc/libs/1_37_0/libs/graph/doc/adjacency_list.html>
-typedef adjacency_list<listS, vecS, directedS, VertexProperty, EdgeProperty >  mdgraph;    
-typedef subgraph< adjacency_list< vecS, vecS, directedS, VertexProperty, EdgeProperty > > dsubgraph;
+typedef adjacency_list< vecS, vecS, directedS, VertexProperty, EdgeProperty >  dgraph;    
 
 // for connected components and such
 // typedef adjacency_list <vecS, vecS, property < edge_weight_t, double >, undirectedS> ugraph;  
-typedef adjacency_list < vecS, vecS, undirectedS, VertexProperty, property < edge_weight_t, double > > ugraph;
+typedef adjacency_list < vecS, vecS, undirectedS, VertexProperty, property < edge_weight_t, double > > ugraph; 
+
+// modifiable directed graph. Uses listS instead of vecS. vecS could lead to invalidated descriptors. <https://www.boost.org/doc/libs/1_37_0/libs/graph/doc/adjacency_list.html>
+// not used cause it does not allow int descriptors
+// typedef adjacency_list<listS, listS, directedS, VertexProperty, EdgeProperty >  mdgraph;    
+
+// TODO: remove
+typedef subgraph< adjacency_list< vecS, vecS, directedS, VertexProperty, EdgeProperty > > dsubgraph;
+
+/**
+ * Because num_vertices does not give the number of nodes in filtered graph.
+ */
+template <class T>
+int robust_num_vertices(T g) {
+  typedef typename graph_traits<T>::vertex_iterator vertex_iter;   
+  std::pair<vertex_iter, vertex_iter> vp;
+  vp = vertices(g);
+  return std::distance(vp.first, vp.second); 
+} 
+
+/**
+ * Because num_edges does not give the number of nodes in filtered graph.
+ */
+template <class T>
+int robust_num_edges(T g) { 
+  typedef typename graph_traits<T>::edge_iterator edge_iter;  
+  std::pair<edge_iter, edge_iter> ep = edges(g) ; 
+  return std::distance(ep.first, ep.second); 
+} 
 
 /**
  * Will return a list with nodes and edges. Does not have the names though unless I save them somewhere.
@@ -66,7 +92,8 @@ Rcpp::List graph2R(T & g) {
   std::pair<vertex_iter, vertex_iter> vp;
   // std::vector<int> nodes;
   std::vector<std::string> nodes;
-  nodes.reserve(num_vertices(g));  
+  int nvertices = robust_num_vertices(g);
+  nodes.reserve(nvertices);  
   
   for (vp = vertices(g); vp.first != vp.second; ++vp.first) {    
     Vertex v = *vp.first; 
@@ -76,7 +103,7 @@ Rcpp::List graph2R(T & g) {
   }  
   
   std::pair<edge_iter, edge_iter> ep; 
-  int nedges = num_edges(g);
+  int nedges = robust_num_edges(g);
   Rcpp::IntegerMatrix edges_matrix(nedges, 2);
   colnames(edges_matrix) = CharacterVector::create("from", "to");
   Vertex u, v;
@@ -164,17 +191,30 @@ Rcpp::List bh_subgraph(const CharacterVector & vertices, const Rcpp::IntegerMatr
   return graph2R(output);
 }  
 
+template <typename NameMap>
+struct positive_edge_weight {
+  positive_edge_weight() { }
+  positive_edge_weight(NameMap weight, std::string name) : m_weight(weight), m_name(name) { }
+  template <typename Vertex>
+  bool operator()(const Vertex& e) const {
+    return get(m_weight, e) == m_name;
+  }
+  NameMap m_weight;
+  std::string m_name;
+};
 
 // TODO rename bh_remove_nodeS
 // [[Rcpp::export]]  
 Rcpp::List bh_remove_node(const CharacterVector & vertices, const Rcpp::IntegerMatrix & edges, const CharacterVector & remove) {
-  mdgraph g  = r2graph<mdgraph>(vertices,  edges);  
-  std::vector<int> remove_ind = match_zero_based(remove, vertices); 
-  for (int i = 0; i < remove_ind.size(); i++) {
-    clear_vertex(remove_ind.at(i), g);
-    remove_vertex(remove_ind.at(i), g);     
-  }
-  return graph2R(g);
+  dgraph g  = r2graph<dgraph>(vertices,  edges);
+  
+  typedef property_map<dgraph, vertex_name_t>::type NameMap ;
+  positive_edge_weight<NameMap> filter(get(vertex_name, g), "b");
+
+  typedef filtered_graph<dgraph, keep_all, positive_edge_weight<NameMap> > fgraph;
+  typedef graph_traits<fgraph>::vertex_iterator vertex_iter;
+  fgraph fg(g, keep_all(), filter);
+  return graph2R(fg);
 } 
 
 // [[Rcpp::export]]  
