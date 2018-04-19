@@ -251,3 +251,12 @@ graph_max_weight_forest <- function(x) {
   mstree <- graph_mstree_kruskal(x=g)
   mstree  
 }
+graph_is_dag <- function(dag) {  
+  #   Check dag is graphNEL. Allow adjacency matrix?
+  if (!(inherits(dag, "graphNEL"))) return(FALSE)
+  # Empty graphs are OK
+  if (graph::numEdges(dag) == 0) return(TRUE)
+  tsort <- tryCatch(RBGL::tsort(dag), warning = function(e) character(0), 
+                    error = function(e) character(0))
+  length(tsort) > 0 
+}  
