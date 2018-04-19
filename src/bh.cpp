@@ -46,7 +46,8 @@ typedef adjacency_list < vecS, vecS, undirectedS, VertexProperty, property < edg
 
 // modifiable directed graph. Uses listS instead of vecS. vecS could lead to invalidated descriptors. <https://www.boost.org/doc/libs/1_37_0/libs/graph/doc/adjacency_list.html>
 // not used cause it does not allow int descriptors
-// typedef adjacency_list<listS, listS, directedS, VertexProperty, EdgeProperty >  mdgraph;    
+typedef adjacency_list<listS, listS, directedS, VertexProperty, EdgeProperty >  mdgraph; 
+typedef adjacency_list < listS, listS, undirectedS, VertexProperty, property < edge_weight_t, double > > mugraph; 
 
 // TODO: remove
 typedef subgraph< adjacency_list< vecS, vecS, directedS, VertexProperty, EdgeProperty > > dsubgraph;
@@ -169,27 +170,6 @@ NumericVector bh_connected_components(CharacterVector vertices, Rcpp::IntegerMat
   return wrap(component);
 }      
 
-dsubgraph make_subgraph(dgraph & g, const CharacterVector & subgraph_vertices, const CharacterVector & vertices)  {  
-  dsubgraph a; 
-  boost::copy_graph(g, a); 
-  dsubgraph subgraph = a.create_subgraph(); 
-//  If you add particular vertices from global, are they kept?
-  std::vector<int> sgraph_vertices = match_zero_based(subgraph_vertices, vertices);
-  for (int i = 0; i < sgraph_vertices.size(); i++) {
-    int a = add_vertex(sgraph_vertices.at(i), subgraph); 
-  }
-  return subgraph;  
-}
-
-// [[Rcpp::export]]  
-Rcpp::List bh_subgraph(const CharacterVector & vertices, const Rcpp::IntegerMatrix & edges, const CharacterVector & subgraph_vertices) {
-  dgraph g  = r2graph<dgraph>(vertices,  edges); 
-  dsubgraph subgraph = make_subgraph (g, subgraph_vertices, vertices) ;   
-  // workaround, i do not know have to make graph2R generic enough
-  dgraph output;
-  copy_graph(subgraph, output);
-  return graph2R(output);
-}  
 
 template <typename NameMap>
 struct remove_names {
@@ -202,6 +182,29 @@ struct remove_names {
   }
   NameMap m_weight;
   std::vector<std::string> m_remove;
+};
+
+template <typename NameMap, typename Graph>
+struct remove_edge_names {
+  remove_edge_names() { }
+  remove_edge_names(NameMap weight, std::vector<std::string> remove_from, std::vector<std::string> remove_to, Graph graph) : 
+          m_weight(weight), m_remove_from(remove_from), m_remove_to(remove_to), m_graph(graph) { } 
+  bool find(const std::string & value, const std::vector<std::string> & vector) const {
+    return vector.end() != std::find(vector.begin(), vector.end(), value );
+  }
+  template <typename Edge>
+  bool operator()(const Edge& e) const { 
+    std::string from =  get(m_weight, source(e, m_graph));
+    std::string to =  get(m_weight, target(e, m_graph));
+    // Consider undirected
+    bool arc = find(from, m_remove_from) && find(to, m_remove_to); 
+    bool reversed = find(to, m_remove_from) && find(from, m_remove_to); 
+    return arc || reversed;
+  }
+  NameMap m_weight; 
+  std::vector<std::string> m_remove_from;
+  std::vector<std::string> m_remove_to;
+  Graph m_graph;
 };
 
 // TODO rename bh_remove_nodeS
@@ -219,11 +222,6 @@ Rcpp::List bh_remove_node(const CharacterVector & vertices, const Rcpp::IntegerM
   return graph2R(fg);
 } 
 
-// [[Rcpp::export]]  
-Rcpp::List bh_subgraph2(const CharacterVector & vertices, const Rcpp::IntegerMatrix & edges, const CharacterVector & subgraph_vertices) { 
-  CharacterVector remove = setdiff(vertices, subgraph_vertices);
-  return bh_remove_node(vertices, edges, remove);  
-}
 
 
 // [[Rcpp::export]]  
@@ -231,14 +229,52 @@ Rcpp::List bh_remove_edges(const CharacterVector & vertices, const Rcpp::Integer
                           const CharacterVector & remove_to, const CharacterVector & edgemode) { 
   if (edgemode[0] != "undirected") stop("Currently not implemented for directed.");
   if (remove_from.size() != remove_to.size()) stop("From and to different lengths.");
-  ugraph g  = r2graph<ugraph>(vertices,  edges);   
-  std::vector<int> from_ind = match_zero_based(remove_from, vertices); 
-  std::vector<int> to_ind = match_zero_based(remove_to, vertices);
-  for (int i = 0; i < from_ind.size(); i++) { 
-    remove_edge(from_ind.at(i), to_ind.at(i), g);
-  }
-  return graph2R(g); 
+  // Copy to graph with listS so that I can modify 
+  ugraph a  = r2graph<ugraph>(vertices,  edges);   
+  mugraph g;
+  copy_graph(a, g);  
+  typedef property_map<mugraph, vertex_name_t>::type NameMap ;
+  
+  std::vector<std::string> remove_from_vec = as<std::vector<std::string> >(remove_from );
+  std::vector<std::string> remove_to_vec = as<std::vector<std::string> >(remove_to ); 
+  remove_edge_names<NameMap, mugraph> filter(get(vertex_name, g), remove_from_vec, remove_to_vec,   g);
+  remove_edge_if(filter, g); 
+  
+  ugraph  output;
+  copy_graph(g, output);   
+ 
+  return graph2R(output); 
 }
+
+// TODO: not currently used
+// dsubgraph make_subgraph(dgraph & g, const CharacterVector & subgraph_vertices, const CharacterVector & vertices)  {  
+//   dsubgraph a; 
+//   boost::copy_graph(g, a); 
+//   dsubgraph subgraph = a.create_subgraph(); 
+// //  If you add particular vertices from global, are they kept?
+//   std::vector<int> sgraph_vertices = match_zero_based(subgraph_vertices, vertices);
+//   for (int i = 0; i < sgraph_vertices.size(); i++) {
+//     int a = add_vertex(sgraph_vertices.at(i), subgraph); 
+//   }
+//   return subgraph;  
+// }
+// 
+///// [[]][[Rcpp::export]]  
+// Rcpp::List bh_subgraph(const CharacterVector & vertices, const Rcpp::IntegerMatrix & edges, const CharacterVector & subgraph_vertices) {
+//   dgraph g  = r2graph<dgraph>(vertices,  edges); 
+//   dsubgraph subgraph = make_subgraph (g, subgraph_vertices, vertices) ;   
+//   // workaround, i do not know have to make graph2R generic enough
+//   dgraph output;
+//   copy_graph(subgraph, output);
+//   return graph2R(output);
+// }  
+
+
+// [[Rcpp::export]]  
+Rcpp::List bh_subgraph(const CharacterVector & vertices, const Rcpp::IntegerMatrix & edges, const CharacterVector & subgraph_vertices) { 
+  CharacterVector remove = setdiff(vertices, subgraph_vertices);
+  return bh_remove_node(vertices, edges, remove);  
+} 
 
 // [[Rcpp::export]]   
 Rcpp::List bh_mstree_kruskal(CharacterVector vertices, Rcpp::IntegerMatrix edges, NumericVector weights) {
@@ -291,7 +327,7 @@ a <- replicate(n = 1e3, test_sgraph('f') )
 
 
 bh_subgraph( dag$nodes, dag$edges, setdiff(dag$nodes, 'f'))
-bh_subgraph2( dag$nodes, dag$edges, setdiff(dag$nodes, 'f'))
+bh_subgraph( dag$nodes, dag$edges, setdiff(dag$nodes, 'f'))
 bh_subgraph2( dag$nodes, dag$edges, setdiff(dag$nodes, 'c'))
 
 nedges <- length(dag$edges)

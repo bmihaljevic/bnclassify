@@ -63,19 +63,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// bh_subgraph
-Rcpp::List bh_subgraph(const CharacterVector& vertices, const Rcpp::IntegerMatrix& edges, const CharacterVector& subgraph_vertices);
-RcppExport SEXP _bnclassify_bh_subgraph(SEXP verticesSEXP, SEXP edgesSEXP, SEXP subgraph_verticesSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const CharacterVector& >::type vertices(verticesSEXP);
-    Rcpp::traits::input_parameter< const Rcpp::IntegerMatrix& >::type edges(edgesSEXP);
-    Rcpp::traits::input_parameter< const CharacterVector& >::type subgraph_vertices(subgraph_verticesSEXP);
-    rcpp_result_gen = Rcpp::wrap(bh_subgraph(vertices, edges, subgraph_vertices));
-    return rcpp_result_gen;
-END_RCPP
-}
 // bh_remove_node
 Rcpp::List bh_remove_node(const CharacterVector& vertices, const Rcpp::IntegerMatrix& edges, const CharacterVector& remove);
 RcppExport SEXP _bnclassify_bh_remove_node(SEXP verticesSEXP, SEXP edgesSEXP, SEXP removeSEXP) {
@@ -86,19 +73,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const Rcpp::IntegerMatrix& >::type edges(edgesSEXP);
     Rcpp::traits::input_parameter< const CharacterVector& >::type remove(removeSEXP);
     rcpp_result_gen = Rcpp::wrap(bh_remove_node(vertices, edges, remove));
-    return rcpp_result_gen;
-END_RCPP
-}
-// bh_subgraph2
-Rcpp::List bh_subgraph2(const CharacterVector& vertices, const Rcpp::IntegerMatrix& edges, const CharacterVector& subgraph_vertices);
-RcppExport SEXP _bnclassify_bh_subgraph2(SEXP verticesSEXP, SEXP edgesSEXP, SEXP subgraph_verticesSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const CharacterVector& >::type vertices(verticesSEXP);
-    Rcpp::traits::input_parameter< const Rcpp::IntegerMatrix& >::type edges(edgesSEXP);
-    Rcpp::traits::input_parameter< const CharacterVector& >::type subgraph_vertices(subgraph_verticesSEXP);
-    rcpp_result_gen = Rcpp::wrap(bh_subgraph2(vertices, edges, subgraph_vertices));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -114,6 +88,19 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const CharacterVector& >::type remove_to(remove_toSEXP);
     Rcpp::traits::input_parameter< const CharacterVector& >::type edgemode(edgemodeSEXP);
     rcpp_result_gen = Rcpp::wrap(bh_remove_edges(vertices, edges, remove_from, remove_to, edgemode));
+    return rcpp_result_gen;
+END_RCPP
+}
+// bh_subgraph
+Rcpp::List bh_subgraph(const CharacterVector& vertices, const Rcpp::IntegerMatrix& edges, const CharacterVector& subgraph_vertices);
+RcppExport SEXP _bnclassify_bh_subgraph(SEXP verticesSEXP, SEXP edgesSEXP, SEXP subgraph_verticesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const CharacterVector& >::type vertices(verticesSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerMatrix& >::type edges(edgesSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type subgraph_vertices(subgraph_verticesSEXP);
+    rcpp_result_gen = Rcpp::wrap(bh_subgraph(vertices, edges, subgraph_vertices));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -240,10 +227,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bnclassify_normalize_ctgt", (DL_FUNC) &_bnclassify_normalize_ctgt, 1},
     {"_bnclassify_match_zero_based", (DL_FUNC) &_bnclassify_match_zero_based, 2},
     {"_bnclassify_bh_connected_components", (DL_FUNC) &_bnclassify_bh_connected_components, 2},
-    {"_bnclassify_bh_subgraph", (DL_FUNC) &_bnclassify_bh_subgraph, 3},
     {"_bnclassify_bh_remove_node", (DL_FUNC) &_bnclassify_bh_remove_node, 3},
-    {"_bnclassify_bh_subgraph2", (DL_FUNC) &_bnclassify_bh_subgraph2, 3},
     {"_bnclassify_bh_remove_edges", (DL_FUNC) &_bnclassify_bh_remove_edges, 5},
+    {"_bnclassify_bh_subgraph", (DL_FUNC) &_bnclassify_bh_subgraph, 3},
     {"_bnclassify_bh_mstree_kruskal", (DL_FUNC) &_bnclassify_bh_mstree_kruskal, 3},
     {"_bnclassify_bh_tsort", (DL_FUNC) &_bnclassify_bh_tsort, 2},
     {"_bnclassify_make_cpt", (DL_FUNC) &_bnclassify_make_cpt, 5},

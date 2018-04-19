@@ -21,20 +21,16 @@ bh_connected_components <- function(vertices, edges) {
     .Call('_bnclassify_bh_connected_components', PACKAGE = 'bnclassify', vertices, edges)
 }
 
-bh_subgraph <- function(vertices, edges, subgraph_vertices) {
-    .Call('_bnclassify_bh_subgraph', PACKAGE = 'bnclassify', vertices, edges, subgraph_vertices)
-}
-
 bh_remove_node <- function(vertices, edges, remove) {
     .Call('_bnclassify_bh_remove_node', PACKAGE = 'bnclassify', vertices, edges, remove)
 }
 
-bh_subgraph2 <- function(vertices, edges, subgraph_vertices) {
-    .Call('_bnclassify_bh_subgraph2', PACKAGE = 'bnclassify', vertices, edges, subgraph_vertices)
-}
-
 bh_remove_edges <- function(vertices, edges, remove_from, remove_to, edgemode) {
     .Call('_bnclassify_bh_remove_edges', PACKAGE = 'bnclassify', vertices, edges, remove_from, remove_to, edgemode)
+}
+
+bh_subgraph <- function(vertices, edges, subgraph_vertices) {
+    .Call('_bnclassify_bh_subgraph', PACKAGE = 'bnclassify', vertices, edges, subgraph_vertices)
 }
 
 bh_mstree_kruskal <- function(vertices, edges, weights) {
