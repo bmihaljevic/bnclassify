@@ -277,3 +277,45 @@ graph_internal_union <- function(g) {
   g <- graph_internal(nodes, edges = edges, weights = NULL, edgemode = "directed")
   graph_internal2graph_NEL(g) 
 }
+
+graph_direct_tree <- function(x, root = NULL) {  
+  g <- x 
+  if (!inherits( g, "bnc_graph_internal"))  {
+    g <- graphNEL2_graph_internal(x) 
+    rm(x)
+  } 
+  if (graph_num_arcs(g) < 1) {
+    return(graph_direct( g)) 
+  }
+  stopifnot(graph_is_undirected(g))  
+  stopifnot(graph::isConnected(g))
+  current_root <- graph::nodes(g)[1]  
+  if (length(root) && root %in% graph::nodes(g)) {
+#   if root is not in tree keep silent as it might be in another tree 
+#   of the forest    
+    current_root <- root
+  }
+  directed <- graph::graphNEL(nodes=graph::nodes(g), edgemode='directed')
+  direct_away_queue <- current_root
+  while (length(direct_away_queue)) {
+    current_root <- direct_away_queue[1]
+    #   convert edges reaching current_root into arcs leaving current_root 
+    adjacent <- graph::edges(g, current_root)[[1]]
+    if (length(adjacent)) {      
+      directed <- graph::addEdge(from=current_root, to=adjacent, directed)
+      g <- graph::removeEdge(from=current_root, to=adjacent, g)
+    }
+    direct_away_queue <- direct_away_queue[-1]
+    direct_away_queue <- c(direct_away_queue, adjacent)
+  }   
+  graph_internal2graph_NEL(directed) 
+} 
+graph_direct <- function(x) { 
+  g <- x 
+  if (!inherits( g, "bnc_graph_internal"))  {
+    g <- graphNEL2_graph_internal(x) 
+    rm(x)
+  } 
+  g$edgemode = "directed"
+  graph_internal2graph_NEL (g) 
+}

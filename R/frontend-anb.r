@@ -52,8 +52,9 @@ direct_tree <- function(g, root = NULL) {
   directed
 }
 direct_graph <- function(g) {
-  graph::edgemode(g) <- 'directed'
-  g
+  # graph::edgemode(g) <- 'directed'
+  # g
+  graph_direct(g)
 }
 #' Returns the undirected augmenting forest.
 #' 
