@@ -29,6 +29,10 @@ bh_remove_node <- function(vertices, edges, remove) {
     .Call('_bnclassify_bh_remove_node', PACKAGE = 'bnclassify', vertices, edges, remove)
 }
 
+bh_remove_edges <- function(vertices, edges, remove_from, remove_to, edgemode) {
+    .Call('_bnclassify_bh_remove_edges', PACKAGE = 'bnclassify', vertices, edges, remove_from, remove_to, edgemode)
+}
+
 bh_mstree_kruskal <- function(vertices, edges, weights) {
     .Call('_bnclassify_bh_mstree_kruskal', PACKAGE = 'bnclassify', vertices, edges, weights)
 }

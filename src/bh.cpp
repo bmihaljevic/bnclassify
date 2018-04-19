@@ -174,6 +174,21 @@ Rcpp::List bh_remove_node(const CharacterVector & vertices, const Rcpp::IntegerM
   return graph2R(g);
 }
 
+
+// [[Rcpp::export]]  
+Rcpp::List bh_remove_edges(const CharacterVector & vertices, const Rcpp::IntegerMatrix & edges, const CharacterVector & remove_from, 
+                          const CharacterVector & remove_to, const CharacterVector & edgemode) { 
+  if (edgemode[0] != "undirected") stop("Currently not implemented for directed.");
+  if (remove_from.size() != remove_to.size()) stop("From and to different lengths.");
+  ugraph g  = r2graph<ugraph>(vertices,  edges);   
+  std::vector<int> from_ind = match_zero_based(remove_from, vertices); 
+  std::vector<int> to_ind = match_zero_based(remove_to, vertices);
+  for (int i = 0; i < from_ind.size(); i++) { 
+    remove_edge(from_ind.at(i), to_ind.at(i), g);
+  }
+  return graph2R(g); 
+}
+
 // [[Rcpp::export]]   
 Rcpp::List bh_mstree_kruskal(CharacterVector vertices, Rcpp::IntegerMatrix edges, NumericVector weights) {
   ugraph g = r2graph<ugraph>(vertices, edges, weights);
@@ -212,7 +227,6 @@ NumericVector bh_tsort(CharacterVector vertices, Rcpp::IntegerMatrix edges) {
 /*** R  
 dag <- anb_make_nb('a', letters[2:6])
 dag <- graphNEL2_graph_internal(dag)
-test_make(dag$nodes, dag$edges)
 bh_connected_components(dag$nodes, dag$edges) 
 bh_subgraph( dag$nodes, dag$edges, dag$nodes)
 bh_subgraph( dag$nodes, dag$edges, setdiff(dag$nodes, 'a'))
@@ -226,6 +240,9 @@ a <- replicate(n = 1000, test_sgraph('f') )
 nedges <- length(dag$edges)
 bh_mstree_kruskal(dag$nodes, dag$edges, rep(1:nedges))
 bh_tsort(dag$nodes, dag$edges) 
+bh_remove_edges(dag$nodes, dag$edges, dag$nodes[1], dag$nodes[2], "undirected")
+bh_remove_edges(dag$nodes, dag$edges, 'a', 'b', "undirected")
+bh_remove_edges(dag$nodes, dag$edges, 'a', 'f', "undirected")
 # load('tmp-g-subgraph.rdata')
 # bh_subgraph( g$nodes, g$edges, setdiff(g$nodes, "class"))
 */

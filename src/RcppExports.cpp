@@ -89,6 +89,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// bh_remove_edges
+Rcpp::List bh_remove_edges(const CharacterVector& vertices, const Rcpp::IntegerMatrix& edges, const CharacterVector& remove_from, const CharacterVector& remove_to, const CharacterVector& edgemode);
+RcppExport SEXP _bnclassify_bh_remove_edges(SEXP verticesSEXP, SEXP edgesSEXP, SEXP remove_fromSEXP, SEXP remove_toSEXP, SEXP edgemodeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const CharacterVector& >::type vertices(verticesSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerMatrix& >::type edges(edgesSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type remove_from(remove_fromSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type remove_to(remove_toSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type edgemode(edgemodeSEXP);
+    rcpp_result_gen = Rcpp::wrap(bh_remove_edges(vertices, edges, remove_from, remove_to, edgemode));
+    return rcpp_result_gen;
+END_RCPP
+}
 // bh_mstree_kruskal
 Rcpp::List bh_mstree_kruskal(CharacterVector vertices, Rcpp::IntegerMatrix edges, NumericVector weights);
 RcppExport SEXP _bnclassify_bh_mstree_kruskal(SEXP verticesSEXP, SEXP edgesSEXP, SEXP weightsSEXP) {
@@ -214,6 +229,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bnclassify_bh_connected_components", (DL_FUNC) &_bnclassify_bh_connected_components, 2},
     {"_bnclassify_bh_subgraph", (DL_FUNC) &_bnclassify_bh_subgraph, 3},
     {"_bnclassify_bh_remove_node", (DL_FUNC) &_bnclassify_bh_remove_node, 3},
+    {"_bnclassify_bh_remove_edges", (DL_FUNC) &_bnclassify_bh_remove_edges, 5},
     {"_bnclassify_bh_mstree_kruskal", (DL_FUNC) &_bnclassify_bh_mstree_kruskal, 3},
     {"_bnclassify_bh_tsort", (DL_FUNC) &_bnclassify_bh_tsort, 2},
     {"_bnclassify_make_cpt", (DL_FUNC) &_bnclassify_make_cpt, 5},
