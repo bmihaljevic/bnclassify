@@ -264,4 +264,16 @@ graph_is_dag <- function(dag) {
   tsort <- tryCatch(call_bh('bh_tsort', g), warning = function(e) character(0), 
                     error = function(e) character(0))
   length(tsort) > 0 
-}  
+}   
+graph_internal_union <- function(g) {
+  stopifnot(is.list(g))
+  g <- lapply(g, graphNEL2_graph_internal) 
+  edges <- lapply(g, graph_named_edge_matrix)
+  edges <- Reduce(cbind, edges)
+  nodes <- sapply(g, graph_nodes)
+  nodes <- as.vector(unlist(nodes))
+  stopifnot(all(sort(nodes) == sort(unique(nodes))))
+  # TODO: check no repeated arcs!! 
+  g <- graph_internal(nodes, edges = edges, weights = NULL, edgemode = "directed")
+  graph_internal2graph_NEL(g) 
+}
