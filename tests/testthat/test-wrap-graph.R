@@ -67,7 +67,7 @@ test_that("graph union", {
   # g <- graph::graphNEL(LETTERS[1:3], edgemode = "directed")
   g <- graph::addEdge(from = "A", to = "B", g)
   
-  connected <- RBGL::connectedComp(g) 
+  connected <- graph_connected_components(g) 
   gs <- lapply(connected, graph::subGraph, g)  
   gu <- graph_union(gs)  
   # Currently not identical because I am missing to set some attributes in graph_internal2graph_NEL 

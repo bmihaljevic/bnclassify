@@ -15,7 +15,6 @@ Imports:
     entropy(>= 1.2.0),
     graph(>= 1.42.0),
     matrixStats(>= 0.14.0),
-    RBGL(>= 1.40.1),
     rpart(>= 4.1-8),
     Rcpp
 Suggests:
