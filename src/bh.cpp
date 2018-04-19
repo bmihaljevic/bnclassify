@@ -77,35 +77,34 @@ int robust_num_edges(T g) {
  * Will return a list with nodes and edges. Does not have the names though unless I save them somewhere.
  * If I did not pass the subgraph by reference here, it would not print.
  */
-template <class T>
-Rcpp::List graph2R(T & g) { 
-  typedef typename graph_traits<T>::vertex_descriptor Vertex; 
-  typedef typename property_map<T, vertex_index_t>::type IndexMap;
-  typedef typename property_map<T, vertex_name_t>::type NameMap;
+template <class T, class F>
+Rcpp::List graph2R(T & g, F & original_graph) { 
+  typedef typename graph_traits<T>::vertex_descriptor Vertex;  
   typedef typename graph_traits<T>::vertex_iterator vertex_iter;
   typedef typename graph_traits<T>::edge_iterator edge_iter; 
-  typedef typename property_map<T, edge_weight_t>::type WeightMap;
+  
+  typedef typename property_map<F, vertex_index_t>::type IndexMap; 
+  typedef typename property_map<F, vertex_name_t>::type NameMap;
+  typedef typename property_map<F, edge_weight_t>::type WeightMap;
 
-  IndexMap index = get(vertex_index, g);
-  NameMap names = get(vertex_name, g);
-  WeightMap weight = get(edge_weight, g);
+  IndexMap index = get(vertex_index, original_graph);
+  NameMap names = get(vertex_name, original_graph);
+  WeightMap weight = get(edge_weight, original_graph);
   
   std::pair<vertex_iter, vertex_iter> vp;
-  // std::vector<int> nodes;
   std::vector<std::string> nodes;
   int nvertices = robust_num_vertices(g);
   nodes.reserve(nvertices);  
   
   for (vp = vertices(g); vp.first != vp.second; ++vp.first) {    
     Vertex v = *vp.first; 
-    // nodes.push_back(index[v]);
     std::string vname = names[v];
     nodes.push_back(vname);
   }  
   
   std::pair<edge_iter, edge_iter> ep; 
   int nedges = robust_num_edges(g);
-  Rcpp::IntegerMatrix edges_matrix(nedges, 2);
+  Rcpp::CharacterMatrix edges_matrix(nedges, 2);
   colnames(edges_matrix) = CharacterVector::create("from", "to");
   Vertex u, v;
   int row  = 0;
@@ -117,8 +116,8 @@ Rcpp::List graph2R(T & g) {
     edge e = *ep.first;
     u = source(*ep.first,g);
     v = target(*ep.first,g);
-    edges_matrix(row, 0) = u;
-    edges_matrix(row, 1) = v;
+    edges_matrix(row, 0) = names[u];
+    edges_matrix(row, 1) = names[v];
     weights[row] = get(weight, e);
     row++;
   }
@@ -219,7 +218,7 @@ Rcpp::List bh_remove_node(const CharacterVector & vertices, const Rcpp::IntegerM
   typedef filtered_graph<dgraph, keep_all, remove_names<NameMap> > fgraph;
   typedef graph_traits<fgraph>::vertex_iterator vertex_iter;
   fgraph fg(g, keep_all(), filter);
-  return graph2R(fg);
+  return graph2R(fg, g);
 }   
 
 // [[Rcpp::export]]  
@@ -238,7 +237,7 @@ Rcpp::List bh_remove_edges(const CharacterVector & vertices, const Rcpp::Integer
   typedef filtered_graph<ugraph, remove_edge_names<NameMap, ugraph>, keep_all> fgraph;
   typedef graph_traits<fgraph>::vertex_iterator vertex_iter;
   fgraph fg(g, filter, keep_all());
-  return graph2R(fg);    
+  return graph2R(fg, g);    
 }
 
 // TODO: not currently used
@@ -294,7 +293,7 @@ Rcpp::List bh_mstree_kruskal(CharacterVector vertices, Rcpp::IntegerMatrix edges
       row++;
   }    
   ugraph krusk = r2graph<ugraph>(vertices, kruskal_edges, weights_vector );
-  return graph2R(krusk);       
+  return graph2R(krusk, krusk);       
 } 
 
 // I think tsort may throw an exception
