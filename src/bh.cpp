@@ -216,6 +216,7 @@ Rcpp::List bh_mstree_kruskal(CharacterVector vertices, Rcpp::IntegerMatrix edges
       kruskal_edges(row, 1) = target(*ei, g);
       row++;
   }   
+  // TODO: I need to return the weights here.
   
   ugraph krusk = bh_make_ugraph(vertices, kruskal_edges);
   return graph2R(krusk);       
@@ -223,6 +224,8 @@ Rcpp::List bh_mstree_kruskal(CharacterVector vertices, Rcpp::IntegerMatrix edges
 
 // [[Rcpp::export]]   
 NumericVector bh_tsort(CharacterVector vertices, Rcpp::IntegerMatrix edges) { 
+  // TODO: is the TSORT exception from RBGL or BGL?
+  
   dgraph g = bh_make_graph(vertices, edges);
   std::vector<int> sorted;
   topological_sort(g, std::back_inserter(sorted)); 

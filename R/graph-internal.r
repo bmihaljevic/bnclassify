@@ -13,6 +13,9 @@
 # I only need boost for algorithms and things I do not implement
 # is_dag() : here call  the acyclic check   
 
+
+# TODO: add checks from make_graph 
+
 # /**
 #  * Basic adjacency list object api
 #  * Data:
@@ -55,16 +58,20 @@ graphNEL2_graph_internal <- function(x) {
   stopifnot(inherits(x, "graphNEL"))
   nodes <- graph::nodes(x)
   edges <- t(named_edge_matrix(x)) 
+  weights <- NULL 
+  tryCatch({
   # Will fail if it does not have the attribute.
-  weights <- graph::edgeData(self = x, from = edges[, 1], to = edges[, 2], 
-                             attr = "weight") 
+   weights <- graph::edgeData(self = x, from = edges[, 1], to = edges[, 2], 
+                             attr = "weight")  
+  }, error = function(e) {}) 
   weights <- unlist(weights)
   graph_internal(nodes, edges, weights ) 
 }  
 graph_internal2graph_NEL <- function(x) {  
   stopifnot(inherits( x, "bnc_graph_internal")) 
   edges <- graph_named_edge_matrix(x) 
-  graph::ftM2graphNEL(ft = edges, W = NULL, V = x$nodes, edgemode = "directed")  
+  # TODO: handle undirected. If directed, then build directed graph in BH.
+  graph::ftM2graphNEL(ft = edges, W = x$weights, V = x$nodes, edgemode = "directed")  
 } 
 graph_make_edges <- function(nodes, edges) { 
   stopifnot(is.character(nodes), is.character(edges), ncol(edges) == 2,
@@ -209,4 +216,20 @@ graph_mstree_kruskal <- function(x) {
   } 
   kruskal <- call_bh('bh_mstree_kruskal', g, weights = g$weights) 
   graph_internal2graph_NEL(kruskal)  
-}
+} 
+# graph_max_weight_forest <- function(g) {
+#   stopifnot(!graph::isDirected(g))
+#   if (graph::numEdges(g) < 1) return(g)
+#   #   change weights sign because Kruskal only searches for minimal tree
+#   e <- named_edge_matrix(g = g)
+#   weights <- graph::edgeData(self = g, from = e[1, ], to = e[2, ], 
+#                              attr = "weight")
+#   weights <- unlist(weights)
+#   graph::edgeData(self = g, from = e[1, ], 
+#                   to = e[2, ], attr = "weight") <- -1 * weights
+#   mstree <- RBGL::mstree.kruskal(x=g)
+#   #   make a graphNEL 
+#   gr <- graph::graphNEL(mstree$nodes)
+#   weights <- -1 * as.vector(mstree$weights)
+#   graph::addEdge(mstree$edgeList[1,], mstree$edgeList[2,], gr, weights= weights)    
+# }
