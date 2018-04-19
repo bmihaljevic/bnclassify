@@ -117,7 +117,7 @@ graph_subgraph <- function(nodes, x) {
     rm(x)
   }
   stopifnot(inherits( g, "bnc_graph_internal"))   
-  subgraph <- call_bh('bh_subgraph2', g = g,  subgraph_vertices = nodes) 
+  subgraph <- call_bh('bh_subgraph', g = g,  subgraph_vertices = nodes) 
   subgraph <- graph_internal_make(subgraph$nodes, subgraph$edges, NULL, g$edgemode)
   # TODO remove:
   graph_internal2graph_NEL(subgraph ) 
@@ -247,6 +247,7 @@ graph_named_edge_matrix <- function(x) {
   u[] <- x$nodes[as.vector(u) + 1]
   if (length(u) == 0) mode(u) <- 'character'
   stopifnot(is.character(u))
+  if(anyNA(u)) browser()
   u
 }
 graph_mstree_kruskal <- function(x) { 

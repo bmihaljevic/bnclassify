@@ -47,7 +47,7 @@ typedef adjacency_list < vecS, vecS, undirectedS, VertexProperty, property < edg
 // modifiable directed graph. Uses listS instead of vecS. vecS could lead to invalidated descriptors. <https://www.boost.org/doc/libs/1_37_0/libs/graph/doc/adjacency_list.html>
 // not used cause it does not allow int descriptors
 typedef adjacency_list<listS, listS, directedS, VertexProperty, EdgeProperty >  mdgraph; 
-typedef adjacency_list < listS, listS, undirectedS, VertexProperty, property < edge_weight_t, double > > mugraph; 
+// typedef adjacency_list < listS, listS, undirectedS, VertexProperty, property < edge_weight_t, double > > mugraph; 
 
 // TODO: remove
 typedef subgraph< adjacency_list< vecS, vecS, directedS, VertexProperty, EdgeProperty > > dsubgraph;
@@ -199,7 +199,7 @@ struct remove_edge_names {
     // Consider undirected
     bool arc = find(from, m_remove_from) && find(to, m_remove_to); 
     bool reversed = find(to, m_remove_from) && find(from, m_remove_to); 
-    return arc || reversed;
+    return !arc && !reversed;
   }
   NameMap m_weight; 
   std::vector<std::string> m_remove_from;
@@ -220,9 +220,7 @@ Rcpp::List bh_remove_node(const CharacterVector & vertices, const Rcpp::IntegerM
   typedef graph_traits<fgraph>::vertex_iterator vertex_iter;
   fgraph fg(g, keep_all(), filter);
   return graph2R(fg);
-} 
-
-
+}   
 
 // [[Rcpp::export]]  
 Rcpp::List bh_remove_edges(const CharacterVector & vertices, const Rcpp::IntegerMatrix & edges, const CharacterVector & remove_from, 
@@ -230,20 +228,17 @@ Rcpp::List bh_remove_edges(const CharacterVector & vertices, const Rcpp::Integer
   if (edgemode[0] != "undirected") stop("Currently not implemented for directed.");
   if (remove_from.size() != remove_to.size()) stop("From and to different lengths.");
   // Copy to graph with listS so that I can modify 
-  ugraph a  = r2graph<ugraph>(vertices,  edges);   
-  mugraph g;
-  copy_graph(a, g);  
-  typedef property_map<mugraph, vertex_name_t>::type NameMap ;
+  ugraph g  = r2graph<ugraph>(vertices,  edges);    
+  typedef property_map<ugraph, vertex_name_t>::type NameMap ;
   
   std::vector<std::string> remove_from_vec = as<std::vector<std::string> >(remove_from );
   std::vector<std::string> remove_to_vec = as<std::vector<std::string> >(remove_to ); 
-  remove_edge_names<NameMap, mugraph> filter(get(vertex_name, g), remove_from_vec, remove_to_vec,   g);
-  remove_edge_if(filter, g); 
+  remove_edge_names<NameMap, ugraph> filter(get(vertex_name, g), remove_from_vec, remove_to_vec,   g);
   
-  ugraph  output;
-  copy_graph(g, output);   
- 
-  return graph2R(output); 
+  typedef filtered_graph<ugraph, remove_edge_names<NameMap, ugraph>, keep_all> fgraph;
+  typedef graph_traits<fgraph>::vertex_iterator vertex_iter;
+  fgraph fg(g, filter, keep_all());
+  return graph2R(fg);    
 }
 
 // TODO: not currently used
@@ -328,7 +323,7 @@ a <- replicate(n = 1e3, test_sgraph('f') )
 
 bh_subgraph( dag$nodes, dag$edges, setdiff(dag$nodes, 'f'))
 bh_subgraph( dag$nodes, dag$edges, setdiff(dag$nodes, 'f'))
-bh_subgraph2( dag$nodes, dag$edges, setdiff(dag$nodes, 'c'))
+bh_subgraph( dag$nodes, dag$edges, setdiff(dag$nodes, 'c'))
 
 nedges <- length(dag$edges)
 bh_mstree_kruskal(dag$nodes, dag$edges, rep(1:nedges))
