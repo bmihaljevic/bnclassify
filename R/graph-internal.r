@@ -32,15 +32,29 @@
 #  * }
 #  */   
 valid_weights <- function(weights, edges) {
-  is.null(weights) || (is.numeric(weights) && is.vector(weights) && length(weights) == nrow(edges))
-}
-graph_internal <- function(nodes, edges, weights = NULL) {  
-    stopifnot(is.character(nodes), is.character(edges), is.matrix(edges), valid_weights(weights, edges))
+  is.null(weights) || (!is.null(edges) && is.numeric(weights) && is.vector(weights) && length(weights) == nrow(edges))
+} 
+valid_nodes <- function(nodes) {
+  is.null(nodes) || is.character(nodes) 
+} 
+valid_edges <- function(edges, numeric = TRUE) {
+  if (is.null(edges) ) return(TRUE) 
+  valid <- is.matrix(edges) && (ncol(edges) == 2) && (colnames(edges) == c('from', 'to') )
+  if (numeric) {
+    valid <- valid && is.numeric(edges)
+  }
+  else { 
+    valid <- valid && is.character(edges)
+  }
+  valid 
+}  
+graph_internal <- function(nodes = NULL, edges = NULL, weights = NULL) {  
+    stopifnot(valid_nodes(nodes), valid_edges(edges, numeric = FALSE), valid_weights(weights, edges))
     edges <- graph_make_edges(nodes, edges)
     graph_internal_make (nodes, edges, weights) 
 }
-graph_internal_make <- function(nodes, edges, weights) {
-    stopifnot(is.character(nodes), is.numeric(edges), is.matrix(edges), valid_weights(weights, edges))
+graph_internal_make <- function(nodes, edges, weights) { 
+    stopifnot(valid_nodes(nodes), valid_edges(edges, numeric = TRUE), valid_weights(weights, edges))
     fromto <- c('from', 'to')
     colnms <- colnames(edges) 
     stopifnot(length(colnms) == 0 || identical(colnms, fromto))
@@ -74,14 +88,16 @@ graph_internal2graph_NEL <- function(x) {
   graph::ftM2graphNEL(ft = edges, W = x$weights, V = x$nodes, edgemode = "directed")  
 } 
 graph_make_edges <- function(nodes, edges) { 
-  stopifnot(is.character(nodes), is.character(edges), ncol(edges) == 2,
+  stopifnot(valid_nodes(nodes), valid_edges(edges, numeric = TRUE), 
             all(edges[] %in% nodes))
   from <- match(edges[, 1], nodes) - 1
   to <- match(edges[, 2], nodes) - 1
   graph_from_to_to_edges (from = from, to = to)
 }  
 graph_from_to_to_edges <- function(from, to) { 
-  matrix(c(from = from, to = to), ncol = 2)
+  m <- matrix(c(from = from, to = to), ncol = 2)
+  colnames(m) <- c('from', 'to')
+  m
 }
 call_bh <- function(fun, g, ...) { 
  do.call(fun, args = list(vertices = g$nodes, edges  = g$edges, ...)) 
