@@ -89,6 +89,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// bh_subgraph2
+Rcpp::List bh_subgraph2(const CharacterVector& vertices, const Rcpp::IntegerMatrix& edges, const CharacterVector& subgraph_vertices);
+RcppExport SEXP _bnclassify_bh_subgraph2(SEXP verticesSEXP, SEXP edgesSEXP, SEXP subgraph_verticesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const CharacterVector& >::type vertices(verticesSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerMatrix& >::type edges(edgesSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type subgraph_vertices(subgraph_verticesSEXP);
+    rcpp_result_gen = Rcpp::wrap(bh_subgraph2(vertices, edges, subgraph_vertices));
+    return rcpp_result_gen;
+END_RCPP
+}
 // bh_remove_edges
 Rcpp::List bh_remove_edges(const CharacterVector& vertices, const Rcpp::IntegerMatrix& edges, const CharacterVector& remove_from, const CharacterVector& remove_to, const CharacterVector& edgemode);
 RcppExport SEXP _bnclassify_bh_remove_edges(SEXP verticesSEXP, SEXP edgesSEXP, SEXP remove_fromSEXP, SEXP remove_toSEXP, SEXP edgemodeSEXP) {
@@ -229,6 +242,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bnclassify_bh_connected_components", (DL_FUNC) &_bnclassify_bh_connected_components, 2},
     {"_bnclassify_bh_subgraph", (DL_FUNC) &_bnclassify_bh_subgraph, 3},
     {"_bnclassify_bh_remove_node", (DL_FUNC) &_bnclassify_bh_remove_node, 3},
+    {"_bnclassify_bh_subgraph2", (DL_FUNC) &_bnclassify_bh_subgraph2, 3},
     {"_bnclassify_bh_remove_edges", (DL_FUNC) &_bnclassify_bh_remove_edges, 5},
     {"_bnclassify_bh_mstree_kruskal", (DL_FUNC) &_bnclassify_bh_mstree_kruskal, 3},
     {"_bnclassify_bh_tsort", (DL_FUNC) &_bnclassify_bh_tsort, 2},

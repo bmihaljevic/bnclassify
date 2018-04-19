@@ -117,8 +117,8 @@ graph_subgraph <- function(nodes, x) {
     rm(x)
   }
   stopifnot(inherits( g, "bnc_graph_internal"))   
-  subgraph <- call_bh('bh_subgraph', g = g,  subgraph_vertices = nodes) 
-  subgraph <- graph_internal_make(subgraph$nodes, subgraph$edges, NULL)
+  subgraph <- call_bh('bh_subgraph2', g = g,  subgraph_vertices = nodes) 
+  subgraph <- graph_internal_make(subgraph$nodes, subgraph$edges, NULL, g$edgemode)
   # TODO remove:
   graph_internal2graph_NEL(subgraph ) 
 }  
@@ -380,5 +380,5 @@ graph_direct_forest <- function(x, root = NULL) {
   components <- lapply(components, subgraph, g)
   trees <- lapply(components, direct_tree, root)
   g <- graph_union(g = trees)  
-  graph_internal2graph_NEL(g)
+  g
 }

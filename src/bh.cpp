@@ -38,7 +38,8 @@ std::vector<int> match_zero_based(const CharacterVector & subset, const Characte
 typedef property<vertex_index_t, int, property<vertex_name_t, std::string> > VertexProperty;
 typedef property<edge_index_t, int, property<edge_weight_t, double> > EdgeProperty; 
 typedef adjacency_list< vecS, vecS, directedS, VertexProperty, EdgeProperty >  dgraph;   
-
+// modifiable directed graph. Uses listS instead of vecS. vecS could lead to invalidated descriptors. <https://www.boost.org/doc/libs/1_37_0/libs/graph/doc/adjacency_list.html>
+typedef adjacency_list<listS, vecS, directedS, VertexProperty, EdgeProperty >  mdgraph;    
 typedef subgraph< adjacency_list< vecS, vecS, directedS, VertexProperty, EdgeProperty > > dsubgraph;
 
 // for connected components and such
@@ -163,15 +164,23 @@ Rcpp::List bh_subgraph(const CharacterVector & vertices, const Rcpp::IntegerMatr
   return graph2R(output);
 }  
 
+
+// TODO rename bh_remove_nodeS
 // [[Rcpp::export]]  
-Rcpp::List bh_remove_node(const CharacterVector & vertices, const Rcpp::IntegerMatrix & edges, const CharacterVector & remove) { 
-  dgraph g  = r2graph<dgraph>(vertices,  edges);  
-  std::vector<int> remove_ind = match_zero_based(remove, vertices);
-  if (remove_ind.size() > 1) stop("More than one match!");
-  int remove_index = remove_ind.at(0);
-  clear_vertex(remove_index, g);
-  remove_vertex(remove_index, g);    
+Rcpp::List bh_remove_node(const CharacterVector & vertices, const Rcpp::IntegerMatrix & edges, const CharacterVector & remove) {
+  mdgraph g  = r2graph<mdgraph>(vertices,  edges);  
+  std::vector<int> remove_ind = match_zero_based(remove, vertices); 
+  for (int i = 0; i < remove_ind.size(); i++) {
+    clear_vertex(remove_ind.at(i), g);
+    remove_vertex(remove_ind.at(i), g);     
+  }
   return graph2R(g);
+} 
+
+// [[Rcpp::export]]  
+Rcpp::List bh_subgraph2(const CharacterVector & vertices, const Rcpp::IntegerMatrix & edges, const CharacterVector & subgraph_vertices) { 
+  CharacterVector remove = setdiff(vertices, subgraph_vertices);
+  return bh_remove_node(vertices, edges, remove);  
 }
 
 
@@ -236,7 +245,12 @@ test_sgraph <- function(feature) {
   a <- bh_subgraph( dag$nodes, dag$edges, setdiff(dag$nodes, feature))
   stopifnot(all(sapply(a$nodes, nchar) >  0))
 }  
-a <- replicate(n = 1000, test_sgraph('f') )
+a <- replicate(n = 1e3, test_sgraph('f') )
+
+
+bh_subgraph( dag$nodes, dag$edges, setdiff(dag$nodes, 'f'))
+bh_subgraph2( dag$nodes, dag$edges, setdiff(dag$nodes, 'f'))
+
 nedges <- length(dag$edges)
 bh_mstree_kruskal(dag$nodes, dag$edges, rep(1:nedges))
 bh_tsort(dag$nodes, dag$edges) 

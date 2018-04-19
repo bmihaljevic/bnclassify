@@ -7,8 +7,8 @@ graphNEL_parents <- function(g) {
   graph_parents(g)
 } 
 subgraph <- function(vars, x) {
-  # graph_subgraph(vars, x)
-  graph::subGraph(snodes=vars, x)
+  graph_subgraph(vars, x)
+  # graph::subGraph(snodes=vars, x)
 }
 connected_components <- function(x) {
  graph_connected_components(x)
