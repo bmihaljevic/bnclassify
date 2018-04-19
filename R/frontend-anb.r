@@ -103,14 +103,7 @@ superimpose_node <- function(dag, node) {
 #   Add node and edges
   graph::addNode(node = node, object = dag, edges = list(nodes))
 }
-is_dag_graph <- function(dag) {
-  # #   Check dag is graphNEL. Allow adjacency matrix?
-  # if (!(inherits(dag, "graphNEL"))) return(FALSE)
-  # # Empty graphs are OK
-  # if (graph::numEdges(dag) == 0) return(TRUE)
-  # tsort <- tryCatch(RBGL::tsort(dag), warning = function(e) character(0), 
-  #                   error = function(e) character(0))
-  # length(tsort) > 0 
+is_dag_graph <- function(dag) {  
   graph_is_dag(dag)
 } 
 check_node <- function(node) {
@@ -119,18 +112,6 @@ check_node <- function(node) {
 #' Returns a naive Bayes structure
 #' 
 #' @keywords internal
-nb_dag <- function(class, features) {
-#   Check class is character and length one, features is length 0 or character,
-#   class is not in features.
-    check_features(features, class)
-#   If > 0 features, add arc from class to each of them
-    narcs <- length(features)
-    arcs  <- matrix(character(narcs * 2), ncol = 2)
-    if (narcs > 0) { 
-      arcs <- cbind(from = class, to = features)
-    }
-#   Set nodes as class + features 
-    nodes <- c(class, features)
-#    Call ftM2graphNEL 
-    graph::ftM2graphNEL(ft = arcs, W = NULL, V = nodes, edgemode = "directed")
+nb_dag <- function(class, features) { 
+ anb_make_nb(class, features)  
 }

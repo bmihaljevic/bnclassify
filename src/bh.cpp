@@ -229,10 +229,9 @@ Rcpp::List bh_mstree_kruskal(CharacterVector vertices, Rcpp::IntegerMatrix edges
   return graph2R(krusk);       
 } 
 
+// I think tsort may throw an exception
 // [[Rcpp::export]]   
-NumericVector bh_tsort(CharacterVector vertices, Rcpp::IntegerMatrix edges) { 
-  // TODO: is the TSORT exception from RBGL or BGL?
-  
+NumericVector bh_tsort(CharacterVector vertices, Rcpp::IntegerMatrix edges) {  
   dgraph g = bh_make_graph(vertices, edges);
   std::vector<int> sorted;
   topological_sort(g, std::back_inserter(sorted)); 

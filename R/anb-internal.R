@@ -14,13 +14,9 @@ anb_make_nb <- function(class, features) {
     check_features(features, class)
 #   If > 0 features, add arc from class to each of them
     narcs <- length(features)
-    arcs  <- matrix(character(narcs * 2), ncol = 2)
-    if (narcs > 0) { 
-      arcs <- cbind(from = class, to = features)
-    }
+    arcs  <- graph_from_to_to_edges(rep(class, narcs), features) 
 #   Set nodes as class + features 
     nodes <- c(class, features)
-    graph_internal(nodes, arcs) 
-    
-    # TODO: return anb internal
+    g <- graph_internal(nodes, arcs) 
+    graph_internal2graph_NEL(g) 
 }             
