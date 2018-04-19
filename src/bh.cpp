@@ -74,6 +74,7 @@ Rcpp::List graph2R(T & g) {
   std::pair<edge_iter, edge_iter> ep; 
   int nedges = num_edges(g);
   Rcpp::IntegerMatrix edges_matrix(nedges, 2);
+  colnames(edges_matrix) = CharacterVector::create("from", "to");
   Vertex u, v;
   int row  = 0;
   
