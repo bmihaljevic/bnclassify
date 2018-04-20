@@ -21,5 +21,5 @@ anb_make_nb <- function(class, features) {
 #   Set nodes as class + features 
     nodes <- c(class, features)
     g <- graph_internal(nodes, arcs) 
-    graph_internal2graph_NEL(g) 
+    g 
 }             

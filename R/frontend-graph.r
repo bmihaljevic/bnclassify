@@ -33,9 +33,3 @@ num_arcs <- function(x) {
 complete_graph <- function(nodes) {   
   graph_complete_undirected(nodes) 
 } 
-make_graph <- function(nodes, from, to, weights) {      
-  edges <- graph_from_to_to_edges(from, to) 
-  # TODO: change name to make_ugraph
-  g <- graph_internal(nodes, edges, weights, "undirected") 
-  graph_internal2graph_NEL(g)
-}  
