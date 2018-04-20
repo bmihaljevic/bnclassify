@@ -7,11 +7,11 @@
 max_weight_forest(g)
 }
 \arguments{
-\item{g}{\code{\link{graphNEL}} object. The undirected graph with pairwise 
+\item{g}{A graph. The undirected graph with pairwise 
 weights.}
 }
 \value{
-A \code{\link{graphNEL}} object. The maximum spanning forest.
+A graph. The maximum spanning forest.
 }
 \description{
 Uses Kruskal's algorithm to find the augmenting forest that maximizes the sum

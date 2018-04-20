@@ -7,7 +7,7 @@
 direct_tree(g, root = NULL)
 }
 \value{
-A \code{\link{graphNEL}}. The directed tree.
+A graph. The directed tree.
 }
 \description{
 The graph must be connected and the function produces a directed tree.

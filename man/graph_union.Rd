@@ -7,10 +7,10 @@
 graph_union(g)
 }
 \arguments{
-\item{g}{A \code{\link{graphNEL}}}
+\item{g}{A graph}
 }
 \value{
-A \code{\link{graphNEL}}.
+A graph
 }
 \description{
 Merges multiple disjoint graphs into a single one.

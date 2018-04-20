@@ -7,12 +7,12 @@
 direct_forest(g, root = NULL)
 }
 \arguments{
-\item{g}{An undirected \code{\link{graphNEL}}.}
+\item{g}{An undirected graph.}
 
 \item{root}{A character. Optional tree root.}
 }
 \value{
-A directed \code{\link{graphNEL}}.
+A directed graph
 }
 \description{
 Starting from a \code{root} not, directs all arcs away from it and applies 

@@ -5,9 +5,9 @@
 #' the same, recursively to its children and descendants. Produces a directed
 #' forest.
 #' 
-#' @param g An undirected \code{\link{graphNEL}}.
+#' @param g An undirected graph.
 #' @param root A character. Optional tree root.
-#' @return A directed \code{\link{graphNEL}}.
+#' @return A directed graph 
 #' @keywords internal
 direct_forest <- function(g, root = NULL) {    
   graph_direct_forest(g, root = NULL)
@@ -15,7 +15,7 @@ direct_forest <- function(g, root = NULL) {
 #' Direct an undirected graph.
 #' 
 #' The graph must be connected and the function produces a directed tree. 
-#' @return A \code{\link{graphNEL}}. The directed tree.
+#' @return A graph. The directed tree.
 #' @keywords internal
 direct_tree <- function(g, root = NULL) { 
   graph_direct_tree(g, root) 
@@ -33,9 +33,9 @@ direct_graph <- function(g) {
 #' If \code{g} is not connected than this will return a forest; otherwise it is 
 #' a tree.
 #' 
-#' @param g \code{\link{graphNEL}} object. The undirected graph with pairwise 
+#' @param g A graph. The undirected graph with pairwise 
 #'   weights.
-#' @return A \code{\link{graphNEL}} object. The maximum spanning forest.
+#' @return A graph. The maximum spanning forest.
 #' @references Friedman N, Geiger D and Goldszmidt M (1997). Bayesian network 
 #'   classifiers. \emph{Machine Learning}, \bold{29}, pp. 131--163.
 #'   
@@ -47,8 +47,8 @@ max_weight_forest <- function(g) {
 }
 #' Merges multiple disjoint graphs into a single one.
 #' 
-#' @param g A \code{\link{graphNEL}}
-#' @return A \code{\link{graphNEL}}. 
+#' @param g A graph
+#' @return A graph
 #' @keywords internal
 graph_union <- function(g) { 
   graph_internal_union(g)

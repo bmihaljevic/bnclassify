@@ -31,7 +31,7 @@ graph_internal2graph_NEL <- function(x) {
 #' 
 #' TODO Not sure this function is used.
 #' 
-#' @param g A \code{\link{graphNEL}}
+#' @param g A graphNEL.
 #' @return A character matrix. 
 #' @keywords internal
 named_edge_matrix <- function(g) {

@@ -7,7 +7,7 @@
 named_edge_matrix(g)
 }
 \arguments{
-\item{g}{A \code{\link{graphNEL}}}
+\item{g}{A graphNEL.}
 }
 \value{
 A character matrix.
