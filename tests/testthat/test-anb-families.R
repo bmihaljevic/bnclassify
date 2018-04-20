@@ -25,6 +25,7 @@ test_that("graph 2 families class length > 1   ", {
 test_that("graph 2 families  Undirected graph" , {
   e <- list(A = 'B', B = 'A')
   g <- graph::graphNEL(nodes = LETTERS[1:2], edgeL = e, edgemode = "directed")
+  expect_error(graphNEL2families(dag = g, class = LETTERS[1]), 'is_dag_graph')
   g <- graph::graphNEL(nodes = LETTERS[1:2], edgeL = e, edgemode = "undirected")
   expect_error(graphNEL2families(dag = g, class = LETTERS[1]), 'is_dag_graph')
 })

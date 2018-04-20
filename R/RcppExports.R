@@ -13,16 +13,32 @@ normalize_ctgt <- function(ctgt) {
     .Call('_bnclassify_normalize_ctgt', PACKAGE = 'bnclassify', ctgt)
 }
 
-make_nb <- function(class_var, features) {
-    invisible(.Call('_bnclassify_make_nb', PACKAGE = 'bnclassify', class_var, features))
+match_zero_based <- function(subset, superset) {
+    .Call('_bnclassify_match_zero_based', PACKAGE = 'bnclassify', subset, superset)
 }
 
-make_nb2 <- function(class_var, features) {
-    invisible(.Call('_bnclassify_make_nb2', PACKAGE = 'bnclassify', class_var, features))
+bh_connected_components <- function(vertices, edges) {
+    .Call('_bnclassify_bh_connected_components', PACKAGE = 'bnclassify', vertices, edges)
 }
 
-bh_connected_comp <- function(x) {
-    .Call('_bnclassify_bh_connected_comp', PACKAGE = 'bnclassify', x)
+bh_remove_node <- function(vertices, edges, remove) {
+    .Call('_bnclassify_bh_remove_node', PACKAGE = 'bnclassify', vertices, edges, remove)
+}
+
+bh_remove_edges <- function(vertices, edges, remove_from, remove_to, edgemode) {
+    .Call('_bnclassify_bh_remove_edges', PACKAGE = 'bnclassify', vertices, edges, remove_from, remove_to, edgemode)
+}
+
+bh_subgraph <- function(vertices, edges, subgraph_vertices) {
+    .Call('_bnclassify_bh_subgraph', PACKAGE = 'bnclassify', vertices, edges, subgraph_vertices)
+}
+
+bh_mstree_kruskal <- function(vertices, edges, weights) {
+    .Call('_bnclassify_bh_mstree_kruskal', PACKAGE = 'bnclassify', vertices, edges, weights)
+}
+
+bh_tsort <- function(vertices, edges) {
+    .Call('_bnclassify_bh_tsort', PACKAGE = 'bnclassify', vertices, edges)
 }
 
 make_cpt <- function(cpt, features, class_var, columns_db, df) {

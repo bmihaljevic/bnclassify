@@ -17,7 +17,7 @@ pairwise_ode_score_contribs <- function(class, dataset, score) {
 # Get features   
   features = get_features(class = class, dataset = dataset)
 # If 0 features then return empty graph   
-  if (length(features) == 0) return(graph::graphNEL()) 
+  if (length(features) == 0) return(graph_empty_undirected()) 
 # If 1 feature then return single node graph (no arcs)
   pairs <- complete_graph(features)  
   if (length(features) == 1) return(pairs)  

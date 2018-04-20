@@ -14,6 +14,14 @@ Load a data set and learn a one-dependence estimator by maximizing Akaike's info
 library(bnclassify)
 data(car)
 tn <- tan_cl('class', car, score = 'aic')
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
+
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
+
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
 tn
 #> 
 #>   Bayesian network classifier (only structure, no parameters)
@@ -50,7 +58,96 @@ Estimate predictive accuracy with cross validation.
 
 ``` r
 cv(tn, car, k = 10)
-#> [1] 0.9432847
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
+
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
+
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
+
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
+
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
+
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
+
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
+
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
+
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
+
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
+
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
+
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
+
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
+
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
+
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
+
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
+
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
+
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
+
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
+
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
+
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
+
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
+
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
+
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
+
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
+
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
+
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
+
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
+
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
+
+#> Warning in graph_is_adjacent(g, from = undirected_from, to =
+#> undirected_to): bnclassify not implemented
+#> [1] 0.9386503
 ```
 
 Or compute the log-likelihood
@@ -67,7 +164,7 @@ Make sure you have at least version 3.2.0 of R. You will need to install package
 
 ``` r
 source("http://bioconductor.org/biocLite.R")
-biocLite(c("graph", "RBGL", "Rgraphviz"))
+biocLite(c("graph", "Rgraphviz"))
 ```
 
 You can install `bnclassify` from CRAN:

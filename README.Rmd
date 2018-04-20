@@ -58,7 +58,7 @@ Make sure you have at least version 3.2.0 of R. You will need to install package
 
 ```{r, eval = FALSE}
 source("http://bioconductor.org/biocLite.R")
-biocLite(c("graph", "RBGL", "Rgraphviz"))
+biocLite(c("graph", "Rgraphviz"))
 ```
 
 You can install `bnclassify` from CRAN:

@@ -39,36 +39,93 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// make_nb
-void make_nb(std::string class_var, std::vector<std::string> features);
-RcppExport SEXP _bnclassify_make_nb(SEXP class_varSEXP, SEXP featuresSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string >::type class_var(class_varSEXP);
-    Rcpp::traits::input_parameter< std::vector<std::string> >::type features(featuresSEXP);
-    make_nb(class_var, features);
-    return R_NilValue;
-END_RCPP
-}
-// make_nb2
-void make_nb2(std::string class_var, std::vector<std::string> features);
-RcppExport SEXP _bnclassify_make_nb2(SEXP class_varSEXP, SEXP featuresSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string >::type class_var(class_varSEXP);
-    Rcpp::traits::input_parameter< std::vector<std::string> >::type features(featuresSEXP);
-    make_nb2(class_var, features);
-    return R_NilValue;
-END_RCPP
-}
-// bh_connected_comp
-NumericVector bh_connected_comp(NumericVector x);
-RcppExport SEXP _bnclassify_bh_connected_comp(SEXP xSEXP) {
+// match_zero_based
+std::vector<int> match_zero_based(const CharacterVector& subset, const CharacterVector& superset);
+RcppExport SEXP _bnclassify_match_zero_based(SEXP subsetSEXP, SEXP supersetSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(bh_connected_comp(x));
+    Rcpp::traits::input_parameter< const CharacterVector& >::type subset(subsetSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type superset(supersetSEXP);
+    rcpp_result_gen = Rcpp::wrap(match_zero_based(subset, superset));
+    return rcpp_result_gen;
+END_RCPP
+}
+// bh_connected_components
+NumericVector bh_connected_components(CharacterVector vertices, Rcpp::IntegerMatrix edges);
+RcppExport SEXP _bnclassify_bh_connected_components(SEXP verticesSEXP, SEXP edgesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type vertices(verticesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerMatrix >::type edges(edgesSEXP);
+    rcpp_result_gen = Rcpp::wrap(bh_connected_components(vertices, edges));
+    return rcpp_result_gen;
+END_RCPP
+}
+// bh_remove_node
+Rcpp::List bh_remove_node(const CharacterVector& vertices, const Rcpp::IntegerMatrix& edges, const CharacterVector& remove);
+RcppExport SEXP _bnclassify_bh_remove_node(SEXP verticesSEXP, SEXP edgesSEXP, SEXP removeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const CharacterVector& >::type vertices(verticesSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerMatrix& >::type edges(edgesSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type remove(removeSEXP);
+    rcpp_result_gen = Rcpp::wrap(bh_remove_node(vertices, edges, remove));
+    return rcpp_result_gen;
+END_RCPP
+}
+// bh_remove_edges
+Rcpp::List bh_remove_edges(const CharacterVector& vertices, const Rcpp::IntegerMatrix& edges, const CharacterVector& remove_from, const CharacterVector& remove_to, const CharacterVector& edgemode);
+RcppExport SEXP _bnclassify_bh_remove_edges(SEXP verticesSEXP, SEXP edgesSEXP, SEXP remove_fromSEXP, SEXP remove_toSEXP, SEXP edgemodeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const CharacterVector& >::type vertices(verticesSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerMatrix& >::type edges(edgesSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type remove_from(remove_fromSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type remove_to(remove_toSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type edgemode(edgemodeSEXP);
+    rcpp_result_gen = Rcpp::wrap(bh_remove_edges(vertices, edges, remove_from, remove_to, edgemode));
+    return rcpp_result_gen;
+END_RCPP
+}
+// bh_subgraph
+Rcpp::List bh_subgraph(const CharacterVector& vertices, const Rcpp::IntegerMatrix& edges, const CharacterVector& subgraph_vertices);
+RcppExport SEXP _bnclassify_bh_subgraph(SEXP verticesSEXP, SEXP edgesSEXP, SEXP subgraph_verticesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const CharacterVector& >::type vertices(verticesSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerMatrix& >::type edges(edgesSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type subgraph_vertices(subgraph_verticesSEXP);
+    rcpp_result_gen = Rcpp::wrap(bh_subgraph(vertices, edges, subgraph_vertices));
+    return rcpp_result_gen;
+END_RCPP
+}
+// bh_mstree_kruskal
+Rcpp::List bh_mstree_kruskal(CharacterVector vertices, Rcpp::IntegerMatrix edges, NumericVector weights);
+RcppExport SEXP _bnclassify_bh_mstree_kruskal(SEXP verticesSEXP, SEXP edgesSEXP, SEXP weightsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type vertices(verticesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerMatrix >::type edges(edgesSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type weights(weightsSEXP);
+    rcpp_result_gen = Rcpp::wrap(bh_mstree_kruskal(vertices, edges, weights));
+    return rcpp_result_gen;
+END_RCPP
+}
+// bh_tsort
+NumericVector bh_tsort(CharacterVector vertices, Rcpp::IntegerMatrix edges);
+RcppExport SEXP _bnclassify_bh_tsort(SEXP verticesSEXP, SEXP edgesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type vertices(verticesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerMatrix >::type edges(edgesSEXP);
+    rcpp_result_gen = Rcpp::wrap(bh_tsort(vertices, edges));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -168,9 +225,13 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bnclassify_are_disjoint", (DL_FUNC) &_bnclassify_are_disjoint, 2},
     {"_bnclassify_normalize", (DL_FUNC) &_bnclassify_normalize, 1},
     {"_bnclassify_normalize_ctgt", (DL_FUNC) &_bnclassify_normalize_ctgt, 1},
-    {"_bnclassify_make_nb", (DL_FUNC) &_bnclassify_make_nb, 2},
-    {"_bnclassify_make_nb2", (DL_FUNC) &_bnclassify_make_nb2, 2},
-    {"_bnclassify_bh_connected_comp", (DL_FUNC) &_bnclassify_bh_connected_comp, 1},
+    {"_bnclassify_match_zero_based", (DL_FUNC) &_bnclassify_match_zero_based, 2},
+    {"_bnclassify_bh_connected_components", (DL_FUNC) &_bnclassify_bh_connected_components, 2},
+    {"_bnclassify_bh_remove_node", (DL_FUNC) &_bnclassify_bh_remove_node, 3},
+    {"_bnclassify_bh_remove_edges", (DL_FUNC) &_bnclassify_bh_remove_edges, 5},
+    {"_bnclassify_bh_subgraph", (DL_FUNC) &_bnclassify_bh_subgraph, 3},
+    {"_bnclassify_bh_mstree_kruskal", (DL_FUNC) &_bnclassify_bh_mstree_kruskal, 3},
+    {"_bnclassify_bh_tsort", (DL_FUNC) &_bnclassify_bh_tsort, 2},
     {"_bnclassify_make_cpt", (DL_FUNC) &_bnclassify_make_cpt, 5},
     {"_bnclassify_df2matrix", (DL_FUNC) &_bnclassify_df2matrix, 1},
     {"_bnclassify_get_instance", (DL_FUNC) &_bnclassify_get_instance, 5},
