@@ -4,7 +4,7 @@
 \alias{graph_connected_components}
 \title{connected_components}
 \usage{
-graph_connected_components(x)
+graph_connected_components(g)
 }
 \arguments{
 \item{x}{currently a graphNEL. TODO But will be a graph_internal.}

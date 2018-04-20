@@ -59,6 +59,13 @@ graph_internal_make <- function(nodes, edges, weights, edgemode) {
     colnms <- colnames(edges) 
     stopifnot(length(colnms) == 0 || identical(colnms, fromto))
     colnames(edges) <- fromto
+    # Fixing the type. Should do it for the other members as well. 
+    # if (is.null(nodes)) {
+    #   nodes <- character()
+    # } 
+    # if (is.null(weights)) {
+    #   weights <- numeric()
+    # }
     dag <- list(nodes=nodes, edges=edges, weights = weights, edgemode = edgemode)
     class(dag) <- 'bnc_graph_internal'
     dag

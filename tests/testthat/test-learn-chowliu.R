@@ -86,3 +86,20 @@ test_that("local scores bic correctness", {
   # I know the correct value; see correctness-checks.R
   expect_equal(scores[['bic']], -4.280159, tolerance = 1e-5)
 })
+
+test_that("Max weight forest", {   
+  g <- pairwise_ode_score_contribs(class = 'Class', voting, score = 'loglik')
+  u <- max_weight_forest(g)
+  expect_equal(graph_num_arcs(u), 15)  
+  
+  g <- pairwise_ode_score_contribs(class = 'class', dataset = car, 
+                                   score = "loglik")
+  u <- max_weight_forest(g)
+  expect_equal(graph_num_arcs(u), 5)  
+  
+# Forest
+  g <- pairwise_ode_score_contribs(class = 'class', dataset = car, 
+                                   score = "aic")
+  u <- max_weight_forest(g)
+  expect_equal(graph_num_arcs(u), 3)  
+})

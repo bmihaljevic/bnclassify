@@ -4,7 +4,7 @@
 \alias{graph_is_adjacent}
 \title{Checks whether nodes are adjacent}
 \usage{
-graph_is_adjacent(from, to, x)
+graph_is_adjacent(from, to, g)
 }
 \description{
 Checks whether nodes are adjacent
