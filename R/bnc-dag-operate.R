@@ -26,11 +26,14 @@ narcs <- function(x) {
 #' plot(nb, layoutType = 'osage')
 #' plot(nb, layoutType = 'twopi')
 #' plot(nb, layoutType = 'neato')
-plot.bnc_dag <- function(x, y, layoutType='dot', fontsize = NULL, ...) {
-  if (!requireNamespace("Rgraphviz", quietly = TRUE)) {
-    stop("Rgraphviz needed ", call. = FALSE)
+plot.bnc_dag <- function(x, y, layoutType='dot', fontsize = NULL, ...) { 
+  if (!requireNamespace("graph", quietly = TRUE)) {
+    stop("Package graph needed ", call. = FALSE)
   }
-  g <- dag(x)
+  if (!requireNamespace("Rgraphviz", quietly = TRUE)) {
+    stop("Package Rgraphviz needed ", call. = FALSE)
+  }
+  g <- graph_internal2graph_NEL(dag(x))
   node_pars <- list(col = "green", textCol = "blue",  lty = "longdash", lwd = 1)
   if (!is.null(fontsize)) {
     node_pars$fontsize <- fontsize

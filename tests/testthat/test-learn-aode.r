@@ -81,6 +81,7 @@ test_that("predict", {
 
 test_that("incomplete data", {   
   # no error
+  skip_if_not_installed("gRain")
   vt <- voting[1:10, ] 
   a <- aode('Class', vt)   
   a <- lp(a, vt, smooth = 1) 
