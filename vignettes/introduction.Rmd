@@ -2,7 +2,7 @@
 title: "Introduction to the `bnclassify` package"
 author: "Bojan Mihaljevic, Concha Bielza, Pedro Larranaga"
 date: "`r Sys.Date()`"
-output: 
+output:
   rmarkdown::pdf_document:
     toc: true
     number_sections: true

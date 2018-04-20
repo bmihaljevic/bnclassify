@@ -16,7 +16,6 @@ Imports:
     matrixStats(>= 0.14.0),
     rpart(>= 4.1-8),
     Rcpp, 
-    BH
 Suggests:
     graph(>= 1.42.0),
     gRain(>= 1.2-3),
