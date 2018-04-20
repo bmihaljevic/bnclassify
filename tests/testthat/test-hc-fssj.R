@@ -6,7 +6,7 @@ test_that("Expand supernode nominal", {
   ex <- augment_supernodes(new_node = 'buying', supernodes = s, bnc_dag = a)
   expect_equal(length(ex), 5)
   maint <- ex[[1]]
-  expect_equal(graph::numEdges(as_graphNEL(maint)), 7)
+  expect_equal(graph_num_arcs(dag(maint)), 7)
   expect_equal(families(maint)[['buying']], c('buying', 'maint', 'class'))
   
   a <- nbcar()

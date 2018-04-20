@@ -3,7 +3,7 @@ context("Learn struct")
 test_that("nb  Nominal", {
   n <- nb('class', car)
   expect_identical('class', class_var(n))
-  expect_equal(graph::numEdges(as_graphNEL(n)), 6) 
+  expect_equal(graph_num_arcs(dag(n)), 6) 
 })
 
 test_that("nb   Class not in dataset", {
@@ -12,7 +12,7 @@ test_that("nb   Class not in dataset", {
 
 test_that("nb No features ", {
   n <- nb('class', car[, 7, drop = FALSE])
-  expect_equal(graph::numEdges(as_graphNEL(n)), 0)
+  expect_equal(graph_num_arcs(dag(n)), 0)
   # Not numeric dataset
 })
 
