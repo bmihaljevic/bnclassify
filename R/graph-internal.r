@@ -256,7 +256,7 @@ graph_complete_undirected <- function(nodes) {
 graph_max_weight_forest <- function(g) {  
   stopifnot(inherits( g, "bnc_graph_internal"))  
   stopifnot(graph_is_undirected(g))
-  if (graph_num_arcs(g) < 1) return( graph_internal2graph_NEL( g )  )
+  if (graph_num_arcs(g) < 1) return(  g  )
   #   change weights sign because Kruskal only searches for minimal tree 
   g$weights <-  -1 * g$weights   
   mstree <- graph_mstree_kruskal(g)

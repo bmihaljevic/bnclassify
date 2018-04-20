@@ -41,6 +41,7 @@ random_letters_vector <- function(nletters, n) {
 # Creates a random augmented NB with class as class. 
 random_aug_nb_dag <- function(class, V, maxpar, wgt) {
   dg <- gRbase::random_dag(V = V, maxpar = maxpar, wgt = wgt)
+  dg <- graphNEL2_graph_internal(dg)
   superimpose_node(dag = dg, class)
 }
 

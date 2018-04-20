@@ -3,11 +3,11 @@ context("aode")
 test_that("spode", {
   u <- spode(sp='D', features=LETTERS[5:9], class = 'C')
   expect_equal(graph_num_arcs(dag(u)), 11)
-  expect_equal(length(graph_get_adjacent(dag(u), 'D')$D), 5)
+  expect_equal(length(graph_get_adjacent('D', dag(u))), 6)
   
   u <- spode(sp='E', features=LETTERS[c(4, 6:9)], class = 'C')
   expect_equal(graph_num_arcs(dag(u)), 11)
-  expect_equal(length(graph_get_adjacent(dag(u), 'E')$E), 5)
+  expect_equal(length(graph_get_adjacent('E', dag(u))), 6)
 })
 
 test_that("aode str", {  
