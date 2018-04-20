@@ -17,6 +17,27 @@ r_binary_packages:
 r_github_packages:
   - jimhester/covr
 
+bioc_packages:
+  - graph
+
 after_success:
   - Rscript -e 'devtools::install();library(bigmemory);library(methods);devtools::test()'
   - Rscript -e 'library(covr);coveralls()'
+
+## Set up the matrix of different runs
+env:
+  global:
+  - _R_CHECK_CRAN_INCOMING_: TRUE
+  matrix:
+  - r: release
+    not_cran: true
+    r_check_args: "--no-manual"
+  - r: release
+    not_cran: false
+    r_check_args: "--no-manual --as-cran"
+  - r: devel
+    not_cran: true
+    r_check_args: "--no-manual"
+  - r: devel
+    not_cran: false
+    r_check_args: "--no-manual --as-cran" 
