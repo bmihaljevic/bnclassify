@@ -43,29 +43,27 @@ test_that("chowliu single-row dataset", {
 
 test_that("pairwise local scores nominal", {  
   a <- pairwise_ode_score_contribs(class = 'class', dataset = car, score= "loglik")  
-  w <- graph::edgeWeights(a)
-  b <- w[['maint']][['safety']]
+  w <- graph_get_named_weights(a) 
+  b <- subset(w, from == 'maint' & to == 'safety')['w']
   cmi <- cmi("maint", "safety", car, 'class')
   expect_equal(unname(unlist(b)), cmi, tolerance = 0.0001)
-  d <- w[['safety']][['maint']] # Its symmetric
-  expect_identical(unname(b), unname(d))   #   All weights positive
   expect_true(all(unlist(w) > 0))  
 })
 
 test_that("pairwise local scores No features", {  
   a <- pairwise_ode_score_contribs(class = 'class', dataset = car[,7, drop=F], 
                            score = "loglik")
-  expect_equal(a, graph::graphNEL())
+  expect_equal(a, graph_internal(edgemode = "undirected"))
 # No weights kept. 
   a <- pairwise_ode_score_contribs(class = 'class', dataset = car, score = "bic")  
-  w <- graph::edgeWeights(a)  
-  expect_equal(graph::nodes(a), colnames(car)[-7])
+  w <- a$weights
+  expect_equal(graph_nodes(a), colnames(car)[-7])
   expect_equal(length(unlist(w)), 0L)
 })
 
 test_that("pairwise local scores bic", {  
   t <- pairwise_ode_score_contribs(class = 'class', dataset = car, score = "bic")    
-  expect_equal(graph::numEdges(t), 0)
+  expect_equal(graph_num_arcs(t), 0)
 })
 
 test_that("local scores correctness", {  

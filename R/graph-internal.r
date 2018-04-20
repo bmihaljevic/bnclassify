@@ -350,3 +350,12 @@ make_graph <- function(nodes, from, to, weights) {
   g <- graph_internal(nodes, edges, weights, "undirected") 
   g
 }  
+# This function is also a hack. I guess weights should be already stored with edge names,
+# just like edges should be stored with names. Using int ids makes no sense 
+graph_get_named_weights <- function(g) { 
+  stopifnot(inherits( g, "bnc_graph_internal"))  
+  e <- graph_named_edge_matrix(g)
+  df <- data.frame(e)
+  df$w <- g$weights
+  df
+}
