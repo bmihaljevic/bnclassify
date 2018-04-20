@@ -1,9 +1,5 @@
 context("Aug nb families")
 
-test_dag <- function() {
-  edges <- graph_from_to_to_edges('A', 'B')
-  graph_internal(nodes = LETTERS[1:2], edges,  weights = NULL, edgemode = "directed") 
-}
 
 test_that("graph 2 families nominal", {
   g <- test_dag()

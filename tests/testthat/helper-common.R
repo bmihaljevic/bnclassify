@@ -50,6 +50,11 @@ identical_non_call <- function(x, y) {
   expect_identical(x, y)
 }
 
+test_dag <- function() {
+  edges <- graph_from_to_to_edges('A', 'B')
+  graph_internal(nodes = LETTERS[1:2], edges,  weights = NULL, edgemode = "directed") 
+} 
+
 # Load data
 
 data(car, envir = environment())

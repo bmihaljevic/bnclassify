@@ -2,12 +2,12 @@ context("aode")
 
 test_that("spode", {
   u <- spode(sp='D', features=LETTERS[5:9], class = 'C')
-  expect_equal(graph::numEdges(as_graphNEL(u)), 11)
-  expect_equal(length(graph::adj(as_graphNEL(u), 'D')$D), 5)
+  expect_equal(graph_num_arcs(dag(u)), 11)
+  expect_equal(length(graph_get_adjacent(dag(u), 'D')$D), 5)
   
   u <- spode(sp='E', features=LETTERS[c(4, 6:9)], class = 'C')
-  expect_equal(graph::numEdges(as_graphNEL(u)), 11)
-  expect_equal(length(graph::adj(as_graphNEL(u), 'E')$E), 5)
+  expect_equal(graph_num_arcs(dag(u)), 11)
+  expect_equal(length(graph_get_adjacent(dag(u), 'E')$E), 5)
 })
 
 test_that("aode str", {  
@@ -23,11 +23,11 @@ test_that("aode str", {
   expect_identical(features(u), letters[2:10])
   
   d <- models(u)[[1]]
-  expect_equal(graph::numEdges(as_graphNEL(d)), 9 + 8)
-  expect_equal(length(graph::adj(as_graphNEL(d), 'b')$b), 8)
+  expect_equal(graph_num_arcs(dag(d)), 9 + 8)   
+  expect_equal(length(graph_get_adjacent('b', dag(d))), 9)
   d <- models(u)[[9]]
-  expect_equal(graph::numEdges(as_graphNEL(d)), 9 + 8)
-  expect_equal(length(graph::adj(as_graphNEL(d), 'j')$j), 8)
+  expect_equal(graph_num_arcs(dag(d)), 9 + 8)
+  expect_equal(length(graph_get_adjacent('j', dag(d))), 9)
 }) 
 
 test_that("aode bnc funs", {    
