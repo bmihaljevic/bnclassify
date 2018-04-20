@@ -19,6 +19,10 @@ install:
 after_success:
   - Rscript -e 'covr::codecov()'
 
+r_binary_packages:
+  - Rcpp,
+  - BH
+
 ## Set up the matrix of different runs
 env:
   global:
