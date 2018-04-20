@@ -2,8 +2,8 @@ context("graph internal")
   
 test_that("empty graph", { 
    a <- graph_internal()
-   expect_null(a$nodes)
-   expect_null(graph_nodes(a))
+   expect_equal(length(a$nodes), 0)
+   expect_equal(length(graph_nodes(a)), 0)
    expect_is(a$edges, "matrix")
    expect_true(mode(a$edges) == "numeric")
 })
