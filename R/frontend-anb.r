@@ -62,15 +62,8 @@ graph_union <- function(g) {
   graph_internal_union(g)
 }
 # Adds a node to DAG as root and parent of all nodes.
-superimpose_node <- function(dag, node) {
-  stopifnot(is_dag_graph(dag))
-#   Check node is length one character 
-  check_node(node)  
-#   Check node not in dag nodes 
-  nodes <- graph::nodes(dag)
-  stopifnot(!(node %in% nodes))
-#   Add node and edges
-  graph::addNode(node = node, object = dag, edges = list(nodes))
+superimpose_node <- function(dag, node) {  
+  graph_superimpose_node(dag, node) 
 }
 is_dag_graph <- function(dag) {  
   graph_is_dag(dag)

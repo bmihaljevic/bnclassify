@@ -125,8 +125,12 @@ graph_subgraph <- function(nodes, x) {
   graph_internal2graph_NEL(subgraph ) 
 }  
 # No need to call BGL for this. 
-graph_add_node <- function(node, x) { 
-  g <- graphNEL2_graph_internal(x)
+graph_add_node <- function(node, x) {  
+  g <- x 
+  if (!inherits( g, "bnc_graph_internal"))  {
+    g <- graphNEL2_graph_internal(x) 
+    rm(x)
+  }  
   stopifnot(inherits( g, "bnc_graph_internal"), is.character(node)) 
   if (node %in% g$nodes) stop("Node already in graph") 
   g$nodes <- c(g$nodes, node)  
@@ -384,4 +388,21 @@ graph_direct_forest <- function(x, root = NULL) {
   trees <- lapply(components, direct_tree, root)
   g <- graph_union(g = trees)  
   g
+} 
+graph_superimpose_node <- function(x, node) { 
+  g <- x 
+  if (!inherits( g, "bnc_graph_internal"))  {
+    g <- graphNEL2_graph_internal(x) 
+    rm(x)
+  }  
+  stopifnot(is_dag_graph(g))
+#   Check node is length one character 
+  check_node(node)  
+#   Check node not in g nodes 
+  nodes <- graph_nodes(g)
+  stopifnot(!(node %in% nodes))
+#   Add node and edges
+  g <- graph_add_node(node = node, g)
+  replicated_node <- rep(node, length(nodes))
+  graph_add_edges(replicated_node, nodes, g)
 }
