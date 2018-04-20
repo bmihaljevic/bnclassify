@@ -10,7 +10,7 @@ bn2dag <- function(x) {
   }
   else {
     make_bnc_dag(class = class_var(x), families = families(x), 
-                 graphNEL = as_graphNEL(x))  
+                 dag = dag(x))  
   }
 }
 check_bnc_bn <- function(x) {
