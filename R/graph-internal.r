@@ -166,7 +166,7 @@ graph_is_adjacent <- function(from, to, g) {
   # undirected_from <- c(from, to)
   # undirected_to <- c(to, from)
   # CHeck any of these are found in the matrix
-  warning("bnclassify not implemented")
+  # warning("bnclassify not implemented")
   FALSE
 } 
 #' Finds adjacent nodes. Has not been tested much

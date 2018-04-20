@@ -38,6 +38,13 @@ check_bnc_dag_basic <- function(x) {
 as_graphNEL <- function(x) {
   stopifnot(inherits(x, "bnc_dag"))
   x$.dag
+} 
+#' Get underlying graph. This should be exported.
+#' @keywords  internal 
+#' @param x the bnc object
+dag <- function(x) {
+  stopifnot(inherits(x, "bnc_dag"))
+  x$.dag
 }
 #' @export 
 #' @describeIn  inspect_bnc_dag Returns the class variable.
