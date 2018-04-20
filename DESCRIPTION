@@ -13,7 +13,6 @@ Depends:
 Imports:
     assertthat (>= 0.1),
     entropy(>= 1.2.0),
-    graph(>= 1.42.0),
     matrixStats(>= 0.14.0),
     rpart(>= 4.1-8),
     Rcpp

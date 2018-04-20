@@ -4,6 +4,7 @@
 * Added k-db classifier
 * Minor additions: cLogLik function
 * Replaced the RBGL package with BH
+* Replaced the graph package with custom code and BH 
 
 # 0.3.4
 * Added WANBIA discriminative parameter learning for naive Bayes  
