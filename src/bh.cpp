@@ -20,7 +20,7 @@ using namespace Rcpp;
 // TODO: R match was returning -2147483648 when not finding the value, and the any() test was failing. 
 // Thus, avoid Rcpp for the test 
 // [[Rcpp::export]]
-std::vector<int> match_zero_based(const CharacterVector & subset, const CharacterVector & superset) { 
+std::vector<int> match_zero_based2(const CharacterVector & subset, const CharacterVector & superset) { 
   IntegerVector subset_inds = Rcpp::match(subset, superset); 
   int min = *std::min_element(subset_inds.begin(), subset_inds.end());
   if (min <= 0)  stop("All subset must be in the superset.");
@@ -233,7 +233,7 @@ Rcpp::List bh_remove_edges(const CharacterVector & vertices, const Rcpp::Integer
 //   boost::copy_graph(g, a); 
 //   dsubgraph subgraph = a.create_subgraph(); 
 // //  If you add particular vertices from global, are they kept?
-//   std::vector<int> sgraph_vertices = match_zero_based(subgraph_vertices, vertices);
+//   std::vector<int> sgraph_vertices = match_zero_based2(subgraph_vertices, vertices);
 //   for (int i = 0; i < sgraph_vertices.size(); i++) {
 //     int a = add_vertex(sgraph_vertices.at(i), subgraph); 
 //   }

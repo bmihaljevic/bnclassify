@@ -16,7 +16,8 @@ Imports:
     matrixStats(>= 0.14.0),
     rpart(>= 4.1-8),
     Rcpp, 
-    BH
+    BH,
+    RcppEigen 
 Suggests:
     gRain(>= 1.2-3),
     gRbase(>= 1.7-0.1),
@@ -31,4 +32,5 @@ License: GPL (>= 2)
 Maintainer: Mihaljevic Bojan <bmihaljevic@fi.upm.es>
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
-LinkingTo: Rcpp, BH
+LinkingTo: Rcpp, BH, RcppEigen
+SystemRequirements: C++11

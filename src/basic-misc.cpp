@@ -1,16 +1,58 @@
 #include <Rcpp.h>
-using namespace Rcpp;   
+#include <basic-misc.h>
+
+using namespace Rcpp;
+
+/**
+ * Maps the features to columns in the data frame.
+ * The indices are 0-based.
+ * TODO: probably should receive evidence or data frame as input, not columns_db character vector. Or it should be a vector of strings.
+ * TODO: make this comments generic. do not refer to columns.
+ */ 
+// [[Rcpp::export]]
+std::vector<int> match_zero_based(const std::vector<std::string> & features, const CharacterVector & columns_db) { 
+  CharacterVector feature_fam = wrap(features); 
+  IntegerVector feature_fam_inds = match(feature_fam, columns_db);
+  if (is_true(any(feature_fam_inds == 0)))  stop("All features must be in the dataset.");
+  feature_fam_inds = feature_fam_inds - 1; 
+  return as<std::vector<int> > (feature_fam_inds);
+}
+
 
 // [[Rcpp::export]]
-bool are_disjoint(Nullable<CharacterVector> x, Nullable<CharacterVector> y) {
+std::vector<std::string> ordersetdiff(CharacterVector vector, CharacterVector remove) {
+  std::vector<std::string> vec = as<std::vector<std::string> >(vector);
+  std::string move = as<std::string>(remove);
+  std::vector<std::string>::iterator index = std::find(vec.begin(), vec.end(), move);
+  vec.erase(index);
+  return vec;
+}  
+
+bool safediff(unsigned int x, int y) {
+  return (y >= 0) && (x != static_cast<unsigned int>(y));
+};
+
+// TODO: This should be called at instance level, not data frame! This way, if the data set is complete, it goes through it a couple of times.
+// [[Rcpp::export]]
+bool hasna(const DataFrame & newdata) {  
+  for (int i = 0; i < newdata.size(); i++) { 
+   const IntegerVector & vec = newdata.at(i);
+   if (is_true(any(is_na(vec)))) return true;  
+  }  
+  return false;
+} 
+
+// [[Rcpp::export]]
+bool are_disjoint(Rcpp::Nullable<Rcpp::CharacterVector> x, Rcpp::Nullable<Rcpp::CharacterVector> y) {
   if (x.isNotNull() & y.isNotNull()) {
     Rcpp::CharacterVector xx(x);
     Rcpp::CharacterVector yy(y);
-    LogicalVector init = in(xx, yy)  ;
+    Rcpp::LogicalVector init = in(xx, yy)  ;
     return  !is_true(any(init)); 
   }
   return true;
-}        
+}
+
 // Normalizes a vector or a segment. If division by the sum is Nan then returns a uniform distribution. 
 // Not checking the input for NAs for speed. Caller must do that. 
 void normalize(NumericVector::iterator begin, NumericVector::iterator end) {
@@ -27,7 +69,7 @@ void normalize(NumericVector::iterator begin, NumericVector::iterator end) {
       (*iter) = 1.0 / n.size();
     } 
   }
-}     
+}
 // [[Rcpp::export]]
 NumericVector normalize(NumericVector & x) {
   normalize(x.begin(), x.end());
@@ -60,7 +102,7 @@ NumericVector normalize_ctgt(NumericVector & ctgt) {
     stop("0 dimension of contigency table");
   } 
   return cpt; 
-}  
+}
 
 // Todo: ensure is is numeric; not integer, otherwise it won't be modified!!  
 /***R  
