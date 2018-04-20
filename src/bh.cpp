@@ -1,14 +1,8 @@
 #include <Rcpp.h>
 // [[Rcpp::depends(BH)]]
 
-#include <boost/config.hpp>
 #include <boost/graph/adjacency_list.hpp>
-#include <boost/graph/connected_components.hpp>
-#include <boost/graph/directed_graph.hpp>
-#include <boost/graph/subgraph.hpp>
-#include <boost/graph/graph_utility.hpp> 
-#include <boost/graph/copy.hpp> 
-#include <boost/property_map/property_map.hpp>
+#include <boost/graph/connected_components.hpp> 
 #include <boost/graph/kruskal_min_spanning_tree.hpp>
 #include <boost/graph/topological_sort.hpp>
 #include <boost/graph/filtered_graph.hpp>
@@ -20,9 +14,7 @@
  */  
 
 using namespace boost; 
-using namespace Rcpp;        
-
-
+using namespace Rcpp;          
 
 // TODO: move this to basic-misc one moved to a header
 // TODO: R match was returning -2147483648 when not finding the value, and the any() test was failing. 
@@ -38,19 +30,17 @@ std::vector<int> match_zero_based(const CharacterVector & subset, const Characte
 
 typedef property<vertex_index_t, int, property<vertex_name_t, std::string> > VertexProperty;
 typedef property<edge_index_t, int, property<edge_weight_t, double> > EdgeProperty; 
-typedef adjacency_list< vecS, vecS, directedS, VertexProperty, EdgeProperty >  dgraph;    
-
+typedef adjacency_list< vecS, vecS, directedS, VertexProperty, EdgeProperty >  dgraph;     
 // for connected components and such
 // typedef adjacency_list <vecS, vecS, property < edge_weight_t, double >, undirectedS> ugraph;  
 typedef adjacency_list < vecS, vecS, undirectedS, VertexProperty, property < edge_weight_t, double > > ugraph; 
 
 // modifiable directed graph. Uses listS instead of vecS. vecS could lead to invalidated descriptors. <https://www.boost.org/doc/libs/1_37_0/libs/graph/doc/adjacency_list.html>
 // not used cause it does not allow int descriptors
-typedef adjacency_list<listS, listS, directedS, VertexProperty, EdgeProperty >  mdgraph; 
-// typedef adjacency_list < listS, listS, undirectedS, VertexProperty, property < edge_weight_t, double > > mugraph; 
-
+// typedef adjacency_list<listS, listS, directedS, VertexProperty, EdgeProperty >  mdgraph; 
+// typedef adjacency_list < listS, listS, undirectedS, VertexProperty, property < edge_weight_t, double > > mugraph;  
 // TODO: remove
-typedef subgraph< adjacency_list< vecS, vecS, directedS, VertexProperty, EdgeProperty > > dsubgraph;
+// typedef subgraph< adjacency_list< vecS, vecS, directedS, VertexProperty, EdgeProperty > > dsubgraph;
 
 /**
  * Because num_vertices does not give the number of nodes in filtered graph.
@@ -124,9 +114,7 @@ Rcpp::List graph2R(T & g, F & original_graph) {
   
   List output = List::create(Named("nodes") = nodes, Named("edges") = edges_matrix, Named("weights") = weights);
   return output;
-}
-
-
+}  
 
 /**
  *  Since not not all vertices need to be in edges, add vertices separately.
@@ -167,8 +155,7 @@ NumericVector bh_connected_components(CharacterVector vertices, Rcpp::IntegerMat
   // TODO:: see additional checks from RBGL. Maybe connected comp might fail?
   // std::vector<int>::size_type i;
   return wrap(component);
-}      
-
+}       
 
 template <typename NameMap>
 struct remove_names {

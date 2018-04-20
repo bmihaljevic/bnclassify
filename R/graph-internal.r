@@ -64,7 +64,7 @@ graph_internal_make <- function(nodes, edges, weights, edgemode) {
     dag
 }
 graph_nodes <- function(x) {
-  stopifnot(is( x, "bnc_graph_internal"))
+  stopifnot(inherits( x, "bnc_graph_internal"))
   x$nodes 
 } 
 graph_make_edges <- function(nodes, edges) { 
