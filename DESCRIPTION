@@ -18,6 +18,7 @@ Imports:
     Rcpp, 
     BH
 Suggests:
+    graph(>= 1.42.0),
     gRain(>= 1.2-3),
     gRbase(>= 1.7-0.1),
     mlr(>= 2.2),
