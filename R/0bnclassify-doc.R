@@ -53,8 +53,7 @@
 #' @name bnclassify
 #' @importFrom stats predict as.formula complete.cases setNames logLik AIC BIC nobs optim
 #' @importFrom graphics plot
-#' @importFrom utils combn
-#' @importFrom graph nodes edgeData edgemode ftM2graphNEL edgeMatrix
+#' @importFrom utils combn 
 #' 
 #' @references Bielza C and Larranaga P (2014), Discrete Bayesian network 
 #'   classifiers: A survey. \emph{ACM Computing Surveys}, \bold{47}(1), Article 
