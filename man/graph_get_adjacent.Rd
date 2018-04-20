@@ -4,7 +4,7 @@
 \alias{graph_get_adjacent}
 \title{Finds adjacent nodes. Has not been tested much}
 \usage{
-graph_get_adjacent(node, x)
+graph_get_adjacent(node, g)
 }
 \description{
 Finds adjacent nodes. Has not been tested much

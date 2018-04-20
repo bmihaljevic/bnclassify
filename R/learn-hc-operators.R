@@ -134,7 +134,7 @@ arcs_to_orphans <- function(orphans, non_orphans) {
 discard_existing <- function(arcs_df, bnc_dag) { 
   stopifnot(is.matrix(arcs_df), is.character(arcs_df))
   # TODO!!!!!: do i access this in this way? .dag??
-  in_bnc_dag <- t(named_edge_matrix(bnc_dag$.dag))
+  in_bnc_dag <- graph_named_edge_matrix(dag(bnc_dag))
   # They are not sorted. For each of a I want to see if it is already in b.  
   # It is OK if the first ones match. if so, then I will look at the second. 
   list_from <- lapply(arcs_df[, 'from'], '==', in_bnc_dag[, 'from'] )

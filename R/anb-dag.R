@@ -9,12 +9,12 @@ bnc_base <- function(class, features) {
 bnc_dag <- function(dag, class) {
   families <- graphNEL2families(dag, class)  
 #   Save dag, class, features,and call 
-  make_bnc_dag(class = class, families = families, graphNEL = dag)
+  make_bnc_dag(class = class, families = families, dag = dag)
 }
-make_bnc_dag <- function(class, families, graphNEL) {
+make_bnc_dag <- function(class, families, dag) {
   # Not checking families for efficiency; they are checked in bnc_dag anyway
   obj <- bnc_base(class = class, features = NULL)
-  obj$.dag = graphNEL
+  obj$.dag = dag
   obj$.families = families
   class(obj) <- c('bnc_dag', class(obj))
   obj
@@ -36,6 +36,13 @@ check_bnc_dag_basic <- function(x) {
 #' @export 
 #' @describeIn grain_and_graph Convert to a graphNEL.
 as_graphNEL <- function(x) {
+  stopifnot(inherits(x, "bnc_dag"))
+  graph_internal2graph_NEL(dag(x))
+} 
+#' Get underlying graph. This should be exported.
+#' @keywords  internal 
+#' @param x the bnc object
+dag <- function(x) {
   stopifnot(inherits(x, "bnc_dag"))
   x$.dag
 }

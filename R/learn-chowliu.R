@@ -22,9 +22,9 @@ pairwise_ode_score_contribs <- function(class, dataset, score) {
   pairs <- complete_graph(features)  
   if (length(features) == 1) return(pairs)  
 # Get each pair of features 
-  edges <- named_edge_matrix(g = pairs)  
-  from <- edges[1, ]
-  to <- edges[2, ]; rm(edges)
+  edges <- graph_named_edge_matrix(pairs)  
+  from <- edges[, 1]
+  to <- edges[, 2]; rm(edges)
 # For each get pairwise contribution to score
   pairwise_score <- mapply(local_ode_score_contrib, from, to, 
                      MoreArgs = list(class = class, dataset = dataset), 

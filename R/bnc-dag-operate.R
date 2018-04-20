@@ -1,7 +1,7 @@
 #' @export 
 #' @describeIn inspect_bnc_dag  Returns the number of arcs.
 narcs <- function(x) {
-  num_arcs(as_graphNEL(x))
+  num_arcs(dag(x))
 }
 #' Plot the structure.
 #' 
@@ -26,11 +26,14 @@ narcs <- function(x) {
 #' plot(nb, layoutType = 'osage')
 #' plot(nb, layoutType = 'twopi')
 #' plot(nb, layoutType = 'neato')
-plot.bnc_dag <- function(x, y, layoutType='dot', fontsize = NULL, ...) {
-  if (!requireNamespace("Rgraphviz", quietly = TRUE)) {
-    stop("Rgraphviz needed ", call. = FALSE)
+plot.bnc_dag <- function(x, y, layoutType='dot', fontsize = NULL, ...) { 
+  if (!requireNamespace("graph", quietly = TRUE)) {
+    stop("Package graph needed ", call. = FALSE)
   }
-  g <- as_graphNEL(x)
+  if (!requireNamespace("Rgraphviz", quietly = TRUE)) {
+    stop("Package Rgraphviz needed ", call. = FALSE)
+  }
+  g <- graph_internal2graph_NEL(dag(x))
   node_pars <- list(col = "green", textCol = "blue",  lty = "longdash", lwd = 1)
   if (!is.null(fontsize)) {
     node_pars$fontsize <- fontsize
@@ -76,7 +79,7 @@ is_semi_naive <- function(x) {
 #' @describeIn inspect_bnc_dag Returns TRUE if \code{x} is an augmented naive Bayes.
 is_anb <- function(x) {
   if (!inherits(x, 'bnc_dag')) return(FALSE)
-  if (!is_dag_graph(as_graphNEL(x))) return(FALSE)
+  if (!is_dag_graph(dag(x))) return(FALSE)
   # Check call has no parents and class is in all families. This
   # code assumes class is last in each family.
   last <- unique(unlist(lapply(families(x), get_last)), use.names = FALSE)
@@ -100,12 +103,12 @@ is_kde <- function(x, k) {
 # Returns sets of non class-conditionally independent features
 not_cci <- function(x) {
   stopifnot(is_anb(x))
-  features <- subgraph(features(x), as_graphNEL(x))
+  features <- subgraph(features(x), dag(x))
   connected_components(features)
 }
 add_feature_parents <- function(parents, feature, x) {
   stopifnot(is_anb(x))  
-  g <- condition_on(parents, feature, as_graphNEL(x))
+  g <- condition_on(parents, feature, dag(x))
   bnc_dag(g, class_var(x))
 }
 # Just a convenience for calling add_feature_parents from *ply loops
@@ -116,19 +119,19 @@ relate_supernodes <- function(child_sn, parent_sn, x) {
   stopifnot(is_anb(x))  
 #   check child and parent are supernodes 
   stopifnot(is_supernode(child_sn, x), is_supernode(parent_sn, x))
-  g <- condition_on(parent_sn, child_sn, as_graphNEL(x))
+  g <- condition_on(parent_sn, child_sn, dag(x))
   bnc_dag(g, class_var(x))
 }
 add_feature <- function(node, x) {
   stopifnot(assertthat::is.string(node))
-  a <- add_node(node, as_graphNEL(x))
+  a <- add_node(node, dag(x))
   class <- class_var(x)
   a <- condition_on(parents = class, nodes = node, x = a)
   bnc_dag(a, class)
 }
 remove_feature <- function(node, x) {
   stopifnot(assertthat::is.string(node))
-  g <- remove_node(node, as_graphNEL(x))
+  g <- remove_node(node, dag(x))
   bnc_dag(g, class_var(x))
 }
 is_supernode <- function(nodes, x) {

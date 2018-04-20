@@ -1,9 +1,8 @@
 context("bnc dag")
 
 test_that("bnc_dag", {
-# Nominal
-  e <- list(A = 'B', B = NULL)
-  g <- graph::graphNEL(nodes = LETTERS[1:2], edgeL = e, edgemode = "directed")
+# Nominal 
+  g <- test_dag() 
   bd <- bnc_dag(dag = g, class = 'A')
   expect_is(bd, 'bnc_dag')
   expect_identical(bd$.class, 'A')
@@ -11,8 +10,9 @@ test_that("bnc_dag", {
   expect_identical(features(bd), 'B')
   expect_identical(vars(bd), setNames(nm = LETTERS[2:1]))
   expect_identical(bd$.families, list(B = LETTERS[2:1], A = 'A'))
-# Just class
-  g <- graph::graphNEL(nodes = LETTERS[1], edgemode = "directed")
+  
+# Just class 
+  g <- graph_internal(nodes = LETTERS[1], edgemode = "directed")
   bd <- bnc_dag(dag = g, class = 'A')
   expect_is(bd, 'bnc_dag')
   expect_identical(bd$.class, 'A')
@@ -20,9 +20,11 @@ test_that("bnc_dag", {
   expect_identical(features(bd), character())
   expect_identical(vars(bd), setNames(nm = 'A'))
   expect_identical(bd$.families, list(A='A'))
+  
 # Class not parent of all other nodes
   e <- list(A = 'B',B = NULL)
-  g <- graph::graphNEL(nodes = LETTERS[1:3], edgeL = e, edgemode = "directed")
+  edges <- graph_from_to_to_edges('A', 'B')
+  g <- graph_internal(nodes = LETTERS[1:3], edges = edges, edgemode = "directed")
   expect_error(bnc_dag(dag = g, class = 'A'), "last")
 })
 

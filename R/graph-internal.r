@@ -59,6 +59,13 @@ graph_internal_make <- function(nodes, edges, weights, edgemode) {
     colnms <- colnames(edges) 
     stopifnot(length(colnms) == 0 || identical(colnms, fromto))
     colnames(edges) <- fromto
+    # Fixing the type. 
+    if (is.null(nodes)) {
+      nodes <- character()
+    }
+    if (is.null(weights)) {
+      weights <- numeric()
+    }
     dag <- list(nodes=nodes, edges=edges, weights = weights, edgemode = edgemode)
     class(dag) <- 'bnc_graph_internal'
     dag
@@ -89,12 +96,7 @@ call_bh <- function(fun, g, ...) {
 #'  
 #' @param x currently a graphNEL. TODO But will be a graph_internal.
 #' @keywords internal
-graph_connected_components <- function(x) {   
-  g <- x 
-  if (!inherits( g, "bnc_graph_internal"))  {
-    g <- graphNEL2_graph_internal(x) 
-    rm(x)
-  }
+graph_connected_components <- function(g) {    
   stopifnot(inherits(g, "bnc_graph_internal"))  
   connected <- call_bh('bh_connected_components', g)
   comps <- split(graph_nodes(g), connected + 1)
@@ -112,43 +114,31 @@ graph_connected_components <- function(x) {
 #' @param nodes character 
 #' @param  x currently a graphNEL. TODO But will be a graph_internal.
 #' @keywords internal
-graph_subgraph <- function(nodes, x) {  
-  g <- x 
-  if (!inherits( g, "bnc_graph_internal"))  {
-    g <- graphNEL2_graph_internal(g) 
-    rm(x)
-  }
+graph_subgraph <- function(nodes, g) {   
   stopifnot(inherits( g, "bnc_graph_internal"))   
   subgraph <- call_bh('bh_subgraph', g = g,  subgraph_vertices = nodes) 
   subgraph <- graph_internal(subgraph$nodes, subgraph$edges, NULL, g$edgemode)
-  # TODO remove:
-  graph_internal2graph_NEL(subgraph ) 
+  subgraph  
 }  
 # No need to call BGL for this. 
-graph_add_node <- function(node, x) { 
-  g <- graphNEL2_graph_internal(x)
+graph_add_node <- function(node, g) {   
   stopifnot(inherits( g, "bnc_graph_internal"), is.character(node)) 
   if (node %in% g$nodes) stop("Node already in graph") 
   g$nodes <- c(g$nodes, node)  
-  graph_internal2graph_NEL(g) 
+  g 
 }
-graph_remove_node <- function(node, x) {
-  g <- graphNEL2_graph_internal(x) 
+graph_remove_node <- function(node, g) {
   stopifnot(inherits( g, "bnc_graph_internal"), is.character(node))  
   if (!node %in% g$nodes) stop("Node not in graph")  
   removed <- call_bh('bh_remove_node', g = g, remove = node)  
   # TODO: currently this does not preserve node weights!!!  Yet is it not used now for weighted graphs.
   removed <- graph_internal(removed$nodes, removed$edges, NULL, g$edgemode)
-  graph_internal2graph_NEL(removed) 
+  removed 
 }
 #' Add edges
 #' Does not allow edges among adjacent nodes
 #' @keywords  internal
-graph_add_edges <- function(from, to, g) {
-  g <- g 
-  if (!inherits( g, "bnc_graph_internal"))  {
-    g <- graphNEL2_graph_internal(g) 
-  }
+graph_add_edges <- function(from, to, g) { 
   stopifnot(inherits( g, "bnc_graph_internal")) 
   stopifnot(graph_is_directed(g)) 
   # check from and to are disjoint and same length
@@ -162,13 +152,9 @@ graph_add_edges <- function(from, to, g) {
   edges <- graph_make_edges(g$nodes, edges )
   edges <- rbind(g$edges, edges)
   augmented <- graph_internal_make(nodes = g$nodes, edges = edges, NULL, "directed")  
-  graph_internal2graph_NEL(augmented) 
+  augmented 
 }
-graph_remove_edges <- function(from, to, g) { 
-  g <- g 
-  if (!inherits( g, "bnc_graph_internal"))  {
-    g <- graphNEL2_graph_internal(g) 
-  }
+graph_remove_edges <- function(from, to, g) {  
   stopifnot(inherits( g, "bnc_graph_internal")) 
   # currently only for undirected
   stopifnot(graph_is_undirected(g))  
@@ -177,31 +163,22 @@ graph_remove_edges <- function(from, to, g) {
   removed <- call_bh('bh_remove_edges', g = g, remove_from = from, remove_to = to, edgemode = g$edgemode)  
   # TODO: currently this does not preserve node weights!!!  Yet is it not used now for weighted graphs.
   removed <- graph_internal(removed$nodes, removed$edges, NULL, g$edgemode)
-  graph_internal2graph_NEL(removed)  
+  removed  
 }  
 #' Checks whether nodes are adjacent
 #' @keywords  internal
-graph_is_adjacent <- function(from, to, x) { 
-  g <- x 
-  if (!inherits( g, "bnc_graph_internal"))  {
-    g <- graphNEL2_graph_internal(x) 
-  }
+graph_is_adjacent <- function(from, to, g) {  
   stopifnot(inherits( g, "bnc_graph_internal")) 
 #   Consider both directions when checking the edges are not in graph already
   # undirected_from <- c(from, to)
   # undirected_to <- c(to, from)
   # CHeck any of these are found in the matrix
-  warning("bnclassify not implemented")
+  # warning("bnclassify not implemented")
   FALSE
 } 
 #' Finds adjacent nodes. Has not been tested much
 #' @keywords  internal
-graph_get_adjacent <- function(node, x) { 
-  g <- x 
-  if (!inherits( g, "bnc_graph_internal"))  {
-    g <- graphNEL2_graph_internal(x) 
-    rm(x)
-  } 
+graph_get_adjacent <- function(node, g) {  
   stopifnot(inherits( g, "bnc_graph_internal")) 
   stopifnot(node %in% g$nodes)
   # unfortunately, node is in numbers internally. TODO: better use strings definitely. simpler.
@@ -226,8 +203,7 @@ graph_num_nodes <- function(x) {
   stopifnot(inherits( g, "bnc_graph_internal")) 
   length(g$nodes)
 }
-graph_parents <- function(x) {  
-  g <- graphNEL2_graph_internal(x)
+graph_parents <- function(g) {  
   stopifnot(inherits( g, "bnc_graph_internal"))  
   nnodes <- graph_num_nodes(g)
   if (nnodes == 0) return(list())
@@ -252,14 +228,11 @@ graph_named_edge_matrix <- function(x) {
   if(anyNA(u)) browser()
   u
 }
-graph_mstree_kruskal <- function(x) { 
-  g <- x 
-  if (!inherits( g, "bnc_graph_internal"))  {
-    g <- graphNEL2_graph_internal(x) 
-  } 
+graph_mstree_kruskal <- function(g) {  
+  stopifnot(inherits( g, "bnc_graph_internal"))  
   kruskal <- call_bh('bh_mstree_kruskal', g, weights = g$weights)  
   kruskal <- graph_internal(kruskal$nodes, kruskal$edges, kruskal$weights, "undirected")
-  graph_internal2graph_NEL(kruskal)  
+  kruskal  
 } 
 graph_is_directed <- function(x) { 
   stopifnot(inherits( x, "bnc_graph_internal"), x$edgemode %in% c("directed", "undirected"))  
@@ -279,33 +252,24 @@ graph_is_undirected <- function(x) {
 graph_empty_undirected <- function() {
   # TODO remove this function. call graph_internal directly.
   g <- graph_internal(edgemode = "undirected")
-  graph_internal2graph_NEL(g) 
+  g 
 } 
 graph_complete_undirected <- function(nodes) {
   all_pairs <- t(combn(nodes, 2))
   colnames(all_pairs) <- c('from', 'to')
   g <- graph_internal(nodes, all_pairs, NULL, "undirected")
-  graph_internal2graph_NEL(g)
+  g
 }
-graph_max_weight_forest <- function(x) { 
-  g <- x 
-  if (!inherits( g, "bnc_graph_internal"))  {
-    g <- graphNEL2_graph_internal(x) 
-  }
+graph_max_weight_forest <- function(g) {  
   stopifnot(inherits( g, "bnc_graph_internal"))  
   stopifnot(graph_is_undirected(g))
-  if (graph_num_arcs(g) < 1) return( graph_internal2graph_NEL( g )  )
+  if (graph_num_arcs(g) < 1) return(  g  )
   #   change weights sign because Kruskal only searches for minimal tree 
   g$weights <-  -1 * g$weights   
-  mstree <- graph_mstree_kruskal(x=g)
+  mstree <- graph_mstree_kruskal(g)
   mstree  
 }
-graph_is_dag <- function(dag) {   
-  g <- dag 
-  if (!inherits( g, "bnc_graph_internal"))  {
-    g <- graphNEL2_graph_internal(dag) 
-    rm(dag)
-  } 
+graph_is_dag <- function(g) {    
   stopifnot(inherits( g, "bnc_graph_internal"))  
   if (!graph_is_directed(g)) return(FALSE)
   # Empty graphs are OK
@@ -316,7 +280,7 @@ graph_is_dag <- function(dag) {
 }   
 graph_internal_union <- function(g) {
   stopifnot(is.list(g))
-  g <- lapply(g, graphNEL2_graph_internal) 
+  # g <- lapply(g, graphNEL2_graph_internal) 
   edges <- lapply(g, graph_named_edge_matrix)
   edges <- Reduce(rbind, edges)
   nodes <- sapply(g, graph_nodes)
@@ -324,15 +288,11 @@ graph_internal_union <- function(g) {
   stopifnot(all(sort(nodes) == sort(unique(nodes))))
   # TODO: check no repeated arcs!! 
   g <- graph_internal(nodes, edges = edges, weights = NULL, edgemode = "directed")
-  graph_internal2graph_NEL(g) 
+  g 
 }
 
-graph_direct_tree <- function(x, root = NULL) {
-  g <- x 
-  if (!inherits( g, "bnc_graph_internal"))  {
-    g <- graphNEL2_graph_internal(x) 
-    rm(x)
-  } 
+graph_direct_tree <- function(g, root = NULL) { 
+  stopifnot(inherits( g, "bnc_graph_internal"))  
   if (graph_num_arcs(g) < 1) {
     return(graph_direct( g)) 
   }
@@ -360,21 +320,13 @@ graph_direct_tree <- function(x, root = NULL) {
   }   
   directed 
 } 
-graph_direct <- function(x) { 
-  g <- x 
-  if (!inherits( g, "bnc_graph_internal"))  {
-    g <- graphNEL2_graph_internal(x) 
-    rm(x)
-  } 
+graph_direct <- function(g) {   
+  stopifnot(inherits( g, "bnc_graph_internal"))  
   g$edgemode = "directed"
-  graph_internal2graph_NEL (g) 
+  g 
 }   
-graph_direct_forest <- function(x, root = NULL) { 
-  g <- x 
-  if (!inherits( g, "bnc_graph_internal"))  {
-    g <- graphNEL2_graph_internal(x) 
-    rm(x)
-  }  
+graph_direct_forest <- function(g, root = NULL) {   
+  stopifnot(inherits( g, "bnc_graph_internal"))  
   if (graph_num_nodes(g) == 0L) {
     return(direct_graph(g))
   }
@@ -384,4 +336,33 @@ graph_direct_forest <- function(x, root = NULL) {
   trees <- lapply(components, direct_tree, root)
   g <- graph_union(g = trees)  
   g
+} 
+graph_superimpose_node <- function(g, node) {  
+  stopifnot(inherits( g, "bnc_graph_internal"))  
+  stopifnot(is_dag_graph(g))
+#   Check node is length one character 
+  check_node(node)  
+#   Check node not in g nodes 
+  nodes <- graph_nodes(g)
+  stopifnot(!(node %in% nodes))
+#   Add node and edges
+  g <- graph_add_node(node = node, g)
+  replicated_node <- rep(node, length(nodes))
+  graph_add_edges(replicated_node, nodes, g)
+}
+
+make_graph <- function(nodes, from, to, weights) {       
+  edges <- graph_from_to_to_edges(from, to) 
+  # TODO: change name to make_ugraph
+  g <- graph_internal(nodes, edges, weights, "undirected") 
+  g
+}  
+# This function is also a hack. I guess weights should be already stored with edge names,
+# just like edges should be stored with names. Using int ids makes no sense 
+graph_get_named_weights <- function(g) { 
+  stopifnot(inherits( g, "bnc_graph_internal"))  
+  e <- graph_named_edge_matrix(g)
+  df <- data.frame(e)
+  df$w <- g$weights
+  df
 }

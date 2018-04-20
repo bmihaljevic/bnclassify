@@ -5,7 +5,7 @@
 \title{Subgraph.  
 Only for a directed graph?}
 \usage{
-graph_subgraph(nodes, x)
+graph_subgraph(nodes, g)
 }
 \arguments{
 \item{nodes}{character}

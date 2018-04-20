@@ -1,9 +1,5 @@
 context("Aug nb families")
 
-test_dag <- function() {
-  e <- list(A = 'B', B = NULL)
-  graph::graphNEL(nodes = LETTERS[1:2], edgeL = e, edgemode = "directed")
-}
 
 test_that("graph 2 families nominal", {
   g <- test_dag()
@@ -11,22 +7,24 @@ test_that("graph 2 families nominal", {
   expect_equal(names(f), c('B', 'A'))
 })  
   
-test_that("graph 2 families class not in dag   ", {  
+test_that("graph 2 families class not in dag   ", {   
   g <- test_dag()
   expect_error(graphNEL2families(dag = g, class = 'C'), 'non_last')
 })
 
-test_that("graph 2 families class length > 1   ", {    
+test_that("graph 2 families class length > 1   ", {     
   g <- test_dag()
   expect_error(graphNEL2families(dag = g, class = LETTERS[1:2]), 
                'string')
 })
 
-test_that("graph 2 families  Undirected graph" , {
-  e <- list(A = 'B', B = 'A')
-  g <- graph::graphNEL(nodes = LETTERS[1:2], edgeL = e, edgemode = "directed")
-  expect_error(graphNEL2families(dag = g, class = LETTERS[1]), 'is_dag_graph')
-  g <- graph::graphNEL(nodes = LETTERS[1:2], edgeL = e, edgemode = "undirected")
+test_that("graph 2 families  Undirected graph" , { 
+  e <- list(A = 'B', B = 'A') 
+  edges <- graph_from_to_to_edges(c('A', 'B'), c('B', 'A')) 
+  g <- graph_internal(nodes = LETTERS[1:2], edges,  weights = NULL, edgemode = "directed") 
+  expect_error(graphNEL2families(dag = g, class = LETTERS[1]), 'is_dag_graph') 
+  
+  g <- graph_internal(nodes = LETTERS[1:2], edges,  weights = NULL, edgemode = "undirected") 
   expect_error(graphNEL2families(dag = g, class = LETTERS[1]), 'is_dag_graph')
 })
 

@@ -1,11 +1,13 @@
 context("Basic DAG")
 
 test_that("Condition on", {
-  set.seed(0)
   skip_if_not_installed('gRbase')
+  set.seed(0)
   g <- gRbase::random_dag(letters[1:10], maxpar = 15)
+  g <- graphNEL2_graph_internal(g)
   d <- condition_on(parents = c('i', 'g', 'e'), nodes = 'a', g)
-  expect_equal(graph::numEdges(d), 5)
+  expect_equal(graph_num_arcs(d), 5)
+  d <- graph_internal2graph_NEL(d)
   expect_true(is_perm(gRbase::parents('a', d), c('i', 'g', 'e')))
 })
 

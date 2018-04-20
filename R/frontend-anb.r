@@ -9,15 +9,7 @@
 #' @param root A character. Optional tree root.
 #' @return A directed \code{\link{graphNEL}}.
 #' @keywords internal
-direct_forest <- function(g, root = NULL) {  
-  # if (graph::numNodes(g) == 0L) {
-  #   return(direct_graph(g))
-  # }
-  # if (length(root)) stopifnot(root %in% graph::nodes(g))
-  # components <- connected_components(g) 
-  # components <- lapply(components, subgraph, g)
-  # trees <- lapply(components, direct_tree, root)
-  # graph_union(g = trees)  
+direct_forest <- function(g, root = NULL) {    
   graph_direct_forest(g, root = NULL)
 }
 #' Direct an undirected graph.
@@ -62,15 +54,8 @@ graph_union <- function(g) {
   graph_internal_union(g)
 }
 # Adds a node to DAG as root and parent of all nodes.
-superimpose_node <- function(dag, node) {
-  stopifnot(is_dag_graph(dag))
-#   Check node is length one character 
-  check_node(node)  
-#   Check node not in dag nodes 
-  nodes <- graph::nodes(dag)
-  stopifnot(!(node %in% nodes))
-#   Add node and edges
-  graph::addNode(node = node, object = dag, edges = list(nodes))
+superimpose_node <- function(dag, node) {  
+  graph_superimpose_node(dag, node) 
 }
 is_dag_graph <- function(dag) {  
   graph_is_dag(dag)

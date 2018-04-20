@@ -14,14 +14,6 @@ Load a data set and learn a one-dependence estimator by maximizing Akaike's info
 library(bnclassify)
 data(car)
 tn <- tan_cl('class', car, score = 'aic')
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
-
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
-
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
 tn
 #> 
 #>   Bayesian network classifier (only structure, no parameters)
@@ -58,96 +50,7 @@ Estimate predictive accuracy with cross validation.
 
 ``` r
 cv(tn, car, k = 10)
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
-
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
-
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
-
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
-
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
-
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
-
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
-
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
-
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
-
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
-
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
-
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
-
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
-
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
-
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
-
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
-
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
-
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
-
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
-
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
-
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
-
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
-
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
-
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
-
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
-
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
-
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
-
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
-
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
-
-#> Warning in graph_is_adjacent(g, from = undirected_from, to =
-#> undirected_to): bnclassify not implemented
-#> [1] 0.9386503
+#> [1] 0.9386336
 ```
 
 Or compute the log-likelihood
@@ -160,14 +63,7 @@ logLik(tn, car)
 Install
 =======
 
-Make sure you have at least version 3.2.0 of R. You will need to install packages from Bioconductor.
-
-``` r
-source("http://bioconductor.org/biocLite.R")
-biocLite(c("graph", "Rgraphviz"))
-```
-
-You can install `bnclassify` from CRAN:
+Make sure you have at least version 3.2.0 of R. You can install `bnclassify` from CRAN:
 
 ``` r
 install.packages('bnclassify')
@@ -182,6 +78,13 @@ devtools::install_github('bmihaljevic/bnclassify')
 ```
 
 Ideally, you would use the `build_vignettes = TRUE` version, and thus get the vignettes, but it requires programs such as texi2dvi to be installed on your side.
+
+For network plotting and prediction with incomplete data you will also need two packages from Bioconductor. Install them with:
+
+``` r
+source("http://bioconductor.org/biocLite.R")
+biocLite(c("graph", "Rgraphviz"))
+```
 
 Overview
 ========
