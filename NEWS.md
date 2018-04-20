@@ -3,6 +3,7 @@
 * Added AODE (averaged one-dependence estimators)
 * Added k-db classifier
 * Minor additions: cLogLik function
+* Replaced the RBGL package with BH
 
 # 0.3.4
 * Added WANBIA discriminative parameter learning for naive Bayes  
