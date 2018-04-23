@@ -132,19 +132,23 @@ MappedModel::MappedModel(const Model & x, const Evidence & evidence):
 NumericMatrix MappedModel::predict() 
 { 
  int N = evidence.getN();
- MatrixXd output(N, nclass);  
+  std::vector<double> output(N * nclass);
+ // MatrixXd output(N, nclass);  
  
  for (int instance_ind = 0; instance_ind  < N ; instance_ind++) {
     // initialize output with log class prior
      for (int theta_ind = 0; theta_ind < nclass; theta_ind++) {
-       output(instance_ind, theta_ind) = class_cpt[theta_ind];
+       // output(instance_ind, theta_ind) = class_cpt[theta_ind];
+       output[theta_ind * N + instance_ind] = class_cpt[theta_ind];
      }
      // add the entries for each feature:
      for (int j = 0; j < n; j++) {
        // Get CPT indices from the instance:
         fill_class_entries(instance_ind, j);
         for (int theta_ind = 0; theta_ind < nclass; theta_ind++) {
-             output(instance_ind, theta_ind) += output_buffer[theta_ind];
+             // output(instance_ind, theta_ind) += output_buffer[theta_ind];
+          
+          // 
         }
      } // features
   }// instances

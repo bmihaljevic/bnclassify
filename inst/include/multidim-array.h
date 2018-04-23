@@ -2,11 +2,7 @@
 #define bnclassify_multidimarray_H
 
 #include <Rcpp.h>
-using namespace Rcpp;
-
-// TODO: maybe have an array class. 
-// int entry_index(std::vector<int>::const_iterator begin, const std::vector<int> & dim_prod);
-
+using namespace Rcpp;   
 
 
  /** 
