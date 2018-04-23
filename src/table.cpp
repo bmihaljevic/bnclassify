@@ -1,96 +1,63 @@
 #include <Rcpp.h>
-using namespace Rcpp;
+using namespace Rcpp;   
 
-#include <Rcpp.h>
-
-// Save on the typing... 
-typedef std::pair<double, int>  ptype; 
-
-// A comparison function to rank values in descending order
-inline bool compare_values(const ptype &p1, const ptype &p2)
-{
-  return p1.second > p2.second;
-}
-
-// Get the top number of observations
-// [[Rcpp::export]]
-Rcpp::IntegerVector table_cpp(const Rcpp::IntegerVector & v)
-{ 
-  if(!Rf_isFactor(v)) stop("Not a factor."); 
-  CharacterVector factorLevels = v.attr("levels"); 
-  std::vector<unsigned int> table(factorLevels.size());   
-
-  std::size_t n =  v.size();
-  for (int i = 0; i != n; ++i) { 
-    table[ v[i] - 1 ] ++;
-  }   
-  
-  IntegerVector rcpptable = wrap(table); 
-  rcpptable.names() = factorLevels;
-  return rcpptable;  
-}   
-
-Rcpp::IntegerVector tabulate(const Rcpp::IntegerVector & v, int levels) { 
-  std::vector<unsigned int> table(levels);   
-  std::size_t n =  v.size();
-  for (int i = 0; i < n; ++i) { 
+// [[Rcpp::export]]  
+Rcpp::IntegerVector tabulate(const Rcpp::IntegerVector & v, R_xlen_t nlevels) {
+  std::vector<R_xlen_t> table(nlevels);   
+  R_xlen_t n =  v.size();
+  for (R_xlen_t i = 0; i < n; ++i) { 
     table.at( v.at(i) - 1 ) ++;
   }    
   return wrap(table); 
 }
 
+// Based on table()  
+// dataframe {
+//   for each column get the num of dims.tfm 
+//   get size of the resulting talbe 
+//   finally tabulate by the bins meaning how many are there 
+//   each value will correspond to its index in the dim array.
+//   this is just indexing by a set of values, then you go to there and find it. 
+// }
 // [[Rcpp::export]]
-Rcpp::IntegerVector unidim_values(const DataFrame & data) {   
+Rcpp::IntegerVector unidim_values(const DataFrame & data) {
+  const R_xlen_t ncols = data.size(); 
+  if (ncols == 0) stop("No columns in data frame.");  
   const IntegerVector & column = data.at(0);
-  unsigned int nrow = column.size(); 
-  IntegerVector bin = no_init(nrow );
-  bin.fill(1);
-  unsigned int pd = 1;
-  int ncols = data.size(); 
+  // There is a single entry for each row
+  IntegerVector to_tabulate = no_init(column.size());
+  to_tabulate.fill(-1);
+  // The product of dimensions.
+  R_xlen_t pd = 1;
   IntegerVector  dims(ncols);
   List  dimnames(ncols); 
   dimnames.names() = data.names();
   
-  for (int i = 0; i < ncols; i++) {
+  for (R_xlen_t i = 0; i < ncols; i++) {
     const IntegerVector & a = data.at(i);  
     if(!Rf_isFactor(a)) stop("Not a factor."); 
     const CharacterVector & factorLevels = a.attr("levels"); 
-    int nl = factorLevels.size();
-    bin = bin + pd * (a - 1L);
+    R_xlen_t nl = factorLevels.size();
+    to_tabulate = to_tabulate + pd * (a - 1L);
     pd = pd * nl ; 
     dims.at(i) = nl; 
     dimnames.at(i) = factorLevels;
   }    
   
-  bin = na_omit(bin);
-  IntegerVector tbl = tabulate(bin, pd);
+  to_tabulate = na_omit(to_tabulate);
+  IntegerVector tbl = tabulate(to_tabulate, pd);
   tbl.attr("dim") =  dims;
   tbl.attr("dimnames") =  dimnames;
   tbl.attr("class") =  "table";
   return tbl;
 }
 
-// Rcpp::IntegerVector unidim_table(const DataFrame & columns) {
-//   dn <- c(dn, list(ll))
-//   bin <- bin + pd * (a - 1L)
-//   pd <- pd * nl
-//   names(dn) <- dnn
-//   bin <- bin[!is.na(bin)]
-//   if (length(bin)) 
-//     bin <- bin + 1L 
-// }
-
-// dataframe {
-//   for each column get the num of dims.tfm 
-//   get size of the resulting talbe 
-//   finally tabulate by the bins meaning how many are there 
-//   each value will correspond to its index in the dim array.
-//  so, again, this is just indexing by a set of values, then you go to there and find it. 
-// }
 
 /*** R 
 kr <- foreign::read.arff('~/gd/phd/code/works-aug-semi-bayes/data/original/kr-vs-kp.arff')
 dbor <- kr
+
+
 y <- array(tabulate(bin, 8), dim(tbl), dimnames = dimnames(tbl))
 y
 tbl
@@ -101,16 +68,15 @@ a
 
 set.seed(223)
 (a = sample(0:1, 1e5, replace = T))
-a <- factor(a)
-bin <- table_cpp(a) 
-bin
-microbenchmark::microbenchmark(table_cpp(a), table(a))
-microbenchmark::microbenchmark(table_cpp(a), table(a))
+a <- factor(a)  
 
 a <- unidim_values(dbor[, 1:3])
 b <- table(dbor[, 1:3])
 all.equal(a, b)  
 
+
+a
+thouss
 tbl <- table(dbor[, 1:3])  
 
 fd <- dbor[, 1:3]
@@ -118,6 +84,14 @@ microbenchmark::microbenchmark( a <- unidim_values(fd), tbl <- table(fd)   )
 
 ku <- dbor[, 1:3]
 ku[1, 1] <- NA
-a <- unidim_values(ku)
+a <- unidim_values(ku)    
+
+
+# No rows 
+a <- unidim_values(dbor[FALSE, 1:3])
+
+# No columns 
+a <- unidim_values(dbor[FALSE, FALSE, drop = FALSE])
+a <- table(dbor[FALSE, FALSE, drop = FALSE])
 
 */

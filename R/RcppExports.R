@@ -81,8 +81,8 @@ entry_index <- function(indices, dim_prod) {
     .Call('_bnclassify_entry_index', PACKAGE = 'bnclassify', indices, dim_prod)
 }
 
-table_cpp <- function(v) {
-    .Call('_bnclassify_table_cpp', PACKAGE = 'bnclassify', v)
+tabulate <- function(v, nlevels) {
+    .Call('_bnclassify_tabulate', PACKAGE = 'bnclassify', v, nlevels)
 }
 
 unidim_values <- function(data) {
