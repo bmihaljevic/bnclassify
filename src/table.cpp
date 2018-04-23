@@ -1,20 +1,18 @@
 #include <Rcpp.h>
-using namespace Rcpp;   
-
-// maybe i should use 
-// typedef int size_t;
+using namespace Rcpp;    
 
 // [[Rcpp::export]]  
 Rcpp::IntegerVector tabulate_cpp(const Rcpp::IntegerVector & v, R_xlen_t nlevels) {
+  // Using R_xlen_t to avoid checking for entries < 0
   std::vector<R_xlen_t> table(nlevels);   
   R_xlen_t n =  v.size();
   for (R_xlen_t i = 0; i < n; ++i) { 
     table.at( v.at(i) - 1 ) ++;
   }    
+  // Wrapp may throw errors with R_xlen_t
   // return wrap(table); 
   IntegerVector  a(table.size());
   std::copy(table.begin(), table.end(), a.begin());
-  // (table.size(), table.begin());
   return a;
 }
 
@@ -54,13 +52,12 @@ Rcpp::IntegerVector table_cpp(const RObject & input) {
     dimnames.at(i) = factorLevels;
   }    
   
-  // to_tabulate = na_omit(to_tabulate);
-  IntegerVector tbla = tabulate_cpp(to_tabulate, pd);
-  // tbl.attr("dim") =  dims;
-  // tbl.attr("dimnames") =  dimnames;
-  // tbl.attr("class") =  "table";
+  to_tabulate = na_omit(to_tabulate);
+  IntegerVector tbl = tabulate_cpp(to_tabulate, pd);
+  tbl.attr("dim") =  dims;
+  tbl.attr("dimnames") =  dimnames;
+  tbl.attr("class") =  "table";
   
-  IntegerVector tbl = IntegerVector::create(); 
   return tbl;
 }
 
