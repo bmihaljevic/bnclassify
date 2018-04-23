@@ -20,7 +20,7 @@ Rcpp::IntegerVector tabulate(const Rcpp::IntegerVector & v, R_xlen_t nlevels) {
 //   this is just indexing by a set of values, then you go to there and find it. 
 // }
 // [[Rcpp::export]]
-Rcpp::IntegerVector unidim_values(const RObject & input) { 
+Rcpp::IntegerVector table_cpp(const RObject & input) { 
   if(!is<DataFrame>(input)) stop("Must be a data frame.");
   DataFrame data = as<DataFrame>(input);
   
@@ -65,41 +65,6 @@ Rcpp::IntegerVector unidim_values(const RObject & input) {
 /*** R 
 kr <- foreign::read.arff('~/gd/phd/code/works-aug-semi-bayes/data/original/kr-vs-kp.arff')
 dbor <- kr
-
-
-y <- array(tabulate(bin, 8), dim(tbl), dimnames = dimnames(tbl))
-y
-tbl
-all.equal(y, tbl)
-
-a <- unidim_values(dbor[, 1:3])
-a  
-
-set.seed(223)
-(a = sample(0:1, 1e5, replace = T))
-a <- factor(a)  
-
-a <- unidim_values(dbor[, 1:3])
-b <- table(dbor[, 1:3])
-all.equal(a, b)   
-
-a
-thouss
-tbl <- table(dbor[, 1:3])  
-
 fd <- dbor[, 1:3]
-microbenchmark::microbenchmark( a <- unidim_values(fd), tbl <- table(fd)   )  
-
-ku <- dbor[, 1:3]
-ku[1, 1] <- NA
-a <- unidim_values(ku)    
-
-
-# No rows 
-a <- unidim_values(dbor[FALSE, 1:3])
-
-# No columns 
-a <- unidim_values(dbor[FALSE, FALSE, drop = FALSE])
-a <- table(dbor[FALSE, FALSE, drop = FALSE])
-
+microbenchmark::microbenchmark( a <- table_cpp(fd), tbl <- table(fd)   )
 */
