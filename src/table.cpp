@@ -33,14 +33,8 @@ Rcpp::IntegerVector table_cpp(const RObject & input) {
   // The product of dimensions.
   R_xlen_t pd = 1;
   IntegerVector  dims(ncols);
-  List  dimnames(ncols); 
-  // if (ncols == 1) { 
-  //   // table sets empty names when a single factor
-  //   dimnames.names() = "";
-  // }
-  // else { 
+  List  dimnames(ncols);  
   dimnames.names() = data.names();
-  // }
   
   for (R_xlen_t i = 0; i < ncols; i++) {
     const IntegerVector & a = data.at(i);  
