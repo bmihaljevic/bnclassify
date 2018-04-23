@@ -44,8 +44,7 @@ test_that("NA", {
   
   db[1:100, 1] <- NA 
   check_unidim(db, TRUE, TRUE)   
-})
-
+}) 
 
 test_that("random", {
   (x = sample(0:1, 1e5, replace = T))
@@ -54,25 +53,13 @@ test_that("random", {
   b <- table(x)
   # don't know why table keeps x as name.
   expect_equal(unname(a), unname(b))   
-})
-
+}) 
 
 test_that("ordinal", {
   skip_if_not_installed("mlbench")
   library(mlbench)
   data(Soybean)
   Soybean <- na.omit(Soybean)  
-  check_unidim(Soybean, TRUE, c('precip', 'Class'))       
-  check_unidim(Soybean, TRUE, c('precip'))       
-  load('~/code/bnclassify-client/tmp-input.rdata')
-  for (i in 1:1e5) {
-    table_cpp(input) 
-  }
-  load('tmp-input-fails.rdata') 
-  for (i in 1:1e5) {
-    table_cpp(input) 
-  } 
-  for (kuak in 1:10) { 
-    fssj            = { set.seed(0); fssj   <- bnc('fssj', 'Class', Soybean, smooth = 1, dag_args = list(k = 5,  epsilon = 0))       }
-  }
+  check_unidim(Soybean, TRUE, c('precip', 'Class'))
+  check_unidim(Soybean, TRUE, c('precip'))
 })
