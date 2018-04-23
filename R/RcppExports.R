@@ -85,7 +85,7 @@ tabulate <- function(v, nlevels) {
     .Call('_bnclassify_tabulate', PACKAGE = 'bnclassify', v, nlevels)
 }
 
-unidim_values <- function(data) {
-    .Call('_bnclassify_unidim_values', PACKAGE = 'bnclassify', data)
+unidim_values <- function(input) {
+    .Call('_bnclassify_unidim_values', PACKAGE = 'bnclassify', input)
 }
 

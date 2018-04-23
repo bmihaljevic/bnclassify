@@ -20,18 +20,27 @@ Rcpp::IntegerVector tabulate(const Rcpp::IntegerVector & v, R_xlen_t nlevels) {
 //   this is just indexing by a set of values, then you go to there and find it. 
 // }
 // [[Rcpp::export]]
-Rcpp::IntegerVector unidim_values(const DataFrame & data) {
-  const R_xlen_t ncols = data.size(); 
+Rcpp::IntegerVector unidim_values(const RObject & input) { 
+  if(!is<DataFrame>(input)) stop("Must be a data frame.");
+  DataFrame data = as<DataFrame>(input);
+  
+  const R_xlen_t ncols = data.ncol();  
   if (ncols == 0) stop("No columns in data frame.");  
   const IntegerVector & column = data.at(0);
   // There is a single entry for each row
   IntegerVector to_tabulate = no_init(column.size());
-  to_tabulate.fill(-1);
+  to_tabulate.fill(1);
   // The product of dimensions.
   R_xlen_t pd = 1;
   IntegerVector  dims(ncols);
   List  dimnames(ncols); 
-  dimnames.names() = data.names();
+  if (ncols == 1) { 
+    // table sets empty names when a single factor
+    dimnames.names() = "";
+  }
+  else { 
+    dimnames.names() = data.names();
+  }
   
   for (R_xlen_t i = 0; i < ncols; i++) {
     const IntegerVector & a = data.at(i);  
@@ -72,8 +81,7 @@ a <- factor(a)
 
 a <- unidim_values(dbor[, 1:3])
 b <- table(dbor[, 1:3])
-all.equal(a, b)  
-
+all.equal(a, b)   
 
 a
 thouss

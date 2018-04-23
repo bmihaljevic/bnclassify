@@ -266,13 +266,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // unidim_values
-Rcpp::IntegerVector unidim_values(const DataFrame& data);
-RcppExport SEXP _bnclassify_unidim_values(SEXP dataSEXP) {
+Rcpp::IntegerVector unidim_values(const RObject& input);
+RcppExport SEXP _bnclassify_unidim_values(SEXP inputSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const DataFrame& >::type data(dataSEXP);
-    rcpp_result_gen = Rcpp::wrap(unidim_values(data));
+    Rcpp::traits::input_parameter< const RObject& >::type input(inputSEXP);
+    rcpp_result_gen = Rcpp::wrap(unidim_values(input));
     return rcpp_result_gen;
 END_RCPP
 }
