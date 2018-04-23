@@ -77,3 +77,19 @@ test_that("Bug", {
  exp(compute_anb_log_joint_per_class(gr, test[[1]]))
 })
   
+
+test_that("cpt var values nominal", {
+  test_ind <- function() {
+    samp <-  function(n) {
+      sample(1:n, size = 1)
+    } 
+    dim <- c(samp(10), samp(10) , samp(10) )
+    index <- c(samp(dim[1]), samp(dim[2]), 1)
+    ind <- entry_index(index - 1, dim)
+    target <- arrayInd(ind + 1, dim)
+    expect_true(all(index == target))
+  }
+  for (i in 1:1e2 ) {
+   test_ind()
+  }
+})
