@@ -47,7 +47,6 @@ void make_cpt_object(const NumericVector & x, std::string class_var) {
  Rcout << nv << std::endl; 
  
  IntegerVector iv = wrap(cpt.get_dimprod());
- Rcout << iv << std::endl; 
 }
 
 

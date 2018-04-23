@@ -32,6 +32,7 @@ public:
   const std::vector<std::string> & get_features() const { 
     return features; 
   }   
+  // Returns the cumulative product of the dimensions
   const std::vector<int> & get_dimprod() const { 
     return dimprod; 
   }  

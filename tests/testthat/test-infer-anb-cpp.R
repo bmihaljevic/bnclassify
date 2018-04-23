@@ -71,5 +71,9 @@ test_that("Bug", {
  gr <- candidate_dags[[7]] 
  gr <- lp_implement(gr, .mem_cpts = train[[1]])
  predict(gr, test[[1]])
+ compute_joint(gr, test[[1]])
+ compute_log_joint_complete(gr, test[[1]])
+ compute_anb_log_joint_per_class(gr, test[[1]])
+ exp(compute_anb_log_joint_per_class(gr, test[[1]]))
 })
   
