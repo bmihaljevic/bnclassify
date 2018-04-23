@@ -1,8 +1,13 @@
 context("cpp table")
 
 check_unidim <- function(db, rows, cols) {
-  a <- table_cpp(db[, cols, drop = FALSE])
-  b <- table(db[, cols, drop = FALSE])
+  db <- db[, cols, drop = FALSE]
+  a <- table_cpp(db)
+  b <- table(db)
+  if (ncol(db) == 1) {
+   # table sets name of object
+   names(dimnames(a)) = "db" 
+  }
   expect_equal(a, b)   
 }
 
