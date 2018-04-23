@@ -2,7 +2,7 @@
 using namespace Rcpp;   
 
 // [[Rcpp::export]]  
-Rcpp::IntegerVector tabulate(const Rcpp::IntegerVector & v, R_xlen_t nlevels) {
+Rcpp::IntegerVector tabulate_cpp(const Rcpp::IntegerVector & v, R_xlen_t nlevels) {
   std::vector<R_xlen_t> table(nlevels);   
   R_xlen_t n =  v.size();
   for (R_xlen_t i = 0; i < n; ++i) { 
@@ -54,7 +54,7 @@ Rcpp::IntegerVector table_cpp(const RObject & input) {
   }    
   
   to_tabulate = na_omit(to_tabulate);
-  IntegerVector tbl = tabulate(to_tabulate, pd);
+  IntegerVector tbl = tabulate_cpp(to_tabulate, pd);
   tbl.attr("dim") =  dims;
   tbl.attr("dimnames") =  dimnames;
   tbl.attr("class") =  "table";

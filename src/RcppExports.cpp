@@ -253,15 +253,15 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// tabulate
-Rcpp::IntegerVector tabulate(const Rcpp::IntegerVector& v, R_xlen_t nlevels);
-RcppExport SEXP _bnclassify_tabulate(SEXP vSEXP, SEXP nlevelsSEXP) {
+// tabulate_cpp
+Rcpp::IntegerVector tabulate_cpp(const Rcpp::IntegerVector& v, R_xlen_t nlevels);
+RcppExport SEXP _bnclassify_tabulate_cpp(SEXP vSEXP, SEXP nlevelsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type v(vSEXP);
     Rcpp::traits::input_parameter< R_xlen_t >::type nlevels(nlevelsSEXP);
-    rcpp_result_gen = Rcpp::wrap(tabulate(v, nlevels));
+    rcpp_result_gen = Rcpp::wrap(tabulate_cpp(v, nlevels));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -298,7 +298,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bnclassify_fill_vector", (DL_FUNC) &_bnclassify_fill_vector, 6},
     {"_bnclassify_make_cpt_object", (DL_FUNC) &_bnclassify_make_cpt_object, 2},
     {"_bnclassify_entry_index", (DL_FUNC) &_bnclassify_entry_index, 2},
-    {"_bnclassify_tabulate", (DL_FUNC) &_bnclassify_tabulate, 2},
+    {"_bnclassify_tabulate_cpp", (DL_FUNC) &_bnclassify_tabulate_cpp, 2},
     {"_bnclassify_table_cpp", (DL_FUNC) &_bnclassify_table_cpp, 1},
     {NULL, NULL, 0}
 };
