@@ -72,5 +72,7 @@ test_that("ordinal", {
   for (i in 1:1e5) {
     table_cpp(input) 
   } 
-  # fssj            = { set.seed(0); fssj   <- bnc('fssj', 'Class', Soybean, smooth = 1, dag_args = list(k = 5,  epsilon = 0))       } 
+  for (kuak in 1:10) { 
+    fssj            = { set.seed(0); fssj   <- bnc('fssj', 'Class', Soybean, smooth = 1, dag_args = list(k = 5,  epsilon = 0))       }
+  }
 })

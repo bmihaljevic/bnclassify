@@ -68,6 +68,7 @@ extract_ctgt <- function(cols, dataset) {
   #Trim dataset (do not use trim_dataset() cause it does not enforce cols order)
   dataset <- dataset[ , cols, drop = FALSE]  
   table_cpp(dataset)
+  table(dataset, dnn = cols) 
 }
 # Get the level of each variable 
 extract_var_levels <- function(dataset) {
