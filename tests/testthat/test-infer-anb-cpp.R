@@ -40,23 +40,11 @@ test_that("To check", {
 # // getClasses() in model   
 #     
 # // Test e.g., for out of bounds 
+# // Consider a single row DF, an empty DF, etc.
 # 
 # // Does making a new object create new memory in R? Would it then be more efficient to avoid sugar?
-# // e.g., match and similar. It creates data in R?
-# 
-# // make function log() that preserve attributes
-# 
-# // Consider a single row DF, an empty DF, etc.
-  
-# // find the list of my types. to which does Model correspond?? 
-# I need a function that lists all the types. 
-  
-#   // after joint, all times go up
-# // the anyNA call makes it much slower 
-# // expr      min       lq      mean    median       uq      max neval
-# // {     f = compute_joint(t, dbor) }  886.097  906.663  950.3323  920.5845  948.043  3049.94  2000
-# // {     h = bnclassify:::compute_log_joint(t, dbor) } 1143.406 1180.499 1771.0422 1248.9055 1357.745 91274.94  2000
-# // > 
+# // e.g., match and similar. It creates data in R? #   
+
 }) 
 
 test_that("C++ 11", {
@@ -67,7 +55,6 @@ test_that("C++ 11", {
 test_that("Bug", {
  skip("Using rdata file")
  load('tmp-debug.rdata') 
- # TODO: make graph from model string. That would be good. Model string to families. That it possible. 
  gr <- candidate_dags[[7]] 
  gr <- lp_implement(gr, .mem_cpts = train[[1]])
  predict(gr, test[[1]])
