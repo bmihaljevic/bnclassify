@@ -40,8 +40,8 @@ public:
 /**
  * Wraps a bnc fit model.  
  * Provide features, class name. 
- * makes a copy of cpts Log after the copies. The class should point to that copy and never have access to original.
- * Just call R functions to get those data. All other logic kept in already available checks. just calls back to R code; no need for re-implementing things.    
+ * makes a copy of cpts and logs entires after the copies. Keeps only these copies.
+ * Call R functions to extract those data from the CPT, to avoid re-implementing things.    
  */
 class Model { 
   private:   

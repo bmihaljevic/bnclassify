@@ -36,6 +36,8 @@ compute_cll <- function(x, dataset) {
 # Computes the log joint probability of the observed features for each of the classes
 # The result is a numeric matrix with a column per class and a row per data instance.
 compute_log_joint <- function(x, dataset) {
+  # TODO: Should check for NAs only in the relevant columns. In addition, these checks should be done at instance level in Rcpp,
+  # as for the NB eg inference is possible even with incomplete data
   if (!anyNA(dataset)) {
     compute_log_joint_complete(x, dataset)
   }

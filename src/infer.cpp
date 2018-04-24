@@ -47,6 +47,10 @@ CPT::CPT(const Rcpp::NumericVector & cpt, const std::string & class_var)
     Rcpp::IntegerVector dimprod = Rcpp::cumprod(dim); 
     this->dimprod = Rcpp::as<std::vector <int> >(dimprod);
 }  
+
+/**
+ * Model.
+ */
 Model::Model(List x)  
 { 
   // TODO: call class()
@@ -81,6 +85,10 @@ Model::Model(List x)
   this->ind_class = get_class_index(class_var, vars_model);
   this->ind_class = this->ind_class  - 1;
 }                 
+
+/**
+ * Makes a copy of the input dataset and reduced entries by 1. 
+ */
 Evidence::Evidence(Rcpp::DataFrame & test, const Rcpp::CharacterVector & features) 
 { 
      // I could also try using an Eigen row matrix to see if access is faster.
@@ -88,15 +96,15 @@ Evidence::Evidence(Rcpp::DataFrame & test, const Rcpp::CharacterVector & feature
      if (!is_true(all(in(features, vec)))) {
        Rcpp::stop("Some features missing from data set.");
      }
-     // using intersect does not alter order of columns,  unlike test[features]. 
+     // Rcpp intersect may alter order of columns, but irrelevant here
      Rcpp::CharacterVector keep = Rcpp::intersect(vec, features);
      test = test[keep];
-     // TODO: remove this from here. Do it at instance level. 
-     if (hasna(test)) Rcpp::stop("NA entries in data set.");  
+     // Only checks for NAs in the relevant columns, not in all of them. 
+     if (hasna(test)) Rcpp::stop("NA entries in data set.");
      
      this->columns = test.names();  
      this->N = test.nrow();
-     this->data = Rcpp::as<std::vector<std::vector<int> > > (test);   
+     this->data = Rcpp::as<std::vector<std::vector<int> > > (test);
   
     // Reduce the entries by 1, so they could serve as 0-based indices.
      for (int i = 0; i < data.size(); i++ ) {
@@ -107,6 +115,10 @@ Evidence::Evidence(Rcpp::DataFrame & test, const Rcpp::CharacterVector & feature
        // std::transform(vec.begin(), vec.end(), vec.begin(), std::bind(std::minus<int>(), 1));       
      } 
 } 
+
+/**
+ * MappedCPT.
+ */  
 MappedCPT::MappedCPT(const CPT & cpt, const Evidence & test) :
                     test(test), cpt(cpt) 
 {  
@@ -114,6 +126,11 @@ MappedCPT::MappedCPT(const CPT & cpt, const Evidence & test) :
   // this is because class in unobserved. if we have more unobserved, it would need a different procedure.
   this->db_indices = match_zero_based(cpt.get_features(), columns_db); 
 }   
+
+
+/**
+ * MappedModel. It holds the instance_buffer and the output_buffer, which are filled during computation.
+ */  
 MappedModel::MappedModel(const Model & x, const Evidence & evidence): 
   model(x),  class_cpt(x.getClassCPT().get_entries()), nclass(x.get_nclass()), n(x.get_n()), evidence(evidence) 
 { 
@@ -121,7 +138,7 @@ MappedModel::MappedModel(const Model & x, const Evidence & evidence):
     cpts.reserve(n);  
     for (unsigned int i = 0; i < n; i++) {
       MappedCPT c(x.get_cpt(i), evidence);
-      // TODO: With C++11 this moves, does not copy
+      // With C++11 this moves, does not copy
       cpts.push_back(c);
     }   
     output_buffer.resize(nclass); 
@@ -154,6 +171,10 @@ NumericMatrix MappedModel::predict()
   colnames(result) = classes;
   return result;   
 } 
+
+/**
+ * Computes the log of the joint for complete data.
+ */
 // [[Rcpp::export]]
 NumericMatrix compute_joint(List x, DataFrame newdata) {
  Model mod(x); 

@@ -32,7 +32,17 @@ test_that("Make CPT", {
  tn <- nbcar()
  make_cpt_object(tn$.params$buying, class_var = class_var(tn)) 
  # todo: need to somehow test this
-})
+}) 
+
+test_that("Data and unmodified", {
+ tn <- nbcar()
+ mod <- tn
+ db <- car
+ p <- predict(tn, db)
+ expect_equal(db, car)
+ expect_equal(db, car)
+ expect_equal(tn, mod)
+})  
 
 test_that("To check", {
   expect_true(FALSE)
@@ -45,12 +55,7 @@ test_that("To check", {
 # // Does making a new object create new memory in R? Would it then be more efficient to avoid sugar?
 # // e.g., match and similar. It creates data in R? #   
 
-}) 
-
-test_that("C++ 11", {
-   # DESCRIPTION makes it build with 11. Update makevars?
-  expect_true(FALSE)
-})
+})   
 
 test_that("Bug", {
  skip("Local rdata file")
