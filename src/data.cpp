@@ -3,9 +3,14 @@
 using namespace Rcpp;    
  
 // [[Rcpp::export]]
-bool hasna_features(const DataFrame & newdata, const CharacterVector & features)
+bool hasna_features(const DataFrame & newdata, const SEXP & features)
 {  
-  const DataFrame & data = trim_dataset_cpp(newdata, features);  
+  // Shallow object so not a big problem with copy
+  DataFrame data = newdata; 
+  if (!Rf_isNull(features)) {
+    // CharacterVector feats(features); 
+    data = trim_dataset_cpp(data, features);  
+  }
   return hasna(data);
 }
 

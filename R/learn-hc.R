@@ -12,6 +12,7 @@ greedy_search <- function(class, to_include, init, step, dataset, epsilon, k,
   train <- lapply(test_folds, function(x) dataset[-x, , drop = FALSE])
   train <- lapply(train, make_cpts_cache, smooth = smooth)
   test <- lapply(test_folds, function(x) dataset[x, , drop = FALSE])
+  test <- lapply(test, make_evidence)
   #   Start caches for training sets 
   # TODO: smooth goes directly to cache. 
   while (length(candidate_dags) > 0) {

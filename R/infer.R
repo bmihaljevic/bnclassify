@@ -37,8 +37,9 @@ compute_cll <- function(x, dataset) {
 # The result is a numeric matrix with a column per class and a row per data instance.
 compute_log_joint <- function(x, dataset) {
   # TODO:  NA checks should be done at instance level in Rcpp,
-  # as for the NB eg inference is possible even with incomplete data
-  if (!hasna_features(dataset, features(x))) {
+  # as for the NB eg inference is possible even with incomplete data 
+  dataset <- make_evidence(dataset, x) 
+  if (!evidence_has_nas(dataset)) {
     compute_log_joint_complete(x, dataset)
   }
   else { 
@@ -106,3 +107,33 @@ compute_log_joint_incomplete.bnc_bn <- function(x, dataset) {
   # Call grain class posterior
   compute_grain_log_joint(grain, dataset, class)
 }#
+# A decorated data frame.
+new_evidence <- function(evidence,  hasna) {
+ stopifnot(is.data.frame(evidence), is.logical(hasna))
+ class(evidence) <- c('bnc_evidence', class(evidence)) 
+ attr(evidence, "hasnas") <- hasna
+ evidence
+}
+# Adds information to the data sets. Also potentially checks it.
+# This could call Rcpp directly. 
+# This is to avoid has_nas each time from greedy search
+make_evidence <- function(dataset, x = NULL) {
+  evidence <- dataset 
+  if (!inherits(evidence, "bnc_evidence")) {   
+    features <- NULL
+    if (!is.null(x)) { 
+      features <- features(x)
+    }  
+     if (!all(features %in% colnames(dataset))) browser()
+     hasna <- hasna_features(dataset, features )
+     evidence <- new_evidence(evidence,  hasna)
+  }
+  # check evidence? 
+       # has hasna. it is logical.
+       #  cpts match the dataset 
+  evidence
+}
+evidence_has_nas <- function(evidence) {
+ stopifnot(inherits(evidence, "bnc_evidence"))  
+ attr(evidence, "hasnas") 
+}

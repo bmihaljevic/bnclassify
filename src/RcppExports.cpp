@@ -144,13 +144,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // hasna_features
-bool hasna_features(const DataFrame& newdata, const CharacterVector& features);
+bool hasna_features(const DataFrame& newdata, const SEXP& features);
 RcppExport SEXP _bnclassify_hasna_features(SEXP newdataSEXP, SEXP featuresSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const DataFrame& >::type newdata(newdataSEXP);
-    Rcpp::traits::input_parameter< const CharacterVector& >::type features(featuresSEXP);
+    Rcpp::traits::input_parameter< const SEXP& >::type features(featuresSEXP);
     rcpp_result_gen = Rcpp::wrap(hasna_features(newdata, features));
     return rcpp_result_gen;
 END_RCPP
