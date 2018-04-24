@@ -38,10 +38,13 @@ compute_cll <- function(x, dataset) {
 compute_log_joint <- function(x, dataset) {
   # TODO: Should check for NAs only in the relevant columns. In addition, these checks should be done at instance level in Rcpp,
   # as for the NB eg inference is possible even with incomplete data
-  if (!anyNA(dataset)) {
+  # TODO:  hasna should take modes as parameter and check na only in those columns.
+  # if (!anyNA(dataset)) {
+   if (!hasna(dataset)) {
     compute_log_joint_complete(x, dataset)
   }
   else { 
+    # TODO:  should filter complete according to the variables in the model.
     ind_complete <- complete.cases(dataset)
     p_complete <- 
       compute_log_joint_complete(x, dataset[ind_complete, , drop = FALSE])

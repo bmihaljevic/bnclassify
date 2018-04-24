@@ -15,8 +15,8 @@
  */
 class CPT {
 private:
-    std::vector<std::string> variables; 
-    std::vector<std::string> features; 
+    Rcpp::CharacterVector variables; 
+    Rcpp::CharacterVector features; 
     std::vector<double> entries; 
     std::vector<int> dimprod; 
 public: 
@@ -26,7 +26,7 @@ public:
     return  entries; 
   } 
   // TODO: maybe remove this one
-  const std::vector<std::string> & get_variables() const { 
+  const Rcpp::CharacterVector & get_variables() const { 
     return variables; 
   }  
   const Rcpp::CharacterVector & get_features() const {

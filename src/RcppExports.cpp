@@ -31,17 +31,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// hasna
-bool hasna(const DataFrame& newdata);
-RcppExport SEXP _bnclassify_hasna(SEXP newdataSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const DataFrame& >::type newdata(newdataSEXP);
-    rcpp_result_gen = Rcpp::wrap(hasna(newdata));
-    return rcpp_result_gen;
-END_RCPP
-}
 // are_disjoint
 bool are_disjoint(Rcpp::Nullable<Rcpp::CharacterVector> x, Rcpp::Nullable<Rcpp::CharacterVector> y);
 RcppExport SEXP _bnclassify_are_disjoint(SEXP xSEXP, SEXP ySEXP) {
@@ -151,6 +140,41 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< CharacterVector >::type vertices(verticesSEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerMatrix >::type edges(edgesSEXP);
     rcpp_result_gen = Rcpp::wrap(bh_tsort(vertices, edges));
+    return rcpp_result_gen;
+END_RCPP
+}
+// hasna_features
+bool hasna_features(const DataFrame& newdata, const CharacterVector& features);
+RcppExport SEXP _bnclassify_hasna_features(SEXP newdataSEXP, SEXP featuresSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const DataFrame& >::type newdata(newdataSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type features(featuresSEXP);
+    rcpp_result_gen = Rcpp::wrap(hasna_features(newdata, features));
+    return rcpp_result_gen;
+END_RCPP
+}
+// hasna
+bool hasna(const DataFrame& newdata);
+RcppExport SEXP _bnclassify_hasna(SEXP newdataSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const DataFrame& >::type newdata(newdataSEXP);
+    rcpp_result_gen = Rcpp::wrap(hasna(newdata));
+    return rcpp_result_gen;
+END_RCPP
+}
+// trim_dataset_cpp
+DataFrame trim_dataset_cpp(const DataFrame& dataset, const CharacterVector& features);
+RcppExport SEXP _bnclassify_trim_dataset_cpp(SEXP datasetSEXP, SEXP featuresSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const DataFrame& >::type dataset(datasetSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type features(featuresSEXP);
+    rcpp_result_gen = Rcpp::wrap(trim_dataset_cpp(dataset, features));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -266,12 +290,9 @@ BEGIN_RCPP
 END_RCPP
 }
 
-RcppExport SEXP _bnclassify_match_zero_based2(SEXP, SEXP, SEXP);
-
 static const R_CallMethodDef CallEntries[] = {
     {"_bnclassify_match_zero_based", (DL_FUNC) &_bnclassify_match_zero_based, 3},
     {"_bnclassify_ordersetdiff", (DL_FUNC) &_bnclassify_ordersetdiff, 2},
-    {"_bnclassify_hasna", (DL_FUNC) &_bnclassify_hasna, 1},
     {"_bnclassify_are_disjoint", (DL_FUNC) &_bnclassify_are_disjoint, 2},
     {"_bnclassify_normalize", (DL_FUNC) &_bnclassify_normalize, 1},
     {"_bnclassify_normalize_ctgt", (DL_FUNC) &_bnclassify_normalize_ctgt, 1},
@@ -281,6 +302,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bnclassify_bh_subgraph", (DL_FUNC) &_bnclassify_bh_subgraph, 3},
     {"_bnclassify_bh_mstree_kruskal", (DL_FUNC) &_bnclassify_bh_mstree_kruskal, 3},
     {"_bnclassify_bh_tsort", (DL_FUNC) &_bnclassify_bh_tsort, 2},
+    {"_bnclassify_hasna_features", (DL_FUNC) &_bnclassify_hasna_features, 2},
+    {"_bnclassify_hasna", (DL_FUNC) &_bnclassify_hasna, 1},
+    {"_bnclassify_trim_dataset_cpp", (DL_FUNC) &_bnclassify_trim_dataset_cpp, 2},
     {"_bnclassify_call_model_fun", (DL_FUNC) &_bnclassify_call_model_fun, 2},
     {"_bnclassify_compute_joint", (DL_FUNC) &_bnclassify_compute_joint, 2},
     {"_bnclassify_test_dims2columns", (DL_FUNC) &_bnclassify_test_dims2columns, 3},
@@ -290,7 +314,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bnclassify_entry_index", (DL_FUNC) &_bnclassify_entry_index, 2},
     {"_bnclassify_tabulate_cpp", (DL_FUNC) &_bnclassify_tabulate_cpp, 2},
     {"_bnclassify_table_cpp", (DL_FUNC) &_bnclassify_table_cpp, 1},
-    {"_bnclassify_match_zero_based2",       (DL_FUNC) &_bnclassify_match_zero_based2,       3},
     {NULL, NULL, 0}
 };
 

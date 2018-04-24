@@ -3,9 +3,7 @@
 
 #include <Rcpp.h>
 
-bool are_disjoint(Rcpp::Nullable<Rcpp::CharacterVector> x, Rcpp::Nullable<Rcpp::CharacterVector> y);  
-// TODO: This should be called at instance level, not data frame! This way, if the data set is complete, it goes through it a couple of times.
-bool hasna(const Rcpp::DataFrame & newdata); 
+bool are_disjoint(Rcpp::Nullable<Rcpp::CharacterVector> x, Rcpp::Nullable<Rcpp::CharacterVector> y);
 /**
  * A comparison that does not raise a compiler warning.
  */

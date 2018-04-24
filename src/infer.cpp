@@ -1,4 +1,5 @@
 #include <infer.h>
+#include <data.h>
 
 // [[Rcpp::depends(RcppEigen)]]
 // [[Rcpp::plugins(cpp11)]]
@@ -8,6 +9,8 @@
 // TODO: this logic should also not be here. Should be check_cpt()
 // Reduce the entries by 1, so they could serve as 0-based indices.
   // Do this or not?
+// !!!! Does evidence change underlying data frame when filtering columns?????
+// Remove trimdataset R funct
 // =================================================
 
 using namespace Rcpp;
@@ -32,11 +35,11 @@ CPT::CPT(const Rcpp::NumericVector & cpt, const std::string & class_var)
     const Rcpp::List & dimnames = cpt.attr("dimnames");
     const Rcpp::CharacterVector & fam = dimnames.attr("names"); 
     
-    this -> variables = Rcpp::as< std::vector<std::string> >(fam);  
+    this -> variables = fam;  
     // TODO: this logic should also not be here. Should be check_cpt()
     if (!(variables[variables.size() - 1] == class_var)) Rcpp::stop("Class not last dimension in CPT."); 
     this -> features = this -> variables;
-    this -> features.pop_back();
+    this -> features.erase(variables.size() - 1); 
   
     // Copy and log entries 
     entries.resize(cpt.size());
@@ -97,7 +100,7 @@ Evidence::Evidence(Rcpp::DataFrame & test, const Rcpp::CharacterVector & feature
      Rcpp::CharacterVector keep = Rcpp::intersect(vec, features);
      test = test[keep];
      // Only checks for NAs in the relevant columns, not in all of them. 
-     if (hasna(test)) Rcpp::stop("NA entries in data set.");
+     if (hasna_features(test, features)) Rcpp::stop("NA entries in data set.");
      
      this->columns = test.names();  
      this->N = test.nrow();

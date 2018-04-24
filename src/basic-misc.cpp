@@ -21,15 +21,8 @@ std::vector<std::string> ordersetdiff(CharacterVector vector, CharacterVector re
 }   
 bool safediff(unsigned int x, int y) {
   return (y >= 0) && (x != static_cast<unsigned int>(y));
-}; 
-// [[Rcpp::export]]
-bool hasna(const DataFrame & newdata) {  
-  for (int i = 0; i < newdata.size(); i++) { 
-   const IntegerVector & vec = newdata.at(i);
-   if (is_true(any(is_na(vec)))) return true;  
-  }  
-  return false;
-}  
+};  
+
 // [[Rcpp::export]]
 bool are_disjoint(Rcpp::Nullable<Rcpp::CharacterVector> x, Rcpp::Nullable<Rcpp::CharacterVector> y) {
   if (x.isNotNull() & y.isNotNull()) {

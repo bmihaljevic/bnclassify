@@ -9,10 +9,6 @@ ordersetdiff <- function(vector, remove) {
     .Call('_bnclassify_ordersetdiff', PACKAGE = 'bnclassify', vector, remove)
 }
 
-hasna <- function(newdata) {
-    .Call('_bnclassify_hasna', PACKAGE = 'bnclassify', newdata)
-}
-
 are_disjoint <- function(x, y) {
     .Call('_bnclassify_are_disjoint', PACKAGE = 'bnclassify', x, y)
 }
@@ -47,6 +43,18 @@ bh_mstree_kruskal <- function(vertices, edges, weights) {
 
 bh_tsort <- function(vertices, edges) {
     .Call('_bnclassify_bh_tsort', PACKAGE = 'bnclassify', vertices, edges)
+}
+
+hasna_features <- function(newdata, features) {
+    .Call('_bnclassify_hasna_features', PACKAGE = 'bnclassify', newdata, features)
+}
+
+hasna <- function(newdata) {
+    .Call('_bnclassify_hasna', PACKAGE = 'bnclassify', newdata)
+}
+
+trim_dataset_cpp <- function(dataset, features) {
+    .Call('_bnclassify_trim_dataset_cpp', PACKAGE = 'bnclassify', dataset, features)
 }
 
 call_model_fun <- function(x, funct) {
