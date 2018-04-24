@@ -19,6 +19,7 @@ std::vector<std::string> ordersetdiff(Rcpp::CharacterVector vector, Rcpp::Charac
  * TODO: probably should receive evidence or data frame as input, not columns_db character vector. Or it should be a vector of strings.
  * TODO: make this comments generic. do not refer to columns.
  */
-std::vector<int> match_zero_based(const std::vector<std::string> & features, const Rcpp::CharacterVector & columns_db); 
+std::vector<int> match_zero_based(const std::vector<std::string> & features, const Rcpp::CharacterVector & columns_db);  
+std::vector<int> match_zero_based2(const Rcpp::CharacterVector & subset, const Rcpp::CharacterVector & superset, const std::string error_message);
 
 #endif

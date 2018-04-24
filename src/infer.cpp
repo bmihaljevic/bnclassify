@@ -16,16 +16,10 @@ Rcpp::CharacterVector call_model_fun(const Rcpp::List& x, const std::string func
    // Call the function and receive its list output
    Rcpp::CharacterVector res = features(Rcpp::_["x"] = x);  
    return res;
-}    
-
-// TODO: probably remove this and use some code in R
-// TODO: or this should just do search but know nothing about classes and such
-int get_class_index(const CharacterVector & class_var, const CharacterVector & vars_model) { 
-  IntegerVector index = match(class_var, vars_model );
-  if (index.size() != 1) stop("Class CPT missing.");
-  return as<int> (index) ;
-}      
-
+}       
+/**
+ * CPT. Copy the CPTs and log them. 
+ */
 CPT::CPT(const Rcpp::NumericVector & cpt, const std::string & class_var) 
 { 
     const Rcpp::List & dimnames = cpt.attr("dimnames");
@@ -46,8 +40,7 @@ CPT::CPT(const Rcpp::NumericVector & cpt, const std::string & class_var)
     const Rcpp::IntegerVector & dim = cpt.attr("dim");
     Rcpp::IntegerVector dimprod = Rcpp::cumprod(dim); 
     this->dimprod = Rcpp::as<std::vector <int> >(dimprod);
-}  
-
+}   
 /**
  * Model.
  */
@@ -69,7 +62,6 @@ Model::Model(List x)
   this->classes = dimnames.at(0);
   // this->classes = call_model_fun(x, "classes");
   // TODO: call R.
-  // this->classes = call_model_fun(x, "classes");
   this->nclass = classes.size();
   // TODO: names(t$.families)  
   
@@ -80,10 +72,8 @@ Model::Model(List x)
   }        
   
   // get index of class in all cpts
-  // take class cpt from log, not from original ones 
-  // TODO: The above is a 1-based index. Fix it.  
-  this->ind_class = get_class_index(class_var, vars_model);
-  this->ind_class = this->ind_class  - 1;
+  std::vector<int> inds = match_zero_based2(class_var, vars_model, "Class CPT missing.");
+  this->ind_class = inds.at(0); 
 }                 
 
 /**

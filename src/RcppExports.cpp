@@ -18,6 +18,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// match_zero_based2
+std::vector<int> match_zero_based2(const CharacterVector& subset, const CharacterVector& superset, const std::string error_message);
+RcppExport SEXP _bnclassify_match_zero_based2(SEXP subsetSEXP, SEXP supersetSEXP, SEXP error_messageSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const CharacterVector& >::type subset(subsetSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type superset(supersetSEXP);
+    Rcpp::traits::input_parameter< const std::string >::type error_message(error_messageSEXP);
+    rcpp_result_gen = Rcpp::wrap(match_zero_based2(subset, superset, error_message));
+    return rcpp_result_gen;
+END_RCPP
+}
 // ordersetdiff
 std::vector<std::string> ordersetdiff(CharacterVector vector, CharacterVector remove);
 RcppExport SEXP _bnclassify_ordersetdiff(SEXP vectorSEXP, SEXP removeSEXP) {
@@ -72,18 +85,6 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector& >::type ctgt(ctgtSEXP);
     rcpp_result_gen = Rcpp::wrap(normalize_ctgt(ctgt));
-    return rcpp_result_gen;
-END_RCPP
-}
-// match_zero_based2
-std::vector<int> match_zero_based2(const CharacterVector& subset, const CharacterVector& superset);
-RcppExport SEXP _bnclassify_match_zero_based2(SEXP subsetSEXP, SEXP supersetSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const CharacterVector& >::type subset(subsetSEXP);
-    Rcpp::traits::input_parameter< const CharacterVector& >::type superset(supersetSEXP);
-    rcpp_result_gen = Rcpp::wrap(match_zero_based2(subset, superset));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -279,12 +280,12 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_bnclassify_match_zero_based", (DL_FUNC) &_bnclassify_match_zero_based, 2},
+    {"_bnclassify_match_zero_based2", (DL_FUNC) &_bnclassify_match_zero_based2, 3},
     {"_bnclassify_ordersetdiff", (DL_FUNC) &_bnclassify_ordersetdiff, 2},
     {"_bnclassify_hasna", (DL_FUNC) &_bnclassify_hasna, 1},
     {"_bnclassify_are_disjoint", (DL_FUNC) &_bnclassify_are_disjoint, 2},
     {"_bnclassify_normalize", (DL_FUNC) &_bnclassify_normalize, 1},
     {"_bnclassify_normalize_ctgt", (DL_FUNC) &_bnclassify_normalize_ctgt, 1},
-    {"_bnclassify_match_zero_based2", (DL_FUNC) &_bnclassify_match_zero_based2, 2},
     {"_bnclassify_bh_connected_components", (DL_FUNC) &_bnclassify_bh_connected_components, 2},
     {"_bnclassify_bh_remove_node", (DL_FUNC) &_bnclassify_bh_remove_node, 3},
     {"_bnclassify_bh_remove_edges", (DL_FUNC) &_bnclassify_bh_remove_edges, 5},

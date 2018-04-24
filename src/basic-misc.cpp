@@ -16,7 +16,19 @@ std::vector<int> match_zero_based(const std::vector<std::string> & features, con
   if (is_true(any(feature_fam_inds == 0)))  stop("All features must be in the dataset.");
   feature_fam_inds = feature_fam_inds - 1; 
   return as<std::vector<int> > (feature_fam_inds);
-}
+} 
+
+// TODO: move this to basic-misc one moved to a header
+// TODO: R match was returning -2147483648 when not finding the value, and the any() test was failing. 
+// Thus, avoid Rcpp for the test 
+// [[Rcpp::export]]
+std::vector<int> match_zero_based2(const CharacterVector & subset, const CharacterVector & superset, const std::string error_message) { 
+  IntegerVector subset_inds = Rcpp::match(subset, superset); 
+  int min = *std::min_element(subset_inds.begin(), subset_inds.end());
+  if (min <= 0)  stop(error_message);
+  subset_inds = subset_inds - 1; 
+  return as<std::vector<int> > (subset_inds);
+}     
 
 
 // [[Rcpp::export]]

@@ -16,17 +16,7 @@
 using namespace boost; 
 using namespace Rcpp;          
 
-// TODO: move this to basic-misc one moved to a header
-// TODO: R match was returning -2147483648 when not finding the value, and the any() test was failing. 
-// Thus, avoid Rcpp for the test 
-// [[Rcpp::export]]
-std::vector<int> match_zero_based2(const CharacterVector & subset, const CharacterVector & superset) { 
-  IntegerVector subset_inds = Rcpp::match(subset, superset); 
-  int min = *std::min_element(subset_inds.begin(), subset_inds.end());
-  if (min <= 0)  stop("All subset must be in the superset.");
-  subset_inds = subset_inds - 1; 
-  return as<std::vector<int> > (subset_inds);
-}     
+
 
 typedef property<vertex_index_t, int, property<vertex_name_t, std::string> > VertexProperty;
 typedef property<edge_index_t, int, property<edge_weight_t, double> > EdgeProperty; 

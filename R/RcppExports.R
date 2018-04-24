@@ -5,6 +5,10 @@ match_zero_based <- function(features, columns_db) {
     .Call('_bnclassify_match_zero_based', PACKAGE = 'bnclassify', features, columns_db)
 }
 
+match_zero_based2 <- function(subset, superset, error_message) {
+    .Call('_bnclassify_match_zero_based2', PACKAGE = 'bnclassify', subset, superset, error_message)
+}
+
 ordersetdiff <- function(vector, remove) {
     .Call('_bnclassify_ordersetdiff', PACKAGE = 'bnclassify', vector, remove)
 }
@@ -23,10 +27,6 @@ normalize <- function(x) {
 
 normalize_ctgt <- function(ctgt) {
     .Call('_bnclassify_normalize_ctgt', PACKAGE = 'bnclassify', ctgt)
-}
-
-match_zero_based2 <- function(subset, superset) {
-    .Call('_bnclassify_match_zero_based2', PACKAGE = 'bnclassify', subset, superset)
 }
 
 bh_connected_components <- function(vertices, edges) {
