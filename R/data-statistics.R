@@ -66,11 +66,8 @@ extract_ctgt <- function(cols, dataset) {
   stopifnot(is_non_empty_complete(cols), is.character(cols), 
             are_all_unique(cols), is_subset(cols, colnames(dataset)))
   #Trim dataset (do not use trim_dataset() cause it does not enforce cols order)
-  dataset <- dataset[ , cols, drop = FALSE]
-#   # Check all are factors
-  # check_dataset(dataset)
-  #   Return table over cols
-  table(dataset, dnn = cols)
+  dataset <- dataset[ , cols, drop = FALSE]  
+  table_cpp(dataset)
 }
 # Get the level of each variable 
 extract_var_levels <- function(dataset) {

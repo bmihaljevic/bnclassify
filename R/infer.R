@@ -66,7 +66,8 @@ compute_log_joint_complete.bnc_aode <- function(x, dataset) {
 } 
 #' @export
 compute_log_joint_complete.bnc_bn <- function(x, dataset) {
-  compute_anb_log_joint_per_class(x, dataset)
+  # compute_anb_log_joint_per_class(x, dataset)
+  compute_joint(x, dataset)
 }  
 #' @keywords internal
 compute_log_joint_incomplete <- function(x, dataset) {
