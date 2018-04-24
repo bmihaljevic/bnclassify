@@ -2,8 +2,7 @@
 #include <data.h>
 
 // [[Rcpp::depends(RcppEigen)]]
-// [[Rcpp::plugins(cpp11)]]
-
+// [[Rcpp::plugins(cpp11)]] 
 
 // =================================================
 // TODO: this logic should also not be here. Should be check_cpt()
@@ -13,6 +12,7 @@
 // Remove trimdataset R funct
 // I could also try using an Eigen row matrix for evidence to see if access is faster.
 //    Becuase if it makes copies then it might be slow.
+// TODO: why would I need ind class in model?
 // =================================================
 
 using namespace Rcpp;
@@ -138,6 +138,9 @@ MappedModel::MappedModel(const Model & x, const Evidence & evidence):
     // It is a hack and would be best to do it another way
     instance_buffer.resize(n + 1);
 }       
+/**
+ * Computes the log of the joint for complete data.
+ */
 NumericMatrix MappedModel::predict() 
 { 
  int N = evidence.getN();
