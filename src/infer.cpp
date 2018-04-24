@@ -1,7 +1,6 @@
 #include <infer.h>
 #include <data.h>
 
-// [[Rcpp::depends(RcppEigen)]]
 // [[Rcpp::plugins(cpp11)]] 
 
 // =================================================
@@ -17,7 +16,6 @@
 // =================================================
 
 using namespace Rcpp;
-using Eigen::MatrixXd;      
 
 // A function with the bnc model ( a list) as only parameter and CharacterVector output
 // [[Rcpp::export(rng=false)]]
@@ -136,7 +134,7 @@ MappedModel::MappedModel(const Model & x, const Evidence & evidence):
 NumericMatrix MappedModel::predict() 
 { 
  int N = evidence.getN();
- MatrixXd output(N, nclass);  
+ NumericMatrix output(N, nclass);
  
  for (int instance_ind = 0; instance_ind  < N ; instance_ind++) {
     // initialize output with log class prior
@@ -153,10 +151,9 @@ NumericMatrix MappedModel::predict()
      } // features
   }// instances
 
-  NumericMatrix result = wrap(output);
   const CharacterVector classes = model.get_classes(); 
-  colnames(result) = classes;
-  return result;   
+  colnames(output) = classes;
+  return output;   
 }  
 /**
  * Computes the log of the joint for complete data.

@@ -2,7 +2,6 @@
 #define bnclassify_infer_H
 
 #include <Rcpp.h>
-#include <RcppEigen.h>
 #include <cmath> 
 #include <basic-misc.h>
 #include <multidim-array.h>   
