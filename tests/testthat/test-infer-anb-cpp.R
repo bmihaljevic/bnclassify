@@ -53,8 +53,8 @@ test_that("C++ 11", {
 })
 
 test_that("Bug", {
- skip("Using rdata file")
- load('tmp-debug.rdata') 
+ skip("Local rdata file")
+ load('~/code/bnclassify-client/rdata/tmp-debug.rdata') 
  gr <- candidate_dags[[7]] 
  gr <- lp_implement(gr, .mem_cpts = train[[1]])
  predict(gr, test[[1]])
