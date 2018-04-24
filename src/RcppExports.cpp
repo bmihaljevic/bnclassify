@@ -7,27 +7,15 @@
 using namespace Rcpp;
 
 // match_zero_based
-std::vector<int> match_zero_based(const std::vector<std::string>& features, const CharacterVector& columns_db);
-RcppExport SEXP _bnclassify_match_zero_based(SEXP featuresSEXP, SEXP columns_dbSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const std::vector<std::string>& >::type features(featuresSEXP);
-    Rcpp::traits::input_parameter< const CharacterVector& >::type columns_db(columns_dbSEXP);
-    rcpp_result_gen = Rcpp::wrap(match_zero_based(features, columns_db));
-    return rcpp_result_gen;
-END_RCPP
-}
-// match_zero_based2
-std::vector<int> match_zero_based2(const CharacterVector& subset, const CharacterVector& superset, const std::string error_message);
-RcppExport SEXP _bnclassify_match_zero_based2(SEXP subsetSEXP, SEXP supersetSEXP, SEXP error_messageSEXP) {
+std::vector<int> match_zero_based(const CharacterVector& subset, const CharacterVector& superset, const std::string error_message);
+RcppExport SEXP _bnclassify_match_zero_based(SEXP subsetSEXP, SEXP supersetSEXP, SEXP error_messageSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const CharacterVector& >::type subset(subsetSEXP);
     Rcpp::traits::input_parameter< const CharacterVector& >::type superset(supersetSEXP);
     Rcpp::traits::input_parameter< const std::string >::type error_message(error_messageSEXP);
-    rcpp_result_gen = Rcpp::wrap(match_zero_based2(subset, superset, error_message));
+    rcpp_result_gen = Rcpp::wrap(match_zero_based(subset, superset, error_message));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -278,9 +266,10 @@ BEGIN_RCPP
 END_RCPP
 }
 
+RcppExport SEXP _bnclassify_match_zero_based2(SEXP, SEXP, SEXP);
+
 static const R_CallMethodDef CallEntries[] = {
-    {"_bnclassify_match_zero_based", (DL_FUNC) &_bnclassify_match_zero_based, 2},
-    {"_bnclassify_match_zero_based2", (DL_FUNC) &_bnclassify_match_zero_based2, 3},
+    {"_bnclassify_match_zero_based", (DL_FUNC) &_bnclassify_match_zero_based, 3},
     {"_bnclassify_ordersetdiff", (DL_FUNC) &_bnclassify_ordersetdiff, 2},
     {"_bnclassify_hasna", (DL_FUNC) &_bnclassify_hasna, 1},
     {"_bnclassify_are_disjoint", (DL_FUNC) &_bnclassify_are_disjoint, 2},
@@ -301,6 +290,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bnclassify_entry_index", (DL_FUNC) &_bnclassify_entry_index, 2},
     {"_bnclassify_tabulate_cpp", (DL_FUNC) &_bnclassify_tabulate_cpp, 2},
     {"_bnclassify_table_cpp", (DL_FUNC) &_bnclassify_table_cpp, 1},
+    {"_bnclassify_match_zero_based2",       (DL_FUNC) &_bnclassify_match_zero_based2,       3},
     {NULL, NULL, 0}
 };
 

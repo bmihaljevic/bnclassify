@@ -3,6 +3,13 @@
 // [[Rcpp::depends(RcppEigen)]]
 // [[Rcpp::plugins(cpp11)]]
 
+
+// =================================================
+// TODO: this logic should also not be here. Should be check_cpt()
+// Reduce the entries by 1, so they could serve as 0-based indices.
+  // Do this or not?
+// =================================================
+
 using namespace Rcpp;
 using Eigen::MatrixXd;      
 
@@ -26,6 +33,7 @@ CPT::CPT(const Rcpp::NumericVector & cpt, const std::string & class_var)
     const Rcpp::CharacterVector & fam = dimnames.attr("names"); 
     
     this -> variables = Rcpp::as< std::vector<std::string> >(fam);  
+    // TODO: this logic should also not be here. Should be check_cpt()
     if (!(variables[variables.size() - 1] == class_var)) Rcpp::stop("Class not last dimension in CPT."); 
     this -> features = this -> variables;
     this -> features.pop_back();
@@ -72,10 +80,9 @@ Model::Model(List x)
   }        
   
   // get index of class in all cpts
-  std::vector<int> inds = match_zero_based2(class_var, vars_model, "Class CPT missing.");
+  std::vector<int> inds = match_zero_based(class_var, vars_model, "Class CPT missing.");
   this->ind_class = inds.at(0); 
-}                 
-
+}                  
 /**
  * Makes a copy of the input dataset and reduced entries by 1. 
  */
@@ -104,8 +111,7 @@ Evidence::Evidence(Rcpp::DataFrame & test, const Rcpp::CharacterVector & feature
        }
        // std::transform(vec.begin(), vec.end(), vec.begin(), std::bind(std::minus<int>(), 1));       
      } 
-} 
-
+}  
 /**
  * MappedCPT.
  */  
@@ -114,10 +120,8 @@ MappedCPT::MappedCPT(const CPT & cpt, const Evidence & test) :
 {  
   Rcpp::CharacterVector columns_db = test.getColumns();
   // this is because class in unobserved. if we have more unobserved, it would need a different procedure.
-  this->db_indices = match_zero_based(cpt.get_features(), columns_db); 
-}   
-
-
+  this->db_indices = match_zero_based(cpt.get_features(), columns_db, "Some features missing from the dataset."); 
+}     
 /**
  * MappedModel. It holds the instance_buffer and the output_buffer, which are filled during computation.
  */  
@@ -160,8 +164,7 @@ NumericMatrix MappedModel::predict()
   const CharacterVector classes = model.get_classes(); 
   colnames(result) = classes;
   return result;   
-} 
-
+}  
 /**
  * Computes the log of the joint for complete data.
  */
@@ -171,9 +174,4 @@ NumericMatrix compute_joint(List x, DataFrame newdata) {
  Evidence test(newdata, mod.getFeatures());
  MappedModel model(mod, test);
  return model.predict(); 
-}  
-
-
-/*** R   
-source('tests/infer-test.R', print.eval = TRUE)
-*/  
+}     

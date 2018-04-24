@@ -29,7 +29,7 @@ public:
   const std::vector<std::string> & get_variables() const { 
     return variables; 
   }  
-  const std::vector<std::string> & get_features() const { 
+  const Rcpp::CharacterVector & get_features() const {
     return features; 
   }   
   // Returns the cumulative product of the dimensions

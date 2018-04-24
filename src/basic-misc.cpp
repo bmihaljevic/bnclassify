@@ -1,36 +1,16 @@
 #include <Rcpp.h>
 #include <basic-misc.h>
 
-using namespace Rcpp;
+using namespace Rcpp;  
 
-/**
- * Maps the features to columns in the data frame.
- * The indices are 0-based.
- * TODO: probably should receive evidence or data frame as input, not columns_db character vector. Or it should be a vector of strings.
- * TODO: make this comments generic. do not refer to columns.
- */ 
 // [[Rcpp::export]]
-std::vector<int> match_zero_based(const std::vector<std::string> & features, const CharacterVector & columns_db) { 
-  CharacterVector feature_fam = wrap(features); 
-  IntegerVector feature_fam_inds = match(feature_fam, columns_db);
-  if (is_true(any(feature_fam_inds == 0)))  stop("All features must be in the dataset.");
-  feature_fam_inds = feature_fam_inds - 1; 
-  return as<std::vector<int> > (feature_fam_inds);
-} 
-
-// TODO: move this to basic-misc one moved to a header
-// TODO: R match was returning -2147483648 when not finding the value, and the any() test was failing. 
-// Thus, avoid Rcpp for the test 
-// [[Rcpp::export]]
-std::vector<int> match_zero_based2(const CharacterVector & subset, const CharacterVector & superset, const std::string error_message) { 
+std::vector<int> match_zero_based(const CharacterVector & subset, const CharacterVector & superset, const std::string error_message) {
   IntegerVector subset_inds = Rcpp::match(subset, superset); 
   int min = *std::min_element(subset_inds.begin(), subset_inds.end());
   if (min <= 0)  stop(error_message);
   subset_inds = subset_inds - 1; 
   return as<std::vector<int> > (subset_inds);
-}     
-
-
+}       
 // [[Rcpp::export]]
 std::vector<std::string> ordersetdiff(CharacterVector vector, CharacterVector remove) {
   std::vector<std::string> vec = as<std::vector<std::string> >(vector);
@@ -38,13 +18,10 @@ std::vector<std::string> ordersetdiff(CharacterVector vector, CharacterVector re
   std::vector<std::string>::iterator index = std::find(vec.begin(), vec.end(), move);
   vec.erase(index);
   return vec;
-}  
-
+}   
 bool safediff(unsigned int x, int y) {
   return (y >= 0) && (x != static_cast<unsigned int>(y));
-};
-
-// TODO: This should be called at instance level, not data frame! This way, if the data set is complete, it goes through it a couple of times.
+}; 
 // [[Rcpp::export]]
 bool hasna(const DataFrame & newdata) {  
   for (int i = 0; i < newdata.size(); i++) { 
@@ -52,8 +29,7 @@ bool hasna(const DataFrame & newdata) {
    if (is_true(any(is_na(vec)))) return true;  
   }  
   return false;
-} 
-
+}  
 // [[Rcpp::export]]
 bool are_disjoint(Rcpp::Nullable<Rcpp::CharacterVector> x, Rcpp::Nullable<Rcpp::CharacterVector> y) {
   if (x.isNotNull() & y.isNotNull()) {
@@ -63,8 +39,7 @@ bool are_disjoint(Rcpp::Nullable<Rcpp::CharacterVector> x, Rcpp::Nullable<Rcpp::
     return  !is_true(any(init)); 
   }
   return true;
-}
-
+} 
 // Normalizes a vector or a segment. If division by the sum is Nan then returns a uniform distribution. 
 // Not checking the input for NAs for speed. Caller must do that. 
 void normalize(NumericVector::iterator begin, NumericVector::iterator end) {
@@ -88,10 +63,12 @@ NumericVector normalize(NumericVector & x) {
   return x;
 }
 // Normalizes the contigency table on the first dimension. Returns a table.
-// It modifes its argument and returns it.
+// It modifes its argument and returns it. 
+// Todo: ensure is is numeric; not integer, otherwise it won't be modified!!  
+// TOOD: move to array
 // [[Rcpp::export]]
 NumericVector normalize_ctgt(NumericVector & ctgt) {
-  if (is_true(any(is_na(ctgt)))) stop("NAs in contigency table."); // TODO: Should check for NaN
+  if (is_true(any(is_na(ctgt)))) stop("NAs in contigency table."); 
   // # Keep attributes (e.g., class and dimension names); just change entries
   NumericVector &  cpt = ctgt;
   NumericVector dim = ctgt.attr("dim");
@@ -114,9 +91,8 @@ NumericVector normalize_ctgt(NumericVector & ctgt) {
     stop("0 dimension of contigency table");
   } 
   return cpt; 
-}
-
-// Todo: ensure is is numeric; not integer, otherwise it won't be modified!!  
+} 
+// TODO: move to test!!   
 /***R  
 a <- c(0.0, 0.0)
 dim(a) <- c(2)

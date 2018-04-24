@@ -3,23 +3,21 @@
 
 #include <Rcpp.h>
 
-bool are_disjoint(Rcpp::Nullable<Rcpp::CharacterVector> x, Rcpp::Nullable<Rcpp::CharacterVector> y); 
+bool are_disjoint(Rcpp::Nullable<Rcpp::CharacterVector> x, Rcpp::Nullable<Rcpp::CharacterVector> y);  
+// TODO: This should be called at instance level, not data frame! This way, if the data set is complete, it goes through it a couple of times.
 bool hasna(const Rcpp::DataFrame & newdata); 
 /**
  * A comparison that does not raise a compiler warning.
  */
 bool safediff(unsigned int x, int y);   
 /**
- * A set diff which preserves the order in the first vector
+ * A set diff which preserves the order in the first vector. This is because rcpp setdiff does not preserve it.
  */
-std::vector<std::string> ordersetdiff(Rcpp::CharacterVector vector, Rcpp::CharacterVector remove);  
+std::vector<std::string> ordersetdiff(Rcpp::CharacterVector vector, Rcpp::CharacterVector remove);   
 /**
- * Maps the features to columns in the data frame.
- * The indices are 0-based.
- * TODO: probably should receive evidence or data frame as input, not columns_db character vector. Or it should be a vector of strings.
- * TODO: make this comments generic. do not refer to columns.
+ * 0-based match. (1 less than what Rcpp returns)
+ * rcpp match was returning -2147483648 when not finding the value, and the any() test was failing, thus implemented without rcpp.
  */
-std::vector<int> match_zero_based(const std::vector<std::string> & features, const Rcpp::CharacterVector & columns_db);  
-std::vector<int> match_zero_based2(const Rcpp::CharacterVector & subset, const Rcpp::CharacterVector & superset, const std::string error_message);
+std::vector<int> match_zero_based(const Rcpp::CharacterVector & subset, const Rcpp::CharacterVector & superset, const std::string error_message);
 
 #endif
