@@ -88,13 +88,12 @@ class Model {
  */
 class Evidence {
   Rcpp::CharacterVector columns;
-  // use a vector because I think it is faster to access than DataFrame
   // Currently, int allows only for factors, yet it could be generic.
-  std::vector<std::vector<int> > data; 
+  std::vector<Rcpp::IntegerVector> data_columns;
   int N;   
 public:
-  inline double get(int i, int j) const {  
-    return data.at(i).at(j); 
+  inline int get(int column, int row) const {
+    return data_columns.at(column)(row) - 1;
   }   
   inline Rcpp::CharacterVector getColumns() const {
    return  columns;

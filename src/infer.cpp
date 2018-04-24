@@ -13,6 +13,7 @@
 // I could also try using an Eigen row matrix for evidence to see if access is faster.
 //    Becuase if it makes copies then it might be slow.
 // TODO: why would I need ind class in model?
+// TODO: check evidence levels match the cpts.
 // =================================================
 
 using namespace Rcpp;
@@ -97,18 +98,9 @@ Evidence::Evidence(Rcpp::DataFrame & test, const Rcpp::CharacterVector & feature
      if (hasna_features(test, features)) Rcpp::stop("NA entries in data set.");
      test = trim_dataset_cpp(test, features);  
      this->columns = test.names();  
-     this->N = test.nrow();
+     this->N = test.nrow(); 
      
-     // copy data and reduce by 1. consider eigen.
-     this->data = Rcpp::as<std::vector<std::vector<int> > > (test); 
-    // Reduce the entries by 1, so they could serve as 0-based indices.
-     for (int i = 0; i < data.size(); i++ ) {
-       std::vector<int> & vec = data.at(i);
-       for (std::vector<int>::iterator iter = vec.begin(); iter != vec.end(); iter ++ ) {
-        (*iter)--;
-       }
-       // std::transform(vec.begin(), vec.end(), vec.begin(), std::bind(std::minus<int>(), 1));       
-     } 
+     this->data_columns = Rcpp::as<std::vector<IntegerVector > > (test); 
 }  
 /**
  * MappedCPT.
