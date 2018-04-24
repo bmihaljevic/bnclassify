@@ -11,6 +11,8 @@
   // Do this or not?
 // !!!! Does evidence change underlying data frame when filtering columns?????
 // Remove trimdataset R funct
+// I could also try using an Eigen row matrix for evidence to see if access is faster.
+//    Becuase if it makes copies then it might be slow.
 // =================================================
 
 using namespace Rcpp;
@@ -91,21 +93,14 @@ Model::Model(List x)
  */
 Evidence::Evidence(Rcpp::DataFrame & test, const Rcpp::CharacterVector & features) 
 { 
-     // I could also try using an Eigen row matrix to see if access is faster.
-     const Rcpp::CharacterVector & vec = test.names();
-     if (!is_true(all(in(features, vec)))) {
-       Rcpp::stop("Some features missing from data set.");
-     }
-     // Rcpp intersect may alter order of columns, but irrelevant here
-     Rcpp::CharacterVector keep = Rcpp::intersect(vec, features);
-     test = test[keep];
      // Only checks for NAs in the relevant columns, not in all of them. 
      if (hasna_features(test, features)) Rcpp::stop("NA entries in data set.");
-     
+     test = trim_dataset_cpp(test, features);  
      this->columns = test.names();  
      this->N = test.nrow();
-     this->data = Rcpp::as<std::vector<std::vector<int> > > (test);
-  
+     
+     // copy data and reduce by 1. consider eigen.
+     this->data = Rcpp::as<std::vector<std::vector<int> > > (test); 
     // Reduce the entries by 1, so they could serve as 0-based indices.
      for (int i = 0; i < data.size(); i++ ) {
        std::vector<int> & vec = data.at(i);

@@ -34,8 +34,8 @@ test_that("Make CPT", {
  # todo: need to somehow test this
 }) 
 
-test_that("Data and unmodified", {
- tn <- nbcar()
+test_that("Data and unmodified", {  
+ tn <- lp(nb('class', car[ , 5:7]), car[ , 5:7], smooth = 1)
  mod <- tn
  db <- car
  p <- predict(tn, db)
@@ -50,11 +50,7 @@ test_that("To check", {
 # // getClasses() in model   
 #     
 # // Test e.g., for out of bounds 
-# // Consider a single row DF, an empty DF, etc.
-# 
-# // Does making a new object create new memory in R? Would it then be more efficient to avoid sugar?
-# // e.g., match and similar. It creates data in R? #   
-
+# // Consider a single row DF, an empty DF, etc. 
 })   
 
 test_that("Bug", {
@@ -67,8 +63,7 @@ test_that("Bug", {
  compute_log_joint_complete(gr, test[[1]])
  compute_anb_log_joint_per_class(gr, test[[1]])
  exp(compute_anb_log_joint_per_class(gr, test[[1]]))
-})
-  
+}) 
 
 test_that("cpt var values nominal", {
   test_ind <- function() {
