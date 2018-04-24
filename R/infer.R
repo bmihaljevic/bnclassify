@@ -124,9 +124,8 @@ make_evidence <- function(dataset, x = NULL) {
     if (!is.null(x)) { 
       features <- features(x)
     }  
-     if (!all(features %in% colnames(dataset))) browser()
-     hasna <- hasna_features(dataset, features )
-     evidence <- new_evidence(evidence,  hasna)
+    hasna <- hasna_features(dataset, features )
+    evidence <- new_evidence(evidence,  hasna)
   }
   # check evidence? 
        # has hasna. it is logical.
