@@ -59,5 +59,12 @@ are_complete_dimnames <- function(x) {
   # Check dimnames have non-empty complete names
   if (!is_non_empty_complete(names(dnames))) return (FALSE)
   # Check each dimension is non-empty complete
-  all(vapply(dnames, is_non_empty_complete, FUN.VALUE = logical(1)))
+  i  <-  1
+  n <- length(dnames)
+  while (i < n) {
+    if (!is_non_empty_complete(dnames[i])) return (FALSE) 
+    i <- i + 1
+  }
+  return(TRUE)
+  # all(vapply(dnames, is_non_empty_complete, FUN.VALUE = logical(1)))
 }
