@@ -2,10 +2,7 @@
 is_perm <- function(x, y) {
   is.character(x) && identical(sort(x), sort(y))
 }
-# use this e.g., in (I think) check_dataset
-is_non_empty_complete <- function(x) {
-  (length(x) > 0)  && (!anyNA(x))
-}
+
 # Compares two numerics ignoring attributes and class
 equivalent_num <- function(x, y) {
   stopifnot(is.numeric(x), is.numeric(y))

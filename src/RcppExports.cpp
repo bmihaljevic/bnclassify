@@ -5,6 +5,16 @@
 
 using namespace Rcpp;
 
+// is_non_empty_complete
+bool is_non_empty_complete(const RObject& x);
+RcppExport SEXP _bnclassify_is_non_empty_complete(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< const RObject& >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(is_non_empty_complete(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // match_zero_based
 std::vector<int> match_zero_based(const CharacterVector& subset, const CharacterVector& superset, const std::string error_message);
 RcppExport SEXP _bnclassify_match_zero_based(SEXP subsetSEXP, SEXP supersetSEXP, SEXP error_messageSEXP) {
@@ -303,6 +313,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_bnclassify_is_non_empty_complete", (DL_FUNC) &_bnclassify_is_non_empty_complete, 1},
     {"_bnclassify_match_zero_based", (DL_FUNC) &_bnclassify_match_zero_based, 3},
     {"_bnclassify_ordersetdiff", (DL_FUNC) &_bnclassify_ordersetdiff, 2},
     {"_bnclassify_are_disjoint", (DL_FUNC) &_bnclassify_are_disjoint, 2},
