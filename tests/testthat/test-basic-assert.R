@@ -9,7 +9,6 @@ test_that("non-empty complete empty", {
 })  
 test_that("non-empty complete 1 NA", {
     expect_error(check_non_empty_complete(c(letters, NA)), "complete")
-  # TODO: cannot detect the type of such vectors. However, they should not appear if I only call that from the dimnames.
   expect_error(check_non_empty_complete(NA), "complete")
   expect_error(check_non_empty_complete(rep(NA, 1e2)), "complete")
 })

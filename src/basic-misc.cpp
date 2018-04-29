@@ -3,30 +3,6 @@
 
 using namespace Rcpp;  
 
-// use this e.g., in (I think) check_dataset
-// Won't work with Generic vector
-// [[Rcpp::export(rng=false)]]
-bool is_non_empty_complete(const RObject & x) {  
-  if (x.isNULL()) return (false);
-  if(is<CharacterVector>(x)) { 
-    CharacterVector y(x);
-    return y.size() > 0 &&  (!is_true(any(is_na(y)))) ;
-  }  
-  if(is<NumericVector>(x)) { 
-    NumericVector y(x);
-    return y.size() > 0 &&  (!is_true(any(is_na(y)))) ;
-  }
-  if(is<IntegerVector>(x)) { 
-    IntegerVector y(x);
-    return y.size() > 0 &&  (!is_true(any(is_na(y)))) ;
-  }
-  if(is<List>(x)) { 
-    List y(x);
-    return y.size() > 0 &&  (!is_true(any(is_na(y)))) ;
-  }  
-  stop("Unknown type.");
-}
-
 // [[Rcpp::export]]
 std::vector<int> match_zero_based(const CharacterVector & subset, const CharacterVector & superset, const std::string error_message) {
   IntegerVector subset_inds = Rcpp::match(subset, superset); 
