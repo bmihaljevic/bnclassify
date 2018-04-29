@@ -62,6 +62,7 @@ test_that("All incomplete rows", {
   vna <- voting[!complete.cases(voting), -17]
   cp <- compute_log_joint_incomplete(a, vna)
   cp <- log_normalize(cp)
+  cp <- exponentiate_probs(cp)
   check_cp(cp, nrow(vna), levels(voting$Class))
 })
  

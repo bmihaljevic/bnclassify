@@ -25,7 +25,7 @@
 #'p <- predict(nb, car, prob = TRUE)
 #'head(p)
 predict.bnc_fit <- function(object, newdata, prob = FALSE, ...) {      
-  pred <- compute_cp(x = object, dataset = newdata)  
+  pred <- compute_cp(x = object, dataset = newdata, ...)  
   if (!prob) {
     pred <- map(pred)
   }

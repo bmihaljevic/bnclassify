@@ -30,18 +30,16 @@ log_normalize <- function(lp) {
   # Check p is matrix of log probs?(<= 0)
   # Normalize with log sum exp 
   log_probs <- lp - matrixStats::rowLogSumExps(lp)
-  # exponentiate
-  p <- exp(log_probs)
+  log_probs 
+}
+exponentiate_probs <- function(p) { 
+  stopifnot(is.matrix(p))
+  p <- exp(p)
   # rowAnys Does not distinguish between NA and NaN. 
   nans <- which(matrixStats::rowAnys(p, value = NaN))
   if (length(nans) > 0) {
     p[nans, ] <- 1 / ncol(p)
-  }
-  # Assign a uniform where the result is NaN
-#   ind_zero <- is.nan(p)
-#   if (any(ind_zero)) {
-#     p[ind_zero,] <- 1 / ncol(p)
-#   }
+  } 
   p
 }
 #' Returns \code{TRUE} is \code{x} is a valid probability distribution.

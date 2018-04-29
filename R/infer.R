@@ -1,9 +1,14 @@
 # Computes class posterior. 
 # x is a bnc_dag.
-compute_cp <- function(x, dataset) {
+compute_cp <- function(x, dataset, normalize = TRUE) {
   p <- compute_log_joint(x, dataset)
-  p <- log_normalize(p)
-  stopifnot(are_pdists(p))
+  if (normalize ) {
+    p <- log_normalize(p)
+  } 
+  p <- exponentiate_probs(p)   
+  if (normalize ) {
+    stopifnot(are_pdists(p))  
+  }
   p
 }
 select_probs <- function(x, dataset, log_prob_pred_class) {
