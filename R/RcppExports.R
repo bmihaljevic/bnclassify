@@ -17,6 +17,10 @@ normalize <- function(x) {
     .Call('_bnclassify_normalize', PACKAGE = 'bnclassify', x)
 }
 
+make_last_sideeffect <- function(x, last) {
+    .Call('_bnclassify_make_last_sideeffect', PACKAGE = 'bnclassify', x, last)
+}
+
 normalize_ctgt <- function(ctgt) {
     .Call('_bnclassify_normalize_ctgt', PACKAGE = 'bnclassify', ctgt)
 }

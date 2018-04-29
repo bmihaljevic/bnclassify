@@ -54,7 +54,30 @@ void normalize(NumericVector::iterator begin, NumericVector::iterator end) {
 NumericVector normalize(NumericVector & x) {
   normalize(x.begin(), x.end());
   return x;
-}
+} 
+
+// Note: changes original vector!! Hence sideeffect postfix
+// [[Rcpp::export]]
+CharacterVector make_last_sideeffect(CharacterVector & x, const CharacterVector & last) {
+// OK if the vector is emtpy, because the parents of class are empty.
+    if (x.size() == 0) return x;
+    if (!(last.size() == 1)) stop("last should be a single string.");
+// #   Just asume there is no more than a a single last in x 
+    IntegerVector first_match = match(last, x); 
+    // CharacterVector::iterator fmatch = std::find(x.begin(), x.end(), l);
+    // int ind  =  first_match.at(0) - 1;
+    // Rcout << " ind " << ind << std::endl;
+    // if (ind < 0) stop("last not found.");
+    // CharacterVector::iterator fmatch  = x.begin() + ind;   
+    CharacterVector::iterator fmatch  = x.begin() + first_match.at(0) - 1;  
+    if (fmatch < x.begin() || fmatch > x.end()) stop("last not found.");
+    // if (fmatch == x.end()) stop("last not found.");
+    // std::iter_swap(fmatch, x.end() - 1); 
+    // use rotate to preserve previous behaviour
+    std::rotate(fmatch, fmatch + 1, x.end());
+    return x;
+} 
+
 // Normalizes the contigency table on the first dimension. Returns a table.
 // It modifes its argument and returns it. 
 // Todo: ensure is is numeric; not integer, otherwise it won't be modified!!  

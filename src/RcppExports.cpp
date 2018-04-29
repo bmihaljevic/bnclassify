@@ -53,6 +53,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// make_last_sideeffect
+CharacterVector make_last_sideeffect(CharacterVector& x, const CharacterVector& last);
+RcppExport SEXP _bnclassify_make_last_sideeffect(SEXP xSEXP, SEXP lastSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type last(lastSEXP);
+    rcpp_result_gen = Rcpp::wrap(make_last_sideeffect(x, last));
+    return rcpp_result_gen;
+END_RCPP
+}
 // normalize_ctgt
 NumericVector normalize_ctgt(NumericVector& ctgt);
 RcppExport SEXP _bnclassify_normalize_ctgt(SEXP ctgtSEXP) {
@@ -294,6 +306,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bnclassify_ordersetdiff", (DL_FUNC) &_bnclassify_ordersetdiff, 2},
     {"_bnclassify_are_disjoint", (DL_FUNC) &_bnclassify_are_disjoint, 2},
     {"_bnclassify_normalize", (DL_FUNC) &_bnclassify_normalize, 1},
+    {"_bnclassify_make_last_sideeffect", (DL_FUNC) &_bnclassify_make_last_sideeffect, 2},
     {"_bnclassify_normalize_ctgt", (DL_FUNC) &_bnclassify_normalize_ctgt, 1},
     {"_bnclassify_bh_connected_components", (DL_FUNC) &_bnclassify_bh_connected_components, 2},
     {"_bnclassify_bh_remove_node", (DL_FUNC) &_bnclassify_bh_remove_node, 3},

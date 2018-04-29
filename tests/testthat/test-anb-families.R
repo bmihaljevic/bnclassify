@@ -9,7 +9,7 @@ test_that("graph 2 families nominal", {
   
 test_that("graph 2 families class not in dag   ", {   
   g <- test_dag()
-  expect_error(graphNEL2families(dag = g, class = 'C'), 'non_last')
+  expect_error(graphNEL2families(dag = g, class = 'C'), 'last not found')
 })
 
 test_that("graph 2 families class length > 1   ", {     

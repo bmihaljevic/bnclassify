@@ -1,14 +1,3 @@
-# Makes sure that last is the last element in x 
-make_last <- function(x, last) {
-#   Check x and last are characters, last is length 1
-  stopifnot(is.character(x), is.character(last), length(last) == 1)
-#   Get all elements in x different than last
-  non_last <- Filter(function(elem) { elem != last }, x)
-#  Make sure there are n-1 such elements (i.e., last appears once in x) 
-  stopifnot(length(non_last) + 1L == length(x))  
-#   Append last to non_last
-  append(non_last, last)  
-}
 #' Return all but last element of x. 
 #' 
 #' If x is NULL returns NA not NULL
