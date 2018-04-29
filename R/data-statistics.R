@@ -63,11 +63,11 @@ cmi_table <- function(xyz_freqs, unit = "log") {
 #' @keywords internal
 extract_ctgt <- function(cols, dataset) {
   # check cols non empty unique characters 
-  stopifnot(is_non_empty_complete(cols), is.character(cols), 
-            are_all_unique(cols), is_subset(cols, colnames(dataset)))
+  # stopifnot(is_non_empty_complete(cols), is.character(cols), 
+  #           are_all_unique(cols), is_subset(cols, colnames(dataset)))
   #Trim dataset (do not use trim_dataset() cause it does not enforce cols order)
-  dataset <- dataset[ , cols, drop = FALSE]  
-  table_cpp(dataset)
+  # dataset <- dataset[ , cols, drop = FALSE]  
+  table_cpp(dataset, cols)
 }
 # Get the level of each variable 
 extract_var_levels <- function(dataset) {

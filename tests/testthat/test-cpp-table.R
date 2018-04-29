@@ -1,8 +1,11 @@
 context("cpp table")
 
 check_unidim <- function(db, rows, cols) {
+  if (!is.character(cols)) {
+    cols <- colnames(db)[cols] 
+  }
+  a <- table_cpp(db, cols)
   db <- db[, cols, drop = FALSE]
-  a <- table_cpp(db)
   b <- table(db)
   if (ncol(db) == 1) {
    # table sets name of object
@@ -49,7 +52,7 @@ test_that("NA", {
 test_that("random", {
   (x = sample(0:1, 1e5, replace = T))
   x <- data.frame(u = factor(x))
-  a <- table_cpp(x)
+  a <- table_cpp(x, colnames(x))
   b <- table(x)
   # don't know why table keeps x as name.
   expect_equal(unname(a), unname(b))   

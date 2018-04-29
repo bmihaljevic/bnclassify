@@ -25,9 +25,12 @@ Rcpp::IntegerVector tabulate_cpp(const Rcpp::IntegerVector & v, R_xlen_t nlevels
 //   this is just indexing by a set of values, then you go to there and find it. 
 // }
 // [[Rcpp::export]]
-Rcpp::IntegerVector table_cpp(const RObject & input) { 
+Rcpp::IntegerVector table_cpp(const RObject & input, const RObject & columns) { 
   if(!is<DataFrame>(input)) stop("Must be a data frame.");
-  DataFrame data = as<DataFrame>(input);
+  DataFrame data = as<DataFrame>(input);  
+  if(!is<CharacterVector>(columns)) stop("Must be character vector."); 
+  CharacterVector cols = as<CharacterVector>(columns);  
+  data = data[cols];
   
   const R_xlen_t ncols = data.ncol();  
   if (ncols == 0) stop("No columns in data frame.");  

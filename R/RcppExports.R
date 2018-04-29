@@ -93,7 +93,7 @@ tabulate_cpp <- function(v, nlevels) {
     .Call('_bnclassify_tabulate_cpp', PACKAGE = 'bnclassify', v, nlevels)
 }
 
-table_cpp <- function(input) {
-    .Call('_bnclassify_table_cpp', PACKAGE = 'bnclassify', input)
+table_cpp <- function(input, columns) {
+    .Call('_bnclassify_table_cpp', PACKAGE = 'bnclassify', input, columns)
 }
 
