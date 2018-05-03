@@ -11,25 +11,26 @@ output:
           in_header: header.tex
     citation_package: natbib
 bibliography: bnclassify.bib  
+abstract: The \pkg{bnclassify} package provides state-of-the art algorithms for learning Bayesian network classifiers from data. This vignette serves as a reference for understanding the implemented methods. It also documents some implementation details, especially where they differ from are are undocumented in the original paper.
 fontsize: 11pt
 vignette: >
   %\VignetteIndexEntry{Methods}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
----  
+---   
 
+\section{Introduction}\label{introduction}    
+The first part of this vignette provides the required background on Bayesian network classifiers. The remaining sections provide details on the implementation of some of the methods. Other resources provide additional information:
 
-\section{Introduction}\label{introduction}
-This vignette provides details about some of the implemented functionalities. A comprehensive list of the functionalities is listed with \texttt{?bnclassify}. The "introduction" vignette presents examples and shows how to combine the existing functions. The first part of this vignette provides background and lists all implemented functionalities. The remaining sections details on some of the implemented methods.
+- `?bnclassify` provides an overview of the package, listing main functionalities and functions.
+- `vignette("introduction", package="bnclassify")` provides details on the implemented methods. 
 
 \input{background}
 
 \section{Structure learning}
 \label{structure-learning}
 
-\label{sec:structure}
-
-%AODE. There are no weights.
+\label{sec:structure} 
 
 \subsection{Chow-Liu for one-dependence estimators}\label{chow-liu-for-one-dependence-estimators}
 
