@@ -48,20 +48,16 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{centernot}
-\DeclareMathOperator*{\argmax}{arg\,max}
 
-\newcommand{\bigCI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}}
-\newcommand{\nbigCI}{\centernot{\bigCI}}
-
-\newcommand{\CI}{\mathrel{\perp\mspace{-10mu}\perp}}
-\newcommand{\nCI}{\centernot{\CI}}
+\input{macros-math} 
+\input{macros-paper} 
 
 \newcommand{\code}[1]{\texttt{#1}}
 
 %\VignetteIndexEntry{Techical information}
 
 \author{Bojan Mihaljevi\'c, Concha Bielza, Pedro Larra\~{n}aga\\}
-\title{Technical details for the \texttt{bnclassify} package}
+\title{Implementation details for the \texttt{bnclassify} package}
 
 \begin{document}
 
@@ -76,154 +72,19 @@ Many algorithms for learning discrete Bayesian network classifiers from data hav
 \tableofcontents
 }
 
-\section{Introduction}\label{introduction}
- 
+\section{Introduction}\label{introduction} 
 Many algorithms for learning Bayesian network classifiers \citep{Friedman1997} from data have been developed over the last 40 years \citep{Bielza14}. However, only a handful are available in the R environment for statistical computing \citep{RCore2015}. The \code{bnclassify} package helps filling this gap by implementing state-of-the-art algorithms for learning discrete Bayesian network classifiers, including both structure and parameter learning methods, as well as functions for using these classifiers for prediction, assessing their predictive performance, and inspecting and analyzing their properties. 
 
-\section{Package overview}
+This vignettes provides details about some of the implemented functionalities. A comprehensive list of the functionalities is listed with \texttt{?bnclassify}. The "introduction" vignette presents examples and shows how to combine the existing functions. The first part of this vignette provides background and lists all implemented functionalities. The last three chapters provide details on some of the implemented methods. 
 
-Structure learning algorithms:
-\begin{itemize}
-\item Naive Bayes \citep{Minsky1961}
-\item Chow-Liu's algorithm for one-dependence estimators (CL-ODE)  \citep{Friedman1997}
-\item Forward sequential selection and joining (FSSJ) \citep{Pazzani1996}
-\item Backward sequential elimination and joining (BSEJ)  \citep{Pazzani1996}
-\item Hill-climbing tree augmented naive Bayes (TAN-HC)  \citep{Keogh2002}
-\item Hill-climbing super-parent tree augmented naive Bayes (TAN-HCSP) \citep{Keogh2002}
-\end{itemize}
+\input{background}
 
-Parameter learning methods:
+\section{Structure learning}
+\label{structure-learning}
 
-\begin{itemize}
-\item Bayesian and maximum likelihood estimation
-\item Model averaged naive Bayes (MANB) \citep{Dash2002}
-\item Weighting to Alleviate the Naive Bayes Independence Assumption (WANBIA) \citep{Zaidi2013}
-\item Attribute-weighted naive Bayes (AWNB)  \citep{Hall2007}
-\end{itemize}
+\label{sec:structure} 
 
-Model evaluating:
-
-\begin{itemize}
- \item Cross-validated estimate of accuracy 
- \item Log likelihood
- \item Akaike information criterion (AIC) \citep{Akaike74}
- \item Bayesian information criterion (BIC) \citep{Schwarz1978}
-\end{itemize}
-
-Predicting: 
-\begin{itemize}
-\item Fast prediction for augmented naive Bayes models with complete data
-\end{itemize}
-
-In addition, it implements functions for querying models properties, enables network structure plotting through the \texttt{Rgraphviz} package \citep{Hansen}, uses \code{gRain} for inference with incomplete data, and provides additional utility functions.
-
-\section{Background}\label{background}
-
-\label{sec:bcground}
-
-\subsection{Bayesian networks}\label{bayesian-networks}
-
-A Bayesian network is a pair \(\mathcal{B} = (\mathcal{G}, \mathbf{\theta})\) which encodes a joint distribution over a random vector $\mathbf{X} = (X_1,\ldots,X_m)$. The directed acyclic graph \(\mathcal{G}\) (its structure), which has a node per each variable in $\mathbf{X}$, encodes conditional independences among triplets of variables (e.g., \(X_1\) is independent of \(X_3\) given \(X_2\)), breaking the joint distribution into multiple smaller, local ones, over subsets of variables. The parameters \(\mathbf{\theta}\) specify the local distributions. The joint probability distribution is factorized as
-
-\[P(\mathbf{X}) = \prod_{i=1}^{m} P(X_i \mid \mathbf{Pa}(X_i)),\]
-
-where \(\mathbf{Pa}(X_i)\) is the set of parents of \(X_i\) in
-\(\mathcal{G}\) and \(m\) is the number of variables.
-
-When learning a Bayesian network from data we are given a data set
-\(\mathcal{D} = \{ \mathbf{x}^{1}, \ldots, \mathbf{x}^{N} \}\) of \(N\) observations of \(\mathbf{X}\) from which we
-aim to learn \(\mathcal{G}\) and \(\mathbf{\theta}\). Learning \(\mathbf{\theta}\) is generally straightforward given a structure. To learn the structure, \(\mathcal{G}\), there are basically two methods: by testing for conditional independence among triplets of variables (e.g., is \(X_1\) independent of \(X_3\) given \(X_2\)?) and by searching in the space of structures guided by a network quality score. In general, learning Bayesian networks by searching in the structure space is NP-hard \citep{Chickering2004} and thus a plethora of algorithms exist for the task, both specific for Bayesian networks, such as the K2 \citep{Cooper1992}, and general purpose search algorithms, such as genetic algorithms.
-
-Learning the parameters \(\mathbf{\theta}\) of a local conditional
-distribution \(\theta_{ijk} = P(X_i = k \mid \mathbf{Pa}(X_i) = j)\) is relatively straightforward. Assuming a Dirichlet prior over \(\mathbf{\theta}\) with all hyperparameters equal to \(\alpha\), and fully observed data, we get the Bayesian parameter estimates in closed form,
-
-\begin{equation}
-\theta_{ijk} = \frac{N_{ijk} + \alpha}{N_{ \cdot j \cdot } + r_i \alpha},
-\label{eq:disparams}
-\end{equation}
-
-where \(N_{ijk}\) is the number of instances in \(\mathcal{D}\) in which
-\(X_i = k\) and \(\mathbf{Pa}(X_i) = j\), \(N_{\cdot j \cdot}\) is the number of instances in which \(\mathbf{Pa}(X_i) = j\), while \(r_i\) is the cardinality of \(X_i\). When \(\alpha = 0\), Equation~(\ref{eq:disparams}) yields the maximum likelihood estimate of \(\theta_{ijk}\).
-
-\subsection{Bayesian network
-classifiers}\label{bayesian-network-classifiers}
-
-A Bayesian network classifier is a Bayesian network that is used for
-classifying instances into classes (e.g., classifying images as tumor or
-not tumor). Thus, we distinguish between predictor variables (or features), which
-describe the objects to classify, and which we label as \(\mathbf{X}\), and a
-discrete class variable \(C\). In this setting we are learning from a supervised data set \(\mathcal{D} = \{ (\mathbf{x}^{1}, c^{1}), \ldots, (\mathbf{x}^{N}, c^{N}) \}\).
-
-A Bayesian network classifiers encodes the joint over \(\mathbf{X}\) and \(C\) as
-
-\[P(\mathbf{X}, C) = P(C \mid \mathbf{Pa}(C)) \prod_{i=1}^{n} P(X_i \mid \mathbf{Pa}(X_i)),\]
-
-where \(n = m - 1 \) is the number of predictors. The classifier assigns an instance
-\(\mathbf{x}\) to the most probable class:
-
-\[ c^* = \argmax_c P(c \mid \mathbf{x}) = \argmax_c P(\mathbf{x}, c).\]
-
-Many search algorithms that produce Bayesian network classifiers
-traverse a restricted search space, considering only structures where
-the class node is a root node and parent of each feature. These are augmented
-naive Bayes \citep{Friedman1997} models and all structures in
-Figure \ref{fig:structures} are examples of it. The best known example is the naive Bayes \citep{Minsky1961} (Figure \ref{fig:nb}), a special case with no augmenting arcs (i.e., arcs between the features). Thus, the augmented naive Bayes factorizes the joint distribution as
-
-\begin{equation}
-P(\mathbf{X}, C) = P(C) \prod_{i=1}^{n} P(X_i \mid \mathbf{Pa}(X_i)), \label{eq:augnb}
-\end{equation}
-
-where \(C \in \mathbf{Pa}(X_i)\) for all \(X_i\).
-
-\section{Structure learning}\label{structure-learning}
-
-\label{sec:structure}
-
-\subsection{Models}\label{models}
-
-All models produced by \texttt{bnclassify} are augmented naive Bayes models. These can be organized hierarchically according to their complexity.
-
-The simplest is the naive Bayes, which assumes that the predictors are
-independent given the class (Figure \ref{fig:nb}). One-dependence
-estimators (ODE) allow each predictor to depend on at most one other
-predictor. A well-known example is the tree augmented naive Bayes (TAN)
-\citep{Friedman1997}, which has \(n-1\) augmenting arcs, forming a
-tree in the predictors' subgraph (Figure \ref{fig:tan}). Another variant
-is the forest augmented naive Bayes (FAN), with possibly less than
-\(n-1\) augmenting arcs (Figure \ref{fig:fan}). The semi-naive model
-(Semi) \citep{Pazzani1996} allows for more complex dependencies
-among features. It partitions the predictor set into subsets that are fully dependent within them but mutually independent among them given the class. In other words, it forms a complete directed graph across each feature subset, with no arcs among the different subsets (Figure~\ref{fig:semi}).\footnote{Note that, equivalently to this formulation, the original paper proposes forming `supernodes' by joining features by means of the Cartesian product of their domains; these supernodes correspond to the complete subgraphs across predictor nodes in our formulation. There are two such supernodes in Figure~\ref{fig:semi}: (\(X_1,X_2)\) and (\(X_4,X_5,X_6)\).} 
-The semi-naive Bayes model does not necessarily include all features (\(X_3\) is omitted from the model in Figure~\ref{fig:semi}), i.e., it allows for feature selection \citep{Liu2007} embedded in the process of model construction.
-
-\begin{figure}[h]
-\begin{subfigure}[b]{0.5\textwidth}
-  \includegraphics{nb}
-  \caption{$p(c, \mathbf{x}) = p(c)p(x_1 \vert c)p(x_2 \vert c)p(x_3 \vert c)p(x_4 \vert c)$\\$p(x_5 \vert c)p(x_6 \vert c)$}
-  \label{fig:nb}
-\end{subfigure}
-\begin{subfigure}[b]{0.5\textwidth}
-  \includegraphics{tan}
-  \caption{$p(c, \mathbf{x}) = p(c)p(x_1 \vert c, x_2)p(x_2 \vert c, x_3)p(x_3 \vert c, x_4)p(x_4 \vert c)$\\$p(x_5 \vert c, x_4)p(x_6 \vert c, x_5)$}
-  \label{fig:tan}
-\end{subfigure}
-\begin{subfigure}[b]{0.5\textwidth}
-  \includegraphics{fan}
-  \caption{$p(c, \mathbf{x}) = p(c)p(x_1 \vert c, x_2)p(x_2 \vert c)p(x_3 \vert c)p(x_4 \vert c)$ \\$p(x_5 \vert c, x_4)p(x_6 \vert c, x_5)$}
-  \label{fig:fan}
-\end{subfigure}
-\begin{subfigure}[b]{0.5\textwidth}
-  \includegraphics{sn}
-  \caption{$p(c, \mathbf{x}) = p(c)p(x_1 \vert c, x_2)p(x_2 \vert c)p(x_4 \vert c)$ \\ $p(x_5 \vert c, x_4)p(x_6 \vert c, x_4, x_5)$}
-  \label{fig:semi}
-\end{subfigure}
-\caption{Augmented naive Bayes models of different complexity produced by the \texttt{bnclassify} package. (a) A naive Bayes; (b) a tree augmented naive Bayes; (c) a forest augmented naive Bayes; (d) a semi-naive Bayes. Here $X_3$ is omitted from the model.}
-\label{fig:structures}
-\end{figure}
-
-\subsection{Fixed structure}\label{fixed-structure}
-
-The naive Bayes has a fixed structure and its learning amounts to
-estimating its parameters.
+%AODE. There are no weights. 
 
 \subsection{Chow-Liu for one-dependence estimators}\label{chow-liu-for-one-dependence-estimators}
 
@@ -231,31 +92,15 @@ The CL-ODE algorithm by \citep{Friedman1997} adapts the Chow-Liu \citep{Chow1968
 
 Note that when data is incomplete \code{bnclassify} does not necessarily return the optimal (with respect to penalized log-likelihood) ODE. Namely, that requires the computationally expensive calculation of the sufficient statistics \(N_{ijk}\) which maximize parameter likelihood; instead, \code{bnclassify} approximates these statistics with the \emph{available case analysis} heuristic (see Section \ref{sec:params}).   
 
-\subsection{Greedy hill-climbing}\label{greedy-hill-climbing}
+%The tree is done with the Kruskal algorithm. For BIC and AIC, the penalization is. Since this is symmetric it will work. Just that some will be like this and it may turn out as a forest. 
+% The weight for the BIC is ...
 
-\texttt{bnclassify} implements four greedy hill-climbing algorithms for learning Bayesian network classifiers.
+%\subsection{Greedy hill-climbing}\label{greedy-hill-climbing}
+%All greedy algorithms maximize the cross-validated estimate of accuracy as their objective function. The BSEJ algorithm  starts from a naive Bayes structure and adds augmenting arcs and removes features from the model until no improvement in network score. On the contrary, FSSJ starts from a structure containing just the class node and proceeds by incorporating features features and augmenting arcs. 
+\subsection{TAN HC and TAN HC SP}\label{greedy-hill-climbing} 
+TAN HC and TAN HC SP may evaluate equivalent structures at each step. Adding valid arcs $X_i \rightarrow X_j$ and $X_j \rightarrow X_i$ results in identical structures because of tree structure of the features subgraph. Namely, $|Pa(X) \setminus C| \leq 1$ for each $X$ and thus we can only add the arc $X_i \rightarrow X_j$ if $Pa(X) = \{ C \}$. Thus, adding an arc $X_i \rightarrow X_j$ introduces no v-structures into the network, and both $X_i \rightarrow X_j$ and $X_j \rightarrow X_i$ only remove the independence between $X_i$ and $X_j$. The two obtained networks thus correspond to identical factorizations of the joint distribution. 
 
-The following produce a TAN model:
-
-\begin{itemize}
-\itemsep1pt\parskip0pt\parsep0pt
-\item TAN-HC
-\item TAN-HCSP
-\end{itemize}
-
-Both algorithms start from a naive Bayes structure and add arcs until there is no improvement in network score. TAN-HCSP uses a reduced search space and should be less time-consuming.
-
-The following algorithms produce a semi-naive Bayes model:
-
-\begin{itemize}
-\itemsep1pt\parskip0pt\parsep0pt
-\item BSEJ
-\item FSSJ
-\end{itemize}
-
-BSEJ starts from a naive Bayes structure and adds augmenting arcs and removes features from the model until no improvement in network score. On the contrary, FSSJ starts from a structure containing just the class node and proceeds by incorporating features features and augmenting arcs. 
-
-All greedy algorithms maximize the cross-validated estimate of accuracy as objective function, i.e., they are wrapper algorithms. 
+To avoid scoring equivalent structures, at each step we selected the $X_i \rightarrow X_j$ such that $X_i$ (that is, its column name in the data set) is alphabetically before $X_j$. A preferable implementation would be to select the arc randomly. 
 
 \section{Parameter learning}\label{parameter-learning}
 
@@ -263,22 +108,11 @@ All greedy algorithms maximize the cross-validated estimate of accuracy as objec
 
 \subsection{Bayesian parameter estimation}
 
-With fully observed data, \texttt{bnclassify} estimates parameters with
-maximum likelihood or Bayesian estimation, according to Equation~(\ref{eq:disparams}), with all prior hyperparameters \(\alpha = a\) for a specified \(a\) (provided by the user). When \(N_{\cdot j \cdot} = 0\) and \(a = 0\), that is, when the model's probability of observing $ \mathbf{Pa}(X_i) = j$ is 0, \texttt{bnclassify} assigns a uniform distribution to \(P(X_i \mid \mathbf{Pa}(X_i) = j)\).
-
-When data is incomplete, the parameters of local distributions are no
-longer independent and we cannot separately maximize the likelihood of
-each one as in Equation \ref{eq:disparams}. Optimizing (heuristically)
-the likelihood would require a time-consuming algorithm like expectation
-maximization \citep{Dempster1977}. Instead, we use \emph{available
-case analysis} \citep{Pigott2001} and estimate the parameters independently, substituting \(N_{\cdot j \cdot}\) in Equation \ref{eq:disparams} with \(N_{i j \cdot} = \sum_{k = 1}^{r_i} N_{i j k}\), i.e., with the count of instances in which \(\mathbf{Pa}(X_i) = j\) and \(X_i\) is observed, regardless of the observation of other variables. That is,
-
-\begin{equation}
+\code{bnclassify} only handles discrete features. With fully observed data, it estimates the parameters with maximum likelihood or Bayesian estimation, according to Equation \ref{eq:disparams}, with a single \(\alpha\) for all local distributions. With incomplete data it uses \textit{available case analysis} \citep{Pigott2001} and substitutes \(N_{\cdot j \cdot}\) in \req{disparams} with \(N_{i j \cdot} = \sum_{k = 1}^{r_i} N_{i j k}\), i.e., with the count of instances in which \(\mathbf{Pa}(X_i) = j\) and \(X_i\) is observed:   
+\begin{equation*}
 \theta_{ijk} = \frac{N_{ijk} + \alpha}{N_{ i j \cdot } + r_i \alpha}.
 \label{eq:incp_params}
-\end{equation}
-
-Thus, the parameter estimates are not maximum likelihood nor Bayesian when data is incomplete.
+\end{equation*}    
 
 \subsection{Exact model averaging for naive Bayes}
 
@@ -359,29 +193,15 @@ where \(M\) is the number of bootstrap \citep{Efron1979} subsamples
 from \(\mathcal{D}\) and \(d_{ti}\) is the minimum testing depth of \(X_i\)
 in an unpruned classification tree learned from the \(t\)-th subsample
 (\(d_{ti} = 0\) if \(X_i\) is omitted from \(t\)-th tree). 
-
-
-\section{Cross-validation}
-\label{sec:eval}
-
-\texttt{bnclassify} implements stratified cross-validation. It is possible to
-cross-validate the entire two-step learning process --learning the structure and the parameters-- or parameter learning alone, keeping the structure fixed across the different subsamples.
-
-\section{Prediction}\label{implementation}
-
+ 
+\section{Prediction}
 \label{sec:pred}
 
-\texttt{bnclassify} implements prediction for augmented naive Bayes
-models with complete data. This amounts to multiplying the corresponding entries in the local distributions and is done in logarithmic space, applying the *log-sum-exp* trick before normalizing, in order to reduce the chance of underflow.   
+\texttt{bnclassify} implements prediction for augmented naive Bayes models with complete data. This amounts to multiplying the corresponding entries in the local distributions and is done in logarithmic space, applying the *log-sum-exp* trick before normalizing, in order to reduce the chance of underflow.   
 
-With incomplete data this cannot be done and therefore \code{bnclassify} uses the \texttt{gRain} package \citep{Hojsgaard2012} to perform exact inference. Such inference is time-consuming and, therefore, wrapper algorithms can be very slow when applied on incomplete data sets.
-
-\section{Future work}
-\label{sec:future}
-
-Future work involves handling real-valued data, via, for example, conditional Gaussian models. Straightforward extensions include additional variants of the greedy hill-climbing algorithm, such as the k-DB \citep{Sahami1996} algorithm, or adding more flexibility to the hill-climbing algorithm, such as enabling the choice of the initial structure (e.g., whether a naive Bayes or a model with no arcs), when applicable. Useful parameter learning methods to implement include \cite{Zaidi2013}.
+With incomplete data this cannot be done and therefore \code{bnclassify} uses the \texttt{gRain} package \citep{Hojsgaard2012} to perform exact inference. Such inference is time-consuming and, therefore, wrapper algorithms can be very slow when applied on incomplete data sets.   
 
 \bibliographystyle{abbrvnat}
 \bibliography{bnclassify}
 
-\end{document}
+\end{document} 
