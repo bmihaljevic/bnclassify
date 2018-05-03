@@ -16,7 +16,7 @@ network used for predicting a discrete class variable \(C\). It assigns
 Bayesian network
 \(\mathcal{B} = \langle \mathcal{G}, \boldsymbol{ \theta } \rangle\).
 \(\mathcal{G}\) is a directed acyclic graph with a node per each of the
-variables \((\mathbf{X}, C)\), encoding conditional independences: a
+variables in \((\mathbf{X}, C)\), encoding conditional independences: a
 variable \(X\) is independent of its nondescendants in \(\mathcal{G}\)
 given the values \(\mathbf{pa}(x)\) of its parents. \(\mathcal{G}\) thus
 factorizes the joint into local conditional distributions over subsets
@@ -25,26 +25,25 @@ of variables:
 \[P(\mathbf{x}, c) = P(c \mid \mathbf{pa}(c)) \prod_{i=1}^{n} P(x_i \mid \mathbf{pa}(x_i)).\]
 
 \noindent The parameters \(\boldsymbol{ \theta }\) specify the local
-distributions.
+conditional distributions.
 
 \subsection{Learning structure}\label{learning-structure}
 
 \label{sec:bkg:learning} We learn \(\mathcal{B}\) from a data set
 \(\mathcal{D} = \{ (\mathbf{x}^{1}, c^{1}), \ldots, (\mathbf{x}^{N}, c^{N}) \}\)
 of \(N\) observations of \(\mathbf{X}\) and \(C\). There are two main
-approaches to learning the structure \gstuc/: a) testing for conditional
-independence among triplets of variables and b) searching a space of
-possible structures in order to optimize a network quality score. Under
-assumptions such as a limited number of parents per variable, approach
-a) can produce the correct network in polynomial time
+approaches to learning the structure \gstuc/ from \(\mathcal{D}\): a)
+testing for conditional independence among triplets of variables and b)
+searching a space of possible structures in order to optimize a network
+quality score. Under assumptions such as a limited number of parents per
+variable, approach a) can produce the correct network in polynomial time
 \citep{cheng-greiner02,Tsamardinos2003a}. On the other hand, finding the
 optimal structure even with at most two parents per variable is NP-hard
 \citep{Chickering2004}. Thus, heuristic search algorithms, such as
-greedy hill-climbing, are commonly used
-\citep[see, e.g.,][]{Koller2009}. Ways to reduce model complexity, in
-order to avoid overfitting the training data \(\mathcal{D}\), include
-searching in restricted structure spaces and penalizing it with adequate
-scores.
+greedy hill-climbing, are commonly used \citep[see e.g.,][]{Koller2009}.
+Ways to reduce model complexity, in order to avoid overfitting the
+training data \(\mathcal{D}\), include searching in restricted structure
+spaces and penalizing it with adequate scores.
 
 Common scores in structure learning are the penalized log-likelihood
 scores, such as the Akaike information criterion (AIC) \citep{Akaike74}
@@ -57,10 +56,10 @@ discriminative scores based on \pcgx/, such as conditional
 log-likelihood and classification accuracy, are more suitable to the
 classification task \citep{Friedman1997}. These, however, are not
 decomposable according to \(\mathcal{G}\). While one can add a
-complexity penalty to them \citep[e.g.,][]{grossman2004}, they are
-instead often cross-validated to induce preference towards structures
-that generalize better, making their computation even more time
-demanding.
+complexity penalty to discriminative scores
+\citep[e.g.,][]{grossman2004}, they are instead often cross-validated to
+induce preference towards structures that generalize better, making
+their computation even more time demanding.
 
 For Bayesian network classifiers, a common \citep[see][]{Bielza14}
 structure space is that of augmented naive Bayes \citep{Friedman1997}
@@ -77,7 +76,10 @@ extending or shrinking the parent sets \(\mathbf{Pa}(X_i)\), ranging
 from the NB \citep{Minsky1961} with \(\mathbf{Pa}(X_i) = \{C \}\) for
 all \(X_i\), to those with a limited-size \(\mathbf{Pa}(X_i)\)
 \citep{Friedman1997,Sahami1996}, to those with unbounded
-\(\mathbf{Pa}(X_i)\) \citep{Pernkopf2003}. Simpler models, with sparser \(\mathbf{Pa}(X_i)\), may perform better with less
+\(\mathbf{Pa}(X_i)\) \citep{Pernkopf2003}. \textbf{While the NB can only
+represent linearly} separable classes (see Minsky) \citep{jaeger2003},
+more complex models are more expressive \citep{Varando2015jmlr}. Simpler
+models, with sparser \(\mathbf{Pa}(X_i)\), may perform better with less
 training data, due to their lower variance, yet worse with more data as
 the bias due to wrong independence assumptions will tend to dominate the
 error.
@@ -107,16 +109,17 @@ obtained in closed form by assuming a Dirichlet prior over
 \label{eq:disparams}
 \end{equation}
 
-where \(N_{ijk}\) is the number of instances in \(\mathcal{D}\) such
-that \(X_i = k\) and \(\mathbf{pa}(x_i) = j\), corresponding to the
-\(j\)-th possible instantiation of \(\mathbf{pa}(x_i)\), while \(r_i\)
-is the cardinality of \(X_i\). \(\alpha = 0\) in \req{disparams} yields
-the maximum likelihood estimate of \(\theta_{ijk}\). With incomplete
-data, the parameters of local distributions are no longer independent
-and we cannot separately maximize the likelihood for each \(X_i\) as in
-\req{disparams}. Optimizing the likelihood requires a time-consuming
-algorithm like expectation maximization \citep{Dempster1977} which does
-not guarantee convergence to the global optimum.
+\noindent where \(N_{ijk}\) is the number of instances in
+\(\mathcal{D}\) such that \(X_i = k\) and \(\mathbf{pa}(x_i) = j\),
+corresponding to the \(j\)-th possible instantiation of
+\(\mathbf{pa}(x_i)\), while \(r_i\) is the cardinality of \(X_i\).
+\(\alpha = 0\) in \req{disparams} yields the maximum likelihood estimate
+of \(\theta_{ijk}\). With incomplete data, the parameters of local
+distributions are no longer independent and we cannot separately
+maximize the likelihood for each \(X_i\) as in \req{disparams}.
+Optimizing the likelihood requires a time-consuming algorithm like
+expectation maximization \citep{Dempster1977} which does not guarantee
+convergence to the global optimum.
 
 While the NB can separate any two linearly separable classes given the
 appropriate \mthetas/, learning by approximating \PCX/ cannot render the
@@ -148,7 +151,7 @@ Computing \pcgx/ for a fully observed \x/ means multiplying the
 corresponding \(\boldsymbol{\theta}\). With an incomplete \x/, however,
 exact inference requires summing over parameters of the local
 distributions and is NP-hard in the general case \citep{cooper1990}, yet
-can be tracktable with limited-complexity structures. The AODE ensemble
+can be tractable with limited-complexity structures. The AODE ensemble
 computes \pcgx/ as the average of the \(P_i (c\mid\mathbf{x})\) of the
 \(n\) base models. A special case is the lazy elimination
 \citep{zheng2006efficient} heuristic which omits \(x_i\) from

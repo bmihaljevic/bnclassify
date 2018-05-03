@@ -38,11 +38,11 @@ The CL-ODE algorithm by \citep{Friedman1997} adapts the Chow-Liu \citep{Chow1968
 
 Note that when data is incomplete \pkg{bnclassify} does not necessarily return the optimal (with respect to penalized log-likelihood) ODE. Namely, that requires the computationally expensive calculation of the sufficient statistics \(N_{ijk}\) which maximize parameter likelihood; instead, \pkg{bnclassify} approximates these statistics with the \emph{available case analysis} heuristic (see Section \ref{sec:params}).
 
-%The tree is done with the Kruskal algorithm. For BIC and AIC, the penalization is. Since this is symmetric it will work. Just that some will be like this and it may turn out as a forest.
-% The weight for the BIC is ...
+<!-- %The tree is done with the Kruskal algorithm. For BIC and AIC, the penalization is. Since this is symmetric it will work. Just that some will be like this and it may turn out as a forest. -->
+<!-- % The weight for the BIC is ... -->
 
-%\subsection{Greedy hill-climbing}\label{greedy-hill-climbing}
-%All greedy algorithms maximize the cross-validated estimate of accuracy as their objective function. The BSEJ algorithm  starts from a naive Bayes structure and adds augmenting arcs and removes features from the model until no improvement in network score. On the contrary, FSSJ starts from a structure containing just the class node and proceeds by incorporating features features and augmenting arcs.
+<!-- %\subsection{Greedy hill-climbing}\label{greedy-hill-climbing} -->
+<!-- %All greedy algorithms maximize the cross-validated estimate of accuracy as their objective function. The BSEJ algorithm  starts from a naive Bayes structure and adds augmenting arcs and removes features from the model until no improvement in network score. On the contrary, FSSJ starts from a structure containing just the class node and proceeds by incorporating features features and augmenting arcs. -->
 \subsection{TAN HC and TAN HC SP}\label{greedy-hill-climbing}
 TAN HC and TAN HC SP may evaluate equivalent structures at each step. Adding valid arcs $X_i \rightarrow X_j$ and $X_j \rightarrow X_i$ results in identical structures because of tree structure of the features subgraph. Namely, $|Pa(X) \setminus C| \leq 1$ for each $X$ and thus we can only add the arc $X_i \rightarrow X_j$ if $Pa(X) = \{ C \}$. Thus, adding an arc $X_i \rightarrow X_j$ introduces no v-structures into the network, and both $X_i \rightarrow X_j$ and $X_j \rightarrow X_i$ only remove the independence between $X_i$ and $X_j$. The two obtained networks thus correspond to identical factorizations of the joint distribution.
 
