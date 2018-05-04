@@ -7,7 +7,7 @@ output:
     toc: true
     number_sections: true
     keep_tex: true
-bibliography: bnclassify.bib
+bibliography: includes/bnclassify.bib
 fontsize: 11pt
 vignette: >
   %\VignetteIndexEntry{Introduction}

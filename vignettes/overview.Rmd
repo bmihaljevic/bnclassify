@@ -8,33 +8,16 @@ output:
     number_sections: true
     keep_tex: true
     includes:
-          in_header: header.tex
+          in_header: includes/header.tex
     citation_package: natbib 
-bibliography: bnclassify.bib  
+bibliography: includes/bnclassify.bib  
 fontsize: 11pt
 vignette: >
   %\VignetteIndexEntry{Overview}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
----
+--- 
 
-<!-- --- -->
-<!-- author: -->
-<!--   - name: Author One -->
-<!--     affiliation: Affiliation -->
-<!--     address: -->
-<!--     - line 1 -->
-<!--     - line 2 -->
-<!--     email:  author1@work -->
-<!--   - name: Author Two -->
-<!--     affiliation: Affiliation -->
-<!--     address: -->
-<!--     - line 1 -->
-<!--     - line 2 -->
-<!--     email:  author2@work -->
-<!-- abstract: > -->
-<!--   An abstract of less than 150 words.  -->
-<!-- --- -->
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(

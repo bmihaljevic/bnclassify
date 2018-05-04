@@ -1,7 +1,9 @@
-bnclassify.bib
-nb.pdf
-tan.pdf
-fan.pdf
-sn.pdf
-usage.rmd
-RJournal.sty
+includes/nb.pdf
+includes/tan.pdf
+includes/fan.pdf
+includes/sn.pdf
+includes/usage.rmd
+includes/background.tex 
+includes/header.tex 
+includes/macros-*.tex 
+includes/bnclassify.bib
