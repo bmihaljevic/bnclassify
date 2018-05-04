@@ -1,13 +1,5 @@
----
-title: "Basic usage examples for the `bnclassify` package"
-author: "Bojan Mihaljevic, Concha Bielza, Pedro Larranaga"
-date: "`r Sys.Date()`"
-output: 
-  rmarkdown::pdf_document:
-    number_sections: true
-    keep_tex: true
-fontsize: 11pt
----
+# Usage example 
+\label{sec:usage}
 
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(cache = FALSE, autodep = TRUE, collapse = TRUE, comment = "", highlight = FALSE

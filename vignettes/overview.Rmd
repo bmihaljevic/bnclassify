@@ -25,7 +25,6 @@ vignette: >
 ```{r child = 'includes/functionalities.rmd'}
 ``` 
 
-# Usage example
 ```{r child = 'includes/usage.rmd'}
 ```
 
