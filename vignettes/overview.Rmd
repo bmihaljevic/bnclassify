@@ -28,3 +28,6 @@ vignette: >
 # Usage example
 ```{r child = 'includes/usage.rmd'}
 ```
+
+```{r child = 'includes/impl-related-conclusion.rmd'}
+```
