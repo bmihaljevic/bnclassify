@@ -1,10 +1,9 @@
 ---
-title: "The bnclassify package" 
-author: "Bojan Mihaljevic, Concha Bielza, Pedro Larranaga"
+title: "`bnclassify`: Learning Bayesian Network Classifiers"  
+author: "Bojan Mihaljević, Concha Bielza and Pedro Larrañaga"
 date: "`r Sys.Date()`"  
 output:
   rmarkdown::pdf_document:
-    toc: true
     number_sections: true
     keep_tex: true
     includes:
@@ -19,14 +18,13 @@ vignette: >
 --- 
 
 
-```{r setup, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
+\input{includes/abstract}   
+```{r child = 'includes/intro.rmd'}
 ```
+\input{includes/background}  
+```{r child = 'includes/functionalities.rmd'}
+``` 
 
-\input{includes/background}
-
+# Usage example
 ```{r child = 'includes/usage.rmd'}
 ```

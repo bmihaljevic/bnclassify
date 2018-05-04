@@ -1,3 +1,9 @@
+\usepackage{subcaption} 
+\RequirePackage{fancyvrb}
+\RequirePackage{alltt}
+
+\DefineVerbatimEnvironment{example}{Verbatim}{}
+\renewenvironment{example*}{\begin{alltt}}{\end{alltt}}
 
 \newcommand{\rtbl}[1]{Table~\ref{tbl:#1}}
 \newcommand{\req}[1]{Equation~\ref{eq:#1}} 

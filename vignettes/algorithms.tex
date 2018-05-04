@@ -1,0 +1,19 @@
+\begin{table}[ht]
+\centering
+\caption{Implemented structure learning algorithms.} 
+\label{tbl:algorithms}
+\begin{tabular}{lllll}
+  \hline
+Structure & Search algorithm & Score & Feature selection & Function \\ 
+  \hline
+NB & - & - & - & \code{nb} \\ 
+  TAN/FAN & CL-ODE & log-lik, AIC, BIC & - & \code{tan\_cl} \\ 
+  TAN & TAN-HC & accuracy & - & \code{tan\_hc} \\ 
+  TAN & TAN-HCSP & accuracy & - & \code{tan\_hcsp} \\ 
+  SNB  & FSSJ & accuracy & forward & \code{fssj} \\ 
+  SNB  & BSEJ & accuracy & backward & \code{bsej} \\ 
+  AODE & - & - & - & \code{aode} \\ 
+  kDB & kDB & accuracy & - & \code{kdb} \\ 
+   \hline
+\end{tabular}
+\end{table}
