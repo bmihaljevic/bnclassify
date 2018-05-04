@@ -50,7 +50,7 @@ Estimate predictive accuracy with cross validation.
 
 ``` r
 cv(tn, car, k = 10)
-#> [1] 0.9386336
+#> [1] 0.9415368
 ```
 
 Or compute the log-likelihood
@@ -89,16 +89,23 @@ biocLite(c("graph", "Rgraphviz"))
 Overview
 ========
 
-See the list of implemented functionalities.
+See an overview of the package and examples of usage:
+
+``` r
+vignette('overview', package = 'bnclassify')
+#> Warning: vignette 'overview' not found
+```
+
+See the list of main functionalities.
 
 ``` r
 ?bnclassify
 ```
 
-Use the introduction vignette to get started.
+Use the usage vignette for more details on the functions.
 
 ``` r
-vignette('introduction', package = 'bnclassify')
+vignette('usage', package = 'bnclassify')
 ```
 
 Then have a look at the remaining vignettes.
