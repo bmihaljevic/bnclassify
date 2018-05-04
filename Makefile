@@ -17,8 +17,8 @@ clean:
 	rm src/*.so
 
 clean-vignettes:
-	find vignettes/ -type f -print | grep -Fvf vignettes/.install_extras | grep 'tex$' | xargs rm -f
-	find vignettes/ -type f -print | grep -Fvf vignettes/.install_extras | grep 'pdf$' | xargs rm -f
+	find vignettes/ -type f -print | grep -Fvf vignettes/.install_extras | grep "tex" | xargs rm -f
+	find vignettes/ -type f -print | grep -Fvf vignettes/.install_extras | grep "pdf" | xargs rm -f
 	rm vignettes/*.log
 	rm vignettes/*.R
 
@@ -27,6 +27,7 @@ clean-vignettes:
 technical: ~/code-papers/tex-includes/macros-paper.tex ~/code-papers/tex-includes/macros-math.tex ~/code-papers/paper-bnclassify-rjournal/background.tex
 	cp ~/code-papers/tex-includes/macros-paper.tex  vignettes/  
 	cp ~/code-papers/tex-includes/macros-math.tex  vignettes/ 
+	cd vignettes; cat macros-paper.tex > header.tex; cat macros-math.tex >> header.tex; cat macros-rjournal.tex >> header.tex; cat macros-bnclassify.tex >> header.tex
 	cp ~/code-papers/paper-bnclassify-rjournal/background.tex  vignettes/ 
 	cp ~/code-papers/paper-bnclassify-rjournal/usage.rmd  vignettes/ 
 	cp ~/code-papers/paper-bnclassify-rjournal/RJreferences.bib  vignettes/bnclassify.bib
