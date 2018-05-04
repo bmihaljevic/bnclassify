@@ -9,13 +9,7 @@ output:
     keep_tex: true
     includes:
           in_header: header.tex
-    citation_package: natbib
-preamble: >
-  % Any extra latex you need in the preamble 
-  \input{macros-math}
-  \input{macros-paper}  
-  \def\tecvin/{"technical" vignette}
-  \def\invin/{"introduction" vignette}
+    citation_package: natbib 
 bibliography: bnclassify.bib  
 fontsize: 11pt
 vignette: >

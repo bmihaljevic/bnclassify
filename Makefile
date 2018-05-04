@@ -16,8 +16,11 @@ clean:
 	rm src/*.o
 	rm src/*.so
 
-cleanvig:
+clean-vignettes:
+	find vignettes/ -type f -print | grep -Fvf vignettes/.install_extras | grep 'tex$' | xargs rm -f
+	find vignettes/ -type f -print | grep -Fvf vignettes/.install_extras | grep 'pdf$' | xargs rm -f
 	rm vignettes/*.log
+	rm vignettes/*.R
 
 .PHONY: printl
 
