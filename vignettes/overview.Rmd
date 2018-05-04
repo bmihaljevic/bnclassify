@@ -1,0 +1,31 @@
+---
+title: "The bnclassify package" 
+author: "Bojan Mihaljevic, Concha Bielza, Pedro Larranaga"
+date: "`r Sys.Date()`" 
+output:
+  rmarkdown::pdf_document:
+    toc: true
+    number_sections: true
+    keep_tex: true  
+    includes:
+          in_header: header.tex
+    citation_package: natbib
+bibliography: bnclassify.bib  
+fontsize: 11pt
+vignette: >
+  %\VignetteIndexEntry{Overview}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+\input{background}
+
+```{r child = 'usage.rmd'}
+```

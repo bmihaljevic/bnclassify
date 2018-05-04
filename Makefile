@@ -22,6 +22,7 @@ technical: ~/code-papers/tex-includes/macros-paper.tex ~/code-papers/tex-include
 	cp ~/code-papers/tex-includes/macros-paper.tex  vignettes/  
 	cp ~/code-papers/tex-includes/macros-math.tex  vignettes/ 
 	cp ~/code-papers/paper-bnclassify-rjournal/background.tex  vignettes/ 
+	cp ~/code-papers/paper-bnclassify-rjournal/usage.rmd  vignettes/ 
 	cp ~/code-papers/paper-bnclassify-rjournal/RJreferences.bib  vignettes/bnclassify.bib
 
 clean-technical:

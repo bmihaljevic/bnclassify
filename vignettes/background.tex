@@ -76,13 +76,12 @@ extending or shrinking the parent sets \(\mathbf{Pa}(X_i)\), ranging
 from the NB \citep{Minsky1961} with \(\mathbf{Pa}(X_i) = \{C \}\) for
 all \(X_i\), to those with a limited-size \(\mathbf{Pa}(X_i)\)
 \citep{Friedman1997,Sahami1996}, to those with unbounded
-\(\mathbf{Pa}(X_i)\) \citep{Pernkopf2003}. \textbf{While the NB can only
-represent linearly} separable classes (see Minsky) \citep{jaeger2003},
-more complex models are more expressive \citep{Varando2015jmlr}. Simpler
-models, with sparser \(\mathbf{Pa}(X_i)\), may perform better with less
-training data, due to their lower variance, yet worse with more data as
-the bias due to wrong independence assumptions will tend to dominate the
-error.
+\(\mathbf{Pa}(X_i)\) \citep{Pernkopf2003}. While the NB can only
+represent linearly separable classes \citep{jaeger2003}, more complex
+models are more expressive \citep{Varando2015jmlr}. Simpler models, with
+sparser \(\mathbf{Pa}(X_i)\), may perform better with less training
+data, due to their lower variance, yet worse with more data as the bias
+due to wrong independence assumptions will tend to dominate the error.
 
 The algorithms that produce the above structures are generally instances
 of greedy hill-climbing \citep{Keogh2002,Sahami1996}, with arc inclusion
@@ -112,10 +111,11 @@ obtained in closed form by assuming a Dirichlet prior over
 \noindent where \(N_{ijk}\) is the number of instances in
 \(\mathcal{D}\) such that \(X_i = k\) and \(\mathbf{pa}(x_i) = j\),
 corresponding to the \(j\)-th possible instantiation of
-\(\mathbf{pa}(x_i)\), while \(r_i\) is the cardinality of \(X_i\).
-\(\alpha = 0\) in \req{disparams} yields the maximum likelihood estimate
-of \(\theta_{ijk}\). With incomplete data, the parameters of local
-distributions are no longer independent and we cannot separately
+\(\mathbf{pa}(x_i)\), \(N_{\cdot j \cdot}\) is the number of instances
+in which \(\mathbf{pa}(x_i) = j\), while \(r_i\) is the cardinality of
+\(X_i\). \(\alpha = 0\) in \req{disparams} yields the maximum likelihood
+estimate of \(\theta_{ijk}\). With incomplete data, the parameters of
+local distributions are no longer independent and we cannot separately
 maximize the likelihood for each \(X_i\) as in \req{disparams}.
 Optimizing the likelihood requires a time-consuming algorithm like
 expectation maximization \citep{Dempster1977} which does not guarantee

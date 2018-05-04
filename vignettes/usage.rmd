@@ -1,0 +1,131 @@
+---
+title: "Basic usage examples for the `bnclassify` package"
+author: "Bojan Mihaljevic, Concha Bielza, Pedro Larranaga"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::pdf_document:
+    number_sections: true
+    keep_tex: true
+fontsize: 11pt
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(cache = FALSE, autodep = TRUE, collapse = TRUE, comment = "", highlight = FALSE
+                      # , fig.height = 3, fig.width = 3, 
+                      )
+```
+The available functionalities can be split into four groups:
+
+1. Learning network structure and parameters
+1. Analyzing the model 
+1. Evaluating the model 
+1. Predicting with the model 
+
+\noindent We illustrate these functionalities with the synthetic `car` data set with six features. We begin with a simple example for each functionality group and then elaborate on the options in the following sections. We first load the package and the dataset,
+ 
+```{r} 
+library(bnclassify)
+data(car)
+``` 
+
+\noindent then learn a naive Bayes structure and its parameters,
+```{r} 
+nb <- nb('class', car) 
+nb <- lp(nb, car, smooth = 0.01) 
+``` 
+
+\noindent get the number of arcs in the network,
+```{r} 
+narcs(nb)
+``` 
+
+\noindent get the 10-fold cross-validation estimate of accuracy,
+```{r} 
+cv(nb, car, k = 10) 
+``` 
+
+\noindent and finally classify the entire data set
+```{r} 
+p <- predict(nb, car)
+head(p) 
+``` 
+
+
+```{r, echo = FALSE, results='hide', include=FALSE} 
+set.seed(1)
+```
+
+## Learning 
+The functions for structure learning, shown in \rtbl{algorithms}, correspond to the different algorithms. They all receive the name of the class variable and the data set as their first two arguments, which are then followed by optional arguments. The following runs the CL-ODE algorithm with the AIC score, followed by the FSSJ algorithm to learn another model:
+```{r learn_ode} 
+ode_cl_aic <- tan_cl('class', car, score = 'aic')  
+set.seed(3)
+fssj <- fssj('class', car, k = 5, epsilon = 0)
+```        
+
+The \code{bnc} function is a shorthand for learning structure and parameters in a single step, 
+```{r}
+ode_cl_aic <- bnc('tan_cl', 'class', car, smooth = 1, dag_args = list(score = 'aic'))
+```
+\noindent where the first argument is the name of the structure learning function while and optional arguments go in \code{dag\_args}.  
+
+## Analyzing   
+Printing the model, such as the above \code{ode\_cl\_aic} object, provides basic information about it.
+```{r} 
+ode_cl_aic
+```    
+While plotting the network is especially useful for small networks, printing the structure in the \CRANpkg{deal} \citep{deal1237} and \pkg{bnlearn} format may be more useful for larger ones:
+<!-- 
+r , fig.width = 4, fig.height = 4}
+plot(ode_cl_aic)
+--> 
+
+```{r} 
+modelstring(ode_cl_aic)
+```
+
+We can query the type of structure; \code{params} lets us access the conditional probability tables (CPTs); while \code{features} lists the features:   
+```{r} 
+is_ode(ode_cl_aic)
+params(nb)$buying
+length(features(fssj))
+``` 
+<!-- For example, the CPT of the `buying` feature in `nb` is: --> 
+
+For example, \code{fssj} has selected five out of six features.  
+
+\code{manb\_arc\_posterior} provides the MANB posterior probabilities for arcs from the class to each of the features: 
+```{r} 
+manb <- lp(nb, car, smooth = 0.01, manb_prior = 0.5)
+manb_arc_posterior(manb)
+```
+
+With the posterior probability of 0% for the arc from `class` to `doors`, and 100\% for all others, MANB renders \code{doors} independent from the class while leaving the other features' parameters unaltered. We can see this by printing out the CPTs:
+```{r}
+params(manb)$doors 
+all.equal(params(manb)$buying, params(nb)$buying)
+```   
+For more functions for querying a structure with parameters (\code{bnc\_bn}) see \code{?inspect\_bnc\_bn}. For a structure without parameters (\code{bnc\_dag}), see \code{?inspect\_bnc\_dag}. 
+
+## Evaluating
+  
+Multiple scores can be computed: 
+```{r}
+logLik(ode_cl_aic, car)
+AIC(ode_cl_aic, car)
+```   
+<!-- cLogLik -->
+
+The `cv` function estimates the predictive accuracy of one or more models with stratified cross-validation. In the following we assess the above models produced by NB and CL-ODE algorithms:     
+```{r} 
+set.seed(0)
+cv(list(nb = nb, ode_cl_aic = ode_cl_aic), car, k = 5, dag = TRUE)
+```
+\noindent Above, \code{k} is the desired number of folds, and \code{dag = TRUE} evaluates structure and parameter learning, while `dag = FALSE` keeps the structure fixed and evaluates just the parameter learning. The output gives 86\% and 93\% accuracy estimates for NB and CL-ODE, respectively. \CRANpkg{mlr} and \CRANpkg{caret} packages provide additional options for evaluating predictive performance, such as different metrics, and \pkg{bnclassify} is integrated with both (see the \invin/).  
+
+## Predicting 
+As shown above, we can predict class labels with `predict`. We can also get the class posterior probabilities:    
+```{r}
+pp <- predict(nb, car, prob = TRUE)
+head(pp)
+``` 
