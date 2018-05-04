@@ -132,7 +132,7 @@ P(\mathbf{X}, C) \propto P(C) \prod_{i=1}^{n} P(X_i \mid \mathbf{Pa}(X_i))^{w_i}
   \theta_{ijk}^{AWNB} = \frac{\theta_{ijk}^{w_i}}{\sum_{k=1}^{r_i} \theta_{ijk}^{w_i}},
 \end{equation*}
 
-and plugging those estimates into Equation~(\ref{eq:augnb}). Weights $w_i$ are computed as
+and plugging those estimates into Equation 1 in the "overview" vignette. Weights $w_i$ are computed as
 
 \[w_i = \frac{1}{M}\sum_{t=1}^M \frac{1}{\sqrt{d_{ti}}},\]
 
