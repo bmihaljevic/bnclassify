@@ -76,7 +76,7 @@ families <- function(x) {
   x$.families
 } 
 #' @export 
-#' @describeIn  inspect_bnc_dag Returns the model string of the network in bnlearn format.
+#' @describeIn  inspect_bnc_dag Returns the model string of the network in bnlearn format (adding a space in between two families).
 modelstring <- function(x) {
   stopifnot(inherits(x, "bnc_dag"))
   fams <- families(x)
@@ -84,7 +84,7 @@ modelstring <- function(x) {
   fams <- fams[order] 
   paste(sapply(names(fams), function(node) { 
     paste("[", node, ifelse(length(fams[[node]]) - 1 > 0, "|", ""), paste(fams[[node]][-1], sep = "", collapse = ":"), "]", sep = "")
-  }), collapse = "")   
+  }), collapse = " ")   
 }
 # # Returns all feature families excluding the class variable
 # # Returns all feature families excluding the class variable

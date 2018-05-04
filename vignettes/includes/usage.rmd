@@ -73,8 +73,9 @@ plot(ode_cl_aic)
 --> 
 
 ```{r} 
-modelstring(ode_cl_aic)
-```
+ms <- modelstring(ode_cl_aic)
+strwrap(ms, width = 60)
+``` 
 
 We can query the type of structure; \code{params} lets us access the conditional probability tables (CPTs); while \code{features} lists the features:   
 ```{r} 
