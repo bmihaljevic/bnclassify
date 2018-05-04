@@ -10,7 +10,7 @@ output:
     includes:
           in_header: header.tex
     citation_package: natbib
-bibliography: includes/bnclassify.bib  
+bibliography: bnclassify.bib  
 abstract: The \pkg{bnclassify} package provides state-of-the art algorithms for learning Bayesian network classifiers from data. This vignette serves as a reference for understanding the implemented methods. It also documents some implementation details, especially where they differ from are are undocumented in the original paper.
 fontsize: 11pt 
 vignette: >
@@ -25,7 +25,7 @@ The first part of this vignette provides the required background on Bayesian net
 - `?bnclassify` provides an overview of the package, listing main functionalities and functions.
 - `vignette("introduction", package="bnclassify")` provides details on the implemented methods. 
 
-\input{includes/background}
+\input{background}
 
 \section{Structure learning}
 \label{structure-learning}

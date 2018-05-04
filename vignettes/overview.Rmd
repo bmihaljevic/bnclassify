@@ -9,7 +9,7 @@ output:
     includes:
           in_header: header.tex
     citation_package: natbib 
-bibliography: includes/bnclassify.bib  
+bibliography: bnclassify.bib  
 fontsize: 11pt
 vignette: >
   %\VignetteIndexEntry{Overview}
@@ -18,10 +18,10 @@ vignette: >
 --- 
 
 
-\input{includes/abstract}   
+\input{abstract}   
 ```{r child = 'includes/intro.rmd'}
 ```
-\input{includes/background}  
+\input{background}  
 ```{r child = 'includes/functionalities.rmd'}
 ``` 
 
