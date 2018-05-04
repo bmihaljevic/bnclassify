@@ -27,10 +27,8 @@ clean-vignettes:
 technical: ~/code-papers/tex-includes/macros-paper.tex ~/code-papers/tex-includes/macros-math.tex ~/code-papers/paper-bnclassify-rjournal/background.tex
 	cp ~/code-papers/tex-includes/macros-paper.tex  vignettes/  
 	cp ~/code-papers/tex-includes/macros-math.tex  vignettes/ 
-	#cd vignettes; cat macros-paper.tex > header.tex; cat macros-math.tex >> header.tex; cat macros-rjournal.tex >> header.tex; cat macros-bnclassify.tex >> header.tex
-	cp ~/code-papers/paper-bnclassify-rjournal/background.tex  vignettes/includes/ 
-	cp ~/code-papers/paper-bnclassify-rjournal/usage.rmd  vignettes/includes/ 
-	cp ~/code-papers/paper-bnclassify-rjournal/RJreferences.bib  vignettes/includes/bnclassify.bib
+	cat vignettes/methods.bib vignettes/bnclassify.bib
+	cat ~/code-papers/paper-bnclassify-rjournal/RJreferences.bib >> vignettes/bnclassify.bib
 
 clean-technical:
 	cd vignettes; latexmk -c technical.tex

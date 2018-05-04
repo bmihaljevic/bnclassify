@@ -1,5 +1,5 @@
 ---
-title: "Methodological details for the `bnclassify` package"
+title: "Methods' details for the `bnclassify` package"
 author: "Bojan Mihaljevic, Concha Bielza, Pedro Larranaga"
 date: "`r Sys.Date()`"
 output:
@@ -11,7 +11,7 @@ output:
           in_header: header.tex
     citation_package: natbib
 bibliography: bnclassify.bib  
-abstract: The \pkg{bnclassify} package provides state-of-the art algorithms for learning Bayesian network classifiers from data. This vignette serves as a reference for understanding the implemented methods. It also documents some implementation details, especially where they differ from are are undocumented in the original paper.
+abstract:  This vignette provides \tecvindesc/. It complements the ``overview'' vignette.
 fontsize: 11pt 
 vignette: >
   %\VignetteIndexEntry{methods}
@@ -20,13 +20,14 @@ vignette: >
 ---     
 
 \section{Introduction}\label{introduction}    
-The first part of this vignette provides the required background on Bayesian network classifiers. The remaining sections provide details on the implementation of some of the methods. Other resources provide additional information:
+All notation and acronyms used here are introduced in  `vignette("overview", package="bnclassify")`. 
 
-- `?bnclassify` provides an overview of the package, listing main functionalities and functions.
-- `vignette("introduction", package="bnclassify")` provides details on the implemented methods. 
+See the remaining vignettes: 
 
-\input{background}
-
+- `vignette("overview", package="bnclassify")` provides details on the implemented methods. 
+- `?bnclassify` provides a a consise overview of the package, listing main functionalities and functions.
+- `vignette("introduction", package="bnclassify")` provides details on the implemented methods.   
+ 
 \section{Structure learning}
 \label{structure-learning}
 
@@ -54,7 +55,7 @@ To avoid scoring equivalent structures, at each step we selected the $X_i \right
 
 \subsection{Bayesian parameter estimation}
 
-\pkg{bnclassify} only handles discrete features. With fully observed data, it estimates the parameters with maximum likelihood or Bayesian estimation, according to Equation \ref{eq:disparams}, with a single \(\alpha\) for all local distributions. With incomplete data it uses \textit{available case analysis} \citep{Pigott2001} and substitutes \(N_{\cdot j \cdot}\) in \req{disparams} with \(N_{i j \cdot} = \sum_{k = 1}^{r_i} N_{i j k}\), i.e., with the count of instances in which \(\mathbf{Pa}(X_i) = j\) and \(X_i\) is observed:
+\pkg{bnclassify} only handles discrete features. With fully observed data, it estimates the parameters with maximum likelihood or Bayesian estimation, according to Equation 2 in the "overview" vignette, with a single \(\alpha\) for all local distributions. With incomplete data it uses \textit{available case analysis} \citep{Pigott2001} and substitutes \(N_{\cdot j \cdot}\) in Equation 2 in the "overview" vignette with \(N_{i j \cdot} = \sum_{k = 1}^{r_i} N_{i j k}\), i.e., with the count of instances in which \(\mathbf{Pa}(X_i) = j\) and \(X_i\) is observed:
 \begin{equation*}
 \theta_{ijk} = \frac{N_{ijk} + \alpha}{N_{ i j \cdot } + r_i \alpha}.
 \label{eq:incp_params}
