@@ -149,4 +149,5 @@ Ensembles are of type \code{bnc\_aode} and only \code{print} and model type quer
 The above functions for \code{bnc\_bn} can also be applied to an ensemble with fitted parameters.
 
 ## Documentation 
-Calling \code{?bnclassify} gives an overview of the functionalities, with pointers to relevant functions and their documentation. The \invin/ presents examples and shows how to combine the existing functions. The \tecvin/ provides details about some of the underlying methods and our implementation.  **TODO!!!!!!!!!!!** 
+This vignette provides an overview of the package and background on the implemented methods. Calling \code{?bnclassify} gives a more concise overview of the functionalities, with pointers to relevant functions and their documentation. The \invin/ presents more detailed usage examples and shows how to combine the functions. The \tecvin/ provides additional details on the underlying methods and documents implementation details where they differ from or are undocumented in the original paper.
+

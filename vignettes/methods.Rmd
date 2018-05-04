@@ -14,7 +14,7 @@ bibliography: bnclassify.bib
 abstract: The \pkg{bnclassify} package provides state-of-the art algorithms for learning Bayesian network classifiers from data. This vignette serves as a reference for understanding the implemented methods. It also documents some implementation details, especially where they differ from are are undocumented in the original paper.
 fontsize: 11pt 
 vignette: >
-  %\VignetteIndexEntry{Methods}
+  %\VignetteIndexEntry{methods}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---     

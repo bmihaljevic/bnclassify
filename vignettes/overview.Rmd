@@ -12,7 +12,7 @@ output:
 bibliography: bnclassify.bib  
 fontsize: 11pt
 vignette: >
-  %\VignetteIndexEntry{Overview}
+  %\VignetteIndexEntry{overview}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 --- 
