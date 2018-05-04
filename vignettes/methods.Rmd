@@ -8,7 +8,7 @@ output:
     number_sections: true
     keep_tex: true
     includes:
-          in_header: includes/header.tex
+          in_header: header.tex
     citation_package: natbib
 bibliography: includes/bnclassify.bib  
 abstract: The \pkg{bnclassify} package provides state-of-the art algorithms for learning Bayesian network classifiers from data. This vignette serves as a reference for understanding the implemented methods. It also documents some implementation details, especially where they differ from are are undocumented in the original paper.

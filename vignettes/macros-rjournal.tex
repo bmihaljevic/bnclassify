@@ -21,3 +21,9 @@
 \newcommand{\ctv}[1]{\href{https://CRAN.R-project.org/view=#1}{\emph{#1}}}
 \newcommand{\BIOpkg}[1]{\href{https://www.bioconductor.org/packages/release/bioc/html/#1.html}{\pkg{#1}}}
 
+
+\RequirePackage{fancyvrb}
+\RequirePackage{alltt}
+
+\DefineVerbatimEnvironment{example}{Verbatim}{}
+\renewenvironment{example*}{\begin{alltt}}{\end{alltt}}
