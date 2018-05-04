@@ -16,6 +16,9 @@ clean:
 	rm src/*.o
 	rm src/*.so
 
+cleanvig:
+	rm vignettes/*.log
+
 .PHONY: printl
 
 technical: ~/code-papers/tex-includes/macros-paper.tex ~/code-papers/tex-includes/macros-math.tex ~/code-papers/paper-bnclassify-rjournal/background.tex
