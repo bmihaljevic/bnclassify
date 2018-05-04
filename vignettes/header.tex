@@ -1,6 +1,8 @@
 % contains macros-math + macros-paper + usepackage declarations. this file should be built by make
 
 \usepackage{centernot}
+\usepackage{RJournal}
+\usepackage{amsmath,amssymb,array} 
 
 \newcommand{\bigCI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}}
 \newcommand{\nbigCI}{\centernot{\bigCI}} 
@@ -29,27 +31,27 @@
 
 %\newcommand{\pkg}[1]{\textbf{#1}} 
 
-\DeclareRobustCommand\code{\bgroup\@noligs\@codex}
-\def\@codex#1{\texorpdfstring%
-{{\normalfont\ttfamily\hyphenchar\font=-1 #1}}%
-{#1}\egroup}
-\newcommand{\kbd}[1]{{\normalfont\texttt{#1}}}
-\newcommand{\key}[1]{{\normalfont\texttt{\uppercase{#1}}}}
-\DeclareRobustCommand\samp{`\bgroup\@noligs\@sampx}
-\def\@sampx#1{{\normalfont\texttt{#1}}\egroup'}
-\newcommand{\var}[1]{{\normalfont\textsl{#1}}}
-\let\env=\code
-\newcommand{\file}[1]{{`\normalfont\textsf{#1}'}}
-\let\command=\code
-\let\option=\samp
-\newcommand{\dfn}[1]{{\normalfont\textsl{#1}}}
-% \acronym is effectively disabled since not used consistently
-\newcommand{\acronym}[1]{#1}
-\newcommand{\strong}[1]{\texorpdfstring%
-{{\normalfont\fontseries{b}\selectfont #1}}%
-{#1}}
-\let\pkg=\strong
-\newcommand{\CRANpkg}[1]{\href{https://CRAN.R-project.org/package=#1}{\pkg{#1}}}%
-\let\cpkg=\CRANpkg
-\newcommand{\ctv}[1]{\href{https://CRAN.R-project.org/view=#1}{\emph{#1}}}
-\newcommand{\BIOpkg}[1]{\href{https://www.bioconductor.org/packages/release/bioc/html/#1.html}{\pkg{#1}}}
+% \DeclareRobustCommand\code{\bgroup\@noligs\@codex}
+% \def\@codex#1{\texorpdfstring%
+% {{\normalfont\ttfamily\hyphenchar\font=-1 #1}}%
+% {#1}\egroup}
+% \newcommand{\kbd}[1]{{\normalfont\texttt{#1}}}
+% \newcommand{\key}[1]{{\normalfont\texttt{\uppercase{#1}}}}
+% \DeclareRobustCommand\samp{`\bgroup\@noligs\@sampx}
+% \def\@sampx#1{{\normalfont\texttt{#1}}\egroup'}
+% \newcommand{\var}[1]{{\normalfont\textsl{#1}}}
+% \let\env=\code
+% \newcommand{\file}[1]{{`\normalfont\textsf{#1}'}}
+% \let\command=\code
+% \let\option=\samp
+% \newcommand{\dfn}[1]{{\normalfont\textsl{#1}}}
+% % \acronym is effectively disabled since not used consistently
+% \newcommand{\acronym}[1]{#1}
+% \newcommand{\strong}[1]{\texorpdfstring%
+% {{\normalfont\fontseries{b}\selectfont #1}}%
+% {#1}}
+% \let\pkg=\strong
+% \newcommand{\CRANpkg}[1]{\href{https://CRAN.R-project.org/package=#1}{\pkg{#1}}}%
+% \let\cpkg=\CRANpkg
+% \newcommand{\ctv}[1]{\href{https://CRAN.R-project.org/view=#1}{\emph{#1}}}
+% \newcommand{\BIOpkg}[1]{\href{https://www.bioconductor.org/packages/release/bioc/html/#1.html}{\pkg{#1}}}
