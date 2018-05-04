@@ -55,7 +55,7 @@ Functions for inspecting a \code{\link{bnc_dag}} object.
 
 \item \code{families}: Returns the family of each variable.
 
-\item \code{modelstring}: Returns the model string of the network in bnlearn format.
+\item \code{modelstring}: Returns the model string of the network in bnlearn format (adding a space in between two families).
 
 \item \code{feature_families}: Returns the family of each feature.
 

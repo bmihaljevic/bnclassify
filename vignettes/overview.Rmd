@@ -19,8 +19,10 @@ vignette: >
 
 
 \input{abstract}   
-```{r child = 'includes/intro.rmd'}
+```{r child = 'includes/intro.rmd'} 
 ```
+
+The rest of this paper is structured as follows. Section \ref{sec:bcground} provides background on Bayesian network classifiers. Section \ref{sec:functionalities} describes the implemented functionalities. Section \ref{sec:usage} illustrates usage with a synthetic data set. Section \ref{sec:implementation} discusses implementation while Section \ref{sec:relatedsw} briefly surveys related software. Finally, Section \ref{sec:conclusion} concludes and outlines future work.   
 \input{background}  
 ```{r child = 'includes/functionalities.rmd'}
 ``` 
