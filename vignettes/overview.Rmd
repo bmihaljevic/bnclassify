@@ -43,7 +43,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-\input{background}
+\input{includes/background}
 
-```{r child = 'usage.rmd'}
+```{r child = 'includes/usage.rmd'}
 ```
