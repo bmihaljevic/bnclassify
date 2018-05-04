@@ -6,11 +6,13 @@ output:
   rmarkdown::pdf_document:
     toc: true
     number_sections: true
-    keep_tex: true
+    keep_tex: true 
+    includes:
+          in_header: header.tex
 bibliography: bnclassify.bib
 fontsize: 11pt
 vignette: >
-  %\VignetteIndexEntry{introduction}
+  %\VignetteIndexEntry{usage}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -22,13 +24,11 @@ knitr::opts_chunk$set(cache = FALSE, autodep = TRUE, collapse = TRUE, comment = 
 ```
 
 # Introduction
-The `bnclassify` package implements state-of-the-art algorithms for learning discrete Bayesian network classifiers from data, as well as functions for using these classifiers for prediction, assessing their predictive performance, and inspecting and analyzing their properties. 
+The `bnclassify` package implements state-of-the-art algorithms for learning discrete Bayesian network classifiers from data, as well as functions for using these classifiers for prediction, assessing their predictive performance, and inspecting and analyzing their properties. This vignette gives \invindesc/. Other resources provide additional information: 
 
-This vignette introduces the available functionalities. Other resources provide additional information:
-
-- `?bnclassify` lists main functionalities.
-- `vignette("technical", package="bnclassify")` provides details on the implemented methods.
-- `vignette("runtimes", package="bnclassify")` discusses some issues affecting algorithms' runtimes.
+- `vignette("overview", package="bnclassify")` provides \overvindesc/. 
+- `?bnclassify` provides a \pkghelp/.
+- `vignette("methods", package="bnclassify")`  provides \tecvindesc/.   
 
 # Data
 Throughout the vignette we will use the car evaluation data set. It has six discrete features, describing car properties such as buying price or the number of doors, and 1728 instances assigned to four different classes (unacc, acc, good, vgood). See `?car` for more details.
