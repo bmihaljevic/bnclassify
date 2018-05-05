@@ -25,7 +25,7 @@ test_that("with incomplete data", {
 
 test_that("check consistent result ", {    
   skip_if_not_installed('mlbench')
-  skip_on_cran() 
+  skip_on_cran()
   require(mlbench)
   data("DNA") 
   w <- compute_wanbia_weights( 'Class', DNA)   
