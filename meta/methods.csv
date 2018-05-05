@@ -1,0 +1,11 @@
+Structure,Structure learning,,,,,Parameter learning,,,Other
+Structure,Search algorithm,Score,Feature selection,Function,Paper,Method Name,Paper,Feature selection,
+NB,-,-,-,nb,Minsky1961,MANB,Dash2002,Bayesian,Plotting*
+TAN/FAN,CL-ODE,"log-lik, AIC, BIC",-,tan_cl,Friedman1997,AWNB,Hall2007,Weighting,cross-validation
+TAN,TAN-HC,accuracy,-,tan_hc,Keogh2002,WANBIA,Zaidi2013,Weighting,"is_ode(), is_nb(), …"
+TAN,TAN-HCSP,accuracy,-,tan_hcsp,Keogh2002,,,,"features(), classes()"
+SNB ,FSSJ,accuracy,forward,fssj,Pazzani1996,,,,families()
+SNB ,BSEJ,accuracy,backward,bsej,Pazzani1996,,,,as_bnlearn()
+AODE,-,-,-,aode,Webb2005,,,,as_mlr()
+ODE-MNET,CL-MNET,"log-lik, AIC, BIC",-,mnet_cl,Friedman1997,,,,predict()
+kDB,kDB,accuracy,-,kdb,Blanco2005,,,,

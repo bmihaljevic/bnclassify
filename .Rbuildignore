@@ -2,6 +2,7 @@
 ^\.Rproj\.user$
 .gitignore
 cran-comments.md
+meta
 Makefile
 ^\.travis\.yml$
 ^README\.Rmd$
