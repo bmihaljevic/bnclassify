@@ -104,7 +104,7 @@ Evidence::Evidence(Rcpp::DataFrame & test, const Rcpp::CharacterVector & feature
  * MappedCPT.
  */  
 MappedCPT::MappedCPT(const CPT & cpt, const Evidence & test) :
-                    test(test), cpt(cpt) 
+                    cpt(cpt), test(test) 
 {  
   Rcpp::CharacterVector columns_db = test.getColumns();
   // this is because class in unobserved. if we have more unobserved, it would need a different procedure.

@@ -136,11 +136,11 @@ public:
  */
 class MappedModel {
  const Model & model;
- const Evidence & evidence;
+ const std::vector<double> & class_cpt; 
  int nclass; 
  int n;
+ const Evidence & evidence;
  std::vector<MappedCPT> cpts;     
- const std::vector<double> & class_cpt; 
  // Buffer for a row of per-class probabilities
  std::vector<double> output_buffer; 
  // Buffer for an instance 
