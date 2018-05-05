@@ -38,7 +38,7 @@ test_that("CV two bnc_bns to repeat learning", {
   expect_equal(length(a), 2L)
   expect_true(all(a > 0.5))  
   # With dag = FALSE it fails
-  expect_error(cv(list(n, m), car[ , c(1, 7)], k = 5, dag = FALSE), "cols")
+  expect_error(cv(list(n, m), car[ , c(1, 7)], k = 5, dag = FALSE), "not found")
 })
 
 test_that("CV classifier names", {
