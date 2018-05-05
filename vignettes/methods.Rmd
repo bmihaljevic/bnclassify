@@ -114,8 +114,11 @@ The WANBIA \citep{Zaidi2013} method updates naive Bayes' parameters with a singl
 
 \begin{equation}
     g_i = \sum_{j = 1}^{N} \Big( \log{P(X_i = x_i^{(j)} \mid c^{(j)})} - \sum_{c \in C} P(c \mid \mathbf{x}; \mathbf{w} ) \log P(X_i = x_i^{(j)} \mid c) \Big),
+    \label{eq:wanbia}
 \end{equation}
 where the probabilities are those estimated with maximum likelihood, i.e., without taking weights into account, whereas $P(c \mid \mathbf{x}; \mathbf{w} )$ takes weights into account. This corresponds to discriminative learning of parameters, as a discriminative, rather than generative, objective function is optimized.
+
+If \(X_i\) is unobserved for some instance \(j\), that is, \(x_i^{(j)} = \) \code{NA}, then we replace \({P(X_i = x_i^{(j)} \mid c^{(j)})}\) and \(P(X_i = x_i^{(j)} \mid c)\) with 1 in Equation \ref{eq:wanbia} (as a leaf in the Bayesian network, an unobserved \(X_i\) does not affect conditional log-likelihood).
 
 \subsection{Attribute-weighted naive Bayes}
 
