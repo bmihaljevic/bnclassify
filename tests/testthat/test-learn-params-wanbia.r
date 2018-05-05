@@ -18,6 +18,7 @@ test_that("wanbia error", {
 
 test_that("with incomplete data", {   
   skip_on_cran()
+  skip("too slow currently")
   w <- compute_wanbia_weights( 'Class', voting)   
   # just check results is consistent
   expect_equal(w[['physician_fee_freeze']], 0.7730736, tolerance = 1e-6)
