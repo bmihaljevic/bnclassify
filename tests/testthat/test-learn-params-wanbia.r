@@ -26,6 +26,7 @@ test_that("with incomplete data", {
 test_that("check consistent result ", {    
   skip_if_not_installed('mlbench')
   skip_on_cran()
+  skip("too slow currently")
   require(mlbench)
   data("DNA") 
   w <- compute_wanbia_weights( 'Class', DNA)   
@@ -35,6 +36,7 @@ test_that("check consistent result ", {
 test_that("with more than two classes ", {   
   skip_if_not_installed('mlbench')
   skip_on_cran()
+  skip("too slow currently")
   require(mlbench)
   data("Soybean") 
   w <- compute_wanbia_weights( 'Class', Soybean)   

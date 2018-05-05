@@ -1,29 +1,21 @@
-## Update
-- The package was archived as my email was temporarily unavailable (full inbox). 
-- I am no longer using the microbenchmark package.   
-
 ## Test environments
-* Ubuntu 16.04, R 3.4.3 (local)
-* ubuntu 16.04, R 3.4.2 (travis-CI)
-* win-builder (R-devel and R-release)
+* Ubuntu 16.04, R 3.4.4 (local)
+* ubuntu 14.04, R 3.5.0 (travis-CI) Failing !!!!!!!!
+* win-builder (R-devel and R-release) Lacking devel!!!!!!!!
 
 ## R CMD check results
-There were no ERRORs, WARNINGs. There was one NOTE:   
+Locally, there were no ERRORs, no WARNINGs, and no NOTEs.
 
-checking CRAN incoming feasibility ... NOTE
-Maintainer: ‘Mihaljevic Bojan <bmihaljevic@fi.upm.es>’
+On Travis and win-builder there was one WARNING: 
 
-New submission
+* checking sizes of PDF files under 'inst/doc' ... WARNING
+  'gs+qpdf' made some significant size reductions:
+     compacted 'overview.pdf' from 427Kb to 148Kb
+  consider running tools::compactPDF(gs_quality = "ebook") on these files 
 
-Package was archived on CRAN
+Since the vignette is generated automatically from vignettes/overview.rmd and I don't know of anything I can do to reduce the size of the resulting pdf. I avoided the warning locally by using 
+`devtools::check(args = '--as-cran', cran = TRUE, check_version = TRUE, build_args = c('--resave-data','--compact-vignettes="gs+qpdf"'))`.
 
-Possibly mis-spelled words in DESCRIPTION:
-  Bielza (3:156)
-  Larranaga (3:165)
-
-CRAN repository db overrides:
-  X-CRAN-Comment: Archived on 2018-01-08 as maintainer address bounced
-    when asked for corrections.  
 
 ## Downstream dependencies
 There are currently no downstream dependencies for this package.
