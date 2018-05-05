@@ -42,16 +42,7 @@ test_that("Data and unmodified", {
  expect_equal(db, car)
  expect_equal(db, car)
  expect_equal(tn, mod)
-})  
-
-test_that("To check", {
-  expect_true(FALSE)
-#   // TODO: class names for all cpts
-# // getClasses() in model   
-#     
-# // Test e.g., for out of bounds 
-# // Consider a single row DF, an empty DF, etc. 
-})   
+})    
 
 test_that("Bug", {
  skip("Local rdata file")

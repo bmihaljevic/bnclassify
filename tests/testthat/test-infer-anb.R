@@ -69,7 +69,7 @@ test_that("different levels", {
   nb <- nbcar()
   ce <- car
   levels(ce$buying) <-  rev(levels(ce$buying))
-  expect_error(compute_joint(nb, ce), 
+  expect_error(compute_log_joint(nb, ce), 
                "Levels in data set must match those in the CPTs ")
 })
 

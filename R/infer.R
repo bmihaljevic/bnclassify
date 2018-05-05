@@ -123,18 +123,30 @@ new_evidence <- function(evidence,  hasna) {
 # This could call Rcpp directly. 
 # This is to avoid has_nas each time from greedy search
 make_evidence <- function(dataset, x = NULL) {
+  # TODO: this should go to the constructor of evidence, and be done there. As done currently, when calling compute_joint directly, all code in make_evidence is skipped.
   evidence <- dataset 
   if (!inherits(evidence, "bnc_evidence")) {   
     features <- NULL
     if (!is.null(x)) { 
-      features <- features(x)
+      features <- features(x) 
+      # check all features in dataset
+      #  checks cpts match the dataset 
+      # only for those that have params() defined; will not work for an aode. refactor this.
+      dataset <- trim_dataset_cpp(dataset, features)
+      if (inherits(x, 'bnc_bn')) { 
+        data_levels <- lapply(dataset, levels)[features]
+        #   # [features] omits the class and puts in same order as data levels
+        var_values <- cpt_vars_values(params(x))[features]
+        if (!isTRUE(all.equal(data_levels, var_values, check.attributes = FALSE))) {
+          stop("Levels in data set must match those in the CPTs (values(x)).")  
+        } 
+      }
     }  
     hasna <- hasna_features(dataset, features )
     evidence <- new_evidence(evidence,  hasna)
   }
   # check evidence? 
        # has hasna. it is logical.
-       #  cpts match the dataset 
   evidence
 }
 evidence_has_nas <- function(evidence) {
