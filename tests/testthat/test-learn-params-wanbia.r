@@ -23,14 +23,18 @@ test_that("with incomplete data", {
   expect_equal(w[['physician_fee_freeze']], 0.7730736, tolerance = 1e-6)
 })
 
-test_that("check consistent result ", {   
-  # do on car 
-  # expect_equal(w$par['physician_fee_freeze'])
-  # TODO
+test_that("check consistent result ", {    
+  skip_if_not_installed('mlbench')
+  skip_on_cran() 
+  require(mlbench)
+  data("DNA") 
+  w <- compute_wanbia_weights( 'Class', DNA)   
+  expect_equal(w[['V132']], 0.99039949, tolerance = 1e-6) 
 }) 
 
 test_that("with more than two classes ", {   
   skip_if_not_installed('mlbench')
+  skip_on_cran()
   require(mlbench)
   data("Soybean") 
   w <- compute_wanbia_weights( 'Class', Soybean)   

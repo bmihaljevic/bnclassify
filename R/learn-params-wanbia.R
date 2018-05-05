@@ -34,26 +34,9 @@ compute_cll_gradients <- function(unweighted, dataset, w) {
   grad <- mapply(cll_gradient_var, feats, params , MoreArgs = list(class = db[[class_var]], class_posterior = cp )) 
   grad 
 }
-#' Assuming that the cpt is a leaf, returns 1 instead of a CPT entry when value missing
-#' @param  x a vector of values
-#' @keywords  internal
-get_log_leaf_entries  <- function(cpt, x) { 
-  stopifnot(is.character(x), length(dim(cpt)) == 2) 
-  entries <- matrix(numeric(length = length(x) *  ncol(cpt)), ncol = ncol(cpt))
-  colnames(entries) <- colnames(cpt)
-  for (i in seq_along(x)) {
-    value <- x[i]
-    if (is.na(value)) { 
-      entries[i, ] <- 1
-    }
-    else { 
-      entries[i, ] <- cpt[value, ] 
-    }
-  }
-  log(entries)
-}
 cll_gradient_var <- function(x, cpt, class, class_posterior) { 
-  log_theta <- get_log_leaf_entries(cpt, x)  
+  stopifnot(is.character(x))
+  log_theta <- log(cpt[x, ])
   stopifnot(identical(dim(class_posterior), dim(log_theta )))
   log_theta_class <- subset_by_colnames(class, log_theta) 
   sum(- log_theta_class + rowSums(log_theta * class_posterior)) 
