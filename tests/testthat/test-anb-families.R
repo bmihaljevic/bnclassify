@@ -39,13 +39,13 @@ test_that("check families", {
   tfams <- lapply(tvars[-6], function(x) c(x, 'f'))
   tfams <- append(tfams, list(f = 'f'))
   tfams$b <- 'b'
-  expect_error(check_anb_families(tfams, 'f'), 'fams_ok')
+  if (!skip_assert()) expect_error(check_anb_families(tfams, 'f'), 'fams_ok')
   # Family not in vars order
   tvars <- setNames(nm = letters[1:6])
   tfams <- lapply(tvars[-6], function(x) c(x, 'f'))
   tfams <- append(tfams, list(f='f'))
   tfams <- tfams[6:1]
-  expect_error(check_anb_families(tfams, 'f'), 'last')
+  if (!skip_assert()) expect_error(check_anb_families(tfams, 'f'), 'last')
 })
 
 test_that("is is family nominal", {

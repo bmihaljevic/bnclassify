@@ -1,3 +1,7 @@
+#' Whether to do checks or not. Set TRUE to speed up debugging or building. 
+skip_assert <- function() {
+ TRUE 
+}
 # Tests whether two character vectors are identical when sorted
 is_perm <- function(x, y) {
   is.character(x) && identical(sort(x), sort(y))
@@ -56,6 +60,7 @@ check_non_empty_complete <- function(x) {
   stopifnot(is_non_empty_complete(x))
 }
 are_complete_dimnames <- function(x) {
+  if (skip_assert( )) return (TRUE)
   # Check x has non empty comlete dimames
   dnames <- dimnames(x)
   if (!is_non_empty_complete(dnames)) return (FALSE)

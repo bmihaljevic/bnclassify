@@ -26,6 +26,7 @@ get_family_vars <- function(families) {
 }
 # Check that the families correspond to an augmented naive Bayes. 
 check_anb_families <- function(families, class) {
+  if (skip_assert( )) return (TRUE)
   vars <- get_family_vars(families)
   # Class must be the last family so that it is also last in vars()
   #   Check that class has no parents
@@ -61,6 +62,7 @@ unique_families <- function(fams) {
   all_fams[!duplicated(all_fams)]
 }
 is_dag_families <- function(families) {
+  if (skip_assert( )) return (TRUE)
   !(is.null(order_acyclic(families)))
 }
 #' Provide an acyclic ordering (i.e., a topological sort). 

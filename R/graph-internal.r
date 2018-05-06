@@ -213,6 +213,7 @@ graph_mstree_kruskal <- function(g) {
   kruskal  
 } 
 graph_is_directed <- function(x) { 
+  if (skip_assert( )) return (TRUE)
   stopifnot(inherits( x, "bnc_graph_internal"), x$edgemode %in% c("directed", "undirected"))  
   x$edgemode == "directed" 
 } 

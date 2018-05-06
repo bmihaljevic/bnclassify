@@ -25,6 +25,7 @@ test_that("bnc_dag", {
   e <- list(A = 'B',B = NULL)
   edges <- graph_from_to_to_edges('A', 'B')
   g <- graph_internal(nodes = LETTERS[1:3], edges = edges, edgemode = "directed")
+  # if (!skip_assert()) expect_error(bnc_dag(dag = g, class = 'A'), "fams_ok")
   expect_error(bnc_dag(dag = g, class = 'A'), "fams_ok")
 })
 
