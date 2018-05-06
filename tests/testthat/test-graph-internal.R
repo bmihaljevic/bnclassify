@@ -5,7 +5,7 @@ test_that("empty graph", {
    expect_equal(length(a$nodes), 0)
    expect_equal(length(graph_nodes(a)), 0)
    expect_is(a$edges, "matrix")
-   expect_true(mode(a$edges) == "numeric")
+   expect_true(mode(a$edges) == "character")
 })
   
 test_that("get adjacent", {  
@@ -49,4 +49,12 @@ test_that("Direct tree", {
   expect_equal(d$edgemode, "directed")
   d <- direct_tree(af, 'safety')
   expect_equal(d$edgemode, "directed")
+})
+
+test_that("node parents no parents", {  
+  g <- graph_internal()
+  expect_error(graph_node_parents('A', g))
+  
+  p <- graph_node_parents('A', graph_internal('A')) 
+  expect_equal(p, character())
 })

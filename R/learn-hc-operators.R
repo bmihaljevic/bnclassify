@@ -1,4 +1,6 @@
-
+get_candidate_features <- function(bnc_dag, features_to_include) {
+  setdiff(features_to_include, features(bnc_dag))
+}
 # Forms dags by conditioninng each not-included feature on each of the supernodes
 includes_in_supernodes <- function(bnc_dag, features_to_include) {
   stopifnot(is_semi_naive(bnc_dag))
