@@ -83,8 +83,6 @@ is_ode(ode_cl_aic)
 params(nb)$buying
 length(features(fssj))
 ``` 
-<!-- For example, the CPT of the `buying` feature in `nb` is: --> 
-
 For example, \code{fssj} has selected five out of six features.  
 
 \code{manb\_arc\_posterior} provides the MANB posterior probabilities for arcs from the class to each of the features: 
