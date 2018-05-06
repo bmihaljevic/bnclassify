@@ -1,36 +1,29 @@
-# all functions with begin wit graph_ 
-# Nodes + edge list. 
+# all functions with begin with graph_ 
+# TODO: make BH use character nodes an input and not rely on integers. It could be faster. 
 
-# TODO: implement the interfac of dag.r.  
-# TODO: also cover anb-families. Most of it anyway. Because no need for ANB specifics here. That is, the class variable is indistinct here.
-# However, soma of anb-families will probably go away.
-
-# TODO: the matrix list should contain integers, not strings, to avoid back and forth with boost
-#     a print function could translate the integers to strings
-# 
-# nodes()
-# add ..
-# I only need boost for algorithms and things I do not implement
-# is_dag() : here call  the acyclic check   
-
-
-# TODO: add checks from make_graph 
-
-# /**
-#  * Basic adjacency list object api
-#  * Data:
-#  *  mapping from names to ids.
-#  *  Matrix of edges between
-#  * adj_list {
-#  *    string_vec nodes : all the string nodes I need.
-#  *    edge matrix: uses ids as entries
-#  *   public
-#  *    int vec ids():
-#  *    edgeMatrix(names=FALSE): uses ids as entries
-#  *    edgeMatrix(names=FALSE): uses names as entries
-#  *    print(): print nicely
-#  * }
-#  */   
+new_graph_internal <- function(nodes, edges, weights, edgemode) { 
+    stopifnot(valid_nodes(nodes), valid_edges(edges, numeric = FALSE), valid_weights(weights, edges))
+    fromto <- c('from', 'to')
+    colnms <- colnames(edges) 
+    stopifnot(length(colnms) == 0 || identical(colnms, fromto))
+    colnames(edges) <- fromto
+    # Fixing the type. 
+    if (is.null(nodes)) {
+      nodes <- character()
+    }
+    if (is.null(weights)) {
+      weights <- numeric()
+    }
+    dag <- list(nodes=nodes, edges=edges, weights = weights, edgemode = edgemode)
+    class(dag) <- 'bnc_graph_internal'
+    dag
+}
+graph_internal <- function(nodes = NULL, edges = NULL, weights = NULL, edgemode = "directed") {
+    from <- edges[, 1]
+    to <- edges[, 2]
+    edges <- graph_from_to_to_edges (from = from, to = to)
+    new_graph_internal(nodes, edges, weights, edgemode) 
+} 
 valid_weights <- function(weights, edges) {
   is.null(weights) || (!is.null(edges) && is.numeric(weights) && is.vector(weights) && length(weights) == nrow(edges))
 } 
@@ -47,40 +40,20 @@ valid_edges <- function(edges, numeric = TRUE) {
     valid <- valid && is.character(edges)
   }
   valid 
-}  
-graph_internal <- function(nodes = NULL, edges = NULL, weights = NULL, edgemode = "directed") {
-    #  pass edges to numeric. Useful for BH. 
-    edges <- graph_make_edges(nodes, edges)
-    graph_internal_make(nodes, edges, weights, edgemode) 
-}
-graph_internal_make <- function(nodes, edges, weights, edgemode) { 
-    stopifnot(valid_nodes(nodes), valid_edges(edges, numeric = TRUE), valid_weights(weights, edges))
-    fromto <- c('from', 'to')
-    colnms <- colnames(edges) 
-    stopifnot(length(colnms) == 0 || identical(colnms, fromto))
-    colnames(edges) <- fromto
-    # Fixing the type. 
-    if (is.null(nodes)) {
-      nodes <- character()
-    }
-    if (is.null(weights)) {
-      weights <- numeric()
-    }
-    dag <- list(nodes=nodes, edges=edges, weights = weights, edgemode = edgemode)
-    class(dag) <- 'bnc_graph_internal'
-    dag
-}
+}   
 graph_nodes <- function(x) {
   stopifnot(inherits( x, "bnc_graph_internal"))
   x$nodes 
-} 
-graph_make_edges <- function(nodes, edges) { 
+}  
+# Maps edgs to int 
+graph_edges2int <- function(nodes, edges) { 
   stopifnot(valid_nodes(nodes), valid_edges(edges, numeric = FALSE), 
-            all(edges[] %in% nodes), all(edges[, 1] != edges[, 2]))
+               all(edges[] %in% nodes), all(edges[, 1] != edges[, 2]))
   from <- match(edges[, 1], nodes) - 1
   to <- match(edges[, 2], nodes) - 1
   graph_from_to_to_edges (from = from, to = to)
 }  
+
 graph_from_to_to_edges <- function(from, to) { 
   # TODO: a hack. depending from where it is called, i might return a character or integer matrix. must specify pre and post conditions.
   if (is.null(from)) from <- character()
@@ -90,13 +63,14 @@ graph_from_to_to_edges <- function(from, to) {
   m
 }
 call_bh <- function(fun, g, ...) { 
- do.call(fun, args = list(vertices = g$nodes, edges  = g$edges, ...)) 
+ edges <- graph_edges2int(g$nodes, g$edges)
+ do.call(fun, args = list(vertices = g$nodes, edges  = edges, ...)) 
 }
 #' connected_components 
 #'  
 #' @param x currently a graphNEL. TODO But will be a graph_internal.
 #' @keywords internal
-graph_connected_components <- function(g) {    
+graph_connected_components <- function(g) {
   stopifnot(inherits(g, "bnc_graph_internal"))  
   connected <- call_bh('bh_connected_components', g)
   comps <- split(graph_nodes(g), connected + 1)
@@ -149,9 +123,8 @@ graph_add_edges <- function(from, to, g) {
   # just simply convert the edges to numbers and then add to egisting matrig. 
   # all nodes must be already in matrig.
   edges <- graph_from_to_to_edges(from, to)
-  edges <- graph_make_edges(g$nodes, edges )
   edges <- rbind(g$edges, edges)
-  augmented <- graph_internal_make(nodes = g$nodes, edges = edges, NULL, "directed")  
+  augmented <- new_graph_internal(nodes = g$nodes, edges = edges, NULL, "directed")  
   augmented 
 }
 graph_remove_edges <- function(from, to, g) {  
@@ -181,25 +154,15 @@ graph_is_adjacent <- function(from, to, g) {
 graph_get_adjacent <- function(node, g) {  
   stopifnot(inherits( g, "bnc_graph_internal")) 
   stopifnot(node %in% g$nodes)
-  # unfortunately, node is in numbers internally. TODO: better use strings definitely. simpler.
-  edges <- graph_named_edge_matrix(g)
-  row_inds <- apply(edges, 1, function(g) node %in% g)
-  nodes <- unique(edges[row_inds,  ] )
+  row_inds <- apply(g$edges, 1, function(g) node %in% g)
+  nodes <- unique(g$edges[row_inds,  ] )
   setdiff(nodes, node)   
 }    
-graph_num_arcs <- function(x) {
-  g <- x 
-  if (!inherits( g, "bnc_graph_internal"))  {
-    g <- graphNEL2_graph_internal(x) 
-  }
+graph_num_arcs <- function(g) { 
   stopifnot(inherits( g, "bnc_graph_internal")) 
   nrow(g$edges)
 }
-graph_num_nodes <- function(x) { 
-  g <- x 
-  if (!inherits( g, "bnc_graph_internal"))  {
-    g <- graphNEL2_graph_internal(x) 
-  }
+graph_num_nodes <- function(g) {
   stopifnot(inherits( g, "bnc_graph_internal")) 
   length(g$nodes)
 }
@@ -209,12 +172,23 @@ graph_parents <- function(g) {
   if (nnodes == 0) return(list())
   parents <- setNames(replicate(nnodes, character()), graph_nodes(g))
   if (graph_num_arcs(g) == 0) return(parents)
-  edges <- graph_named_edge_matrix(g) 
-  have_parents <- tapply(unname(edges[, 'from']), unname(edges[, 'to']),
-                         identity, simplify = FALSE)
-  parents[names(have_parents)] <- have_parents
-  parents  
+  families <- lapply(graph_nodes(g), graph_node_parents, g)
+  setNames(families, nm = graph_nodes(g) ) 
+} 
+# Does not check whether node is actually in g
+graph_node_parents <- function(node, g) {
+  stopifnot(inherits( g, "bnc_graph_internal"), is.character(node))
+  if (!(node %in% g$nodes)) stop(paste0("Vertex" , node, "is not in the graph."))
+  edges <- g$edges 
+  ind <- edges[, 'to'] == node  
+  unname(edges[ind, 'from'])
 }
+# TODO remove this function.
+graph_families <- function(g) {  
+  stopifnot(inherits( g, "bnc_graph_internal"))  
+  parents <- graph_parents(g)
+  mapply(c, names(parents), parents, SIMPLIFY = FALSE)
+}   
 #' Returns an edge matrix with node names (instead of node indices).
 #' 
 #' @return A character matrix. 
@@ -225,7 +199,7 @@ graph_named_edge_matrix <- function(x) {
   u[] <- x$nodes[as.vector(u) + 1]
   if (length(u) == 0) mode(u) <- 'character'
   stopifnot(is.character(u))
-  if(anyNA(u)) browser()
+  if(anyNA(u)) stop('NAs in graph')
   u
 }
 graph_mstree_kruskal <- function(g) {  
@@ -280,8 +254,7 @@ graph_is_dag <- function(g) {
 }   
 graph_internal_union <- function(g) {
   stopifnot(is.list(g))
-  # g <- lapply(g, graphNEL2_graph_internal) 
-  edges <- lapply(g, graph_named_edge_matrix)
+  edges <- lapply(g, '[[', "edges")
   edges <- Reduce(rbind, edges)
   nodes <- sapply(g, graph_nodes)
   nodes <- as.vector(unlist(nodes))
@@ -361,8 +334,7 @@ make_graph <- function(nodes, from, to, weights) {
 # just like edges should be stored with names. Using int ids makes no sense 
 graph_get_named_weights <- function(g) { 
   stopifnot(inherits( g, "bnc_graph_internal"))  
-  e <- graph_named_edge_matrix(g)
-  df <- data.frame(e)
+  df <- data.frame(g$edges)
   df$w <- g$weights
   df
 }

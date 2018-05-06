@@ -24,7 +24,7 @@ graph_internal2graph_NEL <- function(x) {
     stop("Package graph required for this functionality.")
   }
       stopifnot(inherits( x, "bnc_graph_internal")) 
-      edges <- graph_named_edge_matrix(x) 
+      edges <- x$edges 
       weights <- x$weight
       if (length(weights ) == 0) {
         # ftM2graphNEL fails with a zero length W vector

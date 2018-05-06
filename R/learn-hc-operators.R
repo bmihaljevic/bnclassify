@@ -1,6 +1,4 @@
-get_candidate_features <- function(bnc_dag, features_to_include) {
-  setdiff(features_to_include, features(bnc_dag))
-}
+
 # Forms dags by conditioninng each not-included feature on each of the supernodes
 includes_in_supernodes <- function(bnc_dag, features_to_include) {
   stopifnot(is_semi_naive(bnc_dag))
@@ -90,8 +88,14 @@ augment_ode_arcs <- function(bnc_dag) {
   non_orphans <- setdiff(features(bnc_dag), orphans)
   arcs <- arcs_to_orphans(orphans, non_orphans)
   arcs <- discard_cycles(arcs, bnc_dag)
-  # discard equivalent arcs
+  # reversed arcs are equivalent in odes, since no v-structs, thus prune them 
+  # TODO: move these discard functions to graph-edgematrix-utils or something
+  # b <- discard_reversed(arcs)
+  # d <- discard_reversed2(arcs)
+  # stopifnot(identical(dim(b), dim(d)))
   discard_reversed(arcs)
+  # d <- discard_reversed2(arcs)
+  # discard_reversed2(arcs)
 } 
 #' Returns augmenting arcs that do not invalidate the k-DB. 
 #' 
@@ -133,8 +137,7 @@ arcs_to_orphans <- function(orphans, non_orphans) {
 # Remove from arcs_df those already in bnc_dag
 discard_existing <- function(arcs_df, bnc_dag) { 
   stopifnot(is.matrix(arcs_df), is.character(arcs_df))
-  # TODO!!!!!: do i access this in this way? .dag??
-  in_bnc_dag <- graph_named_edge_matrix(dag(bnc_dag))
+  in_bnc_dag <- dag(bnc_dag)$edges
   # They are not sorted. For each of a I want to see if it is already in b.  
   # It is OK if the first ones match. if so, then I will look at the second. 
   list_from <- lapply(arcs_df[, 'from'], '==', in_bnc_dag[, 'from'] )
@@ -172,6 +175,35 @@ discard_reversed <- function(matrix) {
     unique[row] <- !any(apply(reversed[unique, , drop = FALSE], 1, 
                               identical, this_row))
   }
+  matrix <- matrix[ unique, , drop = FALSE]
+  colnames(matrix) <- remember_names
+  matrix
+} 
+discard_reversed2 <- function(matrix) {
+  if (nrow(matrix) == 0) return(matrix(character(), ncol = 2))
+  # Remove name so that reversed is the exact reflection
+  remember_names <- colnames(matrix)
+  matrix <- unname(matrix)
+  reversed <- matrix[, rev(seq_len(ncol(matrix)))]
+  stopifnot(identical(matrix, reversed[, 2:1]))
+  unique <- rep(TRUE, nrow(matrix))
+  # Skip last element, consider it unique
+  for (row in rev(seq_len(nrow(matrix) - 1))) {
+    this_row <- matrix[row, ]
+    for (reversed_row in (row + 1):(nrow(matrix))) {
+         if (unique[reversed_row ] &&  identical(reversed[reversed_row,  ], this_row)) {
+           unique[reversed_row ] <- FALSE 
+           break  
+      }
+    } 
+  }
+  
+  # make a graph.
+  # add first edge
+  # keep adding edges as long as they are not adjacent.
+  # return graph's edges
+  # done.
+
   matrix <- matrix[ unique, , drop = FALSE]
   colnames(matrix) <- remember_names
   matrix
