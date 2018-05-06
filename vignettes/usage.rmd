@@ -1,6 +1,6 @@
 ---
-title: "Introduction to the `bnclassify` package"
-author: "Bojan Mihaljevic, Concha Bielza, Pedro Larranaga"
+title: "`bnclassify` usage"
+author: "Bojan Mihaljević, Concha Bielza, Pedro Larrañaga"
 date: "`r Sys.Date()`"
 output:
   rmarkdown::pdf_document:
@@ -9,7 +9,8 @@ output:
     keep_tex: true 
     includes:
           in_header: header.tex
-bibliography: bnclassify.bib
+bibliography: bnclassify.bib 
+abstract:  This vignette gives \invindesc/.
 fontsize: 11pt
 vignette: >
   %\VignetteIndexEntry{usage}
