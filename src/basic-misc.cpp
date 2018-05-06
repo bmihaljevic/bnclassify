@@ -108,8 +108,21 @@ NumericVector normalize_ctgt(NumericVector & ctgt) {
   } 
   return cpt; 
 } 
+
+
+// [[Rcpp::export]]
+NumericVector exp_sideeffect(NumericVector p) { 
+    double (*dexp)(double) = &std::exp;
+    std::transform(p.begin(), p.end(), p.begin(), dexp);   
+    return p;
+}
 // TODO: move to test!!   
 /***R  
+a <- c(0.2, 2, -1, 0)
+b <- c(0.2, 2, -1, 0)
+exp_sideeffect(a)
+stopifnot(all.equal(log(a), b))
+
 a <- c(0.0, 0.0)
 dim(a) <- c(2)
 normalize_ctgt(a) 

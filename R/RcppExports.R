@@ -25,6 +25,10 @@ normalize_ctgt <- function(ctgt) {
     .Call('_bnclassify_normalize_ctgt', PACKAGE = 'bnclassify', ctgt)
 }
 
+exp_sideeffect <- function(p) {
+    .Call('_bnclassify_exp_sideeffect', PACKAGE = 'bnclassify', p)
+}
+
 bh_connected_components <- function(vertices, edges) {
     .Call('_bnclassify_bh_connected_components', PACKAGE = 'bnclassify', vertices, edges)
 }
