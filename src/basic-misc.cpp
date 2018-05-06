@@ -109,19 +109,28 @@ NumericVector normalize_ctgt(NumericVector & ctgt) {
   return cpt; 
 } 
 
-
 // [[Rcpp::export]]
-NumericVector exp_sideeffect(NumericVector p) { 
-    double (*dexp)(double) = &std::exp;
-    std::transform(p.begin(), p.end(), p.begin(), dexp);   
-    return p;
+int count_equal(const RObject & a, const RObject & b) {
+    if(!Rf_isFactor(a)) stop("Not a factor."); 
+    if(!Rf_isFactor(b)) stop("Not a factor.");   
+    IntegerVector avec = as<IntegerVector>(a);
+    IntegerVector bvec = as<IntegerVector>(b); 
+    if (avec.size()  != bvec.size()) stop("Not same length.");
+    int equal = 0;
+    for (IntegerVector::const_iterator itA = avec.begin(), itB = bvec.begin(), endA = avec.end(); itA != endA; ++itA, ++itB) {
+      if (*itA == *itB) {
+        equal += 1;
+      }
+    }
+    return equal;
 }
+
+
 // TODO: move to test!!   
-/***R  
-a <- c(0.2, 2, -1, 0)
-b <- c(0.2, 2, -1, 0)
-exp_sideeffect(a)
-stopifnot(all.equal(log(a), b))
+/***R    
+count_equal(car$class, car$class)
+count_equal(car$class, rev(car$class))
+count_equal(car$class[1], car$class[nrow(car)])
 
 a <- c(0.0, 0.0)
 dim(a) <- c(2)

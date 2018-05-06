@@ -25,6 +25,14 @@ normalize_ctgt <- function(ctgt) {
     .Call('_bnclassify_normalize_ctgt', PACKAGE = 'bnclassify', ctgt)
 }
 
+count_equal <- function(a, b) {
+    .Call('_bnclassify_count_equal', PACKAGE = 'bnclassify', a, b)
+}
+
+smooth_sideeffect <- function(ctgt, smooth) {
+    .Call('_bnclassify_smooth_sideeffect', PACKAGE = 'bnclassify', ctgt, smooth)
+}
+
 exp_sideeffect <- function(p) {
     .Call('_bnclassify_exp_sideeffect', PACKAGE = 'bnclassify', p)
 }

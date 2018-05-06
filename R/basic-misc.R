@@ -45,8 +45,7 @@ fast_equal <- function(a, b) {
 #' p <- predict(nb, car)
 #' accuracy(p, car$class)
 accuracy <- function(x, y) {
-  stopifnot(length(x) == length(y))
-  sum(x == y) / length(x)
+  count_equal(x, y) / length(x)
 }
 #  a list to a matrix where the names are kept in the second column
 unlist_keepnames <- function(list) {

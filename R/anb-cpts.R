@@ -28,7 +28,7 @@ ctgt2cpt <- function(ctgt, smooth) {
   # Requiring ctgt be a table. That implies it is an array.
   stopifnot(smooth >= 0, is.table(ctgt), are_complete_dimnames(ctgt))
   # Add smooth to ctgt 
-  ctgt <- ctgt + smooth
+  ctgt <- smooth_sideeffect(ctgt, smooth)
   normalize_ctgt(ctgt) 
 } 
 #' Get just form first dimension in their own cpt, not checking for consistency

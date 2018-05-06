@@ -32,7 +32,7 @@ log_normalize <- function(lp) {
   log_probs <- lp - matrixStats::rowLogSumExps(lp)
   log_probs 
 }
-exponentiate_probs <- function(p) { 
+exponentiate_probs <- function(p) {
   p <- exp_sideeffect(p)
   # rowAnys Does not distinguish between NA and NaN. 
   nans <- which(matrixStats::rowAnys(p, value = NaN))

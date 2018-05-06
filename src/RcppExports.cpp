@@ -76,6 +76,30 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// count_equal
+int count_equal(const RObject& a, const RObject& b);
+RcppExport SEXP _bnclassify_count_equal(SEXP aSEXP, SEXP bSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const RObject& >::type a(aSEXP);
+    Rcpp::traits::input_parameter< const RObject& >::type b(bSEXP);
+    rcpp_result_gen = Rcpp::wrap(count_equal(a, b));
+    return rcpp_result_gen;
+END_RCPP
+}
+// smooth_sideeffect
+NumericVector smooth_sideeffect(NumericVector ctgt, double smooth);
+RcppExport SEXP _bnclassify_smooth_sideeffect(SEXP ctgtSEXP, SEXP smoothSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type ctgt(ctgtSEXP);
+    Rcpp::traits::input_parameter< double >::type smooth(smoothSEXP);
+    rcpp_result_gen = Rcpp::wrap(smooth_sideeffect(ctgt, smooth));
+    return rcpp_result_gen;
+END_RCPP
+}
 // exp_sideeffect
 NumericVector exp_sideeffect(NumericVector p);
 RcppExport SEXP _bnclassify_exp_sideeffect(SEXP pSEXP) {
@@ -320,6 +344,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bnclassify_normalize", (DL_FUNC) &_bnclassify_normalize, 1},
     {"_bnclassify_make_last_sideeffect", (DL_FUNC) &_bnclassify_make_last_sideeffect, 2},
     {"_bnclassify_normalize_ctgt", (DL_FUNC) &_bnclassify_normalize_ctgt, 1},
+    {"_bnclassify_count_equal", (DL_FUNC) &_bnclassify_count_equal, 2},
+    {"_bnclassify_smooth_sideeffect", (DL_FUNC) &_bnclassify_smooth_sideeffect, 2},
     {"_bnclassify_exp_sideeffect", (DL_FUNC) &_bnclassify_exp_sideeffect, 1},
     {"_bnclassify_bh_connected_components", (DL_FUNC) &_bnclassify_bh_connected_components, 2},
     {"_bnclassify_bh_remove_node", (DL_FUNC) &_bnclassify_bh_remove_node, 3},
