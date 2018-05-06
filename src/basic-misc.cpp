@@ -126,8 +126,18 @@ int count_equal(const RObject & a, const RObject & b) {
 }
 
 
+// [[Rcpp::export]]
+bool in_rcpp(CharacterVector element, CharacterVector vector) {
+  // How to ensure only CharacterVector are passed?
+   if (element.size() != 1) stop("Must be a single element.");
+   return is_true(Rcpp::any(Rcpp::in(element, vector)));
+}
+
+
 // TODO: move to test!!   
-/***R    
+/***R     
+in_rcpp('a', letters)
+
 count_equal(car$class, car$class)
 count_equal(car$class, rev(car$class))
 count_equal(car$class[1], car$class[nrow(car)])

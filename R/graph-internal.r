@@ -44,7 +44,7 @@ valid_edges <- function(edges, numeric = TRUE) {
   valid 
 }   
 graph_nodes <- function(x) {
-  stopifnot(inherits( x, "bnc_graph_internal"))
+  if (!inherits( x, "bnc_graph_internal")) stop()
   x$nodes 
 }  
 # Maps edgs to int 
@@ -160,27 +160,29 @@ graph_get_adjacent <- function(node, g) {
   nodes <- unique(g$edges[row_inds,  ] )
   setdiff(nodes, node)   
 }    
-graph_num_arcs <- function(g) { 
-  stopifnot(inherits( g, "bnc_graph_internal")) 
+graph_num_arcs <- function(g) {  
+  if (!inherits(g, "bnc_graph_internal")) stop()
   nrow(g$edges)
 }
 graph_num_nodes <- function(g) {
-  stopifnot(inherits( g, "bnc_graph_internal")) 
+  if (!inherits(g, "bnc_graph_internal")) stop()
   length(g$nodes)
 }
 graph_parents <- function(g) {  
-  stopifnot(inherits( g, "bnc_graph_internal"))  
+  if (!inherits(g, "bnc_graph_internal")) stop()
   nnodes <- graph_num_nodes(g)
   if (nnodes == 0) return(list())
-  parents <- setNames(replicate(nnodes, character()), graph_nodes(g))
-  if (graph_num_arcs(g) == 0) return(parents)
+  if (graph_num_arcs(g) == 0) {
+    parents <- setNames(replicate(nnodes, character()), graph_nodes(g))
+    return(parents)
+  }
   families <- lapply(graph_nodes(g), graph_node_parents, g)
   setNames(families, nm = graph_nodes(g) ) 
 } 
 # Does not check whether node is actually in g
-graph_node_parents <- function(node, g) {
-  stopifnot(inherits( g, "bnc_graph_internal"), is.character(node))
-  if (!(node %in% g$nodes)) stop(paste0("Vertex" , node, "is not in the graph."))
+graph_node_parents <- function(node, g) { 
+  if (!inherits(g, "bnc_graph_internal")) stop()
+  if (!(in_rcpp(node, g$nodes))) stop(paste0("Vertex" , node, "is not in the graph."))
   edges <- g$edges 
   ind <- edges[, 'to'] == node  
   unname(edges[ind, 'from'])

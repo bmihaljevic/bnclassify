@@ -29,6 +29,10 @@ count_equal <- function(a, b) {
     .Call('_bnclassify_count_equal', PACKAGE = 'bnclassify', a, b)
 }
 
+in_rcpp <- function(element, vector) {
+    .Call('_bnclassify_in_rcpp', PACKAGE = 'bnclassify', element, vector)
+}
+
 smooth_sideeffect <- function(ctgt, smooth) {
     .Call('_bnclassify_smooth_sideeffect', PACKAGE = 'bnclassify', ctgt, smooth)
 }

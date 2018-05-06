@@ -88,6 +88,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// in_rcpp
+bool in_rcpp(CharacterVector element, CharacterVector vector);
+RcppExport SEXP _bnclassify_in_rcpp(SEXP elementSEXP, SEXP vectorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type element(elementSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type vector(vectorSEXP);
+    rcpp_result_gen = Rcpp::wrap(in_rcpp(element, vector));
+    return rcpp_result_gen;
+END_RCPP
+}
 // smooth_sideeffect
 NumericVector smooth_sideeffect(NumericVector ctgt, double smooth);
 RcppExport SEXP _bnclassify_smooth_sideeffect(SEXP ctgtSEXP, SEXP smoothSEXP) {
@@ -345,6 +357,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bnclassify_make_last_sideeffect", (DL_FUNC) &_bnclassify_make_last_sideeffect, 2},
     {"_bnclassify_normalize_ctgt", (DL_FUNC) &_bnclassify_normalize_ctgt, 1},
     {"_bnclassify_count_equal", (DL_FUNC) &_bnclassify_count_equal, 2},
+    {"_bnclassify_in_rcpp", (DL_FUNC) &_bnclassify_in_rcpp, 2},
     {"_bnclassify_smooth_sideeffect", (DL_FUNC) &_bnclassify_smooth_sideeffect, 2},
     {"_bnclassify_exp_sideeffect", (DL_FUNC) &_bnclassify_exp_sideeffect, 1},
     {"_bnclassify_bh_connected_components", (DL_FUNC) &_bnclassify_bh_connected_components, 2},
