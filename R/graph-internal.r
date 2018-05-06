@@ -2,7 +2,9 @@
 # TODO: make BH use character nodes an input and not rely on integers. It could be faster. 
 
 new_graph_internal <- function(nodes, edges, weights, edgemode) { 
-    stopifnot(valid_nodes(nodes), valid_edges(edges, numeric = FALSE), valid_weights(weights, edges))
+    stopifnot(valid_nodes(nodes), valid_edges(edges, numeric = FALSE), 
+              all(edges[] %in% nodes), all(edges[, 1] != edges[, 2]),
+              valid_weights(weights, edges))
     fromto <- c('from', 'to')
     colnms <- colnames(edges) 
     stopifnot(length(colnms) == 0 || identical(colnms, fromto))
