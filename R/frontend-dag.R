@@ -7,6 +7,6 @@ condition_on <- function(parents, nodes, x) {
   wnodes <- rep(nodes, each = length(parents))
 #   Add edges
   g <- add_edges(wparents, wnodes, x) 
-  stopifnot(is_dag_graph(g))
+  if (!skip_testing()) stopifnot(is_dag_graph(g))
   g
 }

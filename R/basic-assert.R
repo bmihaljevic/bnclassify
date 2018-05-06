@@ -1,6 +1,10 @@
 #' Whether to do checks or not. Set TRUE to speed up debugging or building. 
 skip_assert <- function() {
  TRUE 
+} 
+#' Skip while testing to isolate errors
+skip_testing <- function() {
+ TRUE 
 }
 # Tests whether two character vectors are identical when sorted
 is_perm <- function(x, y) {

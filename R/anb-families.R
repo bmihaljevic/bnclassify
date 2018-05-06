@@ -3,7 +3,7 @@
 # Make sure class last element in each family.
 graphNEL2families <- function(dag, class) {
   check_class(class) # Remove?
-  stopifnot(is_dag_graph(dag))
+  if (!skip_testing()) stopifnot(is_dag_graph(dag))
   parents <- graphNEL_parents(dag)
   families <- mapply(make_family, names(parents), parents, class, SIMPLIFY = FALSE)
   # Make sure class is the last family
