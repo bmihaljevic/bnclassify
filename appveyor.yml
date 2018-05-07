@@ -9,6 +9,9 @@ init:
 
 install:
   ps: Bootstrap
+ 
+environment:
+  _R_CHECK_FORCE_SUGGESTS_: false
 
 cache:
   - C:\RLibrary
