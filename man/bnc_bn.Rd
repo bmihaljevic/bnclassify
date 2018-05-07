@@ -20,6 +20,6 @@ tan <- bnc('tan_cl', 'class', car, smooth = 1)
 tan
 p <- predict(tan, car)
 head(p)
-plot(tan)
+\dontrun{plot(tan)}
 nparams(tan)
 }

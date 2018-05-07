@@ -12,7 +12,7 @@
 #' data(car)
 #' nb <- nb('class', car)   
 #' nb2 <- nb('class', features = letters[1:10])
-#' plot(nb2)
+#' \dontrun{plot(nb2)}
 nb <- function(class, dataset = NULL, features = NULL) {
   #   # if dataset is provided features is ignored
   if (!is.null(dataset)) {

@@ -22,17 +22,3 @@ structure.}
 If node labels are to small to be viewed properly, you may fix label fontsize
 with argument fontsize. Also, you may try multiple different layouts.
 }
-\examples{
- 
-
-data(car)
-nb <- nb('class', car)
-nb <- nb('class', car)
-plot(nb)
-plot(nb, fontsize = 20)
-plot(nb, layoutType = 'circo')
-plot(nb, layoutType = 'fdp')
-plot(nb, layoutType = 'osage')
-plot(nb, layoutType = 'twopi')
-plot(nb, layoutType = 'neato')
-}

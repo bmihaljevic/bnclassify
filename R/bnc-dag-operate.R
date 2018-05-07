@@ -16,16 +16,17 @@ narcs <- function(x) {
 #' @param ... Not used.
 #' @examples  
 #' 
+#' # Requires the graph and Rgraphviz packages to be installed.
 #' data(car)
 #' nb <- nb('class', car)
 #' nb <- nb('class', car)
-#' plot(nb)
-#' plot(nb, fontsize = 20)
-#' plot(nb, layoutType = 'circo')
-#' plot(nb, layoutType = 'fdp')
-#' plot(nb, layoutType = 'osage')
-#' plot(nb, layoutType = 'twopi')
-#' plot(nb, layoutType = 'neato')
+#' \dontrun{plot(nb)}
+#' \dontrun{plot(nb, fontsize = 20)}
+#' \dontrun{plot(nb, layoutType = 'circo')}
+#' \dontrun{plot(nb, layoutType = 'fdp')}
+#' \dontrun{plot(nb, layoutType = 'osage'}}
+#' \dontrun{plot(nb, layoutType = 'twopi'}}
+#' \dontrun{plot(nb, layoutType = 'neato')}
 plot.bnc_dag <- function(x, y, layoutType='dot', fontsize = NULL, ...) { 
   if (!requireNamespace("graph", quietly = TRUE)) {
     stop("Package graph needed ", call. = FALSE)

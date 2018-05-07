@@ -33,9 +33,9 @@ forest-augmented rather than a tree-augmented naive Bayes.
 \examples{
 data(car)
 ll <- tan_cl('class', car, score = 'loglik')   
-plot(ll)
+\dontrun{plot(ll)}
 ll <- tan_cl('class', car, score = 'loglik', root = 'maint')   
-plot(ll)
+\dontrun{plot(ll)}
 aic <- tan_cl('class', car, score = 'aic')   
 bic <- tan_cl('class', car, score = 'bic')   
 }

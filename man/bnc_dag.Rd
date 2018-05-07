@@ -15,6 +15,6 @@ in \code{\link{inspect_bnc_dag}}, and convert it to a graph object with
 data(car)
 nb <- tan_cl('class', car)   
 nb
-plot(nb)
+\dontrun{plot(nb)}
 narcs(nb)
 }
