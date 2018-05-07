@@ -3,6 +3,9 @@ sudo: required
 dist: trusty   
 warnings_are_errors: true
 
+before_install: 
+  - sudo apt-get install ghostscript
+
 after_success:
   - Rscript -e 'library(covr);coveralls()' 
 
