@@ -7,14 +7,19 @@ after_success:
   - Rscript -e 'library(covr);coveralls()' 
 
 r:
-- oldrel
 - release
 - devel  
+
+# Not cran will run tests skipped on cran
+not_cran: 
+- true
+- false 
 
 env:
   global:
   - _R_CHECK_FORCE_SUGGESTS_=false
   - _R_CHECK_CRAN_INCOMING_=true
-  
+ 
+# do not build vignettes as that requires Bioc packages such as graph 
 r_build_args: "--no-build-vignettes"
 r_check_args: "--no-build-vignettes --no-manual --as-cran" 
