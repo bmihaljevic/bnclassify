@@ -164,53 +164,30 @@ discard_cycles <- function(arcs_df, bnc_dag) {
 }
 discard_reversed <- function(matrix) {
   if (nrow(matrix) == 0) return(matrix(character(), ncol = 2))
-  # Remove name so that reversed is the exact reflection
-  remember_names <- colnames(matrix)
-  matrix <- unname(matrix)
-  reversed <- matrix[, rev(seq_len(ncol(matrix)))]
-  stopifnot(identical(matrix, reversed[, 2:1]))
-  unique <- rep(FALSE, nrow(matrix))
-  # Count last element as unique
-  unique[length(unique)] <- TRUE
-  for (row in rev(seq_len(nrow(matrix) - 1))) {
+  reversed <- matrix[, 2:1]
+  n <- nrow(matrix)
+  unique <- rep(TRUE, n)
+  # Skip last element in the loop, consider it unique
+  for (row in rev(seq_len(n - 1))) {
     this_row <- matrix[row, ]
-    unique[row] <- !any(apply(reversed[unique, , drop = FALSE], 1, 
-                              identical, this_row))
+    # a row is unique, if non of those before is identical to it
+    # in the reversed matrix 
+    j <- row
+    while (j < n) {
+      j <- j + 1
+      # not need to check for those known to be duplicates, as that would be repeating
+      if (unique(j)) {
+        reversed_row <- reversed[j, ]
+        if (reversed_row[1]  == this_row[1] && reversed_row[2] == this_row[2]) {
+          unique[row] <- FALSE  
+          j <- n
+        }
+      }
+    }
   }
   matrix <- matrix[ unique, , drop = FALSE]
-  colnames(matrix) <- remember_names
   matrix
 } 
-discard_reversed2 <- function(matrix) {
-  if (nrow(matrix) == 0) return(matrix(character(), ncol = 2))
-  # Remove name so that reversed is the exact reflection
-  remember_names <- colnames(matrix)
-  matrix <- unname(matrix)
-  reversed <- matrix[, rev(seq_len(ncol(matrix)))]
-  stopifnot(identical(matrix, reversed[, 2:1]))
-  unique <- rep(TRUE, nrow(matrix))
-  # Skip last element, consider it unique
-  for (row in rev(seq_len(nrow(matrix) - 1))) {
-    this_row <- matrix[row, ]
-    for (reversed_row in (row + 1):(nrow(matrix))) {
-         if (unique[reversed_row ] &&  identical(reversed[reversed_row,  ], this_row)) {
-           unique[reversed_row ] <- FALSE 
-           break  
-      }
-    } 
-  }
-  
-  # make a graph.
-  # add first edge
-  # keep adding edges as long as they are not adjacent.
-  # return graph's edges
-  # done.
-
-  matrix <- matrix[ unique, , drop = FALSE]
-  colnames(matrix) <- remember_names
-  matrix
-}
-
 augment_ode_sp <- function(bnc_dag, features_to_include, train, test) {
   rm(features_to_include) # ignored
   # Select superparent:
