@@ -2,26 +2,15 @@ language: r
 sudo: required
 
 os:
-  - linux
-
-r_build_args: --no-build-vignettes --no-manual --no-resave-data
-r_check_args: --no-build-vignettes --no-manual
+  - linux 
 
 r_binary_packages:
   - Rcpp
-  - bigmemory.sri
   - BH
   - devtools
-  - roxygen2
-
-r_github_packages:
-  - jimhester/covr
-
-bioc_packages:
-  - graph
+  - roxygen2 
 
 after_success:
-  - Rscript -e 'devtools::install();library(bigmemory);library(methods);devtools::test()'
   - Rscript -e 'library(covr);coveralls()'
 
 ## Set up the matrix of different runs
@@ -41,3 +30,4 @@ env:
   - r: devel
     not_cran: false
     r_check_args: "--no-manual --as-cran" 
+
