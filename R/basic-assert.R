@@ -1,12 +1,15 @@
+skip_env <- new.env(parent = emptyenv()) 
+skip_env$skip_assert <- FALSE
+skip_env$skip_testing <- TRUE 
 #' Whether to do checks or not. Set TRUE to speed up debugging or building. 
 #' @keywords  internal
 skip_assert <- function() {
- TRUE 
+  skip_env$skip_assert 
 } 
 #' Skip while testing to isolate errors
 #' @keywords  internal
 skip_testing <- function() {
- TRUE 
+  skip_env$skip_testing
 }
 # Tests whether two character vectors are identical when sorted
 is_perm <- function(x, y) {
