@@ -4,7 +4,7 @@
 \alias{makeRLearner.bnc}
 \title{makeRLearner. Auxiliary mlr function.}
 \usage{
-makeRLearner.bnc()
+\method{makeRLearner}{bnc}()
 }
 \description{
 makeRLearner. Auxiliary mlr function.

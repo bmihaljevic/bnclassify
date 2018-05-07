@@ -14,7 +14,7 @@ as_grain(x)
 \item{x}{The \code{\link{bnc_bn}} object. The Bayesian network classifier.}
 }
 \description{
-Convert a \code{\link{bnc_dag}} to \code{\link[graph]{graphNEL}} and
+Convert a \code{\link{bnc_dag}} to \code{graphNEL} and
 \code{\link[gRain]{grain}} objects.
 }
 \section{Functions}{

@@ -365,7 +365,7 @@ NULL
 
 #' Convert to graph and gRain.
 #' 
-#' Convert a \code{\link{bnc_dag}} to \code{\link[graph]{graphNEL}} and
+#' Convert a \code{\link{bnc_dag}} to \code{graphNEL} and
 #' \code{\link[gRain]{grain}} objects.
 #' 
 #' @name grain_and_graph

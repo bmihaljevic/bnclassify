@@ -4,7 +4,7 @@
 \alias{trainLearner.bnc}
 \title{trainLearner. Auxiliary mlr function.}
 \usage{
-trainLearner.bnc(.learner, .task, .subset, .weights, ...)
+\method{trainLearner}{bnc}(.learner, .task, .subset, .weights, ...)
 }
 \arguments{
 \item{.learner, .task, .subset, .weights}{Internal.}
