@@ -45,4 +45,4 @@ docs:
 	cd .. ; xo  bnclassify.pdf 
 
 check:
-	R < meta/check.r --no-save >> checks-output
+	R < meta/check.r --no-save >> ~/Desktop/checks-output
