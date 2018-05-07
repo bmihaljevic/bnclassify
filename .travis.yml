@@ -11,6 +11,7 @@ r:
 - devel  
 
 # Not cran will run tests skipped on cran
+#  Travis is not taking this into account
 not_cran: 
 - true
 - false 
