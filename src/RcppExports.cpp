@@ -5,6 +5,17 @@
 
 using namespace Rcpp;
 
+// find_non_reversed
+LogicalVector find_non_reversed(CharacterMatrix x);
+RcppExport SEXP _bnclassify_find_non_reversed(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterMatrix >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(find_non_reversed(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // match_zero_based
 std::vector<int> match_zero_based(const CharacterVector& subset, const CharacterVector& superset, const std::string error_message);
 RcppExport SEXP _bnclassify_match_zero_based(SEXP subsetSEXP, SEXP supersetSEXP, SEXP error_messageSEXP) {
@@ -350,6 +361,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_bnclassify_find_non_reversed", (DL_FUNC) &_bnclassify_find_non_reversed, 1},
     {"_bnclassify_match_zero_based", (DL_FUNC) &_bnclassify_match_zero_based, 3},
     {"_bnclassify_ordersetdiff", (DL_FUNC) &_bnclassify_ordersetdiff, 2},
     {"_bnclassify_are_disjoint", (DL_FUNC) &_bnclassify_are_disjoint, 2},
