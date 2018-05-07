@@ -184,7 +184,9 @@ graph_node_parents <- function(node, g) {
   if (!inherits(g, "bnc_graph_internal")) stop()
   if (!(in_rcpp(node, g$nodes))) stop(paste0("Vertex" , node, "is not in the graph."))
   edges <- g$edges 
-  ind <- edges[, 'to'] == node  
+  ind <- edges[, 'to'] == node
+  # ind2 <- graph_node_parents_inds(edges, node)
+  # if (!all.equal(ind, ind2)) browser()
   unname(edges[ind, 'from'])
 }
 # TODO remove this function.

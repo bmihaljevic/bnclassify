@@ -247,6 +247,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// graph_node_parents_inds
+LogicalVector graph_node_parents_inds(CharacterMatrix edges, CharacterVector node);
+RcppExport SEXP _bnclassify_graph_node_parents_inds(SEXP edgesSEXP, SEXP nodeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterMatrix >::type edges(edgesSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type node(nodeSEXP);
+    rcpp_result_gen = Rcpp::wrap(graph_node_parents_inds(edges, node));
+    return rcpp_result_gen;
+END_RCPP
+}
 // call_model_fun
 Rcpp::CharacterVector call_model_fun(const Rcpp::List& x, const std::string funct);
 RcppExport SEXP _bnclassify_call_model_fun(SEXP xSEXP, SEXP functSEXP) {
@@ -381,6 +393,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bnclassify_hasna_features", (DL_FUNC) &_bnclassify_hasna_features, 2},
     {"_bnclassify_hasna", (DL_FUNC) &_bnclassify_hasna, 1},
     {"_bnclassify_trim_dataset_cpp", (DL_FUNC) &_bnclassify_trim_dataset_cpp, 2},
+    {"_bnclassify_graph_node_parents_inds", (DL_FUNC) &_bnclassify_graph_node_parents_inds, 2},
     {"_bnclassify_call_model_fun", (DL_FUNC) &_bnclassify_call_model_fun, 2},
     {"_bnclassify_compute_joint", (DL_FUNC) &_bnclassify_compute_joint, 2},
     {"_bnclassify_test_dims2columns", (DL_FUNC) &_bnclassify_test_dims2columns, 3},

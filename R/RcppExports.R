@@ -81,6 +81,10 @@ trim_dataset_cpp <- function(dataset, features) {
     .Call('_bnclassify_trim_dataset_cpp', PACKAGE = 'bnclassify', dataset, features)
 }
 
+graph_node_parents_inds <- function(edges, node) {
+    .Call('_bnclassify_graph_node_parents_inds', PACKAGE = 'bnclassify', edges, node)
+}
+
 call_model_fun <- function(x, funct) {
     .Call('_bnclassify_call_model_fun', PACKAGE = 'bnclassify', x, funct)
 }
