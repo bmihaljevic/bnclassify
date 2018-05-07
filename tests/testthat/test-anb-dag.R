@@ -26,6 +26,7 @@ test_that("bnc_dag", {
   edges <- graph_from_to_to_edges('A', 'B')
   g <- graph_internal(nodes = LETTERS[1:3], edges = edges, edgemode = "directed")
   # if (!skip_assert()) expect_error(bnc_dag(dag = g, class = 'A'), "fams_ok")
+  # never use skip_assert here so that i always set it to false before publishing
   expect_error(bnc_dag(dag = g, class = 'A'), "fams_ok")
 })
 

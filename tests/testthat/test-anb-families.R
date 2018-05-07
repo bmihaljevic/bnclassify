@@ -22,10 +22,10 @@ test_that("graph 2 families  Undirected graph" , {
   e <- list(A = 'B', B = 'A') 
   edges <- graph_from_to_to_edges(c('A', 'B'), c('B', 'A')) 
   g <- graph_internal(nodes = LETTERS[1:2], edges,  weights = NULL, edgemode = "directed") 
-  expect_error(graphNEL2families(dag = g, class = LETTERS[1]), 'is_dag_graph') 
+  if (!skip_testing()) expect_error(graphNEL2families(dag = g, class = LETTERS[1]), 'is_dag_graph') 
   
   g <- graph_internal(nodes = LETTERS[1:2], edges,  weights = NULL, edgemode = "undirected") 
-  expect_error(graphNEL2families(dag = g, class = LETTERS[1]), 'is_dag_graph')
+  if (!skip_testing()) expect_error(graphNEL2families(dag = g, class = LETTERS[1]), 'is_dag_graph')
 })
 
 test_that("check families", {
