@@ -1,6 +1,7 @@
 language: r
 sudo: required
 dist: trusty   
+warnings_are_errors: true
 
 after_success:
   - Rscript -e 'library(covr);coveralls()' 
@@ -12,8 +13,8 @@ r:
 
 env:
   global:
-  - _R_CHECK_FORCE_SUGGESTS_= FALSE
-  - _R_CHECK_CRAN_INCOMING_: TRUE
+  - _R_CHECK_FORCE_SUGGESTS_=false
+  - _R_CHECK_CRAN_INCOMING_=true
   
 r_build_args: "--no-build-vignettes"
 r_check_args: "--no-build-vignettes --no-manual --as-cran" 
