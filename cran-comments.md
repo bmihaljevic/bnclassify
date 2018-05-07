@@ -1,10 +1,14 @@
 ## Test environments
 * Ubuntu 16.04 3.4.4 (local)
+* ubuntu 14.04 3.5.0 (travis ci)
+* ubuntu 14.04 R-release (travis ci)
 * win-builder R 3.5.0
 * win-builder R-release
-* add travis!!!!!!!!!
+* Windows i386-w64-mingw32/i386, R 3.5.0  (Appveyor)
 
-## R CMD check results
+## R CMD check results 
+2 NOTES on appveyor. No warning there? 
+
 Locally, and on win-builder R-release, there were no ERRORs, no NOTEs, and one WARNING. 
 
 hecking sizes of PDF files under ‘inst/doc’ ... WARNING
