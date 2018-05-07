@@ -5,7 +5,7 @@ bnclassify
 ![](https://cranlogs.r-pkg.org/badges/bnclassify?color=yellow)
 ![](https://cranlogs.r-pkg.org/badges/grand-total/bnclassify?color=yellowgreen)
 [![Research software
-impact](https://depsy.org/api/package/cran/bnclassify/badge.svg)](https://depsy.org/package/r/bnclassify)
+impact](http://depsy.org/api/package/cran/bnclassify/badge.svg)](http://depsy.org/package/r/bnclassify)
 [![codecov.io](https://codecov.io/github/bmihaljevic/bnclassify/coverage.svg?branch=master)](https://codecov.io/github/bmihaljevic/bnclassify?branch=master)
 [![Travis-CI Build
 Status](https://travis-ci.org/bmihaljevic/bnclassify.svg?branch=master)](https://travis-ci.org/bmihaljevic/bnclassify)
@@ -62,7 +62,7 @@ Estimate predictive accuracy with cross validation.
 
 ``` r
 cv(tn, car, k = 10)
-#> [1] 0.9392148
+#> [1] 0.9375576
 ```
 
 Or compute the log-likelihood
@@ -109,6 +109,7 @@ See an overview of the package and examples of usage:
 
 ``` r
 vignette('overview', package = 'bnclassify')
+#> Warning: vignette 'overview' not found
 ```
 
 See the list of main functionalities.
