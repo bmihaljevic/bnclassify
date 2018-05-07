@@ -12,13 +12,17 @@ env:
   matrix:
   - r: release
     not_cran: true
+    r_build_args: "--no-build-vignettes"
     r_check_args: "--no-build-vignettes --no-manual"
   - r: release
     not_cran: false
+    r_build_args: "--no-build-vignettes"
     r_check_args: "--no-build-vignettes --no-manual --as-cran"
   - r: devel
     not_cran: true
+    r_build_args: "--no-build-vignettes"
     r_check_args: "--no-build-vignettes --no-manual"
   - r: devel
     not_cran: false
+    r_build_args: "--no-build-vignettes"
     r_check_args: "--no-build-vignettes --no-manual --as-cran"  
