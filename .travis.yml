@@ -1,9 +1,9 @@
 language: r
 sudo: required
+dist: trusty 
 
-os:
-  - linux  
-
+-r_build_args: --no-build-vignettes --no-manual --no-resave-data
+-r_check_args: --no-build-vignettes --no-manual 
 
 after_success:
   - Rscript -e 'library(covr);coveralls()'
@@ -25,4 +25,3 @@ env:
   - r: devel
     not_cran: false
     r_check_args: "--no-manual --as-cran" 
-
