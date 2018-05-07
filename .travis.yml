@@ -1,9 +1,6 @@
 language: r
 sudo: required
-dist: trusty 
-
--r_build_args: --no-build-vignettes --no-manual --no-resave-data
--r_check_args: --no-build-vignettes --no-manual 
+dist: trusty   
 
 after_success:
   - Rscript -e 'library(covr);coveralls()'
@@ -15,13 +12,13 @@ env:
   matrix:
   - r: release
     not_cran: true
-    r_check_args: "--no-manual"
+    r_check_args: "--no-build-vignettes --no-manual"
   - r: release
     not_cran: false
-    r_check_args: "--no-manual --as-cran"
+    r_check_args: "--no-build-vignettes --no-manual --as-cran"
   - r: devel
     not_cran: true
-    r_check_args: "--no-manual"
+    r_check_args: "--no-build-vignettes --no-manual"
   - r: devel
     not_cran: false
-    r_check_args: "--no-manual --as-cran" 
+    r_check_args: "--no-build-vignettes --no-manual --as-cran"  
