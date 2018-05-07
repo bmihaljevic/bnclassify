@@ -27,6 +27,7 @@ Convert a \code{\link{bnc_dag}} to \code{\link[graph]{graphNEL}} and
 \examples{
 data(car)
 nb <- bnc('nb', 'class', car, smooth = 1)
-g <- as_grain(nb)
-gRain::querygrain.grain(g)$buying
+# Requires the grain and graph packages installed
+\dontrun{g <- as_grain(nb)}
+\dontrun{gRain::querygrain.grain(g)$buying}
 }

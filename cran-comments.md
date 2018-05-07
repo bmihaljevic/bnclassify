@@ -2,6 +2,7 @@
 * Ubuntu 16.04 3.4.4 (local)
 * win-builder R 3.5.0
 * win-builder R-release
+* add travis!!!!!!!!!
 
 ## R CMD check results
 Locally, and on win-builder R-release, there were no ERRORs, no NOTEs, and one WARNING. 
