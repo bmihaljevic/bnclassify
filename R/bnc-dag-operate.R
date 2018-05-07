@@ -79,7 +79,7 @@ is_semi_naive <- function(x) {
 #' @describeIn inspect_bnc_dag Returns TRUE if \code{x} is an augmented naive Bayes.
 is_anb <- function(x) {
   if (!inherits(x, 'bnc_dag')) return(FALSE)
-  if (!is_dag_graph(dag(x))) return(FALSE)
+  if (!skip_testing()) { if (!is_dag_graph(dag(x))) return(FALSE) }
   # Check call has no parents and class is in all families. This
   # code assumes class is last in each family.
   last <- unique(unlist(lapply(families(x), get_last)), use.names = FALSE)
