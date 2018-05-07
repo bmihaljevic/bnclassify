@@ -22,7 +22,7 @@ test_that("bnc_bn no class in dataset ", {
   tbdag <- nb_dag('class', 'buying')
   tb <- bnc_dag(tbdag, class = 'class')
   expect_error(lp(tb, car[ , 1, drop = FALSE], smooth = 0),
-               "is_subset")
+               "not found")
 })
 
 test_that("Just the class in dataset", {
@@ -35,7 +35,7 @@ test_that("Just the class in dataset", {
 test_that(" Wrong data set", {
   tbdag <- nb_dag('class', colnames(car)[-7])
   tbdag <- bnc_dag(tbdag, class = 'class')
-  expect_error(lp(tbdag, voting, smooth = 0)   , "colnames")
+  expect_error(lp(tbdag, voting, smooth = 0)   , "not found")
 })
 
 test_that(" Classes", {

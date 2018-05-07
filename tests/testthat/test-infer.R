@@ -1,4 +1,4 @@
-context("inference")
+context("inference")  
 
 check_cp <- function(x, nrow, colnames) {
   expect_true(is.numeric(x))
@@ -47,12 +47,12 @@ test_that("No rows returns empty matrix", {
 
 test_that("Missing features in the dataset", {
   tn <- nbcar()
-  expect_error(compute_cp(tn, car[, 1:2]), "undefined")
+  expect_error(compute_cp(tn, car[, 1:2]), "Some features missing from data set.")
 })
 
 test_that("Complete with incomplete data", {
   a <- nbvote()
-  expect_error(compute_log_joint_complete(a, voting), "anyNA")
+  expect_error(compute_log_joint_complete(a, voting), "NA entries in data set.")
 })
 
  
@@ -62,6 +62,7 @@ test_that("All incomplete rows", {
   vna <- voting[!complete.cases(voting), -17]
   cp <- compute_log_joint_incomplete(a, vna)
   cp <- log_normalize(cp)
+  cp <- exponentiate_probs(cp)
   check_cp(cp, nrow(vna), levels(voting$Class))
 })
  
@@ -111,3 +112,5 @@ test_that("Nominal log-likelihood 7 vars", {
   ll <- compute_ll(nb, car)
   expect_equal(ll, -13503.69, tolerance = 1e-6)
 })
+
+

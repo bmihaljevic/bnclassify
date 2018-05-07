@@ -1,22 +1,28 @@
 language: r
-warnings_are_errors: true
-sudo: required   
-dist: trusty 
+sudo: required
 
-env:
- global:
-   - CRAN: http://cran.rstudio.com
-   
-before_install: 
-    - sudo apt-get install ghostscript
-    - echo "options(repos = c(CRAN='http://cran.rstudio.com'))" > ~/.Rprofile   
-    
-install:  
-  - Rscript -e "source('http://bioconductor.org/biocLite.R');tryCatch(useDevel(TRUE), error=function(e)"'{if (!grepl'"('already in use', e)) {e}}); options(repos=biocinstallRepos()); biocLite(commandArgs(TRUE))" graph RBGL Rgraphviz
-  - Rscript -e "install.packages(c('assertthat', 'entropy', 'matrixStats', 'rpart', 'gRain', 'gRbase', 'mlr', 'testthat', 'knitr', 'ParamHelpers', 'rmarkdown','covr', 'memoise'))"
-  
+os:
+  - linux
+
+r_build_args: --no-build-vignettes --no-manual --no-resave-data
+r_check_args: --no-build-vignettes --no-manual
+
+r_binary_packages:
+  - Rcpp
+  - bigmemory.sri
+  - BH
+  - devtools
+  - roxygen2
+
+r_github_packages:
+  - jimhester/covr
+
+bioc_packages:
+  - graph
+
 after_success:
-  - Rscript -e 'covr::codecov()'
+  - Rscript -e 'devtools::install();library(bigmemory);library(methods);devtools::test()'
+  - Rscript -e 'library(covr);coveralls()'
 
 ## Set up the matrix of different runs
 env:
@@ -34,9 +40,4 @@ env:
     r_check_args: "--no-manual"
   - r: devel
     not_cran: false
-    r_check_args: "--no-manual --as-cran"
-  
-notifications:
-  email:
-    on_success: change
-    on_failure: change 
+    r_check_args: "--no-manual --as-cran" 

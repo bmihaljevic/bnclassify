@@ -3,11 +3,12 @@
 # Make sure class last element in each family.
 graphNEL2families <- function(dag, class) {
   check_class(class) # Remove?
-  stopifnot(is_dag_graph(dag))
+  if (!skip_testing()) stopifnot(is_dag_graph(dag))
   parents <- graphNEL_parents(dag)
   families <- mapply(make_family, names(parents), parents, class, SIMPLIFY = FALSE)
   # Make sure class is the last family
-  ordered_vars <- make_last(names(parents), class)
+  nms <- c(names(parents), NULL) # avoid side-effects
+  ordered_vars <- make_last_sideeffect(nms, class)
   families <- families[ordered_vars]
   check_anb_families(families, class)
   families
@@ -15,8 +16,9 @@ graphNEL2families <- function(dag, class) {
 # Make class last element of each family 
 # TODO: maybe should ensure an alphabetic ordering of non-class parents
 make_family <- function(var, parents, class) {
- family <- c(var, parents) 
- make_last(family, class)
+  # TODO: make_family and make_last should be merged into a single function.
+  parents <- make_last_sideeffect(parents, class)
+  c(var, parents) 
 }
 # Returns the variables whose families are these
 get_family_vars <- function(families) {
@@ -24,6 +26,7 @@ get_family_vars <- function(families) {
 }
 # Check that the families correspond to an augmented naive Bayes. 
 check_anb_families <- function(families, class) {
+  if (skip_assert( )) return (TRUE)
   vars <- get_family_vars(families)
   # Class must be the last family so that it is also last in vars()
   #   Check that class has no parents
@@ -59,6 +62,7 @@ unique_families <- function(fams) {
   all_fams[!duplicated(all_fams)]
 }
 is_dag_families <- function(families) {
+  if (skip_assert( )) return (TRUE)
   !(is.null(order_acyclic(families)))
 }
 #' Provide an acyclic ordering (i.e., a topological sort). 

@@ -1,5 +1,14 @@
+# 0.4
+* Optimizing some functions with RCPP
+* Added AODE (averaged one-dependence estimators)
+* Added k-db classifier
+* Replaced the RBGL package with BH
+* Replaced the graph package with custom code and BH 
+* Added the 'overview' vignette
+* Minor additions: cLogLik function
+
 # 0.3.4
-* Added WANBIA discriminative parameter learning for naive Bayes  
+* Added WANBIA discriminative parameter learning for naive Bayes
 * Remove 'runtimes' vignette and microbenchmark dependency
 
 # 0.3.3

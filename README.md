@@ -1,14 +1,25 @@
 bnclassify
 ==========
 
-[![Travis-CI Build Status](https://travis-ci.org/bmihaljevic/bnclassify.svg?branch=master)](https://travis-ci.org/bmihaljevic/bnclassify) [![codecov.io](https://codecov.io/github/bmihaljevic/bnclassify/coverage.svg?branch=master)](https://codecov.io/github/bmihaljevic/bnclassify?branch=master) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/bnclassify)](http://cran.r-project.org/package=bnclassify) ![](http://cranlogs.r-pkg.org/badges/bnclassify?color=yellow) ![](http://cranlogs.r-pkg.org/badges/grand-total/bnclassify?color=yellowgreen)
+[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/bnclassify)](https://cran.r-project.org/package=bnclassify)
+![](https://cranlogs.r-pkg.org/badges/bnclassify?color=yellow)
+![](https://cranlogs.r-pkg.org/badges/grand-total/bnclassify?color=yellowgreen)
+[![Research software
+impact](http://depsy.org/api/package/cran/bnclassify/badge.svg)](http://depsy.org/package/r/bnclassify)
+[![codecov.io](https://codecov.io/github/bmihaljevic/bnclassify/coverage.svg?branch=master)](https://codecov.io/github/bmihaljevic/bnclassify?branch=master)
+[![Travis-CI Build
+Status](https://travis-ci.org/bmihaljevic/bnclassify.svg?branch=master)](https://travis-ci.org/bmihaljevic/bnclassify)
 
-Implements algorithms for learning discrete Bayesian network classifiers from data, as well as functions for using these classifiers for prediction, assessing their predictive performance, and inspecting and analyzing their properties.
+Implements algorithms for learning discrete Bayesian network classifiers
+from data, as well as functions for using these classifiers for
+prediction, assessing their predictive performance, and inspecting and
+analyzing their properties.
 
 Example
 =======
 
-Load a data set and learn a one-dependence estimator by maximizing Akaike's information criterion (AIC) score.
+Load a data set and learn a one-dependence estimator by maximizing
+Akaike’s information criterion (AIC) score.
 
 ``` r
 library(bnclassify)
@@ -27,7 +38,8 @@ plot(tn)
 
 ![](man/figures/README-unnamed-chunk-2-1.png)
 
-After learning the network's parameters, you can use it to classify data.
+After learning the network’s parameters, you can use it to classify
+data.
 
 ``` r
 tn <- lp(tn, car, smooth = 0.01)
@@ -50,7 +62,7 @@ Estimate predictive accuracy with cross validation.
 
 ``` r
 cv(tn, car, k = 10)
-#> [1] 0.9403711
+#> [1] 0.9375576
 ```
 
 Or compute the log-likelihood
@@ -63,14 +75,8 @@ logLik(tn, car)
 Install
 =======
 
-Make sure you have at least version 3.2.0 of R. You will need to install packages from Bioconductor.
-
-``` r
-source("http://bioconductor.org/biocLite.R")
-biocLite(c("graph", "RBGL", "Rgraphviz"))
-```
-
-You can install `bnclassify` from CRAN:
+Make sure you have at least version 3.2.0 of R. You can install
+`bnclassify` from CRAN:
 
 ``` r
 install.packages('bnclassify')
@@ -84,21 +90,38 @@ devtools::install_github('bmihaljevic/bnclassify')
 # devtools::install_github('bmihaljevic/bnclassify', build_vignettes = TRUE)
 ```
 
-Ideally, you would use the `build_vignettes = TRUE` version, and thus get the vignettes, but it requires programs such as texi2dvi to be installed on your side.
+Ideally, you would use the `build_vignettes = TRUE` version, and thus
+get the vignettes, but it requires programs such as texi2dvi to be
+installed on your side.
+
+For network plotting and prediction with incomplete data you will also
+need two packages from Bioconductor. Install them with:
+
+``` r
+source("http://bioconductor.org/biocLite.R")
+biocLite(c("graph", "Rgraphviz"))
+```
 
 Overview
 ========
 
-See the list of implemented functionalities.
+See an overview of the package and examples of usage:
+
+``` r
+vignette('overview', package = 'bnclassify')
+#> Warning: vignette 'overview' not found
+```
+
+See the list of main functionalities.
 
 ``` r
 ?bnclassify
 ```
 
-Use the introduction vignette to get started.
+Use the usage vignette for more details on the functions.
 
 ``` r
-vignette('introduction', package = 'bnclassify')
+vignette('usage', package = 'bnclassify')
 ```
 
 Then have a look at the remaining vignettes.

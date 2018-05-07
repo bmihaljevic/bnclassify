@@ -1,0 +1,153 @@
+---
+title: "Methods' details for the `bnclassify` package"
+author: "Bojan Mihaljevic, Concha Bielza, Pedro Larranaga"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::pdf_document:
+    toc: true
+    number_sections: true
+    keep_tex: true
+    includes:
+          in_header: header.tex
+    citation_package: natbib
+bibliography: bnclassify.bib  
+abstract:  This vignette provides \tecvindesc/. It complements the ``overview'' vignette.
+fontsize: 11pt 
+vignette: >
+  %\VignetteIndexEntry{methods}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---     
+
+\section{Introduction}\label{introduction}    
+All notation and acronyms used here are introduced in  `vignette("overview", package="bnclassify")`. 
+
+See the remaining vignettes: 
+
+- `vignette("overview", package="bnclassify")` provides details on the implemented methods. 
+- `?bnclassify` provides a a consise overview of the package, listing main functionalities and functions.
+- `vignette("introduction", package="bnclassify")` provides details on the implemented methods.   
+ 
+\section{Structure learning}
+\label{structure-learning}
+
+\label{sec:structure} 
+
+\subsection{Chow-Liu for one-dependence estimators}\label{chow-liu-for-one-dependence-estimators}
+
+The CL-ODE algorithm by \citep{Friedman1997} adapts the Chow-Liu \citep{Chow1968} algorithm in order to find the maximum likelihood TAN model in time quadratic in \(n\). Since the same method can be used to find ODE models which maximize decomposable penalized log-likelihood scores, \texttt{bnclassify} uses it to maximize Akaike's information criterion (AIC) \citep{Akaike74} and BIC \citep{Schwarz1978}. While maximizing likelihood will always render a TAN, i.e., a network with \(n-1\) augmenting arcs, maximizing penalized log-likelihood may render a FAN, since the inclusion of some arcs might degrade the penalized log-likelihood score.
+
+Note that when data is incomplete \pkg{bnclassify} does not necessarily return the optimal (with respect to penalized log-likelihood) ODE. Namely, that requires the computationally expensive calculation of the sufficient statistics \(N_{ijk}\) which maximize parameter likelihood; instead, \pkg{bnclassify} approximates these statistics with the \emph{available case analysis} heuristic (see Section \ref{sec:params}).
+
+<!-- %The tree is done with the Kruskal algorithm. For BIC and AIC, the penalization is. Since this is symmetric it will work. Just that some will be like this and it may turn out as a forest. -->
+<!-- % The weight for the BIC is ... -->
+
+<!-- %\subsection{Greedy hill-climbing}\label{greedy-hill-climbing} -->
+<!-- %All greedy algorithms maximize the cross-validated estimate of accuracy as their objective function. The BSEJ algorithm  starts from a naive Bayes structure and adds augmenting arcs and removes features from the model until no improvement in network score. On the contrary, FSSJ starts from a structure containing just the class node and proceeds by incorporating features features and augmenting arcs. -->
+\subsection{TAN HC and TAN HC SP}\label{greedy-hill-climbing}
+TAN HC and TAN HC SP may evaluate equivalent structures at each step. Adding valid arcs $X_i \rightarrow X_j$ and $X_j \rightarrow X_i$ results in identical structures because of tree structure of the features subgraph. Namely, $|Pa(X) \setminus C| \leq 1$ for each $X$ and thus we can only add the arc $X_i \rightarrow X_j$ if $Pa(X) = \{ C \}$. Thus, adding an arc $X_i \rightarrow X_j$ introduces no v-structures into the network, and both $X_i \rightarrow X_j$ and $X_j \rightarrow X_i$ only remove the independence between $X_i$ and $X_j$. The two obtained networks thus correspond to identical factorizations of the joint distribution.
+
+To avoid scoring equivalent structures, at each step we selected the $X_i \rightarrow X_j$ such that $X_i$ (that is, its column name in the data set) is alphabetically before $X_j$. A preferable implementation would be to select the arc randomly.
+
+\section{Parameter learning}\label{parameter-learning}
+
+\label{sec:params}
+
+\subsection{Bayesian parameter estimation}
+
+\pkg{bnclassify} only handles discrete features. With fully observed data, it estimates the parameters with maximum likelihood or Bayesian estimation, according to Equation 2 in the "overview" vignette, with a single \(\alpha\) for all local distributions. With incomplete data it uses \textit{available case analysis} \citep{Pigott2001} and substitutes \(N_{\cdot j \cdot}\) in Equation 2 in the "overview" vignette with \(N_{i j \cdot} = \sum_{k = 1}^{r_i} N_{i j k}\), i.e., with the count of instances in which \(\mathbf{Pa}(X_i) = j\) and \(X_i\) is observed:
+\begin{equation*}
+\theta_{ijk} = \frac{N_{ijk} + \alpha}{N_{ i j \cdot } + r_i \alpha}.
+\label{eq:incp_params}
+\end{equation*}
+
+\subsection{Exact model averaging for naive Bayes}
+
+The MANB parameter estimation method corresponds to exact Bayesian model averaging over the naive Bayes models obtained from all $2^n$ subsets of the $n$ features, yet it is computed in time linear in $n$. The implementation in \pkg{bnclassify} follows the online appendix of \cite{Wei2011}, extending it to the cases where $\alpha \neq 1$ in Equation~(\ref{eq:incp_params}).
+
+The estimate for a particular parameter $\theta_{ijk}^{MANB}$ is:
+
+\begin{equation*}
+\theta_{ijk}^{MANB} = \theta_{ijk} P(\mathcal{G}_{C \nbigCI X_i} \mid \mathcal{D}) + \theta_{ik} P(\mathcal{G}_{C \bigCI X_i}),
+\end{equation*}
+
+where $P(\mathcal{G}_{C \nbigCI X_i} \mid \mathcal{D})$ is the local posterior probability of an arc from $C$ to $X_i$, whereas $P(\mathcal{G}_{C \bigCI X_i}) = 1 - P(\mathcal{G}_{C \nbigCI X_i} \mid \mathcal{D})$ is that of the absence of such an arc (which is equivalent to omitting $X_i$ from the model), while $\theta_{ijk}$ and $\theta_{ik}$ are the Bayesian parameter estimates obtained with Equation~(\ref{eq:incp_params}) given the corresponding structures (i.e., with and without the arc from $C$ to $X_i$).
+
+Using Bayes' theorem,
+
+\begin{equation*}
+P(\mathcal{G}_{C \nbigCI X_i} \mid \mathcal{D}) = \frac{P(\mathcal{G}_{C \nbigCI X_i}) P(\mathcal{D} \mid \mathcal{G}_{C \nbigCI X_i})}{P(\mathcal{G}_{C \nbigCI X_i}) P(\mathcal{D} \mid \mathcal{G}_{C \nbigCI X_i}) + P(\mathcal{G}_{C \bigCI X_i}) P(\mathcal{D} \mid \mathcal{G}_{C \bigCI X_i})}.
+\end{equation*}
+
+Assuming a Dirichlet prior with hyperparameter $\alpha = 1$ in Equation~\ref{eq:incp_params}, Equation~(6) and Equation~(7) in the online appendix of \cite{Wei2011} give formulas for $P(\mathcal{D} \mid \mathcal{G}_{C \nbigCI X_i})$ and $P(\mathcal{D} \mid \mathcal{G}_{C \bigCI X_i})$:
+
+\begin{equation*}
+P(\mathcal{D} \mid \mathcal{G}_{C \nbigCI X_i}) = \prod_{j=1}^{r_C} \frac{(r_i - 1)!}{(N_{ij \cdot} + r_i - 1)!} \prod_{k=1}^{r_i} N_{ijk}!,
+\end{equation*}
+
+\begin{equation*}
+P(\mathcal{D} \mid \mathcal{G}_{C \bigCI X_i}) = \frac{(r_i - 1)!}{(N_{i} + r_i - 1)!} \prod_{k=1}^{r_i} N_{i \cdot k}!,
+\end{equation*}
+
+\noindent where $N_{i \cdot k} = \sum_{j=1}^{r_C} N_{ijk}$. Noting that the above are special cases of Equation~(8) in \cite{Dash2002}, we can generalize this for any hyperparameter $\alpha > 0$ as follows:
+
+\begin{equation*}
+P(\mathcal{D} \mid \mathcal{G}_{C \nbigCI X_i}) = \prod_{j=1}^{r_C} \frac{\Gamma(r_i \alpha )}{\Gamma(N_{ij} + r_i \alpha)} \prod_{k=1}^{r_i} \frac{\Gamma(N_{ijk}+ \alpha)}{\Gamma(\alpha)},
+\end{equation*}
+
+and
+
+\begin{equation*}
+P(\mathcal{D} \mid \mathcal{G}_{C \nbigCI X_i}) = \frac{\Gamma(r_i \alpha )}{\Gamma(N_{i} + r_i \alpha)} \prod_{k=1}^{r_i} \frac{\Gamma(N_{ik} + \alpha)}{\Gamma(\alpha)}.
+\end{equation*}
+
+Following \cite{Wei2011}, \pkg{bnclassify} asumes that the local prior probability of an arc from the class to a feature $X_i$, $P(\mathcal{G}_{C \nbigCI X_i})$, is given by the user. The prior of a naive Bayes structure $\mathcal{G}$, with arcs from the class to $a$ out of $n$, features and no arcs to the remaining $n-a$ features is, then,
+
+\begin{equation}
+P(\mathcal{G}) = P(\mathcal{G}_{C \nbigCI X_i})^a (1-P(\mathcal{G}_{C \nbigCI X_i}))^{(n-a)}.
+\end{equation}
+
+Note that \pkg{bnclassify} computes the above in logarithmic space to reduce numerical errors.
+
+\subsection{Weighting to Alleviate the Naive Bayes Independence Assumption}
+The WANBIA \citep{Zaidi2013} method updates naive Bayes' parameters with a single exponent `weight' per feature. The weights are computed by optimizing either the conditional log-likelihood or the mean root squared error of the predictions. \pkg{bnclassify} implements the conditional log-likelihood optimization as described in the original paper, namely optimizing it with the L-BFGS \citep{Zhu1997algorithm} algorithm, with its gradient $\mathbf{g}$ given by
+
+\begin{equation}
+    g_i = \sum_{j = 1}^{N} \Big( \log{P(X_i = x_i^{(j)} \mid c^{(j)})} - \sum_{c \in C} P(c \mid \mathbf{x}; \mathbf{w} ) \log P(X_i = x_i^{(j)} \mid c) \Big),
+    \label{eq:wanbia}
+\end{equation}
+where the probabilities are those estimated with maximum likelihood, i.e., without taking weights into account, whereas $P(c \mid \mathbf{x}; \mathbf{w} )$ takes weights into account. This corresponds to discriminative learning of parameters, as a discriminative, rather than generative, objective function is optimized.
+
+If \(X_i\) is unobserved for some instance \(j\), that is, \(x_i^{(j)} = \) \code{NA}, then we replace \({P(X_i = x_i^{(j)} \mid c^{(j)})}\) and \(P(X_i = x_i^{(j)} \mid c)\) with 1 in Equation \ref{eq:wanbia} (as a leaf in the Bayesian network, an unobserved \(X_i\) does not affect conditional log-likelihood).
+
+\subsection{Attribute-weighted naive Bayes}
+
+The AWNB parameter estimation method is intended for the naive Bayes but in \pkg{bnclassify} it can be applied to any model. It exponentiates the conditional probability of a predictor,
+
+\begin{equation*}
+P(\mathbf{X}, C) \propto P(C) \prod_{i=1}^{n} P(X_i \mid \mathbf{Pa}(X_i))^{w_i},
+\label{eq:awnb}
+\end{equation*}
+
+\noindent reducing or maintaining its effect on the class posterior, since \(w_i \in [0,1]\) (note that a weight \(w_i = 0\) omits \(X_i\) from the model, rendering it independent from the class.). This is equivalent to updating parameters of $\theta_{ijk}$ given by Equation~(\ref{eq:incp_params}) as
+
+\begin{equation*}
+  \theta_{ijk}^{AWNB} = \frac{\theta_{ijk}^{w_i}}{\sum_{k=1}^{r_i} \theta_{ijk}^{w_i}},
+\end{equation*}
+
+and plugging those estimates into Equation 1 in the "overview" vignette. Weights $w_i$ are computed as
+
+\[w_i = \frac{1}{M}\sum_{t=1}^M \frac{1}{\sqrt{d_{ti}}},\]
+
+where \(M\) is the number of bootstrap \citep{Efron1979} subsamples
+from \(\mathcal{D}\) and \(d_{ti}\) is the minimum testing depth of \(X_i\)
+in an unpruned classification tree learned from the \(t\)-th subsample
+(\(d_{ti} = 0\) if \(X_i\) is omitted from \(t\)-th tree).
+
+\section{Prediction}
+\label{sec:pred}
+
+\texttt{bnclassify} implements prediction for augmented naive Bayes models with complete data. This amounts to multiplying the corresponding entries in the local distributions and is done in logarithmic space, applying the *log-sum-exp* trick before normalizing, in order to reduce the chance of underflow.
+
+With incomplete data this cannot be done and therefore \pkg{bnclassify} uses the \texttt{gRain} package \citep{Hojsgaard2012} to perform exact inference. Such inference is time-consuming and, therefore, wrapper algorithms can be very slow when applied on incomplete data sets.
+

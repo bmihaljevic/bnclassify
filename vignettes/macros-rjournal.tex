@@ -1,0 +1,29 @@
+% implementation of rjournal commands
+% re-implement code to let is be used with default pandoc template
+
+\newcommand{\kbd}[1]{{\normalfont\texttt{#1}}}
+\newcommand{\key}[1]{{\normalfont\texttt{\uppercase{#1}}}}
+\DeclareRobustCommand\samp{`\bgroup\@noligs\@sampx}
+\def\@sampx#1{{\normalfont\texttt{#1}}\egroup'}
+\newcommand{\var}[1]{{\normalfont\textsl{#1}}}
+\newcommand{\file}[1]{{`\normalfont\textsf{#1}'}} 
+\newcommand{\code}[1]{\texttt{#1}}
+\let\option=\samp
+\newcommand{\dfn}[1]{{\normalfont\textsl{#1}}}
+% \acronym is effectively disabled since not used consistently
+\newcommand{\acronym}[1]{#1}
+\newcommand{\strong}[1]{\texorpdfstring%
+{{\normalfont\fontseries{b}\selectfont #1}}%
+{#1}}
+\let\pkg=\strong
+\newcommand{\CRANpkg}[1]{\href{https://CRAN.R-project.org/package=#1}{\pkg{#1}}}%
+\let\cpkg=\CRANpkg
+\newcommand{\ctv}[1]{\href{https://CRAN.R-project.org/view=#1}{\emph{#1}}}
+\newcommand{\BIOpkg}[1]{\href{https://www.bioconductor.org/packages/release/bioc/html/#1.html}{\pkg{#1}}}
+
+
+\RequirePackage{fancyvrb}
+\RequirePackage{alltt}
+
+\DefineVerbatimEnvironment{example}{Verbatim}{}
+\renewenvironment{example*}{\begin{alltt}}{\end{alltt}}

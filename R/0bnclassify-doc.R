@@ -1,9 +1,7 @@
 #' Learn discrete Bayesian network classifiers from data.
 #' 
-#' Implements state-of-the-art algorithms for learning discrete Bayesian network 
-#' classifiers from data, as well as functions for using these classifiers for
-#' prediction, assessing their predictive performance, and inspecting their
-#' properties.
+#' State-of-the-art algorithms for learning discrete Bayesian network 
+#' classifiers from data, with functions prediction, model evaluation and inspection.
 #' 
 #' The learn more about the package, start with the vignettes:
 #'  \code{browseVignettes(package = "bnclassify")}. The following is a list of available
@@ -17,12 +15,14 @@
 #' \item \code{\link{bsej}}: Backward sequential elimination and joining (BSEJ)  (Pazzani, 1996)
 #' \item \code{\link{tan_hc}}: Hill-climbing tree augmented naive Bayes (TAN-HC)  (Keogh and Pazzani, 2002)
 #' \item \code{\link{tan_hcsp}}: Hill-climbing super-parent tree augmented naive Bayes (TAN-HCSP) (Keogh and Pazzani, 2002)
+#' \item \code{\link{aode}}: Averaged one-dependence estimators (AODE) (Webb et al., 2005)
 #' }
 #' 
 #' Parameter learning methods (\code{\link{lp}}):
 #' 
 #' \itemize{
 #' \item Bayesian and maximum likelihood estimation
+#' \item Weighting attributes to alleviate naive bayes' independence assumption (WANBIA) (Zaidi et al., 2013)
 #' \item Attribute-weighted naive Bayes (AWNB)  (Hall, 2007)
 #' \item Model averaged naive Bayes (MANB) (Dash and Cooper, 2002)
 #' }
@@ -38,12 +38,12 @@
 #' 
 #' Predicting: 
 #' \itemize{
-#' \item \code{\link[=predict.bnc_bn]{predict}}: Inference for complete and/or incomplete data (the latter through \code{gRain})}
+#' \item \code{\link[=predict.bnc_fit]{predict}}: Inference for complete and/or incomplete data (the latter through \code{gRain})}
 #' 
 #' Inspecting models:
 #'  \itemize{ 
 #'  \item \code{\link[=plot.bnc_dag]{plot}}: Structure plotting (through \code{Rgraphviz})
-#'  \item \code{\link[=print.bnc_dag]{print}}: Summary 
+#'  \item \code{\link[=print.bnc_base]{print}}: Summary 
 #'  \item \code{\link{params}}: Access conditional probability tables 
 #'  \item \code{\link{nparams}}: Number of free parameters 
 #'  \item and more. See \code{\link{inspect_bnc_dag}} and \code{\link{inspect_bnc_bn}}.
@@ -66,6 +66,13 @@
 #'   Friedman N, Geiger D and Goldszmidt M (1997). Bayesian network classifiers.
 #'   \emph{Machine Learning}, \bold{29}, pp. 131--163.
 #'   
+#'   Zaidi NA, Cerquides J, Carman MJ, and Webb GI (2013) Alleviating naive Bayes 
+#'   attribute independence assumption by attribute weighting.
+#'   \emph{Journal of Machine Learning Research}, \bold{14} pp. 1947--1988.  
+#'   
+#'   GI. Webb, JR Boughton, and Z Wang (2005) Not so naive bayes: Aggregating one-dependence 
+#'   estimators. \emph{Machine Learning}, \bold{58}(1) pp. 5--24.  
+#'   
 #'   Hall M (2007). A decision tree-based attribute weighting filter for naive 
 #'   Bayes. \emph{Knowledge-Based Systems}, \bold{20}(2), pp. 120-126.
 #'   
@@ -86,10 +93,10 @@ NULL
 #' 
 #' A Bayesian network classifier with structure and parameters. Returned by 
 #' \code{\link{lp}} and \code{\link{bnc}} functions. You can use it to classify
-#' data (with \code{\link[=predict.bnc_bn]{predict}}). Can estimate its
+#' data (with \code{\link[=predict.bnc_fit]{predict}}). Can estimate its
 #' predictive accuracy with \code{\link{cv}}, plot its structure (with 
 #' \code{\link[=plot.bnc_dag]{plot}}), print a summary to console 
-#' (\code{\link[=print.bnc_dag]{print}}), inspect it with functions documented 
+#' (\code{\link[=print.bnc_base]{print}}), inspect it with functions documented 
 #' in \code{\link{inspect_bnc_bn}} and \code{\link{inspect_bnc_dag}}, and
 #' convert it to mlr, grain, and graph objects --see \code{\link{as_mlr}} and 
 #' \code{\link{grain_and_graph}}.
@@ -111,7 +118,7 @@ NULL
 #' A Bayesian network classifier structure, returned by functions such as 
 #' \code{\link{nb}} and \code{\link{tan_cl}}. You can plot its structure (with 
 #' \code{\link[=plot.bnc_dag]{plot}}), print a summary to console 
-#' (\code{\link[=print.bnc_dag]{print}}), inspect it with functions documented
+#' (\code{\link[=print.bnc_base]{print}}), inspect it with functions documented
 #' in \code{\link{inspect_bnc_dag}}, and convert it to a graph object with 
 #' \code{\link{grain_and_graph}}.
 #' 
@@ -158,6 +165,7 @@ NULL
 #' @inheritParams nb
 #' @inheritParams cv
 #' @inheritParams learn_params
+#' @param kdbk An integer. The maximum number of feature parents per feature.
 #' @param epsilon A numeric. Minimum absolute improvement in accuracy required 
 #'   to keep searching.
 #' @param cache_reset A numeric. Number of iterations after which to reset the 
@@ -213,6 +221,7 @@ NULL
 #' Learn the parameters of a Bayesian network structure.
 #' 
 #' Learn parameters with maximum likelihood or Bayesian estimation, the 
+#' weighting attributes to alleviate naive bayes' independence assumption (WANBIA), 
 #' attribute weighted naive Bayes (AWNB), or the model averaged naive Bayes 
 #' (MANB) methods. Returns a \code{\link{bnc_bn}}.
 #' 
@@ -230,6 +239,10 @@ NULL
 #' \alpha = 0}. With partially observed data, the above amounts to 
 #' \emph{available case analysis}.
 #' 
+#' WANBIA learns a unique exponent 'weight' per feature. They are 
+#' computed by optimizing conditional log-likelihood, and are bounded with
+#' all \eqn{w_i \in [0, 1]}. For WANBIA estimates, set \code{wanbia} to \code{TRUE}.
+#' 
 #' In order to get the AWNB parameter estimate, provide either the 
 #' \code{awnb_bootstrap} and/or the \code{awnb_trees} argument. The estimate is:
 #' \deqn{\theta_{ijk}^{AWNB} = \frac{\theta_{ijk}^{w_i}}{\sum_{k=1}^{r_i} 
@@ -245,10 +258,7 @@ NULL
 #' The MANB parameters correspond to Bayesian model averaging over the naive 
 #' Bayes models obtained from all \eqn{2^n}{2^n} subsets over the \eqn{n} 
 #' features. To get MANB parameters, provide the \code{manb_prior} argument. 
-#' 
-#' Like AWNB, WANBIA learns a unique exponent 'weight' per feature. They are 
-#' computed by optimizing conditional log-likelihood, and are bounded with
-#' all \eqn{w_i \in [0, 1]}. For WANBIA estimates, set \code{wanbia} to \code{TRUE}.
+#'  
 #' @name learn_params
 #'   
 #' @inheritParams nb
@@ -323,7 +333,7 @@ NULL
 
 #' Compute (penalized) log-likelihood.
 #' 
-#' Compute (penalized) log-likelihood score of a \code{\link{bnc_bn}} object on
+#' Compute (penalized) log-likelihood and conditional log-likelihood score of a \code{\link{bnc_bn}} object on
 #' a data set. Requires a data frame argument in addition to \code{object}.
 #' 
 #' log-likelihood =  \eqn{log P(\mathcal{D} \mid \theta)}{log P(D | \theta)},
@@ -338,9 +348,11 @@ NULL
 #' \eqn{\mathcal{D}}{D} is the data set and N is the number of instances in 
 #' \eqn{\mathcal{D}}{D}.
 #' 
+#' \code{cLogLik} computes the conditional log-likelihood of the model. 
+#' 
 #' @name loglik
 #'   
-#' @inheritParams predict.bnc_bn
+#' @inheritParams predict.bnc_fit
 #' @param ... A data frame (\eqn{\mathcal{D}}{D}).
 #' @examples 
 #' data(car)
@@ -348,6 +360,7 @@ NULL
 #' logLik(nb, car)   
 #' AIC(nb, car)
 #' BIC(nb, car)
+#' cLogLik(nb, car)   
 NULL
 
 #' Convert to graph and gRain.
@@ -363,3 +376,11 @@ NULL
 #' g <- as_grain(nb)
 #' gRain::querygrain.grain(g)$buying
 NULL
+
+#' @useDynLib bnclassify
+#' @importFrom Rcpp sourceCpp
+NULL
+
+.onUnload <- function (libpath) {
+  library.dynam.unload("bnclassify", libpath)
+}

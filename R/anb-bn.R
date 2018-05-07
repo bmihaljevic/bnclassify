@@ -1,6 +1,6 @@
 make_bnc_bn <- function(bnc_dag, params) {
   bnc_dag$.params <- params
-  class(bnc_dag) <- c('bnc_bn', class(bnc_dag))
+  class(bnc_dag) <- c('bnc_bn', class(bnc_dag), 'bnc_fit')
   bnc_dag
 }
 bn2dag <- function(x) {
@@ -10,7 +10,7 @@ bn2dag <- function(x) {
   }
   else {
     make_bnc_dag(class = class_var(x), families = families(x), 
-                 graphNEL = as_graphNEL(x))  
+                 dag = dag(x))  
   }
 }
 check_bnc_bn <- function(x) {

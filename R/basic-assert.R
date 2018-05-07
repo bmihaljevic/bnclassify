@@ -1,3 +1,13 @@
+#' Whether to do checks or not. Set TRUE to speed up debugging or building. 
+#' @keywords  internal
+skip_assert <- function() {
+ FALSE 
+} 
+#' Skip while testing to isolate errors
+#' @keywords  internal
+skip_testing <- function() {
+ TRUE 
+}
 # Tests whether two character vectors are identical when sorted
 is_perm <- function(x, y) {
   is.character(x) && identical(sort(x), sort(y))
@@ -13,11 +23,7 @@ equivalent_num <- function(x, y) {
   class(x) <- NULL
   class(y) <- NULL
   all.equal(x, y, check.attributes = FALSE)
-}
-# I use this a lot, e.g., in check_features
-are_disjoint <- function(x, y) {
-	length(intersect(x, y)) == 0
-}
+} 
 is_subset <- function(x, y) {
   all(x %in% y)
 }
@@ -60,6 +66,7 @@ check_non_empty_complete <- function(x) {
   stopifnot(is_non_empty_complete(x))
 }
 are_complete_dimnames <- function(x) {
+  if (skip_assert( )) return (TRUE)
   # Check x has non empty comlete dimames
   dnames <- dimnames(x)
   if (!is_non_empty_complete(dnames)) return (FALSE)

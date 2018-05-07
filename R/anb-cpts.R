@@ -28,26 +28,9 @@ ctgt2cpt <- function(ctgt, smooth) {
   # Requiring ctgt be a table. That implies it is an array.
   stopifnot(smooth >= 0, is.table(ctgt), are_complete_dimnames(ctgt))
   # Add smooth to ctgt 
-  ctgt <- ctgt + smooth
-  normalize_ctgt(ctgt)
-}
-# Normalizes the contigency table on the first dimension. Returns a table.
-normalize_ctgt <- function(ctgt) {
-  stopifnot(!anyNA(ctgt))  # TODO: Should check for NaN
-  # Keep attributes (e.g., class and dimension names); just change entries
-  cpt <- ctgt
-  ndims <- length(dim(ctgt))
-  if (ndims == 1) {
-    cpt[] <- normalize(cpt)
-  }
-  else if (ndims > 1) { 
-    cpt[] <- apply(ctgt, 2:ndims, normalize)
-  }
-  else {
-    stop("0 dimension of", ctgt)
-  }
-  cpt
-}
+  ctgt <- smooth_sideeffect(ctgt, smooth)
+  normalize_ctgt(ctgt) 
+} 
 #' Get just form first dimension in their own cpt, not checking for consistency
 #' in others.
 #' @keywords internal
@@ -92,7 +75,8 @@ subset_cpt <- function(cpt, indices) {
   cpt[x_indices]
 }
 exponentiate_cpt <- function(cpt, value) {
-  normalize_ctgt(cpt ^ value)
+  cpt <- cpt ^ value
+  normalize_ctgt(cpt) 
 }
 get_cpt_id <- function(cpt) {
   make_family_id(cpt2family(cpt))

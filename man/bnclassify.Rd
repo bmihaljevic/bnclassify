@@ -6,10 +6,8 @@
 \alias{bnclassify-package}
 \title{Learn discrete Bayesian network classifiers from data.}
 \description{
-Implements state-of-the-art algorithms for learning discrete Bayesian network 
-classifiers from data, as well as functions for using these classifiers for
-prediction, assessing their predictive performance, and inspecting their
-properties.
+State-of-the-art algorithms for learning discrete Bayesian network 
+classifiers from data, with functions prediction, model evaluation and inspection.
 }
 \details{
 The learn more about the package, start with the vignettes:
@@ -24,12 +22,14 @@ Structure learning algorithms:
 \item \code{\link{bsej}}: Backward sequential elimination and joining (BSEJ)  (Pazzani, 1996)
 \item \code{\link{tan_hc}}: Hill-climbing tree augmented naive Bayes (TAN-HC)  (Keogh and Pazzani, 2002)
 \item \code{\link{tan_hcsp}}: Hill-climbing super-parent tree augmented naive Bayes (TAN-HCSP) (Keogh and Pazzani, 2002)
+\item \code{\link{aode}}: Averaged one-dependence estimators (AODE) (Webb et al., 2005)
 }
 
 Parameter learning methods (\code{\link{lp}}):
 
 \itemize{
 \item Bayesian and maximum likelihood estimation
+\item Weighting attributes to alleviate naive bayes' independence assumption (WANBIA) (Zaidi et al., 2013)
 \item Attribute-weighted naive Bayes (AWNB)  (Hall, 2007)
 \item Model averaged naive Bayes (MANB) (Dash and Cooper, 2002)
 }
@@ -45,12 +45,12 @@ Model evaluating:
 
 Predicting: 
 \itemize{
-\item \code{\link[=predict.bnc_bn]{predict}}: Inference for complete and/or incomplete data (the latter through \code{gRain})}
+\item \code{\link[=predict.bnc_fit]{predict}}: Inference for complete and/or incomplete data (the latter through \code{gRain})}
 
 Inspecting models:
  \itemize{ 
  \item \code{\link[=plot.bnc_dag]{plot}}: Structure plotting (through \code{Rgraphviz})
- \item \code{\link[=print.bnc_dag]{print}}: Summary 
+ \item \code{\link[=print.bnc_base]{print}}: Summary 
  \item \code{\link{params}}: Access conditional probability tables 
  \item \code{\link{nparams}}: Number of free parameters 
  \item and more. See \code{\link{inspect_bnc_dag}} and \code{\link{inspect_bnc_bn}}.
@@ -67,6 +67,13 @@ Bielza C and Larranaga P (2014), Discrete Bayesian network
   
   Friedman N, Geiger D and Goldszmidt M (1997). Bayesian network classifiers.
   \emph{Machine Learning}, \bold{29}, pp. 131--163.
+  
+  Zaidi NA, Cerquides J, Carman MJ, and Webb GI (2013) Alleviating naive Bayes 
+  attribute independence assumption by attribute weighting.
+  \emph{Journal of Machine Learning Research}, \bold{14} pp. 1947--1988.  
+  
+  GI. Webb, JR Boughton, and Z Wang (2005) Not so naive bayes: Aggregating one-dependence 
+  estimators. \emph{Machine Learning}, \bold{58}(1) pp. 5--24.  
   
   Hall M (2007). A decision tree-based attribute weighting filter for naive 
   Bayes. \emph{Knowledge-Based Systems}, \bold{20}(2), pp. 120-126.

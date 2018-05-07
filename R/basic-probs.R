@@ -17,20 +17,7 @@ sum_matrices <- function(matrices) {
 }
 valid_factor <- function(x, nrow, ncol, colnames) {
   identical(dim(x), c(nrow, ncol)) && is.numeric(x) && identical(colnames, colnames(x))
-}
-# Normalizes a vector. If division by the sum is Nan then returns a uniform distribution. 
-# Not checking the input for NAs for speed. Caller must do that. 
-normalize <- function(x) {
-  n <- x / sum(x)
-  # check the quotient is NaN since it is unclear which tolerance to use if checking
-  # sum(x) == 0
-  if (is.nan(n[1])) {
-    stopifnot(all(is.nan(n)))
-    # keeps the dimnames of n 
-    n[] <- 1 / length(x)
-  }
-  n 
-}
+}  
 #' Normalize log probabilities. 
 #' 
 #' Uses the log-sum-exp trick.
@@ -43,18 +30,15 @@ log_normalize <- function(lp) {
   # Check p is matrix of log probs?(<= 0)
   # Normalize with log sum exp 
   log_probs <- lp - matrixStats::rowLogSumExps(lp)
-  # exponentiate
-  p <- exp(log_probs)
+  log_probs 
+}
+exponentiate_probs <- function(p) {
+  p <- exp_sideeffect(p)
   # rowAnys Does not distinguish between NA and NaN. 
   nans <- which(matrixStats::rowAnys(p, value = NaN))
   if (length(nans) > 0) {
     p[nans, ] <- 1 / ncol(p)
-  }
-  # Assign a uniform where the result is NaN
-#   ind_zero <- is.nan(p)
-#   if (any(ind_zero)) {
-#     p[ind_zero,] <- 1 / ncol(p)
-#   }
+  } 
   p
 }
 #' Returns \code{TRUE} is \code{x} is a valid probability distribution.

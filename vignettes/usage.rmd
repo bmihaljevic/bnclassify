@@ -1,0 +1,436 @@
+---
+title: "`bnclassify` usage"
+author: "Bojan Mihaljević, Concha Bielza, Pedro Larrañaga"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::pdf_document:
+    toc: true
+    number_sections: true
+    keep_tex: true 
+    includes:
+          in_header: header.tex
+bibliography: bnclassify.bib 
+abstract:  This vignette gives \invindesc/.
+fontsize: 11pt
+vignette: >
+  %\VignetteIndexEntry{usage}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(cache = FALSE, autodep = TRUE, collapse = TRUE, comment = "#>"
+                      # , fig.height = 3, fig.width = 3
+                      )
+```
+
+# Introduction
+The `bnclassify` package implements state-of-the-art algorithms for learning discrete Bayesian network classifiers from data, as well as functions for using these classifiers for prediction, assessing their predictive performance, and inspecting and analyzing their properties. This vignette gives \invindesc/. Other resources provide additional information: 
+
+- `vignette("overview", package="bnclassify")` provides \overvindesc/. 
+- `?bnclassify` provides a \pkghelp/.
+- `vignette("methods", package="bnclassify")`  provides \tecvindesc/.   
+
+# Data
+Throughout the vignette we will use the car evaluation data set. It has six discrete features, describing car properties such as buying price or the number of doors, and 1728 instances assigned to four different classes (unacc, acc, good, vgood). See `?car` for more details.
+```{r}
+library(bnclassify)
+data(car)
+dim(car)
+head(car)
+```
+
+# Workflow
+
+Using `bnclassify` generally consists of four steps:
+
+1. Learning network structure
+1. Learning network parameters
+1. Evaluating the model 
+1. Predicting with the model 
+
+In between those steps, you may also want to inspect the model's properties. 
+
+Below is an example of the four steps done in four lines. 
+
+<!-- : a) learn network structure; b) learn the parameters of that network; c) evaluate the model's performance with 10-fold stratified cross-validation.  -->
+
+```{r}
+nb <- nb('class', car) # Learn a naive Bayes structure 
+nb <- lp(nb, car, smooth = 1) # Learn parameters
+cv(nb, car, k = 10) # 10-fold Cross-validation estimate of accuracy
+head(predict(nb, car)) # Classify the entire data set
+```
+
+While there are multiple alternatives to `nb` for the first step, you are most likely to use `lp`, `cv`, and `predict` for steps 2-4. We will elaborate on all four steps throughout the rest of the vignette.  
+
+<!-- The above gave us an accuracy estimate of 85.60\%. -->
+
+# Network structure 
+
+## Learning
+
+\texttt{bnlassify} provides one function per each structure learning algorithm that it implements. Grouped according to algorithm type (see `vignette("bnclassify-technical")`), these are:
+
+Naive Bayes:
+
+- `nb`
+
+CL ODE:
+
+- `tan_cl`
+
+Greedy wrapper:
+
+- `tan_hc`
+- `tan_hcsp`
+- `fssj`
+- `bsej`
+
+They all receive the name of the class variable and the data set as their first two arguments, followed by optional arguments. 
+
+<!--, such as `nb` function for naive Bayes [@Minsky1961] or the the `tan_cl` function for the adaptation Chow-Liu's algorithm for one-dependence estimators (Chow-Liu ODE; [@Friedman1997]). -->
+
+The following learns three different structures with three different algorithms.
+```{r learn_ode}
+# Naive Bayes
+nb <- nb('class', car)
+# ODE Chow-Liu with AIC score (penalized log-likelihood)
+ode_cl_aic <- tan_cl('class', car, score = 'aic')
+# Semi-naive Bayes with forward sequential selection and joining (FSSJ) and 
+# 5-fold cross-validation
+fssj <- fssj('class', car, k = 5, epsilon = 0)  
+```
+
+For details on the learning algorithms, see the corresponding functions (e.g., `?tan_cl`) and `vignette("bnclassify-technical")`. 
+
+## Analyzing 
+\label{interpreting-the-models}
+
+The above `nb`, `ode_cl_aic`, and `fssj` are objects of class `bnc_dag`. There are a number of functions that you can perform on such objects. 
+
+Printing the object to console outputs basic information on structure: 
+```{r}
+ode_cl_aic 
+```
+
+The above tells that the `ode_cl_aic` object is a network structure without any parameters, the name of the class variables is "class", it has six feature nodes and nine arcs, and it was learned with the `tan_cl` function.
+
+Plotting network structure can reveal probabilistic relationships among the variables:    
+```{r, fig.height=4}
+plot(ode_cl_aic)
+```
+
+If the network is not displaying properly, e.g., with node names overlapping in large networks, you may try different layout types and font sizes (see `?plot.bnc_dag`). 
+```{r, fig.height=4}
+plot(ode_cl_aic, layoutType = 'twopi', fontsize = 15)
+```
+
+An alternative to plotting, useful when the graph is large, is to query for the families that compose the structure (a family of a node is itself plus its parents in the graph).
+```{r}
+families(ode_cl_aic)
+```
+
+`narcs` gives the number of arcs in a structure.
+```{r}
+narcs(nb)
+```
+
+Functions such as `is_ode`, `is_nb`, or `id_semi` query the type of structure. For example:
+```{r}
+is_ode(ode_cl_aic)
+is_semi_naive(ode_cl_aic)
+```
+
+For more functions to query a network structure, see `?inspect_bnc_dag`.
+
+# Network parameters
+
+## Learning
+
+`bnclassify` provides three parameter estimation methods, all implemented with the `lp` function.  
+
+- Bayesian and maximum likelihood estimation 
+- AWNB
+- MANB
+
+`lp` which takes the network structure and the dataset from which to learn parameters as its first two arguments.
+
+To get Bayesian parameter estimates assuming a Dirichlet prior, provide a positive \texttt{smooth} argument to \texttt{lp}.
+
+```{r}
+nb <- lp(nb, car, smooth = 0.01)
+```
+
+For AWNB or MANB parameter estimation, provide the appropriate arguments to \texttt{lp}, in addition to `smooth`. 
+
+```{r}
+awnb <- lp(nb, car, smooth = 0.01, awnb_trees = 10, awnb_bootstrap = 0.5)
+manb <- lp(nb, car, smooth = 0.01, manb_prior = 0.5)
+```
+
+The `bnc` function is shorthand for learning both structure and parameters in a single step. Provide the name of the structure learning algorithm, as a character, and its optional arguments in `dag_args`.
+```{r}
+ode_cl_aic <- bnc('tan_cl', 'class', car, smooth = 1, dag_args = list(score = 'aic'))
+```
+
+## Analyzing 
+
+`lp` and `bnc` return objects of class `bnc_bn`, which are fully specified Bayesian network classifiers (i.e., with both structure and parameters). 
+
+Printing the `ode_cl_aic` object now also shows how many free parameters there are in the model (131).
+
+```{r}
+ode_cl_aic
+```
+
+`params` lets you access the conditional probability tables (CPTs). For example, the CPT of the `buying` feature in `nb` is:
+
+```{r}
+params(nb)$buying
+```
+
+<!-- 
+Note that the parameters learned with AWNB and MANB differ from those with Bayesian estimation. -->
+
+```{r, eval = FALSE, results = "hide", echo = FALSE}
+params(awnb)$buying
+params(manb)$buying
+```
+
+`nparams` gives the number of parameters of the classifier.
+```{r}
+nparams(nb)
+```
+
+For more functions for querying a `bnc_bn` object, see `?inspect_bnc_bn`
+
+## Interface to `bnlearn`, `gRain`, and `graph`
+You can convert a `bnc_bn` object to `bnlearn` [@scutari2009learning], `gRain` [@Hojsgaard2012] and `graph` [@Gentleman2015] objects to leverage functionalities from those packages, such as Bayesian network querying or inference.  
+
+Use 
+
+- `as_graphNEL` for `graph`
+- `as_grain` for `gRain`
+
+For `bnlearn`, first convert to `gRain` and then convert the `gRain` object to a `bnlearn` one (see `bnlearn` docs for how to do this).
+
+The following uses `gRain` to ge the marginal probability of the `buying` feature:
+```{r}
+a <- lp(nb('class', car), car, smooth = 1)
+g <- as_grain(a)
+gRain::querygrain.grain(g)$buying
+```
+
+# Selecting features
+
+\label{sec:fss}
+
+Some structure and parameter learning methods perform feature selection:
+
+- `fssj` and `bsej` : embedded wrapper
+- MANB: Bayesian model averaging 
+- AWNB: weighting 
+
+`fssj` and `bsej` perform feature selection while learning structure. On the car evaluation data they both select all features.
+
+```{r}
+length(features(fssj))
+set.seed(0)
+bsej <- bsej('class', car, k = 5, epsilon = 0)  
+length(features(bsej))
+```
+
+MANB has computed zero posterior probability for the arc from `class` to `doors` and 100\% probability for arcs to the other features. 
+```{r}
+manb_arc_posterior(manb)
+```
+
+This means that it has effectively omitted `doors` from the model, rendering it independent from the class.
+```{r}
+params(manb)$doors 
+```
+
+It has left the other features' parameters unaltered.
+```{r}
+all.equal(params(manb)$buying, params(nb)$buying)
+```
+
+The AWNB method has decreased the effect of each feature on the class posterior, especially `doors`, `lug_boot`, and `maint`, also modifying their local distributions towards independence from the class.
+
+```{r}
+awnb_weights(awnb)
+```
+
+
+## External feature selection
+
+\label{sec:efss}
+
+You can use `R` packages such as `mlr` [@Bischl2015] or `caret` [@Kuhn2008] to select features prior to learning a classifier with `bnclassify`. See Section \ref{sec:mlr} for how to do it with `mlr`.
+
+# Evaluating
+
+## Network scores
+The are three functions for computing penalized log-likelihood network scores of `bnc_bn` objects. 
+
+- `logLik`
+- `AIC`
+- `BIC`
+
+In addition to the model, provide them the dataset on which to compute the score.
+```{r}
+logLik(ode_cl_aic, car)
+AIC(ode_cl_aic, car)
+BIC(ode_cl_aic, car)
+```
+
+## Predictive accuracy
+
+`accuracy` lets you compute the classifier's predictive accuracy on a given data set. You need to provide the vectors of predicted and true labels.
+```{r}
+p <- predict(nb, car)
+accuracy(p, car$class)
+```
+
+`cv` estimates predictive accuracy with stratified cross-validation. Indicate the desired number of folds with `k`. 
+```{r}
+set.seed(0)
+cv(ode_cl_aic, car, k = 10)
+```
+
+Each `bnc_bn` object records the structure and parameter learning methods that were used to produce it. `cv` just reruns these methods. Hence, the above is the accuracy estimate for `tan_cl` with the AIC score and Bayesian parameter estimation with `smooth = 0.01`.
+
+To keep the structure fixed and evaluate just the parameter learning method, set `dag = FALSE`:
+```{r}
+set.seed(0)
+cv(ode_cl_aic, car, k = 10, dag = FALSE)
+```
+
+To get the accuracy for each of the folds, instead of the mean accuracy, set `mean = FALSE`.
+```{r}
+set.seed(0)
+cv(ode_cl_aic, car, k = 10, dag = FALSE, mean = FALSE)
+```
+
+Finally, to cross-validate multiple classifiers at once pass a list of `bnc_bn` objects to `cv`. 
+
+```{r}
+set.seed(0)
+accu <- cv(list(nb = nb, ode_cl_aic = ode_cl_aic), car, k = 5, dag = TRUE)
+accu
+```
+
+## More 
+
+General-purpose machine learning packages such as `mlr` or `caret` provide additional options for evaluating a model, including bootstrap resampling and performance measures such as the area under the curve. See Section \ref{sec:mlr} for how that could be done with `mlr`.
+
+# Predicting 
+
+We can use a `bnc_bn` object to classify data instances, with `predict`. 
+
+Here we use the naive Bayes to predict the class for our entire data set. 
+
+```{r}
+p <- predict(nb, car)
+# We use head() to print the first elements of vector p
+head(p)
+```
+
+You can also get the class posterior probabilities. 
+```{r}
+pp <- predict(nb, car, prob = TRUE)
+head(pp)
+```
+
+# Miscellaneous
+
+You can compute the (conditional) mutual information between two variables with `cmi`. Mutual information of `maint` and `buying`:
+
+```{r}
+cmi('maint', 'buying', car)
+```
+
+Mutual information of `maint` and `buying` conditioned to `class`:
+```{r}
+cmi('maint', 'buying', car, 'class')
+```
+
+# Complementing `bnclassify` with `mlr`
+
+\label{sec:mlr}
+
+General-purpose machine learning packages, such as `mlr` and `caret`, provide many options for feature selection and model evaluation. For example, the provide resampling methods other than cross-validation and performance measures other than accuracy. Here we use `mlr` to: 
+
+1. Perform and evaluate wrapper feature selection using `tan_cl`
+1. Estimate the accuracy of `tan_cl` and random forest
+
+To use a `bnc_bn` object with `mlr`, call the `as_mlr` function. 
+
+```{r}
+library(mlr)
+ode_cl_aic_mlr <- as_mlr(ode_cl_aic, dag = TRUE, id = "ode_cl_aic") 
+```
+
+The obtained `ode_cl_aic_mlr` behaves like any other classifier supported by `mlr`.
+
+## Wrapper feature selection 
+
+Set up sequential forward search with 2-fold cross validation and  `ode_cl_aic_mlr` as the classifier. 
+
+```{r}
+# 5-fold cross-validation
+rdesc = makeResampleDesc("CV", iters = 2)
+# sequential floating forward search
+ctrl = makeFeatSelControlSequential(method = "sfs", alpha = 0) 
+# Wrap ode_cl_aic_mlr with feature selection
+ode_cl_aic_mlr_fs = makeFeatSelWrapper(ode_cl_aic_mlr, resampling = rdesc,
+                                      control = ctrl, show.info = FALSE)
+t <- makeClassifTask(id = "car", data = car, 
+        target = 'class', fixup.data = "no", check.data = FALSE)
+```
+
+Select features:
+```{r wrapper_fss, eval = FALSE}
+set.seed(0)
+# Select features
+mod <- train(ode_cl_aic_mlr_fs, task = t) 
+sfeats <- getFeatSelResult(mod)
+sfeats
+```
+
+`mlr` makes it easy to evaluate the predictive performance of the combination of feature selection plus classifier learning. The following estimates accuracy with 2-fold cross-validation: 
+
+```{r, eval = FALSE}
+set.seed(0)
+r = resample(learner = ode_cl_aic_mlr_fs, task = t, 
+             resampling = rdesc, show.info = FALSE, measure = mlr::acc)
+```
+
+<!--
+## Multi-class area under the curve 
+
+`mlr` implements performance measures other than accuracy, such as area under the curve or F1, and resampling methods other than cross-validation, including bootstrap. 
+
+The following computes the bootstrap estimate multi-class area under the curve for `tan_cl`:
+
+```{r, eval = FALSE, echo = FALSE}
+ode_cl_aic_mlr_prob <- setPredictType(ode_cl_aic_mlr, "prob")
+set.seed(0)
+benchmark(ode_cl_aic_mlr_prob, t, rdesc, show.info = FALSE, 
+          measures = mlr::multiclass.auc)
+```
+-->
+
+## Comparing to random forest
+
+With `mlr` you can compare the predictive performance of `bnclassify` models to those of different classification paradigms, such as random forests. 
+
+```{r, eval = FALSE}
+rf <- makeLearner("classif.randomForest", id = "rf")
+classifiers <- list(ode_cl_aic_mlr, rf)
+set.seed(0)
+benchmark(classifiers, t, rdesc, show.info = FALSE, measures = mlr::acc)
+```
+
+# References 

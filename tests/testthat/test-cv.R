@@ -38,7 +38,7 @@ test_that("CV two bnc_bns to repeat learning", {
   expect_equal(length(a), 2L)
   expect_true(all(a > 0.5))  
   # With dag = FALSE it fails
-  expect_error(cv(list(n, m), car[ , c(1, 7)], k = 5, dag = FALSE), "cols")
+  expect_error(cv(list(n, m), car[ , c(1, 7)], k = 5, dag = FALSE), "not found")
 })
 
 test_that("CV classifier names", {
@@ -66,6 +66,15 @@ test_that("CV a wrapper", {
   t <- lp(t, car, smooth = 0.01)
   r <- cv(t, car, k = 2, dag = TRUE)
   expect_equal(r, 0.9346065, tolerance = 1e-7)
+}) 
+
+test_that("CV aode", {
+  skip_on_cran()
+  set.seed(0)
+  t <- aode('class', car)
+  t <- lp(t, car, smooth = 0.01)
+  r <- cv(t, car, k = 2, dag = TRUE)
+  expect_equal(r, 0.9056713, tolerance = 1e-7) # just regression test, comparing value I obtained on first run
 })
 
 test_that("correct cv result", {
@@ -164,4 +173,15 @@ test_that("distribute accross folds nominal", {
   expect_equal(f, c(733, 485, 899, 857))
   f <- distribute_class_over_folds(0, 2)
   expect_equal(f, integer())
+})
+
+test_that("cv of different models", {  
+  skip_on_cran()
+  t <- kdb('class', dataset = car, kdb = 1, k = 10, epsilon = 0)
+  t <- lp(t, car, smooth = 1) 
+  to <- tan_hc('class', dataset = car, k = 10, epsilon = 0)
+  to <- lp(to, car, smooth = 1) 
+  set.seed(0) 
+  score <- cv(list(t, to), car, k = 2)
+  expect_false(isTRUE(all.equal(score[1], score[2])))
 })
