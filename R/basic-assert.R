@@ -1,8 +1,10 @@
 #' Whether to do checks or not. Set TRUE to speed up debugging or building. 
+#' @keywords  internal
 skip_assert <- function() {
  FALSE 
 } 
 #' Skip while testing to isolate errors
+#' @keywords  internal
 skip_testing <- function() {
  TRUE 
 }
