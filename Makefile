@@ -24,12 +24,13 @@ clean-vignettes:
 
 .PHONY: printl
 
-vignette-includes: ~/code-papers/tex-includes/macros-paper.tex ~/code-papers/tex-includes/macros-math.tex ~/code-papers/paper-bnclassify-rjournal/background.tex
+vignette-includes: ~/code-papers/tex-includes/macros-paper.tex ~/code-papers/tex-includes/macros-math.tex ~/code-papers/paper-bnclassify-rjournal/RJreferences.bib ~/code-papers/paper-bnclassify-rjournal/pg_*.png 
 	cp ~/code-papers/tex-includes/macros-paper.tex  vignettes/  
 	cp ~/code-papers/tex-includes/macros-math.tex  vignettes/ 
 	cp ~/code-papers/tex-includes/macros-rjournal.tex  vignettes/ 
 	cat vignettes/methods.bib > vignettes/bnclassify.bib
 	cat ~/code-papers/paper-bnclassify-rjournal/RJreferences.bib >> vignettes/bnclassify.bib
+	cp ~/code-papers/paper-bnclassify-rjournal/pg_*.png vignettes/
 
 clean-technical:
 	cd vignettes; latexmk -c technical.tex

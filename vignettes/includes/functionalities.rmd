@@ -24,22 +24,22 @@ The learning algorithms produce the following network structures:
 
 \begin{figure}[h]
 \begin{subfigure}[b]{0.5\textwidth}
-  \includegraphics[width=0.9\textwidth]{pg_0001.pdf}
+  \includegraphics[width=0.9\textwidth]{pg_0001}
   \caption{$p(c, \mathbf{x}) = p(c)p(x_1 \vert c)p(x_2 \vert c)p(x_3 \vert c)p(x_4 \vert c)$\\$p(x_5 \vert c)p(x_6 \vert c)$}
   \label{fig:nb}
 \end{subfigure}
 \begin{subfigure}[b]{0.5\textwidth}
-  \includegraphics[width=0.9\textwidth]{pg_0002.pdf}
+  \includegraphics[width=0.9\textwidth]{pg_0002}
   \caption{$p(c, \mathbf{x}) = p(c)p(x_1 \vert c, x_2)p(x_2 \vert c, x_3)p(x_3 \vert c, x_4)p(x_4 \vert c)$\\$p(x_5 \vert c, x_4)p(x_6 \vert c, x_5)$}
   \label{fig:tan}
 \end{subfigure}
 \begin{subfigure}[b]{0.5\textwidth}
-  \includegraphics[width=0.9\textwidth]{pg_0003.pdf}
+  \includegraphics[width=0.9\textwidth]{pg_0003}
   \caption{$p(c, \mathbf{x}) = p(c)p(x_1 \vert c, x_2)p(x_2 \vert c)p(x_3 \vert c)p(x_4 \vert c)$ \\$p(x_5 \vert c, x_4)p(x_6 \vert c, x_5)$}
   \label{fig:fan}
 \end{subfigure}
 \begin{subfigure}[b]{0.5\textwidth}
-  \includegraphics[width=0.9\textwidth]{pg_0004.pdf}
+  \includegraphics[width=0.9\textwidth]{pg_0004}
   \caption{$p(c, \mathbf{x}) = p(c)p(x_1 \vert c, x_2)p(x_2 \vert c)p(x_4 \vert c)$ \\ $p(x_5 \vert c, x_4)p(x_6 \vert c, x_4, x_5)$}
   \label{fig:semi}
 \label{fig:structures}
