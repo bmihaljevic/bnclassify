@@ -1,4 +1,4 @@
-# 0.4
+# 0.4.0
 * Optimizing some functions with RCPP
 * Added AODE (averaged one-dependence estimators)
 * Added k-db classifier
