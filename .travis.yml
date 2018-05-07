@@ -2,13 +2,8 @@ language: r
 sudo: required
 
 os:
-  - linux 
+  - linux  
 
-r_binary_packages:
-  - Rcpp
-  - BH
-  - devtools
-  - roxygen2 
 
 after_success:
   - Rscript -e 'library(covr);coveralls()'
