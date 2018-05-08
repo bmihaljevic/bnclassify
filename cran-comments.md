@@ -1,3 +1,8 @@
+## Resubmission
+This is a resubmission. In this version I have: 
+
+* Fixed the WARNING on win-builder that also appeared on CRAN Windows check 
+
 ## Test environments
 * Ubuntu 16.04 3.4.4 (local)
 * ubuntu 14.04 3.5.0 (travis ci)
