@@ -24,8 +24,8 @@ narcs <- function(x) {
 #' \dontrun{plot(nb, fontsize = 20)}
 #' \dontrun{plot(nb, layoutType = 'circo')}
 #' \dontrun{plot(nb, layoutType = 'fdp')}
-#' \dontrun{plot(nb, layoutType = 'osage'}}
-#' \dontrun{plot(nb, layoutType = 'twopi'}}
+#' \dontrun{plot(nb, layoutType = 'osage')}
+#' \dontrun{plot(nb, layoutType = 'twopi')}
 #' \dontrun{plot(nb, layoutType = 'neato')}
 plot.bnc_dag <- function(x, y, layoutType='dot', fontsize = NULL, ...) { 
   if (!requireNamespace("graph", quietly = TRUE)) {
