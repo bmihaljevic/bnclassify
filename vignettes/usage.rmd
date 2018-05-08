@@ -367,7 +367,7 @@ General-purpose machine learning packages, such as `mlr` and `caret`, provide ma
 
 To use a `bnc_bn` object with `mlr`, call the `as_mlr` function. 
 
-```{r}
+```{r, eval = FALSE}
 library(mlr)
 ode_cl_aic_mlr <- as_mlr(ode_cl_aic, dag = TRUE, id = "ode_cl_aic") 
 ```
@@ -378,7 +378,7 @@ The obtained `ode_cl_aic_mlr` behaves like any other classifier supported by `ml
 
 Set up sequential forward search with 2-fold cross validation and  `ode_cl_aic_mlr` as the classifier. 
 
-```{r}
+```{r, eval = FALSE}
 # 5-fold cross-validation
 rdesc = makeResampleDesc("CV", iters = 2)
 # sequential floating forward search
