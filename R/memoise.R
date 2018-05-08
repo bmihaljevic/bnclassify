@@ -4,7 +4,7 @@
 #' character vector.
 #' 
 #' This function is a slightly modified version of
-#' \code{\link[memoise]{memoise}} to avoid the use of digest. The rest functions
+#' \code{memoise} to avoid the use of digest. The rest functions
 #' copied as is from memoise.
 #' 
 #' @keywords internal
@@ -14,7 +14,7 @@ memoise_char <- memoize <- function(f) {
   cache <- new_cache()
   memo_f <- function(x) {
     hash <- paste0(x, collapse = ';')
-    stopifnot(length(hash) == 1L)
+    # stopifnot(length(hash) == 1L)
     if (cache$has_key(hash)) {
       cache$get(hash)
     } else {

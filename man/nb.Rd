@@ -25,5 +25,5 @@ Learn a naive Bayes network structure.
 data(car)
 nb <- nb('class', car)   
 nb2 <- nb('class', features = letters[1:10])
-plot(nb2)
+\dontrun{plot(nb2)}
 }

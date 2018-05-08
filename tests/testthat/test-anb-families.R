@@ -1,9 +1,5 @@
 context("Aug nb families")
 
-test_dag <- function() {
-  e <- list(A = 'B', B = NULL)
-  graph::graphNEL(nodes = LETTERS[1:2], edgeL = e, edgemode = "directed")
-}
 
 test_that("graph 2 families nominal", {
   g <- test_dag()
@@ -11,22 +7,25 @@ test_that("graph 2 families nominal", {
   expect_equal(names(f), c('B', 'A'))
 })  
   
-test_that("graph 2 families class not in dag   ", {  
+test_that("graph 2 families class not in dag   ", {   
   g <- test_dag()
-  expect_error(graphNEL2families(dag = g, class = 'C'), 'non_last')
+  expect_error(graphNEL2families(dag = g, class = 'C'), 'last not found')
 })
 
-test_that("graph 2 families class length > 1   ", {    
+test_that("graph 2 families class length > 1   ", {     
   g <- test_dag()
   expect_error(graphNEL2families(dag = g, class = LETTERS[1:2]), 
                'string')
 })
 
-test_that("graph 2 families  Undirected graph" , {
-  e <- list(A = 'B', B = 'A')
-  g <- graph::graphNEL(nodes = LETTERS[1:2], edgeL = e, edgemode = "directed")
-  g <- graph::graphNEL(nodes = LETTERS[1:2], edgeL = e, edgemode = "undirected")
-  expect_error(graphNEL2families(dag = g, class = LETTERS[1]), 'is_dag_graph')
+test_that("graph 2 families  Undirected graph" , { 
+  e <- list(A = 'B', B = 'A') 
+  edges <- graph_from_to_to_edges(c('A', 'B'), c('B', 'A')) 
+  g <- graph_internal(nodes = LETTERS[1:2], edges,  weights = NULL, edgemode = "directed") 
+  if (!skip_testing()) expect_error(graphNEL2families(dag = g, class = LETTERS[1]), 'is_dag_graph') 
+  
+  g <- graph_internal(nodes = LETTERS[1:2], edges,  weights = NULL, edgemode = "undirected") 
+  if (!skip_testing()) expect_error(graphNEL2families(dag = g, class = LETTERS[1]), 'is_dag_graph')
 })
 
 test_that("check families", {
@@ -40,13 +39,13 @@ test_that("check families", {
   tfams <- lapply(tvars[-6], function(x) c(x, 'f'))
   tfams <- append(tfams, list(f = 'f'))
   tfams$b <- 'b'
-  expect_error(check_anb_families(tfams, 'f'), 'fams_ok')
+  if (!skip_assert()) expect_error(check_anb_families(tfams, 'f'), 'fams_ok')
   # Family not in vars order
   tvars <- setNames(nm = letters[1:6])
   tfams <- lapply(tvars[-6], function(x) c(x, 'f'))
   tfams <- append(tfams, list(f='f'))
   tfams <- tfams[6:1]
-  expect_error(check_anb_families(tfams, 'f'), 'last')
+  if (!skip_assert()) expect_error(check_anb_families(tfams, 'f'), 'last')
 })
 
 test_that("is is family nominal", {

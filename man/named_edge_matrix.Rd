@@ -7,12 +7,12 @@
 named_edge_matrix(g)
 }
 \arguments{
-\item{g}{A \code{\link{graphNEL}}}
+\item{g}{A graphNEL.}
 }
 \value{
 A character matrix.
 }
 \description{
-Returns an edge matrix with node names (instead of node indices).
+TODO Not sure this function is used.
 }
 \keyword{internal}

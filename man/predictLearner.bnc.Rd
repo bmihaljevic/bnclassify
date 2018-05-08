@@ -4,7 +4,7 @@
 \alias{predictLearner.bnc}
 \title{predictLearner. Auxiliary mlr function.}
 \usage{
-predictLearner.bnc(.learner, .model, .newdata, ...)
+\method{predictLearner}{bnc}(.learner, .model, .newdata, ...)
 }
 \arguments{
 \item{.learner, .model, .newdata}{Internal.}

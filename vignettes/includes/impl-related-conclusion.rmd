@@ -1,0 +1,32 @@
+# Implementation 
+\label{sec:implementation} 
+With complete data, \pkg{bnclassify} implements prediction for augmented naive Bayes models as well as for ensembles of such models. It multiplies the corresponding \mthetas/ in logarithmic space, applying the *log-sum-exp* trick before normalizing, to reduce the chance of underflow. On instances with missing entries, it uses the \CRANpkg{gRain} package \citep{grain130,Hojsgaard2012} to perform exact inference, which is notably slower. Network plotting is implemented by the \pkg{Rgraphviz} package. Some functions are implemented in C++ with \pkg{Rcpp} for efficiency. The package is extensively tested, with over 200 unit and integrated tests that give a 94% code coverage.  
+
+# Related software
+\label{sec:relatedsw} 
+NB, TAN, and AODE are available in general-purpose tools such as \pkg{bnlearn} and Weka, while WANBIA\footnote{\url{https://sourceforge.net/projects/rawnaivebayes}} and MANB\footnote{\url{http://www.dbmi.pitt.edu/content/manb}} are only available in stand-alone software, published along with the original publications. We are not aware of available implementations of the remaining methods implemented in \pkg{bnclassify}.  
+
+\pkg{bnlearn} implements algorithms for learning general purpose Bayesian networks. Among them, algorithms for Markov blanket learning by testing for independences, such as IAMB \citep{Tsamardinos2003} and GS \citep{Margaritis2000}, can be very useful for classification as they can look for the Markov blanket of the class variable. \pkg{bnlearn} combines the search algorithms, such as greedy hill-climbing and tabu search \citep{Glover2013}, only with generative scores such as penalized log-likelihood. Among classification models, it implements the discrete NB and CL-ODE. It does not handle incomplete data and provides cross-validation and prediction only for the NB and TAN models, but not for the unrestricted Bayesian networks.
+
+Version 3.8 of Weka \citep{Hall2009,bouckaert2004bayesian} provides variants of the AODE \citep{Webb2005} as well as the CL-ODE and NB. It implements five additional search algorithms, such as K2 \citep{Cooper1992}, tabu search and simulated annealing \citep{kirkpatrick1983optimization}, combining them only with generative scores. Except for the NB, Weka only handles discrete data and uses simple imputation (replacing with the mode or mean) to handle incomplete data. It provides two constraint-based algorithms, but performs conditional independence tests in an ad-hoc way \citep{bouckaert2004bayesian}. Weka provides Bayesian model averaging for parameter estimation \citep{Bouckaert1995}. 
+
+jBNC\footnote{\url{http://jbnc.sourceforge.net/}} (version 1.2.2) is a Java library which learns ODE classifiers from \cite{Sacha2002} by optimizing penalized log-likelihood or the cross-validated estimate of accuracy. The CGBayes (version 7.14.14) package \citep{McGeachie2014} for MATLAB implements conditional Gaussian networks \citep{lauritzen89}. It provides four structure learning algorithms, including a variant of K2 and a greedy hill-climber, all optimizing the marginal likelihood of the data given the network.  
+<!-- 
+- NB: bnlearn, e1071, Weka, jBNC, ...
+- ODE CL: bnlearn, Weka, jBNC
+- AODE: Weka 
+- WANBIA: https://sourceforge.net/projects/rawnaivebayes 
+- MANB: http://www.dbmi.pitt.edu/content/manb 
+- AWNB: 
+- TANHC
+- TANHC-SP
+- kDB 
+- SNB: ?
+- What about efficient kDb by martinez?  some implementation of incremental available in this efficient BNCs
+--> 
+
+# Conclusion
+\label{sec:conclusion} 
+\pkg{bnclassify} implements multiple state-of-the art algorithms for learning Bayesian network classifiers. It also provides features such as model analysis and evaluation. It is reasonably efficient and can handle large data sets. We hope that \pkg{bnclassify} will be useful to practitioners as well as to researchers wishing to compare their methods to existing ones. 
+
+Future work includes handling real-valued feature via conditional Gaussian models. Straightforward extensions include adding flexibility to the hill-climbing algorithm, such as restarts to avoid local minima.

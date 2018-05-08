@@ -13,11 +13,13 @@ knitr::opts_chunk$set(
 ```
 # bnclassify
 
-[![Travis-CI Build Status](https://travis-ci.org/bmihaljevic/bnclassify.svg?branch=master)](https://travis-ci.org/bmihaljevic/bnclassify)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/bnclassify)](https://cran.r-project.org/package=bnclassify)
+![](https://cranlogs.r-pkg.org/badges/bnclassify?color=yellow)
+![](https://cranlogs.r-pkg.org/badges/grand-total/bnclassify?color=yellowgreen)
+[![Research software impact](http://depsy.org/api/package/cran/bnclassify/badge.svg)](http://depsy.org/package/r/bnclassify)
 [![codecov.io](https://codecov.io/github/bmihaljevic/bnclassify/coverage.svg?branch=master)](https://codecov.io/github/bmihaljevic/bnclassify?branch=master)
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/bnclassify)](http://cran.r-project.org/package=bnclassify)
-![](http://cranlogs.r-pkg.org/badges/bnclassify?color=yellow)
-![](http://cranlogs.r-pkg.org/badges/grand-total/bnclassify?color=yellowgreen)
+[![Travis-CI Build Status](https://travis-ci.org/bmihaljevic/bnclassify.svg?branch=master)](https://travis-ci.org/bmihaljevic/bnclassify)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/bmihaljevic/bnclassify?branch=master&svg=true)](https://ci.appveyor.com/project/bmihaljevic/bnclassify)
 
 Implements algorithms for learning discrete Bayesian network classifiers from data, as well as functions for using these classifiers for prediction, assessing their predictive performance, and inspecting and analyzing their properties.
 
@@ -53,14 +55,7 @@ logLik(tn, car)
 
 # Install
 
-Make sure you have at least version 3.2.0 of R. You will need to install packages from Bioconductor.  
-
-```{r, eval = FALSE}
-source("http://bioconductor.org/biocLite.R")
-biocLite(c("graph", "RBGL", "Rgraphviz"))
-```
-
-You can install `bnclassify` from CRAN:
+Make sure you have at least version 3.2.0 of R. You can install `bnclassify` from CRAN:
 ```{r, eval = FALSE}
 install.packages('bnclassify')
 ```
@@ -74,18 +69,32 @@ devtools::install_github('bmihaljevic/bnclassify')
 
 Ideally, you would use the `build_vignettes = TRUE` version, and thus get the vignettes, but it requires programs such as texi2dvi to be installed on your side. 
 
+For network plotting and prediction with incomplete data you will also need two packages from Bioconductor. Install them with:
+```{r, eval = FALSE}
+source("http://bioconductor.org/biocLite.R")
+biocLite(c("graph", "Rgraphviz"))
+```
+
+
 # Overview
 
-See the list of implemented functionalities.
+See an overview of the package and examples of usage:
+
+```{r} 
+vignette('overview', package = 'bnclassify')
+```
+
+
+See the list of main functionalities.
 
 ```{r, eval = FALSE}
 ?bnclassify
 ```
 
-Use the introduction vignette to get started.
+Use the usage vignette for more details on the functions.
 
 ``` r
-vignette('introduction', package = 'bnclassify')
+vignette('usage', package = 'bnclassify')
 ```
 
 Then have a look at the remaining vignettes.

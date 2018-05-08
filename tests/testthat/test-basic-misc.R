@@ -2,14 +2,19 @@ context("Miscallaneous")
 
 test_that("make_last", {
 #   Nominal
-  e <- make_last(letters, 'c')
+  # so to not modify letters
+  e <- c(letters, NULL)
+  e <- make_last_sideeffect(e, 'c')
   expect_equal(e, c(letters[-3], letters[3]))
-#   x not character
-  expect_error(make_last(1:10, 'c')  , "character")
+# #   x not character
+  # Currently not checking this
+#   expect_error(make_last(1:10, 'c')  , "character")
 # last not in x  
-  expect_error(make_last(letters, 'A'), "length")
+  e <- c(letters, NULL)
+  expect_error(make_last_sideeffect(e, 'A'), "not found")
 # last repeated in x  
-  expect_error(make_last(rep('A', 5), 'A'), "length")
+  # TODO: does not report a mistake.
+  # expect_error(make_last_sideeffect(rep('A', 5), 'A'), "length")
 })
 
 test_that("Rep factor as int", {

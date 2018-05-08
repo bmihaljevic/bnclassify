@@ -1,14 +1,3 @@
-# Makes sure that last is the last element in x 
-make_last <- function(x, last) {
-#   Check x and last are characters, last is length 1
-  stopifnot(is.character(x), is.character(last), length(last) == 1)
-#   Get all elements in x different than last
-  non_last <- Filter(function(elem) { elem != last }, x)
-#  Make sure there are n-1 such elements (i.e., last appears once in x) 
-  stopifnot(length(non_last) + 1L == length(x))  
-#   Append last to non_last
-  append(non_last, last)  
-}
 #' Return all but last element of x. 
 #' 
 #' If x is NULL returns NA not NULL
@@ -56,8 +45,7 @@ fast_equal <- function(a, b) {
 #' p <- predict(nb, car)
 #' accuracy(p, car$class)
 accuracy <- function(x, y) {
-  stopifnot(length(x) == length(y))
-  sum(x == y) / length(x)
+  count_equal(x, y) / length(x)
 }
 #  a list to a matrix where the names are kept in the second column
 unlist_keepnames <- function(list) {
@@ -96,6 +84,7 @@ make_call <- function(f, args) {
 #' returns NA.
 #' @param colnames a character vector
 #' @param data a matrix or data frame 
+#' @keywords internal
 subset_by_colnames <- function(colnames, data) {
   stopifnot(is.character(colnames), length(colnames) == nrow(data)) 
   ind_cols <- match(colnames, colnames(data))

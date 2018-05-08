@@ -12,8 +12,11 @@ greedy_search <- function(class, to_include, init, step, dataset, epsilon, k,
   train <- lapply(test_folds, function(x) dataset[-x, , drop = FALSE])
   train <- lapply(train, make_cpts_cache, smooth = smooth)
   test <- lapply(test_folds, function(x) dataset[x, , drop = FALSE])
+  test <- lapply(test, make_evidence)
   #   Start caches for training sets 
   # TODO: smooth goes directly to cache. 
+  # skip asserts during greedy search
+  skip_env$skip_assert <- TRUE
   while (length(candidate_dags) > 0) {
     # if max accuracy then break
     if (isTRUE(fast_equal(current_score, 1))) { break }
@@ -38,6 +41,8 @@ greedy_search <- function(class, to_include, init, step, dataset, epsilon, k,
                            features_to_include = to_include, 
                            train = train, test = test)
   }      
+  # Turn assert back on  
+  skip_env$skip_assert <- FALSE
   current_dag$.greedy_scores_log <- scores_log
   current_dag
 }

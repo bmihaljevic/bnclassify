@@ -1,29 +1,28 @@
-## Update
-- The package was archived as my email was temporarily unavailable (full inbox). 
-- I am no longer using the microbenchmark package.   
+## Resubmission
+This is a resubmission. In this version I have: 
+
+* Fixed the WARNING on win-builder that also appeared on CRAN Windows check 
 
 ## Test environments
-* Ubuntu 16.04, R 3.4.3 (local)
-* ubuntu 16.04, R 3.4.2 (travis-CI)
-* win-builder (R-devel and R-release)
+* Ubuntu 16.04 3.4.4 (local)
+* ubuntu 14.04 3.5.0 (travis ci)
+* ubuntu 14.04 R-release (travis ci)
+* windows R 3.5.0 (win-builder) 
+* windows R-release (win-builder) 
+* Windows i386-w64-mingw32/i386, R 3.5.0  (Appveyor)
 
-## R CMD check results
-There were no ERRORs, WARNINGs. There was one NOTE:   
+## R CMD check results   
+Locally, on win-builder, and on Appveyor there were no ERRORs, no WARNINGs, and no NOTEs.  
+  
+On travis ci there were no ERRORs nor WARNINGs. There was one NOTE. 
 
-checking CRAN incoming feasibility ... NOTE
-Maintainer: ‘Mihaljevic Bojan <bmihaljevic@fi.upm.es>’
-
-New submission
-
-Package was archived on CRAN
-
-Possibly mis-spelled words in DESCRIPTION:
-  Bielza (3:156)
-  Larranaga (3:165)
-
-CRAN repository db overrides:
-  X-CRAN-Comment: Archived on 2018-01-08 as maintainer address bounced
-    when asked for corrections.  
+  checking installed package size ... NOTE
+    installed size is  8.4Mb
+    sub-directories of 1Mb or more:
+      doc    1.0Mb
+      libs   6.9Mb
+      
+This was probably due to a -g compilation flag that I do not currently know how to remove. It does not occur in other environments. 
 
 ## Downstream dependencies
 There are currently no downstream dependencies for this package.

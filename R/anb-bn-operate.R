@@ -20,7 +20,13 @@ logLik.bnc_bn <- function(object, ...) {
   if (inherits(object, "bnc_bn")) attr(loglik, "df") <- nparams(object)
   class(loglik) <- "logLik"
   loglik
-}
+} 
+#' @export
+#' @rdname loglik 
+cLogLik <- function(object, ...) {   
+  dataset <- list(...)[[1]]
+  compute_cll(object, dataset)
+} 
 penalize_loglik <- function(ll, k) {
   as.numeric(ll) - k * attr(ll, "df")
 }

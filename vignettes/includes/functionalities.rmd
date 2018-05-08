@@ -1,0 +1,153 @@
+# Functionalities 
+\label{sec:functionalities} 
+There are four groups of functionalities:
+
+1. Learning network structure
+1. Learning network parameters
+1. Evaluating the model 
+1. Predicting with the model 
+
+The first step is to learn structure and the second, usually, to learn parameters. The obtained models can be evaluated, used for prediction or analyzed. The following provides a brief overview. For details on some of the underlying methods please see the \tecvin/. 
+
+## Structures
+The learning algorithms produce the following network structures: 
+
+- Naive Bayes (NB) (Figure \ref{fig:nb}) \citep{Minsky1961}
+- k-dependence Bayesian classifier (k-DB) \citep{Sahami1996,pernkopf10}
+    - One-dependence estimators (ODE) 
+        - Tree-augmented naive Bayes (TAN) (Figure \ref{fig:tan}) \citep{Friedman1997}
+        - Forest-augmented naive Bayes (FAN) (Figure \ref{fig:fan})
+- Semi-naive Bayes (SNB)(Figure \ref{fig:semi}) \citep{Pazzani1996}
+- Averaged one-dependence estimators (AODE) \citep{Webb2005} 
+
+\rfig{structures} shows some of these structures and their factorizations of \pcx/. We use k-DB in the sense meant by \cite{pernkopf10} rather than that by \cite{Sahami1996}, as we impose no minimum on the number of augmenting arcs. SNB is the only structure whose complexity is not *a priori* bounded: the feature subgraph might be complete in the extreme case. 
+
+\begin{figure}[h]
+\begin{subfigure}[b]{0.5\textwidth}
+  \includegraphics[width=0.9\textwidth]{pg_0001}
+  \caption{$p(c, \mathbf{x}) = p(c)p(x_1 \vert c)p(x_2 \vert c)p(x_3 \vert c)p(x_4 \vert c)$\\$p(x_5 \vert c)p(x_6 \vert c)$}
+  \label{fig:nb}
+\end{subfigure}
+\begin{subfigure}[b]{0.5\textwidth}
+  \includegraphics[width=0.9\textwidth]{pg_0002}
+  \caption{$p(c, \mathbf{x}) = p(c)p(x_1 \vert c, x_2)p(x_2 \vert c, x_3)p(x_3 \vert c, x_4)p(x_4 \vert c)$\\$p(x_5 \vert c, x_4)p(x_6 \vert c, x_5)$}
+  \label{fig:tan}
+\end{subfigure}
+\begin{subfigure}[b]{0.5\textwidth}
+  \includegraphics[width=0.9\textwidth]{pg_0003}
+  \caption{$p(c, \mathbf{x}) = p(c)p(x_1 \vert c, x_2)p(x_2 \vert c)p(x_3 \vert c)p(x_4 \vert c)$ \\$p(x_5 \vert c, x_4)p(x_6 \vert c, x_5)$}
+  \label{fig:fan}
+\end{subfigure}
+\begin{subfigure}[b]{0.5\textwidth}
+  \includegraphics[width=0.9\textwidth]{pg_0004}
+  \caption{$p(c, \mathbf{x}) = p(c)p(x_1 \vert c, x_2)p(x_2 \vert c)p(x_4 \vert c)$ \\ $p(x_5 \vert c, x_4)p(x_6 \vert c, x_4, x_5)$}
+  \label{fig:semi}
+\label{fig:structures}
+\end{subfigure}
+\caption{Augmented naive Bayes models produced by the \pkg{bnclassify} package. (a) NB; (b) TAN (c) FAN (d) SNB. k-DB and AODE not shown. The NB assumes that the features are independent given the class. ODE allows each predictor to depend on at most one other predictor: the TAN is a special case with exactly \(n-1\) augmenting arcs (i.e., inter-feature arcs) while a FAN may have less than \(n-1\). The k-DB allows for up to $k$ parent features per feature $X_i$, with NB and ODE as its special cases with $k = 0$ and $k = 1$, respectively. The SNB does not restrict the number of parents but requires that connected feature subgraphs be complete (connected, after removing $C$, subgraphs in (d): $\{X_1, X_2\}$, and $\{X_4,X_5,X_6\}$), also allowing the removal of features (\(X_3\) omitted in (d)). The AODE is not a single structure but an ensemble of $n$ ODE models in which one feature is the parent of all others (a super-parent). }
+\label{fig:structures}
+\end{figure} 
+
+## Algorithms
+Each structure learning algorithm is implemented by a single R function. \rtbl{algorithms} lists these algorithms along with the corresponding structures that they produce, the scores they can be combined with, and their R functions. Below we provide their abbreviations, references, brief comments and illustrate function calls. 
+
+### Fixed structure 
+We implement two algorithms: 
+
+- NB 
+- AODE 
+
+The NB and AODE structures are fixed given the number of variables, and thus no search is required to estimate them from data. For example, we can get a NB structure with <!-- Conversely, there are no parameters required by the nb and aode function for learning the structure. --> 
+\begin{example}
+n <- nb('class', dataset = car)
+\end{example} 
+
+\noindent where \code{class} is the name of the class variable $C$ and \code{car} the dataset containing observations of $C$ and \X/.
+
+### Optimal ODEs with decomposable scores 
+We implement one algorithm:
+
+- Chow-Liu for ODEs  (CL-ODE; \cite{Friedman1997}) 
+
+Maximizing log-likelihood will always render a TAN while maximizing penalized log-likelihood may render a FAN since including some arcs can degrade such a score. With incomplete data our implementation does not guarantee the optimal ODE as that would require computing maximum likelihood parameters. The parameters of the \code{tan\_cl} function are the network score to use and, optionally, the root for features' subgraph: 
+
+\begin{example} 
+n <- tan_cl('class', car, score = 'AIC', root = 'buying') 
+\end{example} 
+
+### Greedy hill-climbing with global scores
+
+\pkg{bnclassify} implements five algorithms:
+
+\begin{itemize}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  Hill-climbing tree augmented naive Bayes (HC-TAN)
+  \citep{Keogh2002}
+\item
+  Hill-climbing super-parent tree augmented naive Bayes (HC-SP-TAN)
+  \citep{Keogh2002}
+
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  Backward sequential elimination and joining (BSEJ)
+  \citep{Pazzani1996}
+\item
+  Forward sequential selection and joining (FSSJ)
+  \citep{Pazzani1996}
+
+\item
+  Hill-climbing k-dependence Bayesian classifier (k-DB) \citep{pernkopf10}
+\end{itemize} 
+
+These algorithms use the cross-validated estimate of predictive accuracy as score. Only the FSSJ and BSEJ provide feature selection. The parameters of the corresponding functions include the number of cross-validation folds \code{k} and the minimal absolute score improvement \code{epsilon} required for continuing the search: 
+
+\begin{example} 
+fssj <- fssj('class', car, k = 5, epsilon = 0) 
+\end{example} 
+
+\input{algorithms}
+
+## Parameters 
+\label{sec:params}
+\pkg{bnclassify} only handles discrete features. With fully observed data, it estimates the parameters with maximum likelihood or Bayesian estimation, according to Equation \ref{eq:disparams}, with a single \(\alpha\) for all local distributions. With incomplete data it uses \emph{available case analysis} and substitutes \(N_{\cdot j \cdot}\) in \req{disparams} with \(N_{i j \cdot} = \sum_{k = 1}^{r_i} N_{i j k}\), i.e., with the count of instances in which \(\mathbf{Pa}(X_i) = j\) and \(X_i\) is observed. 
+
+We implement two methods for weighted naive Bayes parameter estimation: 
+
+- Weighting attributes to alleviate naive Bayes’ independence assumption (WANBIA) \citep{Zaidi2013}
+- Attribute-weighted naive Bayes (AWNB)  \citep{Hall2007} 
+
+And one method for estimation by means of Bayesian model averaging over all NB structures with up to $n$ features:
+
+- Model averaged naive Bayes (MANB) \citep{Dash2002}
+
+It makes little sense to apply WANBIA, MANB and AWNB to structures other than NB. WANBIA, for example, learns the weights by optimizing the conditional log-likelihood of the NB. Parameter learning is done with the \code{lp} function. For example,
+
+\begin{example}
+a <- lp(n, smooth = 1, manb_prior = 0.5) 
+\end{example} 
+
+\noindent computes Bayesian parameter estimates with \(\alpha = 1\) (the \code{smooth} argument) for all local distributions, and updates them with the MANB estimation obtained with a 0.5 prior probability for each class-to-feature arc.  
+
+## Utilities 
+Single-structure-learning functions, as opposed to those that learn an ensemble of structures, return an S3 object of class \code{bnc\_dag}. The following functions can be invoked on such objects:
+
+- Plot the network: \code{plot}
+- Query model type: \code{is\_tan}, \code{is\_ode}, \code{is\_nb}, \code{is\_aode}, ...
+- Query model properties: \code{narcs}, \code{families}, \code{features}, ... 
+- Convert to \CRANpkg{gRain} and \CRANpkg{bnlearn} objects: \code{as\_grain} 
+
+Ensembles are of type \code{bnc\_aode} and only \code{print} and model type queries can be applied on such objects. Fitting the parameters (by calling \code{lp}) of a \code{bnc\_dag} produces a \code{bnc\_bn} object. In addition to all \code{bnc\_dag} functions, the following are meaningful:
+
+- Predict class labels and class posterior probability: \code{predict}
+- Predict joint distribution: \code{compute\_joint} 
+- Network scores: \code{AIC,BIC,logLik,clogLik} 
+- Cross-validated accuracy: \code{cv}
+- Query model properties: \code{nparams}
+- Parameter weights: \code{manb\_arc\_posterior}, \code{weights}  
+
+The above functions for \code{bnc\_bn} can also be applied to an ensemble with fitted parameters.
+
+## Documentation  
+This vignette provides \overvindesc/. Calling \code{?bnclassify} gives a more \pkghelp/. The \invin/ presents more \invindesc/. The \tecvin/ provides \tecvindesc/. 
+

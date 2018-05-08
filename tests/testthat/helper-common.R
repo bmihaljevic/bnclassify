@@ -41,6 +41,7 @@ random_letters_vector <- function(nletters, n) {
 # Creates a random augmented NB with class as class. 
 random_aug_nb_dag <- function(class, V, maxpar, wgt) {
   dg <- gRbase::random_dag(V = V, maxpar = maxpar, wgt = wgt)
+  dg <- graphNEL2_graph_internal(dg)
   superimpose_node(dag = dg, class)
 }
 
@@ -49,6 +50,11 @@ identical_non_call <- function(x, y) {
   x$.call_bn <- y$.call_bn <- NULL 
   expect_identical(x, y)
 }
+
+test_dag <- function() {
+  edges <- graph_from_to_to_edges('A', 'B')
+  graph_internal(nodes = LETTERS[1:2], edges,  weights = NULL, edgemode = "directed") 
+} 
 
 # Load data
 

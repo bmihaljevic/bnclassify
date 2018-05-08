@@ -1,42 +1,33 @@
 language: r
+sudo: required
+dist: trusty   
 warnings_are_errors: true
-sudo: required   
-dist: trusty 
 
-env:
- global:
-   - CRAN: http://cran.rstudio.com
-   
 before_install: 
-    - sudo apt-get install ghostscript
-    - echo "options(repos = c(CRAN='http://cran.rstudio.com'))" > ~/.Rprofile   
-    
-install:  
-  - Rscript -e "source('http://bioconductor.org/biocLite.R');tryCatch(useDevel(TRUE), error=function(e)"'{if (!grepl'"('already in use', e)) {e}}); options(repos=biocinstallRepos()); biocLite(commandArgs(TRUE))" graph RBGL Rgraphviz
-  - Rscript -e "install.packages(c('assertthat', 'entropy', 'matrixStats', 'rpart', 'gRain', 'gRbase', 'mlr', 'testthat', 'knitr', 'ParamHelpers', 'rmarkdown','covr', 'memoise'))"
-  
-after_success:
-  - Rscript -e 'covr::codecov()'
+  - sudo apt-get install ghostscript
 
-## Set up the matrix of different runs
+after_success:
+  - Rscript -e 'library(covr);coveralls()' 
+
+r:
+- release
+- devel  
+
+# Not cran will run tests skipped on cran
+#  Travis is not taking this into account
+not_cran: 
+- true
+- false 
+
+bioc_packages:
+- graph
+- Rgraphviz
+
 env:
   global:
-  - _R_CHECK_CRAN_INCOMING_: TRUE
-  matrix:
-  - r: release
-    not_cran: true
-    r_check_args: "--no-manual"
-  - r: release
-    not_cran: false
-    r_check_args: "--no-manual --as-cran"
-  - r: devel
-    not_cran: true
-    r_check_args: "--no-manual"
-  - r: devel
-    not_cran: false
-    r_check_args: "--no-manual --as-cran"
-  
-notifications:
-  email:
-    on_success: change
-    on_failure: change 
+  - _R_CHECK_FORCE_SUGGESTS_=false
+  - _R_CHECK_CRAN_INCOMING_=true
+ 
+# do not build vignettes as that requires Bioc packages such as graph 
+# r_build_args: "--no-build-vignettes"
+# r_check_args: "--no-build-vignettes --no-manual --as-cran" 

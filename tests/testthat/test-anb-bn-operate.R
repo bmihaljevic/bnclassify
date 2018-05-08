@@ -67,7 +67,7 @@ test_that("manb_arc_posterior", {
   a <- lp(a, car, smooth = 1, manb_prior = 0.1)  
   b <- manb_arc_posterior(a)
   expect_equal(names(b), features(a))
-  expect_equal(as.vector(b[3]), 2.921702e-06, tolerance = 1e-7)
+  expect_equal(as.vector(b["doors"]), 2.921702e-06, tolerance = 1e-7)
 })
 
 test_that("awnb weights", {

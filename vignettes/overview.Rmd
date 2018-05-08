@@ -1,0 +1,33 @@
+---
+title: "`bnclassify`: Learning Bayesian Network Classifiers"  
+author: "Bojan Mihaljević, Concha Bielza and Pedro Larrañaga"
+date: "`r Sys.Date()`"  
+output:
+  rmarkdown::pdf_document:
+    number_sections: true
+    keep_tex: true
+    includes:
+          in_header: header.tex
+    citation_package: natbib 
+bibliography: bnclassify.bib  
+fontsize: 11pt
+vignette: >
+  %\VignetteIndexEntry{overview}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+--- 
+
+```{r child = 'includes/abstract.rmd'} 
+``` 
+\tableofcontents   
+```{r child = 'includes/intro.rmd'} 
+``` 
+The rest of this paper is structured as follows. Section \ref{sec:bcground} provides background on Bayesian network classifiers. Section \ref{sec:functionalities} describes the implemented functionalities. Section \ref{sec:usage} illustrates usage with a synthetic data set. Section \ref{sec:implementation} discusses implementation while Section \ref{sec:relatedsw} briefly surveys related software. Finally, Section \ref{sec:conclusion} concludes and outlines future work.   
+```{r child = 'includes/background.rmd'}
+``` 
+```{r child = 'includes/functionalities.rmd'}
+``` 
+```{r child = 'includes/usage.rmd'}
+``` 
+```{r child = 'includes/impl-related-conclusion.rmd'}
+```
