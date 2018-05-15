@@ -160,7 +160,7 @@ discard_cycles <- function(arcs_df, bnc_dag) {
                        SIMPLIFY = FALSE)
   cycle_free_mat <- unlist_keepnames(cycle_free)
   colnames(cycle_free_mat) <- c('to', 'from')
-  cycle_free_mat[, c('from', 'to')]
+  cycle_free_mat[, c('from', 'to'), drop = FALSE]
 }
 discard_reversed <- function(matrix) {
   if (nrow(matrix) == 0) return(matrix(character(), ncol = 2))
