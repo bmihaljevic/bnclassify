@@ -4,7 +4,7 @@
 #' character vector.
 #' 
 #' This function is a slightly modified version of
-#' \code{\link[memoise]{memoise}} to avoid the use of digest. The rest functions
+#' \code{memoise} to avoid the use of digest. The rest functions
 #' copied as is from memoise.
 #' 
 #' @keywords internal

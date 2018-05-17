@@ -21,7 +21,7 @@ object.
 \examples{
 data(car)
 nb <- bnc('nb', 'class', car, smooth = 1)
-library(mlr)
-nb_mlr <- as_mlr(nb, dag = FALSE, id = "ode_cl_aic") 
-nb_mlr
+\dontrun{library(mlr)}
+\dontrun{nb_mlr <- as_mlr(nb, dag = FALSE, id = "ode_cl_aic")}
+\dontrun{nb_mlr}
 }

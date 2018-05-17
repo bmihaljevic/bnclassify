@@ -1,43 +1,33 @@
 language: r
 sudo: required
+dist: trusty   
+warnings_are_errors: true
 
-os:
-  - linux
-
-r_build_args: --no-build-vignettes --no-manual --no-resave-data
-r_check_args: --no-build-vignettes --no-manual
-
-r_binary_packages:
-  - Rcpp
-  - bigmemory.sri
-  - BH
-  - devtools
-  - roxygen2
-
-r_github_packages:
-  - jimhester/covr
-
-bioc_packages:
-  - graph
+before_install: 
+  - sudo apt-get install ghostscript
 
 after_success:
-  - Rscript -e 'devtools::install();library(bigmemory);library(methods);devtools::test()'
-  - Rscript -e 'library(covr);coveralls()'
+  - Rscript -e 'library(covr);coveralls()' 
 
-## Set up the matrix of different runs
+r:
+- release
+- devel  
+
+# Not cran will run tests skipped on cran
+#  Travis is not taking this into account
+not_cran: 
+- true
+- false 
+
+bioc_packages:
+- graph
+- Rgraphviz
+
 env:
   global:
-  - _R_CHECK_CRAN_INCOMING_: TRUE
-  matrix:
-  - r: release
-    not_cran: true
-    r_check_args: "--no-manual"
-  - r: release
-    not_cran: false
-    r_check_args: "--no-manual --as-cran"
-  - r: devel
-    not_cran: true
-    r_check_args: "--no-manual"
-  - r: devel
-    not_cran: false
-    r_check_args: "--no-manual --as-cran" 
+  - _R_CHECK_FORCE_SUGGESTS_=false
+  - _R_CHECK_CRAN_INCOMING_=true
+ 
+# do not build vignettes as that requires Bioc packages such as graph 
+# r_build_args: "--no-build-vignettes"
+# r_check_args: "--no-build-vignettes --no-manual --as-cran" 

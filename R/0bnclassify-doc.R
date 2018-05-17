@@ -109,7 +109,7 @@ NULL
 #' tan
 #' p <- predict(tan, car)
 #' head(p)
-#' plot(tan)
+#' \dontrun{plot(tan)}
 #' nparams(tan)
 NULL
 
@@ -128,7 +128,7 @@ NULL
 #' data(car)
 #' nb <- tan_cl('class', car)   
 #' nb
-#' plot(nb)
+#' \dontrun{plot(nb)}
 #' narcs(nb)
 NULL
 
@@ -176,7 +176,7 @@ NULL
 #' @examples 
 #' data(car)
 #' tanhc <- tan_hc('class', car, k = 5, epsilon = 0)  
-#' plot(tanhc) 
+#' \dontrun{plot(tanhc)}
 #'   
 #' @references Pazzani M (1996). Constructive induction of Cartesian product 
 #'   attributes. In \emph{Proceedings of the Information, Statistics and 
@@ -211,9 +211,9 @@ NULL
 #' @examples 
 #' data(car)
 #' ll <- tan_cl('class', car, score = 'loglik')   
-#' plot(ll)
+#' \dontrun{plot(ll)}
 #' ll <- tan_cl('class', car, score = 'loglik', root = 'maint')   
-#' plot(ll)
+#' \dontrun{plot(ll)}
 #' aic <- tan_cl('class', car, score = 'aic')   
 #' bic <- tan_cl('class', car, score = 'bic')   
 NULL
@@ -365,7 +365,7 @@ NULL
 
 #' Convert to graph and gRain.
 #' 
-#' Convert a \code{\link{bnc_dag}} to \code{\link[graph]{graphNEL}} and
+#' Convert a \code{\link{bnc_dag}} to \code{graphNEL} and
 #' \code{\link[gRain]{grain}} objects.
 #' 
 #' @name grain_and_graph
@@ -373,8 +373,9 @@ NULL
 #' @examples 
 #' data(car)
 #' nb <- bnc('nb', 'class', car, smooth = 1)
-#' g <- as_grain(nb)
-#' gRain::querygrain.grain(g)$buying
+#' # Requires the grain and graph packages installed
+#' \dontrun{g <- as_grain(nb)}
+#' \dontrun{gRain::querygrain.grain(g)$buying}
 NULL
 
 #' @useDynLib bnclassify

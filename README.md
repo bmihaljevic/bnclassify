@@ -9,6 +9,8 @@ impact](http://depsy.org/api/package/cran/bnclassify/badge.svg)](http://depsy.or
 [![codecov.io](https://codecov.io/github/bmihaljevic/bnclassify/coverage.svg?branch=master)](https://codecov.io/github/bmihaljevic/bnclassify?branch=master)
 [![Travis-CI Build
 Status](https://travis-ci.org/bmihaljevic/bnclassify.svg?branch=master)](https://travis-ci.org/bmihaljevic/bnclassify)
+[![AppVeyor Build
+Status](https://ci.appveyor.com/api/projects/status/github/bmihaljevic/bnclassify?branch=master&svg=true)](https://ci.appveyor.com/project/bmihaljevic/bnclassify)
 
 Implements algorithms for learning discrete Bayesian network classifiers
 from data, as well as functions for using these classifiers for
@@ -62,7 +64,7 @@ Estimate predictive accuracy with cross validation.
 
 ``` r
 cv(tn, car, k = 10)
-#> [1] 0.9375576
+#> [1] 0.9415736
 ```
 
 Or compute the log-likelihood

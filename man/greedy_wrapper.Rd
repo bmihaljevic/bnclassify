@@ -51,7 +51,7 @@ candidate structures.
 \examples{
 data(car)
 tanhc <- tan_hc('class', car, k = 5, epsilon = 0)  
-plot(tanhc) 
+\dontrun{plot(tanhc)}
   
 }
 \references{

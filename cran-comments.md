@@ -1,23 +1,28 @@
+## Resubmission
+This is a resubmission. In this version I have: 
+
+* Fixed the WARNING on win-builder that also appeared on CRAN Windows check 
+
 ## Test environments
-* Ubuntu 16.04, R 3.4.4 (local)
-* win-builder (R-devel and R-release)
+* Ubuntu 16.04 3.4.4 (local)
+* ubuntu 14.04 3.5.0 (travis ci)
+* ubuntu 14.04 R-release (travis ci)
+* windows R 3.5.0 (win-builder) 
+* windows R-release (win-builder) 
+* Windows i386-w64-mingw32/i386, R 3.5.0  (Appveyor)
 
-## R CMD check results
-Locally, there were no ERRORs, no WARNINGs, and no NOTEs.
+## R CMD check results   
+Locally, on win-builder, and on Appveyor there were no ERRORs, no WARNINGs, and no NOTEs.  
+  
+On travis ci there were no ERRORs nor WARNINGs. There was one NOTE. 
 
-On win-builder there was one WARNING: 
-
-* checking sizes of PDF files under 'inst/doc' ... WARNING
-  'gs+qpdf' made some significant size reductions:
-     compacted 'overview.pdf' from 427Kb to 148Kb
-  consider running tools::compactPDF(gs_quality = "ebook") on these files 
-
-Since the vignette is generated automatically from vignettes/overview.rmd and I don't know of anything I can do to reduce the size of the resulting pdf. The included images are pngs and among them take up only 32K. I avoided the warning locally by using 
-`devtools::check(args = '--as-cran', cran = TRUE, check_version = TRUE, build_args = c('--resave-data','--compact-vignettes="gs+qpdf"'))`.
-
-
-The zip contents. No reason for overview.html
-https://win-builder.r-project.org/E9EX4Jdg1DyF/
+  checking installed package size ... NOTE
+    installed size is  8.4Mb
+    sub-directories of 1Mb or more:
+      doc    1.0Mb
+      libs   6.9Mb
+      
+This was probably due to a -g compilation flag that I do not currently know how to remove. It does not occur in other environments. 
 
 ## Downstream dependencies
 There are currently no downstream dependencies for this package.
