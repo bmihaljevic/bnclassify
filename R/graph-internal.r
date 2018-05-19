@@ -129,6 +129,19 @@ graph_add_edges <- function(from, to, g) {
   augmented <- new_graph_internal(nodes = g$nodes, edges = edges, NULL, "directed")  
   augmented 
 }
+
+# A simple implementation
+graph_tmp_remove_edge <- function(from, to, g) {
+  stopifnot(length(from) == 1, lenght(to) == 1)
+  stopifnot(inherits( g, "bnc_graph_internal")) 
+  
+  if (!all(from %in% g$nodes)) stop("Node not in graph")  
+  if (!all(to %in% g$nodes)) stop("Node not in graph")  
+  # find those that match from and to, both in that direction and reversed, in order to support undirected
+  # selection from edges those that match 
+  removed <- graph_internal(removed$nodes, removed$edges, NULL, g$edgemode)
+  removed   
+}
 graph_remove_edges <- function(from, to, g) {  
   stopifnot(inherits( g, "bnc_graph_internal")) 
   # currently only for undirected
