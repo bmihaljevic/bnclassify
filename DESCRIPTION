@@ -26,6 +26,7 @@ Suggests:
     ParamHelpers(>= 1.5),
     Rgraphviz(>= 2.8.1),
     rmarkdown(>= 0.7),
+    mlbench,
     covr
 License: GPL (>= 2)
 Maintainer: Mihaljevic Bojan <bmihaljevic@fi.upm.es>

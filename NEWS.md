@@ -1,3 +1,6 @@
+# 0.4.1
+* Minor changes to pass CRAN checks
+
 # 0.4.0
 * Optimizing some functions with RCPP
 * Added AODE (averaged one-dependence estimators)

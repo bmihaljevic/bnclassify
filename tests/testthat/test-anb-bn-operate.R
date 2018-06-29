@@ -24,41 +24,22 @@ test_that("logLik AIC BIC", {
 })
 
 test_that("logLik AIC BIC as bnlearn", {
-  skip_if_not_installed('bnlearn')
-  bnlearn_mle_nb <- function(data, training) {
-    features <- setdiff(colnames(data), training)
-    nb.bn <- bnlearn::naive.bayes(x = car, training = training, 
-                                  explanatory = features)
-    bnlearn::bn.fit(x = nb.bn, data = data, method = "mle")    
-  }  
-  
   nb <- nb('class', car[, c('buying', 'class')])
   nb <- lp(nb, car, smooth = 0)  
   ll <- logLik(nb, car)  
   aic <- AIC(nb, car)
-  bic <- BIC(nb, car)    
-  nb.bn <- bnlearn_mle_nb(car[,c('buying','class')], 'class')
-  ll.bn <- bnlearn:::logLik.bn.fit(object = nb.bn, 
-                                   data = car[,c('buying','class')])
-  aic.bn <- bnlearn:::AIC.bn.fit(object = nb.bn, 
-                                 data = car[,c('buying','class')])
-  bic.bn <- bnlearn:::BIC.bn.fit(object = nb.bn, 
-                                 data = car[,c('buying','class')])
-  expect_equal(as.vector(ll), ll.bn)  
-  expect_equal( aic, aic.bn)  
-  expect_equal( bic, bic.bn)
+  bic <- BIC(nb, car)     
+  expect_equal(as.vector(ll), -3724.18038821656273)    
+  expect_equal( aic, -3739.18038821654636)  
+  expect_equal( bic, -3780.09078783677614)   
   
   nb <- lp(nb('class', car), car, smooth = 0)
   ll <- logLik(nb, car)  
   aic <- AIC(nb, car)
-  bic <- BIC(nb, car)    
-  nb.bn <- bnlearn_mle_nb(car, 'class')
-  ll.bn <- bnlearn:::logLik.bn.fit(object = nb.bn, data = car)
-  aic.bn <- bnlearn:::AIC.bn.fit(object = nb.bn, data = car)
-  bic.bn <- bnlearn:::BIC.bn.fit(object = nb.bn, data = car)
-  expect_equal(as.vector(ll), ll.bn)
-  expect_equal( aic, aic.bn)
-  expect_equal( bic, bic.bn)
+  bic <- BIC(nb, car)     
+  expect_equal(as.vector(ll), -13503.6883427047687)
+  expect_equal( aic, -13566.6883427047687)
+  expect_equal( bic, -13738.5120211097346)
 })
 
 test_that("manb_arc_posterior", {
