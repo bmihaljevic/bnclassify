@@ -1,4 +1,6 @@
-# Run checks prior to submitting  
+## ========================================= ## 
+## Run checks prior to submitting            ##
+## ========================================= ## 
 
 ## for vignette size warning. Since vignettes are only built locally, I only need add this argument
 ## MUST use this in all my builds and checks!!
@@ -14,7 +16,12 @@ devtools::check(cran = FALSE, check_version = TRUE, args = '--as-cran', build_ar
 devtools::check(cran = TRUE, check_version = TRUE , build_args = build_args )    
 devtools::check(cran = FALSE, check_version = TRUE, build_args = build_args ) 
 
-# Submit
+## ========================================= ## 
+## Submit                                    ## 
+## ========================================= ## 
 
-## Must use the build args
-## never uncomment this!!! devtools::submit_cran(args = build_args) 
+# Must use the build args for the check to pass on Windows
+# Submit with this, but never uncomment it
+
+# devtools::release(args = build_args) )
+# devtools::submit_cran(args = build_args) 
