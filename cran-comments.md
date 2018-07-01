@@ -1,14 +1,9 @@
-## Resubmission
-This is a resubmission. In this version I have: 
-
-* Fixed the WARNING on win-builder that also appeared on CRAN Windows check 
-
 ## Test environments
-* Ubuntu 16.04 3.4.4 (local)
-* ubuntu 14.04 3.5.0 (travis ci)
-* ubuntu 14.04 R-release (travis ci)
-* windows R 3.5.0 (win-builder) 
-* windows R-release (win-builder) 
+* Ubuntu 16.04 R 3.4.4 (local)
+* ubuntu 14.04 R R-devel (travis ci)
+* ubuntu 14.04 R R-release (travis ci)
+* windows R R-devel (win-builder) 
+* windows R R-release (win-builder) 
 * Windows i386-w64-mingw32/i386, R 3.5.0  (Appveyor)
 
 ## R CMD check results   
