@@ -326,9 +326,9 @@ graph_direct_forest <- function(g, root = NULL) {
   g <- graph_union(g = trees)  
   g
 } 
-graph_superimpose_node <- function(g, node) {  
-  stopifnot(inherits( g, "bnc_graph_internal"))  
-  stopifnot(is_dag_graph(g))
+graph_superimpose_node <- function(g, node) {
+  stopifnot(inherits( g, "bnc_graph_internal"))
+  # stopifnot(is_dag_graph(g))
 #   Check node is length one character 
   check_node(node)  
 #   Check node not in g nodes 
