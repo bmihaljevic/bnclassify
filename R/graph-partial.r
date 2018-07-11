@@ -2,7 +2,7 @@
 # # I could currently use undirected maybe
 # 
 # 
-# # Semi directed graph with D and U edges
+# # Partially directed graph with D and U edges
 # ## Data
 # - The to - from matrix
 # - The edge_mode vector of same length as matrix rows
