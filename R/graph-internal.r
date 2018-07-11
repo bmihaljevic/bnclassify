@@ -129,6 +129,19 @@ graph_add_edges <- function(from, to, g) {
   augmented <- new_graph_internal(nodes = g$nodes, edges = edges, NULL, "directed")  
   augmented 
 }
+
+# A simple implementation
+graph_tmp_remove_edge <- function(from, to, g) {
+  stopifnot(length(from) == 1, lenght(to) == 1)
+  stopifnot(inherits( g, "bnc_graph_internal")) 
+  
+  if (!all(from %in% g$nodes)) stop("Node not in graph")  
+  if (!all(to %in% g$nodes)) stop("Node not in graph")  
+  # find those that match from and to, both in that direction and reversed, in order to support undirected
+  # selection from edges those that match 
+  removed <- graph_internal(removed$nodes, removed$edges, NULL, g$edgemode)
+  removed   
+}
 graph_remove_edges <- function(from, to, g) {  
   stopifnot(inherits( g, "bnc_graph_internal")) 
   # currently only for undirected
@@ -136,6 +149,15 @@ graph_remove_edges <- function(from, to, g) {
   if (!all(from %in% g$nodes)) stop("Node not in graph")  
   if (!all(to %in% g$nodes)) stop("Node not in graph")  
   removed <- call_bh('bh_remove_edges', g = g, remove_from = from, remove_to = to, edgemode = g$edgemode)  
+  # TODO: FIX THIS IS RCP!!!!! It might return a vector  of edges, not a matrix
+  if (!is.matrix(removed$edges)) {
+    if (length(removed$edges) == 2) {
+      removed$edges <- matrix(removed$edges, ncol = 2)
+    } 
+    else {
+      stop("wrong edges")
+    }
+  }
   # TODO: currently this does not preserve node weights!!!  Yet is it not used now for weighted graphs.
   removed <- graph_internal(removed$nodes, removed$edges, NULL, g$edgemode)
   removed  
