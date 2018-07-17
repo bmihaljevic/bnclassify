@@ -1,6 +1,7 @@
 ## Resubmission
 This is a resubmission. In this version I have: 
 
+* Fixed the vignette size WARNING on Windows
 * Addressed the UBSAN issues reported on CRAN: 
     * https://www.stats.ox.ac.uk/pub/bdr/memtests/clang-UBSAN/bnclassify/
     * https://www.stats.ox.ac.uk/pub/bdr/memtests/gcc-UBSAN/bnclassify/ 
