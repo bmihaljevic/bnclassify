@@ -122,7 +122,7 @@ T r2graph(CharacterVector vertices, Rcpp::IntegerMatrix edges, NumericVector wei
   } 
 
   // Add edges, if any 
-  int nedges = edges.nrow();
+  std::size_t nedges = edges.nrow();
   for (std::size_t i = 0; i < nedges; i++) { 
     add_edge(edges(i, 0), edges(i, 1), weights.at(i), g);
   }    
@@ -133,7 +133,7 @@ T r2graph(CharacterVector vertices, Rcpp::IntegerMatrix edges, NumericVector wei
 template <class T>
 T r2graph(CharacterVector vertices, Rcpp::IntegerMatrix edges) {    
   NumericVector weights(edges.size());
-  return r2graph<T>(vertices, edges, weights);   
+  return r2graph<T>(vertices, edges, weights);
 }      
 
 // Requires an undirected graph   
@@ -194,7 +194,6 @@ Rcpp::List bh_remove_node(const CharacterVector & vertices, const Rcpp::IntegerM
   remove_names<NameMap> filter(get(vertex_name, g), remove_vec);
 
   typedef filtered_graph<dgraph, keep_all, remove_names<NameMap> > fgraph;
-  typedef graph_traits<fgraph>::vertex_iterator vertex_iter;
   fgraph fg(g, keep_all(), filter);
   return graph2R(fg, g);
 }   
@@ -213,7 +212,6 @@ Rcpp::List bh_remove_edges(const CharacterVector & vertices, const Rcpp::Integer
   remove_edge_names<NameMap, ugraph> filter(get(vertex_name, g), remove_from_vec, remove_to_vec,   g);
   
   typedef filtered_graph<ugraph, remove_edge_names<NameMap, ugraph>, keep_all> fgraph;
-  typedef graph_traits<fgraph>::vertex_iterator vertex_iter;
   fgraph fg(g, filter, keep_all());
   return graph2R(fg, g);    
 }
