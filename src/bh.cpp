@@ -142,7 +142,7 @@ NumericVector bh_connected_components(CharacterVector vertices, Rcpp::IntegerMat
   ugraph g  =  r2graph<ugraph>(vertices,  edges);
   std::vector<int> component(num_vertices(g));
   // undefined behaviour if doing &component[0] for a 0-length vector
-  if (component.size() == 0) return NumericVector(0); 
+  if (component.size() == 0) return NumericVector(0);
   connected_components(g, &component[0]);
   // TODO:: see additional checks from RBGL. Maybe connected comp might fail?
   return wrap(component);

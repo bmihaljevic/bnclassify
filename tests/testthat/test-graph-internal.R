@@ -20,7 +20,11 @@ test_that("get adjacent", {
 test_that("connected components", { 
   x <- nbcar()  
   g <- graph_connected_components(x$.dag)
-  g 
+  expect_equal(length(g), 1)
+  
+  g <- graph_internal()
+  g <- graph_connected_components(g)
+  expect_null(g)  
 })
 
 test_that("graph union", { 
