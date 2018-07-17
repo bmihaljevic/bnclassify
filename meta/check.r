@@ -18,12 +18,5 @@ devtools::check(cran = FALSE, check_version = TRUE, args = check_args, build_arg
 devtools::check(cran = TRUE, check_version = TRUE , build_args = build_args )    
 devtools::check(cran = FALSE, check_version = TRUE, build_args = build_args ) 
 
-## ========================================= ## 
-## Submit                                    ## 
-## ========================================= ## 
 
-# Must use the build args for the check to pass on Windows
-# Submit with this, but never uncomment it
-
-# devtools::release(args = build_args) )
-# devtools::submit_cran(args = build_args) 
+# see submit.r
