@@ -136,7 +136,7 @@ graph_remove_edges <- function(from, to, g) {
   if (!all(from %in% g$nodes)) stop("Node not in graph")  
   if (!all(to %in% g$nodes)) stop("Node not in graph")  
   removed <- call_bh('bh_remove_edges', g = g, remove_from = from, remove_to = to, edgemode = g$edgemode)  
-  # TODO: FIX THIS IS RCP!!!!! It might return a vector  of edges, not a matrix
+  # TODO: FIX THIS IS RCPP code! It might return a vector  of edges, not a matrix
   if (!is.matrix(removed$edges)) {
     if (length(removed$edges) == 2) {
       removed$edges <- matrix(removed$edges, ncol = 2)
