@@ -6,6 +6,7 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 std::vector<int> match_zero_based(const CharacterVector & subset, const CharacterVector & superset, const std::string error_message) {
   IntegerVector subset_inds = Rcpp::match(subset, superset); 
+  if (subset_inds.size() == 0) throw std::logic_error("No class");
   int min = *std::min_element(subset_inds.begin(), subset_inds.end());
   if (min <= 0)  stop(error_message);
   subset_inds = subset_inds - 1; 
@@ -21,7 +22,7 @@ std::vector<std::string> ordersetdiff(CharacterVector vector, CharacterVector re
 }   
 bool safediff(unsigned int x, int y) {
   return (y >= 0) && (x != static_cast<unsigned int>(y));
-};  
+}
 
 // [[Rcpp::export]]
 bool are_disjoint(Rcpp::Nullable<Rcpp::CharacterVector> x, Rcpp::Nullable<Rcpp::CharacterVector> y) {
