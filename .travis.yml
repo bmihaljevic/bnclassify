@@ -9,6 +9,8 @@ before_install:
 after_success:
   - Rscript -e 'library(covr);coveralls()' 
 
+# TODO: can add build and check args. Also valgrind. See https://github.com/HenrikBengtsson/matrixStats/blob/master/.travis.yml
+
 r:
 - release
 - devel  
