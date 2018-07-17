@@ -1,13 +1,13 @@
 # Functionalities 
-\label{sec:functionalities} 
-There are four groups of functionalities:
+\label{sec:functionalities}
+The package has four groups of functionalities: 
 
-1. Learning network structure
-1. Learning network parameters
+1. Learning network structure and parameters
+1. Analyzing the model
 1. Evaluating the model 
-1. Predicting with the model 
+1. Predicting with the model
 
-The first step is to learn structure and the second, usually, to learn parameters. The obtained models can be evaluated, used for prediction or analyzed. The following provides a brief overview. For details on some of the underlying methods please see the \tecvin/. 
+\noindent Learning is split into two separate steps, the first being structure learning and the second, optional, parameter learning. The obtained models can be evaluated, used for prediction or analyzed. The following provides a brief overview. For details on some of the underlying methods please see the \tecvin/. 
 
 ## Structures
 The learning algorithms produce the following network structures: 
@@ -97,7 +97,7 @@ n <- tan_cl('class', car, score = 'AIC', root = 'buying')
   \citep{Pazzani1996}
 
 \item
-  Hill-climbing k-dependence Bayesian classifier (k-DB) \citep{pernkopf10}
+  Hill-climbing k-dependence Bayesian classifier (k-DB)
 \end{itemize} 
 
 These algorithms use the cross-validated estimate of predictive accuracy as score. Only the FSSJ and BSEJ provide feature selection. The parameters of the corresponding functions include the number of cross-validation folds \code{k} and the minimal absolute score improvement \code{epsilon} required for continuing the search: 
