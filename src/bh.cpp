@@ -141,9 +141,10 @@ T r2graph(CharacterVector vertices, Rcpp::IntegerMatrix edges) {
 NumericVector bh_connected_components(CharacterVector vertices, Rcpp::IntegerMatrix edges) { 
   ugraph g  =  r2graph<ugraph>(vertices,  edges);
   std::vector<int> component(num_vertices(g));
-  int num = connected_components(g, &component[0]);
+  // undefined behaviour if doing &component[0] for a 0-length vector
+  if (component.size() == 0) return NumericVector(0); 
+  connected_components(g, &component[0]);
   // TODO:: see additional checks from RBGL. Maybe connected comp might fail?
-  // std::vector<int>::size_type i;
   return wrap(component);
 }       
 

@@ -22,7 +22,7 @@ std::vector<std::string> ordersetdiff(CharacterVector vector, CharacterVector re
 }   
 bool safediff(unsigned int x, int y) {
   return (y >= 0) && (x != static_cast<unsigned int>(y));
-};  
+}
 
 // [[Rcpp::export]]
 bool are_disjoint(Rcpp::Nullable<Rcpp::CharacterVector> x, Rcpp::Nullable<Rcpp::CharacterVector> y) {
