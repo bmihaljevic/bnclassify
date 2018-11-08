@@ -15,8 +15,8 @@ network used for predicting a discrete class variable \(C\). It assigns
 \noindent The classifier factorizes \(P(\mathbf{x}, c)\) according to a
 Bayesian network
 \(\mathcal{B} = \langle \mathcal{G}, \boldsymbol{ \theta } \rangle\).
-\(\mathcal{G}\) is a directed acyclic graph with a node per each of the
-variables in \((\mathbf{X}, C)\), encoding conditional independences: a
+\(\mathcal{G}\) is a directed acyclic graph with a node for each 
+variable in \((\mathbf{X}, C)\), encoding conditional independences: a
 variable \(X\) is independent of its nondescendants in \(\mathcal{G}\)
 given the values \(\mathbf{pa}(x)\) of its parents. \(\mathcal{G}\) thus
 factorizes the joint into local conditional distributions over subsets
@@ -33,7 +33,7 @@ conditional distributions.
 \(\mathcal{D} = \{ (\mathbf{x}^{1}, c^{1}), \ldots, (\mathbf{x}^{N}, c^{N}) \}\)
 of \(N\) observations of \(\mathbf{X}\) and \(C\). There are two main
 approaches to learning the structure \gstuc/ from \(\mathcal{D}\): a)
-testing for conditional independence among triplets of variables and b)
+testing for conditional independence among triplets of sets of variables and b)
 searching a space of possible structures in order to optimize a network
 quality score. Under assumptions such as a limited number of parents per
 variable, approach a) can produce the correct network in polynomial time
@@ -43,7 +43,7 @@ optimal structure even with at most two parents per variable is NP-hard
 greedy hill-climbing, are commonly used \citep[see e.g.,][]{Koller2009}.
 Ways to reduce model complexity, in order to avoid overfitting the
 training data \(\mathcal{D}\), include searching in restricted structure
-spaces and penalizing it with adequate scores.
+spaces and penalizing dense structures with adequate scores.
 
 Common scores in structure learning are the penalized log-likelihood
 scores, such as the Akaike information criterion (AIC) \citep{Akaike74}
