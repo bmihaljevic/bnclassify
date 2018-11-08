@@ -7,7 +7,7 @@ The package has four groups of functionalities:
 1. Evaluating the model 
 1. Predicting with the model
 
-\noindent Learning is split into two separate steps, the first being structure learning and the second, optional, parameter learning. The obtained models can be evaluated, used for prediction or analyzed. The following provides a brief overview. For details on some of the underlying methods please see the \tecvin/. 
+\noindent Learning is split into two separate steps, the first being structure learning and the second, optional, parameter learning. The obtained models can be evaluated, used for prediction or analyzed. The following provides a brief overview of this workflow. For details on some of the underlying methods please see the \tecvin/. 
 
 ## Structures
 The learning algorithms produce the following network structures: 
@@ -69,7 +69,7 @@ We implement one algorithm:
 
 - Chow-Liu for ODEs  (CL-ODE; \cite{Friedman1997}) 
 
-Maximizing log-likelihood will always produce a TAN while maximizing penalized log-likelihood may produce a FAN since including some arcs can degrade such a score. With incomplete data our implementation does not guarantee the optimal ODE as that would require computing maximum likelihood parameters. The parameters of the \code{tan\_cl} function are the network score to use and, optionally, the root for features' subgraph: 
+Maximizing log-likelihood will always produce a TAN while maximizing penalized log-likelihood may produce a FAN since including some arcs can degrade such a score. With incomplete data our implementation does not guarantee the optimal ODE as that would require computing maximum likelihood parameters. The arguments of the \code{tan\_cl} function are the network score to use and, optionally, the root for features' subgraph: 
 
 ```{=latex}
 \begin{example} 
@@ -102,7 +102,7 @@ The \pkg{bnclassify} package implements five algorithms:
   Hill-climbing k-dependence Bayesian classifier (k-DB)
 \end{itemize} 
 
-These algorithms use the cross-validated estimate of predictive accuracy as score. Only the FSSJ and BSEJ provide feature selection. The parameters of the corresponding functions include the number of cross-validation folds \code{k} and the minimal absolute score improvement \code{epsilon} required for continuing the search: 
+These algorithms use the cross-validated estimate of predictive accuracy as score. Only the FSSJ and BSEJ provide feature selection. The arguments of the corresponding functions include the number of cross-validation folds \code{k} and the minimal absolute score improvement \code{epsilon} required for continuing the search: 
 
 \begin{example} 
 fssj <- fssj('class', car, k = 5, epsilon = 0) 
