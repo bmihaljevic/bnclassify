@@ -88,7 +88,7 @@ For example, \code{fssj()} has selected five out of six features.
 \code{manb\_arc\_posterior()} provides the MANB posterior probabilities for arcs from the class to each of the features: 
 ```{r} 
 manb <- lp(nb, car, smooth = 0.01, manb_prior = 0.5)
-manb_arc_posterior(manb)
+round(manb_arc_posterior(manb))
 ```
 
 With the posterior probability of 0% for the arc from `class` to `doors`, and 100\% for all others, MANB renders \code{doors} independent from the class while leaving the other features' parameters unaltered. We can see this by printing out the CPTs:
