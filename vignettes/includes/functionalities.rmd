@@ -69,7 +69,7 @@ We implement one algorithm:
 
 - Chow-Liu for ODEs  (CL-ODE; \cite{Friedman1997}) 
 
-Maximizing log-likelihood will always produce a TAN while maximizing penalized log-likelihood may produce a FAN since including some arcs can degrade such a score. With incomplete data our implementation does not guarantee the optimal ODE as that would require computing maximum likelihood parameters. The arguments of the \code{tan\_cl} function are the network score to use and, optionally, the root for features' subgraph: 
+Maximizing log-likelihood will always produce a TAN while maximizing penalized log-likelihood may produce a FAN since including some arcs can degrade such a score. With incomplete data our implementation does not guarantee the optimal ODE as that would require computing maximum likelihood parameters. The arguments of the \code{tan\_cl()} function are the network score to use and, optionally, the root for features' subgraph: 
 
 ```{=latex}
 \begin{example} 
@@ -102,7 +102,7 @@ The \pkg{bnclassify} package implements five algorithms:
   Hill-climbing k-dependence Bayesian classifier (k-DB)
 \end{itemize} 
 
-These algorithms use the cross-validated estimate of predictive accuracy as score. Only the FSSJ and BSEJ provide feature selection. The arguments of the corresponding functions include the number of cross-validation folds \code{k} and the minimal absolute score improvement \code{epsilon} required for continuing the search: 
+These algorithms use the cross-validated estimate of predictive accuracy as a score. Only the FSSJ and BSEJ perform feature selection. The arguments of the corresponding functions include the number of cross-validation folds \code{k} and the minimal absolute score improvement \code{epsilon} required for continuing the search: 
 
 \begin{example} 
 fssj <- fssj('class', car, k = 5, epsilon = 0) 
@@ -123,7 +123,7 @@ And one method for estimation by means of Bayesian model averaging over all NB s
 
 - Model averaged naive Bayes (MANB) \citep{Dash2002}
 
-It makes little sense to apply WANBIA, MANB and AWNB to structures other than NB. WANBIA, for example, learns the weights by optimizing the conditional log-likelihood of the NB. Parameter learning is done with the \code{lp} function. For example,
+It makes little sense to apply WANBIA, MANB and AWNB to structures other than NB. WANBIA, for example, learns the weights by optimizing the conditional log-likelihood of the NB. Parameter learning is done with the \code{lp()} function. For example,
 
 ```{=latex}
 \begin{example}
@@ -136,19 +136,19 @@ a <- lp(n, smooth = 1, manb_prior = 0.5)
 ## Utilities 
 Single-structure-learning functions, as opposed to those that learn an ensemble of structures, return an S3 object of class \code{bnc\_dag}. The following functions can be invoked on such objects:
 
-- Plot the network: \code{plot}
-- Query model type: \code{is\_tan}, \code{is\_ode}, \code{is\_nb}, \code{is\_aode}, ...
-- Query model properties: \code{narcs}, \code{families}, \code{features}, ... 
-- Convert to \CRANpkg{gRain} and \CRANpkg{bnlearn} objects: \code{as\_grain} 
+- Plot the network: \code{plot()}
+- Query model type: \code{is\_tan()}, \code{is\_ode()}, \code{is\_nb()}, \code{is\_aode()}, ...
+- Query model properties: \code{narcs()}, \code{families()}, \code{features()}, ... 
+- Convert to a \CRANpkg{gRain} object: \code{as\_grain()} 
 
-Ensembles are of type \code{bnc\_aode} and only \code{print} and model type queries can be applied on such objects. Fitting the parameters (by calling \code{lp}) of a \code{bnc\_dag} produces a \code{bnc\_bn} object. In addition to all \code{bnc\_dag} functions, the following are meaningful:
+Ensembles are of type \code{bnc\_aode} and only \code{print()} and model type queries can be applied to such objects. Fitting the parameters (by calling \code{lp()}) of a \code{bnc\_dag} produces a \code{bnc\_bn} object. In addition to all \code{bnc\_dag} functions, the following are meaningful:
 
-- Predict class labels and class posterior probability: \code{predict}
-- Predict joint distribution: \code{compute\_joint} 
-- Network scores: \code{AIC,BIC,logLik,clogLik} 
-- Cross-validated accuracy: \code{cv}
-- Query model properties: \code{nparams}
-- Parameter weights: \code{manb\_arc\_posterior}, \code{weights}  
+- Predict class labels and class posterior probability: \code{predict()}
+- Predict joint distribution: \code{compute\_joint()} 
+- Network scores: \code{AIC(),BIC(),logLik(),clogLik()} 
+- Cross-validated accuracy: \code{cv()}
+- Query model properties: \code{nparams()}
+- Parameter weights: \code{manb\_arc\_posterior()}, \code{weights()}  
 
 The above functions for \code{bnc\_bn} can also be applied to an ensemble with fitted parameters.
 

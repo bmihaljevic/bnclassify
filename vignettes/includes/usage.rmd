@@ -55,7 +55,7 @@ set.seed(3)
 fssj <- fssj('class', car, k = 5, epsilon = 0)
 ```        
 
-The \code{bnc} function is a shorthand for learning structure and parameters in a single step, 
+The \code{bnc()} function is a shorthand for learning structure and parameters in a single step, 
 ```{r}
 ode_cl_aic <- bnc('tan_cl', 'class', car, smooth = 1, dag_args = list(score = 'aic'))
 ```
@@ -77,15 +77,15 @@ ms <- modelstring(ode_cl_aic)
 strwrap(ms, width = 60)
 ``` 
 
-We can query the type of structure; \code{params} lets us access the conditional probability tables (CPTs); while \code{features} lists the features:   
+We can query the type of structure; \code{params()} lets us access the conditional probability tables (CPTs); while \code{features()} lists the features:   
 ```{r} 
 is_ode(ode_cl_aic)
 params(nb)$buying
 length(features(fssj))
 ``` 
-For example, \code{fssj} has selected five out of six features.  
+For example, \code{fssj()} has selected five out of six features.  
 
-\code{manb\_arc\_posterior} provides the MANB posterior probabilities for arcs from the class to each of the features: 
+\code{manb\_arc\_posterior()} provides the MANB posterior probabilities for arcs from the class to each of the features: 
 ```{r} 
 manb <- lp(nb, car, smooth = 0.01, manb_prior = 0.5)
 manb_arc_posterior(manb)
@@ -107,7 +107,7 @@ AIC(ode_cl_aic, car)
 ```   
 <!-- cLogLik -->
 
-The `cv` function estimates the predictive accuracy of one or more models with stratified cross-validation. In the following we assess the above models produced by NB and CL-ODE algorithms:     
+The `cv` function estimates the predictive accuracy of one or more models with a single run of stratified cross-validation. In the following we assess the above models produced by NB and CL-ODE algorithms:     
 ```{r} 
 set.seed(0)
 cv(list(nb = nb, ode_cl_aic = ode_cl_aic), car, k = 5, dag = TRUE)
