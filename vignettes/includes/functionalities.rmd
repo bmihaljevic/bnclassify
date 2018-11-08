@@ -69,7 +69,7 @@ We implement one algorithm:
 
 - Chow-Liu for ODEs  (CL-ODE; \cite{Friedman1997}) 
 
-Maximizing log-likelihood will always render a TAN while maximizing penalized log-likelihood may render a FAN since including some arcs can degrade such a score. With incomplete data our implementation does not guarantee the optimal ODE as that would require computing maximum likelihood parameters. The parameters of the \code{tan\_cl} function are the network score to use and, optionally, the root for features' subgraph: 
+Maximizing log-likelihood will always produce a TAN while maximizing penalized log-likelihood may produce a FAN since including some arcs can degrade such a score. With incomplete data our implementation does not guarantee the optimal ODE as that would require computing maximum likelihood parameters. The parameters of the \code{tan\_cl} function are the network score to use and, optionally, the root for features' subgraph: 
 
 ```{=latex}
 \begin{example} 

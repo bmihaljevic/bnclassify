@@ -42,7 +42,7 @@ optimal structure even with at most two parents per variable is NP-hard
 greedy hill-climbing, are commonly used \citep[see e.g.,][]{Koller2009}.
 Ways to reduce model complexity, in order to avoid overfitting the
 training data \(\mathcal{D}\), include searching in restricted structure
-spaces and penalizing dense structures with adequate scores.
+spaces and penalizing dense structures with appropriate scores.
 
 Common scores in structure learning are the penalized log-likelihood
 scores, such as the Akaike information criterion (AIC) \citep{Akaike74}
@@ -117,12 +117,12 @@ estimate of \(\theta_{ijk}\). With incomplete data, the parameters of
 local distributions are no longer independent and we cannot separately
 maximize the likelihood for each \(X_i\) as in \req{disparams}.
 Optimizing the likelihood requires a time-consuming algorithm like
-expectation maximization \citep{Dempster1977} which does not guarantee
-convergence to the global optimum.
+expectation maximization \citep{Dempster1977} which only guarantees
+convergence to a local optimum.
 
 While the NB can separate any two linearly separable classes given the
-appropriate \mthetas/, learning by approximating \PCX/ cannot render the
-optimal \mthetas/ in some cases \citep{jaeger2003}. Multiple methods
+appropriate \mthetas/, learning by approximating \PCX/ cannot recover the
+optimal \mthetas/ in some cases \citep{jaeger2003}. Several methods
 \citep{Hall2007,Zaidi2013,Zaidi2017} learn a weight \(w_i \in [0,1]\)
 for each feature and then update \(\boldsymbol{\theta}\) as
 

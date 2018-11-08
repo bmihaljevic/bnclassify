@@ -100,7 +100,7 @@ For more functions for querying a structure with parameters (\code{bnc\_bn}) see
 
 ## Evaluating
   
-Multiple scores can be computed: 
+Several scores can be computed: 
 ```{r}
 logLik(ode_cl_aic, car)
 AIC(ode_cl_aic, car)
