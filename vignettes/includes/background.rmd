@@ -19,13 +19,12 @@ Bayesian network
 variable in \((\mathbf{X}, C)\), encoding conditional independences: a
 variable \(X\) is independent of its nondescendants in \(\mathcal{G}\)
 given the values \(\mathbf{pa}(x)\) of its parents. \(\mathcal{G}\) thus
-factorizes the joint into local conditional distributions over subsets
+factorizes the joint into local (conditional) distributions over subsets
 of variables:
 
 \[P(\mathbf{x}, c) = P(c \mid \mathbf{pa}(c)) \prod_{i=1}^{n} P(x_i \mid \mathbf{pa}(x_i)).\]
 
-\noindent The parameters \(\boldsymbol{ \theta }\) specify the local
-conditional distributions.
+\noindent Local distributions \(P(C \mid \mathbf{pa}(c))\) and \(P(X_i \mid \mathbf{pa}(x_i))\) are specified by parameters \(\boldsymbol{ \theta }_{(C,\mathbf{pa}(c))}\) and \(\boldsymbol{ \theta }_{(X_i,\mathbf{pa}(x_i))}\), with \(\boldsymbol{ \theta } = \{ \boldsymbol{ \theta }_{(C,\mathbf{pa}(c))}, \boldsymbol{ \theta }_{(X_1,\mathbf{pa}(x_1))}, \ldots, \boldsymbol{ \theta }_{(X_n,\mathbf{pa}(x_n))}\}\). It is common to assume each local distribution has a parametric form, such as the multinomial, for discrete variables, and the Gaussian for real-valued variables.
 
 \subsection{Learning structure}\label{learning-structure}
 
