@@ -71,9 +71,11 @@ We implement one algorithm:
 
 Maximizing log-likelihood will always render a TAN while maximizing penalized log-likelihood may render a FAN since including some arcs can degrade such a score. With incomplete data our implementation does not guarantee the optimal ODE as that would require computing maximum likelihood parameters. The parameters of the \code{tan\_cl} function are the network score to use and, optionally, the root for features' subgraph: 
 
+```{=latex}
 \begin{example} 
 n <- tan_cl('class', car, score = 'AIC', root = 'buying') 
 \end{example} 
+```
 
 ### Greedy hill-climbing with global scores
 
@@ -123,9 +125,11 @@ And one method for estimation by means of Bayesian model averaging over all NB s
 
 It makes little sense to apply WANBIA, MANB and AWNB to structures other than NB. WANBIA, for example, learns the weights by optimizing the conditional log-likelihood of the NB. Parameter learning is done with the \code{lp} function. For example,
 
+```{=latex}
 \begin{example}
 a <- lp(n, smooth = 1, manb_prior = 0.5) 
 \end{example} 
+```
 
 \noindent computes Bayesian parameter estimates with \(\alpha = 1\) (the \code{smooth} argument) for all local distributions, and updates them with the MANB estimation obtained with a 0.5 prior probability for each class-to-feature arc.  
 
