@@ -118,5 +118,6 @@ cv(list(nb = nb, ode_cl_aic = ode_cl_aic), car, k = 5, dag = TRUE)
 As shown above, we can predict class labels with `predict`. We can also get the class posterior probabilities:    
 ```{r}
 pp <- predict(nb, car, prob = TRUE)
+# Show class posterior distributions for the first six instances of car
 head(pp)
 ``` 
