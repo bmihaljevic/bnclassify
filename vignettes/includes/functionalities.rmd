@@ -79,7 +79,7 @@ n <- tan_cl('class', car, score = 'AIC', root = 'buying')
 
 ### Greedy hill-climbing with global scores
 
-\pkg{bnclassify} implements five algorithms:
+The \pkg{bnclassify} package implements five algorithms:
 
 \begin{itemize}
 \itemsep1pt\parskip0pt\parsep0pt
@@ -112,7 +112,7 @@ fssj <- fssj('class', car, k = 5, epsilon = 0)
 
 ## Parameters 
 \label{sec:params}
-\pkg{bnclassify} only handles discrete features. With fully observed data, it estimates the parameters with maximum likelihood or Bayesian estimation, according to Equation \ref{eq:disparams}, with a single \(\alpha\) for all local distributions. With incomplete data it uses \emph{available case analysis} and substitutes \(N_{\cdot j \cdot}\) in \req{disparams} with \(N_{i j \cdot} = \sum_{k = 1}^{r_i} N_{i j k}\), i.e., with the count of instances in which \(\mathbf{Pa}(X_i) = j\) and \(X_i\) is observed. 
+The \pkg{bnclassify} package only handles discrete features. With fully observed data, it estimates the parameters with maximum likelihood or Bayesian estimation, according to Equation \ref{eq:disparams}, with a single \(\alpha\) for all local distributions. With incomplete data it uses \emph{available case analysis} and substitutes \(N_{\cdot j \cdot}\) in \req{disparams} with \(N_{i j \cdot} = \sum_{k = 1}^{r_i} N_{i j k}\), i.e., with the count of instances in which \(\mathbf{Pa}(X_i) = j\) and \(X_i\) is observed. 
 
 We implement two methods for weighted naive Bayes parameter estimation: 
 

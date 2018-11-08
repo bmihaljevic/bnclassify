@@ -27,6 +27,6 @@ jBNC\footnote{\url{http://jbnc.sourceforge.net/}} (version 1.2.2) is a Java libr
 
 # Conclusion
 \label{sec:conclusion} 
-\pkg{bnclassify} implements multiple state-of-the art algorithms for learning Bayesian network classifiers. It also provides features such as model analysis and evaluation. It is reasonably efficient and can handle large data sets. We hope that \pkg{bnclassify} will be useful to practitioners as well as to researchers wishing to compare their methods to existing ones. 
+The \pkg{bnclassify} package implements multiple state-of-the art algorithms for learning Bayesian network classifiers. It also provides features such as model analysis and evaluation. It is reasonably efficient and can handle large data sets. We hope that \pkg{bnclassify} will be useful to practitioners as well as to researchers wishing to compare their methods to existing ones. 
 
 Future work includes handling real-valued feature via conditional Gaussian models. Straightforward extensions include adding flexibility to the hill-climbing algorithm, such as restarts to avoid local minima.
