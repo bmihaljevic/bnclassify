@@ -40,9 +40,7 @@ The learning algorithms produce the following network structures:
 \end{subfigure}
 \begin{subfigure}[b]{0.5\textwidth}
   \includegraphics[width=0.9\textwidth]{pg_0004}
-  \caption{$p(c, \mathbf{x}) = p(c)p(x_1 \vert c, x_2)p(x_2 \vert c)p(x_4 \vert c)$ \\ $p(x_5 \vert c, x_4)p(x_6 \vert c, x_4, x_5)$}
-  \label{fig:semi}
-\label{fig:structures}
+  \caption{$p(c, \mathbf{x}) = p(c)p(x_1 \vert c, x_2)p(x_2 \vert c)p(x_4 \vert c)$ \\ $p(x_5 \vert c, x_4)p(x_6 \vert c, x_4, x_5)$} \label{fig:semi}
 \end{subfigure}
 \caption{Augmented naive Bayes models produced by the \pkg{bnclassify} package. (a) NB; (b) TAN (c) FAN (d) SNB. k-DB and AODE not shown. The NB assumes that the features are independent given the class. ODE allows each predictor to depend on at most one other predictor: the TAN is a special case with exactly \(n-1\) augmenting arcs (i.e., inter-feature arcs) while a FAN may have less than \(n-1\). The k-DB allows for up to $k$ parent features per feature $X_i$, with NB and ODE as its special cases with $k = 0$ and $k = 1$, respectively. The SNB does not restrict the number of parents but requires that connected feature subgraphs be complete (connected, after removing $C$, subgraphs in (d): $\{X_1, X_2\}$, and $\{X_4,X_5,X_6\}$), also allowing the removal of features (\(X_3\) omitted in (d)). The AODE is not a single structure but an ensemble of $n$ ODE models in which one feature is the parent of all others (a super-parent). }
 \label{fig:structures}
