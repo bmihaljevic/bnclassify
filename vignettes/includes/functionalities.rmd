@@ -132,14 +132,14 @@ a <- lp(n, smooth = 1, manb_prior = 0.5)
 \noindent computes Bayesian parameter estimates with \(\alpha = 1\) (the \code{smooth} argument) for all local distributions, and updates them with the MANB estimation obtained with a 0.5 prior probability for each class-to-feature arc.  
 
 ## Utilities 
-Single-structure-learning functions, as opposed to those that learn an ensemble of structures, return an S3 object of class \code{bnc\_dag}. The following functions can be invoked on such objects:
+Single-structure-learning functions, as opposed to those that learn an ensemble of structures, return an S3 object of class \code{"bnc\_dag"}. The following functions can be invoked on such objects:
 
 - Plot the network: \code{plot()}
 - Query model type: \code{is\_tan()}, \code{is\_ode()}, \code{is\_nb()}, \code{is\_aode()}, ...
 - Query model properties: \code{narcs()}, \code{families()}, \code{features()}, ... 
 - Convert to a \CRANpkg{gRain} object: \code{as\_grain()} 
 
-Ensembles are of type \code{bnc\_aode} and only \code{print()} and model type queries can be applied to such objects. Fitting the parameters (by calling \code{lp()}) of a \code{bnc\_dag} produces a \code{bnc\_bn} object. In addition to all \code{bnc\_dag} functions, the following are meaningful:
+Ensembles are of type \code{"bnc\_aode"} and only \code{print()} and model type queries can be applied to such objects. Fitting the parameters (by calling \code{lp()}) of a \code{"bnc\_dag"} produces a \code{"bnc\_bn"} object. In addition to all \code{"bnc\_dag"} functions, the following are meaningful:
 
 - Predict class labels and class posterior probability: \code{predict()}
 - Predict joint distribution: \code{compute\_joint()} 
@@ -148,7 +148,7 @@ Ensembles are of type \code{bnc\_aode} and only \code{print()} and model type qu
 - Query model properties: \code{nparams()}
 - Parameter weights: \code{manb\_arc\_posterior()}, \code{weights()}  
 
-The above functions for \code{bnc\_bn} can also be applied to an ensemble with fitted parameters.
+The above functions for \code{"bnc\_bn"} can also be applied to an ensemble with fitted parameters.
 
 ## Documentation  
 This vignette provides \overvindesc/. Calling \code{?bnclassify} gives a more \pkghelp/. The \invin/ presents more \invindesc/. The \tecvin/ provides \tecvindesc/. 
