@@ -16,7 +16,7 @@ network used for predicting a discrete class variable \(C\). It assigns
 Bayesian network
 \(\mathcal{B} = \langle \mathcal{G}, \boldsymbol{ \theta } \rangle\).
 \(\mathcal{G}\) is a directed acyclic graph with a node for each 
-variable in \((\mathbf{X}, C)\), encoding conditional independences: a
+variable in \((\mathbf{X}, C)\), encoding conditional independencies: a
 variable \(X\) is independent of its nondescendants in \(\mathcal{G}\)
 given the values \(\mathbf{pa}(x)\) of its parents. \(\mathcal{G}\) thus
 factorizes the joint into local (conditional) distributions over subsets
