@@ -34,7 +34,7 @@ valid_nodes <- function(nodes) {
 } 
 valid_edges <- function(edges, numeric = TRUE) {
   if (is.null(edges) ) return(TRUE) 
-  valid <- is.matrix(edges) && (ncol(edges) == 2) && (colnames(edges) == c('from', 'to') )
+  valid <- is.matrix(edges) && (ncol(edges) == 2) && (all(colnames(edges) == c('from', 'to')) )
   if (numeric) {
     valid <- valid && is.numeric(edges)
   }
