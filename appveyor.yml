@@ -11,9 +11,9 @@ install:
   ps: Bootstrap
  
 environment:
-  _R_CHECK_FORCE_SUGGESTS_: FALSE
   global:
-    - BIOC_USE_DEVEL="FALSE"
+    BIOC_USE_DEVEL: FALSE
+    _R_CHECK_FORCE_SUGGESTS_: FALSE
 
 
 cache:
