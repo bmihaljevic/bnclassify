@@ -12,6 +12,9 @@ install:
  
 environment:
   _R_CHECK_FORCE_SUGGESTS_: FALSE
+  global:
+    - BIOC_USE_DEVEL="FALSE"
+
 
 cache:
   - C:\RLibrary
