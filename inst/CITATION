@@ -1,0 +1,13 @@
+citHeader("To cite bnclassify in publications, please use:")
+
+citEntry(entry = "article",
+  author = c("Mihaljevi\'{c}, Bojan", "Bielza, Concha", "Larranaga, Pedro"),
+  title = "bnclassify: Learning Bayesian Network Classifiers",
+  journal      = "The R Journal",
+  year         = 2018,
+  volume       = 10,
+  number       = 2,
+  pages        = "455--468",
+  url          = "https://doi.org/10.32614/RJ-2018-073" ,
+  textVersion = "Mihaljevic, Bojan, Pedro Larranaga, and Concha Bielza. 2018. bnclassify: Learning Bayesian Network Classifiers. The R Journal 10 (2): 455-468"
+)  
