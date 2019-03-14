@@ -50,7 +50,8 @@ test_that("awnb do not call", {
 })
 
 test_that('awnb default params', {
-  nb <- nbcar()
+  nb <- nbcar() 
+  suppressWarnings(RNGversion("3.5.0"))
   set.seed(0)
   a <- lp(nb, car, smooth = 1, awnb_trees = 10, awnb_bootstrap = 0.5) 
   set.seed(0)

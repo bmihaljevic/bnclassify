@@ -43,14 +43,16 @@ head(p)
 ``` 
 
 
-```{r, echo = FALSE, results='hide', include=FALSE} 
+```{r, echo = FALSE, results='hide', include=FALSE}  
+suppressWarnings(RNGversion("3.5.0"))
 set.seed(1)
 ```
 
 ## Learning 
 The functions for structure learning, shown in \rtbl{algorithms}, correspond to the different algorithms. They all receive the name of the class variable and the data set as their first two arguments, which are then followed by optional arguments. The following runs the CL-ODE algorithm with the AIC score, followed by the FSSJ algorithm to learn another model:
 ```{r learn_ode} 
-ode_cl_aic <- tan_cl('class', car, score = 'aic')  
+ode_cl_aic <- tan_cl('class', car, score = 'aic')   
+suppressWarnings(RNGversion("3.5.0"))
 set.seed(3)
 fssj <- fssj('class', car, k = 5, epsilon = 0)
 ```        
@@ -108,7 +110,8 @@ AIC(ode_cl_aic, car)
 <!-- cLogLik -->
 
 The `cv` function estimates the predictive accuracy of one or more models with a single run of stratified cross-validation. In the following we assess the above models produced by NB and CL-ODE algorithms:     
-```{r} 
+```{r}  
+suppressWarnings(RNGversion("3.5.0"))
 set.seed(0)
 cv(list(nb = nb, ode_cl_aic = ode_cl_aic), car, k = 5, dag = TRUE)
 ```

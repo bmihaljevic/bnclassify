@@ -61,7 +61,8 @@ test_that("Update dag", {
 test_that("Update with awnb param learning", {
   skip_on_cran()
   skip_if_not_installed('gRain')
-  a <- nb('Class', voting)
+  a <- nb('Class', voting) 
+  suppressWarnings(RNGversion("3.5.0"))
   set.seed(0)
   b <- lp(a, voting, smooth = 1, awnb_trees = 1, awnb_bootstrap = 0.5)
   c <- lp(a, voting, smooth = 1, awnb_trees = 45, awnb_bootstrap = 1)

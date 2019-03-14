@@ -235,7 +235,8 @@ Some structure and parameter learning methods perform feature selection:
 `fssj` and `bsej` perform feature selection while learning structure. On the car evaluation data they both select all features.
 
 ```{r}
-length(features(fssj))
+length(features(fssj)) 
+suppressWarnings(RNGversion("3.5.0"))
 set.seed(0)
 bsej <- bsej('class', car, k = 5, epsilon = 0)  
 length(features(bsej))
@@ -294,7 +295,8 @@ accuracy(p, car$class)
 ```
 
 `cv` estimates predictive accuracy with stratified cross-validation. Indicate the desired number of folds with `k`. 
-```{r}
+```{r} 
+suppressWarnings(RNGversion("3.5.0"))
 set.seed(0)
 cv(ode_cl_aic, car, k = 10)
 ```
@@ -302,20 +304,23 @@ cv(ode_cl_aic, car, k = 10)
 Each `bnc_bn` object records the structure and parameter learning methods that were used to produce it. `cv` just reruns these methods. Hence, the above is the accuracy estimate for `tan_cl` with the AIC score and Bayesian parameter estimation with `smooth = 0.01`.
 
 To keep the structure fixed and evaluate just the parameter learning method, set `dag = FALSE`:
-```{r}
+```{r} 
+suppressWarnings(RNGversion("3.5.0"))
 set.seed(0)
 cv(ode_cl_aic, car, k = 10, dag = FALSE)
 ```
 
 To get the accuracy for each of the folds, instead of the mean accuracy, set `mean = FALSE`.
-```{r}
+```{r} 
+suppressWarnings(RNGversion("3.5.0"))
 set.seed(0)
 cv(ode_cl_aic, car, k = 10, dag = FALSE, mean = FALSE)
 ```
 
 Finally, to cross-validate multiple classifiers at once pass a list of `bnc_bn` objects to `cv`. 
 
-```{r}
+```{r} 
+suppressWarnings(RNGversion("3.5.0"))
 set.seed(0)
 accu <- cv(list(nb = nb, ode_cl_aic = ode_cl_aic), car, k = 5, dag = TRUE)
 accu
@@ -391,7 +396,8 @@ t <- makeClassifTask(id = "car", data = car,
 ```
 
 Select features:
-```{r wrapper_fss, eval = FALSE}
+```{r wrapper_fss, eval = FALSE} 
+suppressWarnings(RNGversion("3.5.0"))
 set.seed(0)
 # Select features
 mod <- train(ode_cl_aic_mlr_fs, task = t) 
@@ -401,7 +407,8 @@ sfeats
 
 `mlr` makes it easy to evaluate the predictive performance of the combination of feature selection plus classifier learning. The following estimates accuracy with 2-fold cross-validation: 
 
-```{r, eval = FALSE}
+```{r, eval = FALSE} 
+suppressWarnings(RNGversion("3.5.0"))
 set.seed(0)
 r = resample(learner = ode_cl_aic_mlr_fs, task = t, 
              resampling = rdesc, show.info = FALSE, measure = mlr::acc)
@@ -428,7 +435,8 @@ With `mlr` you can compare the predictive performance of `bnclassify` models to 
 
 ```{r, eval = FALSE}
 rf <- makeLearner("classif.randomForest", id = "rf")
-classifiers <- list(ode_cl_aic_mlr, rf)
+classifiers <- list(ode_cl_aic_mlr, rf) 
+suppressWarnings(RNGversion("3.5.0"))
 set.seed(0)
 benchmark(classifiers, t, rdesc, show.info = FALSE, measures = mlr::acc)
 ```

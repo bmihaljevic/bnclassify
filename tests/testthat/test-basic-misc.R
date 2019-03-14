@@ -23,7 +23,8 @@ test_that("Rep factor as int", {
   expect_true(all(fi == 1:26))
 })
 
-test_that("Random max nominal", {
+test_that("Random max nominal", { 
+  suppressWarnings(RNGversion("3.5.0"))
   set.seed(0)
   x <- c(1, runif(5), 1)
   a <- max_random(x)

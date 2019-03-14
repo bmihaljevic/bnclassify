@@ -19,7 +19,8 @@ test_that("forget nominal", {
   p <- function(x) {
     print(sample(letters, 1))
     return()
-  }
+  } 
+  suppressWarnings(RNGversion("3.5.0"))
   set.seed(0)
   m <- memoise_char(p)
   expect_output({invisible(m(letters)); invisible(m(letters)) }, "x")

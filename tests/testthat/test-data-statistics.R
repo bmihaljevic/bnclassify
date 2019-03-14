@@ -51,18 +51,21 @@ test_that("Degrees freedom", {
 
 test_that("Contingency table to CPT", {  
   # Nominal
-  set.seed(0)
+  suppressWarnings(RNGversion("3.5.0"))
+  set.seed(0) 
   tc <- table(random_letters_vector(3, 20), random_letters_vector(4, 20))
   tcpt <- ctgt2cpt(tc, 1)
   expect_equal(colnames(tcpt), letters[1:4])
   expect_equal(tcpt[, 1], setNames(c(1, 3, 4) / 8, letters[1:3]))
-  # No smooth 
-  set.seed(0)
+  # No smooth  
+  suppressWarnings(RNGversion("3.5.0"))
+  set.seed(0) 
   tc <- table(random_letters_vector(3, 20), random_letters_vector(4, 20))
   tcpt <- ctgt2cpt(tc, 0)
   expect_equal(colnames(tcpt), letters[1:4])
   expect_equal(tcpt[, 1], setNames(c(0, 2, 3) / 5, letters[1:3]))
-  # 1D table
+  # 1D table 
+  suppressWarnings(RNGversion("3.5.0"))
   set.seed(0)
   tc <- table(random_letters_vector(4, 200))
   tcpt <- ctgt2cpt(tc, 0)

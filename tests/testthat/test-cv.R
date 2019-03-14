@@ -50,17 +50,20 @@ test_that("CV classifier names", {
 
 test_that("Fast structure fitting with smooth", {
   a <- lp(nb('class', car), car, smooth = 1)	
-  b <- lp(nb('class', car[, 7, drop = FALSE]), car, smooth = 1)	
+  b <- lp(nb('class', car[, 7, drop = FALSE]), car, smooth = 1)	 
+  suppressWarnings(RNGversion("3.5.0"))
   set.seed(0)
   r <- cv(list(a, b), car, k = 10, dag = FALSE)
-  expect_equal(r, c(0.8582183, 0.7002446), tolerance = 1e-7)
+  expect_equal(r, c(0.8582183, 0.7002446), tolerance = 1e-7) 
+  suppressWarnings(RNGversion("3.5.0"))
   set.seed(0)
   s <- cv(list(a, b), car, k = 10, dag = FALSE)
   expect_equal(s, r)
 })
 
 test_that("CV a wrapper", {
-  skip_on_cran()
+  skip_on_cran() 
+  suppressWarnings(RNGversion("3.5.0"))
   set.seed(0)
   t <- tan_hc('class', car, k = 2, epsilon = 0, smooth = 0.01)
   t <- lp(t, car, smooth = 0.01)
@@ -69,7 +72,8 @@ test_that("CV a wrapper", {
 }) 
 
 test_that("CV aode", {
-  skip_on_cran()
+  skip_on_cran() 
+  suppressWarnings(RNGversion("3.5.0"))
   set.seed(0)
   t <- aode('class', car)
   t <- lp(t, car, smooth = 0.01)
@@ -80,14 +84,16 @@ test_that("CV aode", {
 test_that("correct cv result", {
   skip_on_cran()
   t <- tan_hc('class', car, k = 5, epsilon = 0, smooth = 0.12)
-  t <- lp(t, car, smooth = 0.01)
+  t <- lp(t, car, smooth = 0.01) 
+  suppressWarnings(RNGversion("3.5.0"))
   set.seed(0)
   s <- cv(t, car, k = 5, dag = TRUE)
   expect_equal(s, 0.9415345, tolerance = 1e-6)
 })
 
 test_that("cv with different parameter learning", {
-  a <- lp(nb('class', car), car, smooth = 1)	
+  a <- lp(nb('class', car), car, smooth = 1)	 
+  suppressWarnings(RNGversion("3.5.0"))
   set.seed(0)
   b <- lp(nb('class', car), car, smooth = 1, awnb_trees = 10)
   d <- lp(nb('class', car), car, smooth = 1, manb_prior = 0.1)	
@@ -100,7 +106,8 @@ test_that("cv with different parameter learning", {
 test_that("correct cv result with missing data", {
   skip_on_cran()
   skip_if_not_installed('gRain')
-  nb <- nbvote()
+  nb <- nbvote() 
+  suppressWarnings(RNGversion("3.5.0"))
   set.seed(0)
   s <- cv(nb, voting, k = 5, dag = TRUE)
   expect_equal(s, 0.9014301, tolerance = 1e-6)
@@ -110,7 +117,8 @@ test_that("cv with just-class classifier", {
   skip_on_cran()
   a <- lp(nb('class', car), car, smooth = 1)	
   b <- lp(nb('class', car[, 'class', drop = FALSE]), car, smooth = 1)
-  d <- lp(nb('class', car[, c(sample(1:6, 4), 7), drop=FALSE]), car, smooth=1)
+  d <- lp(nb('class', car[, c(sample(1:6, 4), 7), drop=FALSE]), car, smooth=1) 
+  suppressWarnings(RNGversion("3.5.0"))
   set.seed(0)
   r <- cv(list(a, b, d), car, k = 10, dag = TRUE)
 })
@@ -160,7 +168,8 @@ test_that("make folds empty class", {
   expect_equal(sum(abs(a - b)), 0)
 })
 
-test_that("distribute accross folds nominal", {
+test_that("distribute accross folds nominal", { 
+  suppressWarnings(RNGversion("3.5.0"))
   set.seed(4)
   f <- distribute_class_over_folds(1210, 3)
   expect_true(all(table(f) == c(403, 404, 403)))
@@ -180,7 +189,8 @@ test_that("cv of different models", {
   t <- kdb('class', dataset = car, kdb = 1, k = 10, epsilon = 0)
   t <- lp(t, car, smooth = 1) 
   to <- tan_hc('class', dataset = car, k = 10, epsilon = 0)
-  to <- lp(to, car, smooth = 1) 
+  to <- lp(to, car, smooth = 1)  
+  suppressWarnings(RNGversion("3.5.0"))
   set.seed(0) 
   score <- cv(list(t, to), car, k = 2)
   expect_false(isTRUE(all.equal(score[1], score[2])))

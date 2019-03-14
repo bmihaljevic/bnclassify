@@ -1,7 +1,8 @@
 context("Basic DAG")
 
 test_that("Condition on", {
-  skip_if_not_installed('gRbase')
+  skip_if_not_installed('gRbase') 
+  suppressWarnings(RNGversion("3.5.0"))
   set.seed(0)
   g <- gRbase::random_dag(letters[1:10], maxpar = 15)
   g <- graphNEL2_graph_internal(g)

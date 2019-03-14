@@ -17,23 +17,27 @@ test_that("nb No features ", {
 })
 
 test_that("fssj nominal", {
-  skip_on_cran()
+  skip_on_cran() 
+  suppressWarnings(RNGversion("3.5.0"))
   set.seed(0)
   f <- fssj('class', dataset = car, k = 10, epsilon = 0.01)
-  expect_equal(features(f), character())
+  expect_equal(features(f), character()) 
+  suppressWarnings(RNGversion("3.5.0"))
   set.seed(0)
   f <- fssj('class', dataset = car, k = 10, epsilon = 0)
   expect_true(is_perm(features(f), colnames(car)[-7]))
 })
 
 test_that("bsej nominal", {
-  skip_on_cran()
+  skip_on_cran() 
+  suppressWarnings(RNGversion("3.5.0"))
   set.seed(0)
   f <- bsej('class', dataset = car, k = 10, epsilon = 0.01)
   expect_equal(features(f), colnames(car)[-7])
   expect_equal(narcs(f), 6 + 1 + 2 + 3)
   expect_equal(length(f$.greedy_scores_log), 4)
-  expect_equal(f$.greedy_scores_log, sort(f$.greedy_scores_log))
+  expect_equal(f$.greedy_scores_log, sort(f$.greedy_scores_log)) 
+  suppressWarnings(RNGversion("3.5.0"))
   set.seed(0)
   f <- bsej('class', dataset = car, k = 10, epsilon = 0)
   expect_equal(features(f), colnames(car)[-7])
@@ -43,7 +47,8 @@ test_that("bsej nominal", {
 })
 
 test_that("tan_hc nominal", {
-  skip_on_cran()
+  skip_on_cran() 
+  suppressWarnings(RNGversion("3.5.0"))
   set.seed(0)
   t <- tan_hc('class', dataset = car, k = 10, epsilon = 0)
   expect_equal(length(features(t)), 6)
@@ -51,7 +56,8 @@ test_that("tan_hc nominal", {
 })
 
 test_that("tanhc sp nominal", {
-  skip_on_cran()
+  skip_on_cran() 
+  suppressWarnings(RNGversion("3.5.0"))
   set.seed(0)
   t <- tan_hcsp('class', dataset = car, k = 10, epsilon = 0)
   expect_equal(length(features(t)), 6)
@@ -61,9 +67,11 @@ test_that("tanhc sp nominal", {
 }) 
 
 test_that("kdb nominal", {
-  skip_on_cran()
+  skip_on_cran() 
+  suppressWarnings(RNGversion("3.5.0"))
   set.seed(0)
-  t <- kdb('class', dataset = car, kdb = 1, k = 10, epsilon = 0)
+  t <- kdb('class', dataset = car, kdb = 1, k = 10, epsilon = 0) 
+  suppressWarnings(RNGversion("3.5.0"))
   set.seed(0)
   to <- tan_hc('class', dataset = car, k = 10, epsilon = 0)
   expect_false(isTRUE(all.equal(t, to)))
