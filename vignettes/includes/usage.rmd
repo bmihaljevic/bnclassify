@@ -13,7 +13,7 @@ The available functionalities can be split into four groups:
 1. Evaluating the model 
 1. Predicting with the model 
 
-\noindent We illustrate these functionalities with the synthetic `car` data set with six features. We begin with a simple example for each functionality group and then elaborate on the options in the following sections. We first load the package and the dataset,
+\noindent We illustrate these functionalities with the synthetic \code{car} data set with six features. We begin with a simple example for each functionality group and then elaborate on the options in the following sections. We first load the package and the dataset,
  
 ```{r} 
 library(bnclassify)
@@ -93,12 +93,12 @@ manb <- lp(nb, car, smooth = 0.01, manb_prior = 0.5)
 round(manb_arc_posterior(manb))
 ```
 
-With the posterior probability of 0% for the arc from `class` to `doors`, and 100\% for all others, MANB renders \code{doors} independent from the class while leaving the other features' parameters unaltered. We can see this by printing out the CPTs:
+With the posterior probability of 0% for the arc from \code{class} to \code{doors}, and 100\% for all others, MANB renders \code{doors} independent from the class while leaving the other features' parameters unaltered. We can see this by printing out the CPTs:
 ```{r}
 params(manb)$doors 
 all.equal(params(manb)$buying, params(nb)$buying)
 ```   
-For more functions for querying a structure with parameters (\code{bnc\_bn}) see \code{?inspect\_bnc\_bn}. For a structure without parameters (\code{bnc\_dag}), see \code{?inspect\_bnc\_dag}. 
+For more functions for querying a structure with parameters (\code{"bnc\_bn"}) see \code{?inspect\_bnc\_bn}. For a structure without parameters (\code{"bnc\_dag"}), see \code{?inspect\_bnc\_dag}. 
 
 ## Evaluating
   
@@ -109,16 +109,16 @@ AIC(ode_cl_aic, car)
 ```   
 <!-- cLogLik -->
 
-The `cv` function estimates the predictive accuracy of one or more models with a single run of stratified cross-validation. In the following we assess the above models produced by NB and CL-ODE algorithms:     
-```{r}  
+The \code{cv} function estimates the predictive accuracy of one or more models with a single run of stratified cross-validation. In the following we assess the above models produced by NB and CL-ODE algorithms:     
+```{r} 
 suppressWarnings(RNGversion("3.5.0"))
 set.seed(0)
 cv(list(nb = nb, ode_cl_aic = ode_cl_aic), car, k = 5, dag = TRUE)
 ```
-\noindent Above, \code{k} is the desired number of folds, and \code{dag = TRUE} evaluates structure and parameter learning, while `dag = FALSE` keeps the structure fixed and evaluates just the parameter learning. The output gives 86\% and 93\% accuracy estimates for NB and CL-ODE, respectively. \CRANpkg{mlr} and \CRANpkg{caret} packages provide additional options for evaluating predictive performance, such as different metrics, and \pkg{bnclassify} is integrated with both (see the \invin/).  
+\noindent Above, \code{k} is the desired number of folds, and \code{dag = TRUE} evaluates structure and parameter learning, while \code{dag = FALSE} keeps the structure fixed and evaluates just the parameter learning. The output gives 86\% and 93\% accuracy estimates for NB and CL-ODE, respectively. \CRANpkg{mlr} and \CRANpkg{caret} packages provide additional options for evaluating predictive performance, such as different metrics, and \pkg{bnclassify} is integrated with both (see the \invin/).  
 
 ## Predicting 
-As shown above, we can predict class labels with `predict`. We can also get the class posterior probabilities:    
+As shown above, we can predict class labels with \code{predict()}. We can also get the class posterior probabilities:    
 ```{r}
 pp <- predict(nb, car, prob = TRUE)
 # Show class posterior distributions for the first six instances of car
