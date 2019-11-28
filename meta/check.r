@@ -2,6 +2,8 @@
 ## Run checks prior to submitting            ##
 ## ========================================= ## 
 
+## I am not currently using AppVeyor, because there are some issues with Bioconductor
+
 ## for vignette size warning. Since vignettes are only built locally, I only need add this argument
 ## MUST use this in all my builds and checks!!
 # build_args <- c('--resave-data','--compact-vignettes=gs+qpdf', '--gs_quality=ebook')
