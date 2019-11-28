@@ -9,7 +9,8 @@ build_args <- c('--resave-data', '--compact-vignettes="gs+qpdf"')
 devtools::build(args = build_args )
 
 check_args <-  '--as-cran'
-devtools::check(args = check_args , cran = TRUE, check_version = TRUE, build_args = build_args ) 
+# check_version = TRUE # seems this argument of devtools::check has been removed
+devtools::check(args = check_args , cran = TRUE,  build_args = build_args ) 
 
 # Full, slow release with questions
 # devtools::release(args = build_args) )
