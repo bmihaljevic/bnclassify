@@ -15,4 +15,4 @@ devtools::check(args = check_args , cran = TRUE,  build_args = build_args )
 # Full, slow release with questions
 # devtools::release(args = build_args) )
 # Quick submission
-devtools::submit_cran(args = build_args)
+# devtools::submit_cran(args = build_args)
