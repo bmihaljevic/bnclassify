@@ -1,10 +1,11 @@
 #include <Rcpp.h>
 using namespace Rcpp;
+using namespace std::placeholders;
 
 // [[Rcpp::export]]
 NumericVector smooth_sideeffect(NumericVector ctgt, double smooth) { 
   transform(ctgt.begin(), ctgt.end(), ctgt.begin(),
-            bind2nd(std::plus<double>(), smooth));     
+            bind(std::plus<double>(), _1, smooth));     
   return ctgt;
 } 
 
