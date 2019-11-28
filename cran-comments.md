@@ -1,10 +1,10 @@
 ## Test environments
-* Ubuntu 16.04 R 3.5.3 (local)
+* Ubuntu 16.04 R 3.6.0 (local)
 * ubuntu 14.04 R R-release (travis ci)
 * ubuntu 14.04 R R-devel (travis ci)
 * windows R R-devel (win-builder) 
 * windows R R-release (win-builder) 
-* Windows i386-w64-mingw32/i386, R 3.5.3  (Appveyor)
+* Windows i386-w64-mingw32/i386, R 3.6.1 (Appveyor)
 
 ## R CMD check results   
 Locally, on win-builder, and on Appveyor there were no ERRORs, no WARNINGs, and no NOTEs.  
