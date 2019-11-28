@@ -4,18 +4,16 @@
 * ubuntu 14.04 R R-devel (travis ci)
 * windows R R-devel (win-builder) 
 * windows R R-release (win-builder) 
-* Windows i386-w64-mingw32/i386, R 3.6.1 (Appveyor)
 
 ## R CMD check results   
-Locally, on win-builder, and on Appveyor there were no ERRORs, no WARNINGs, and no NOTEs.  
+Locally and on win-builder there were no ERRORs, no WARNINGs, and no NOTEs.  
   
-On travis ci there were no ERRORs nor WARNINGs. There was one NOTE. 
+On travis ci there were no ERRORs nor WARNINGs. There was one NOTE.
 
-  checking installed package size ... NOTE
-    installed size is  8.4Mb
-    sub-directories of 1Mb or more:
-      doc    1.0Mb
-      libs   6.9Mb
+  checking installed package size ... NOTE 
+    installed size is  7.9Mb 
+    sub-directories of 1Mb or more: 
+      libs   7.1Mb  
       
 This was probably due to a -g compilation flag that I do not currently know how to remove. It does not occur in other environments. 
 
