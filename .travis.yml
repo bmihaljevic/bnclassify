@@ -15,6 +15,10 @@ r:
 - release
 - devel  
 
+script:
+  - R CMD build . --compact-vignettes=both
+  - R CMD check *tar.gz --as-cran
+
 # Not cran will run tests skipped on cran
 #  Travis is not taking this into account
 not_cran: 
