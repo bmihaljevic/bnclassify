@@ -1,4 +1,7 @@
- # 0.4.2
+# 0.4.3
+* Minor changes to pass CRAN checks
+
+# 0.4.2
 * Minor changes to pass CRAN checks
 
 # 0.4.1
