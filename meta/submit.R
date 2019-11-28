@@ -4,8 +4,8 @@
 
 # must build vignettes first
 devtools::build_vignettes()
-# Must use the build args for the check to pass on Windows  
-build_args <- c('--resave-data', '--compact-vignettes="gs+qpdf"')
+# Must use the build args for the check to pass on Windows   
+build_args <- c('--resave-data','--compact-vignettes=both')
 devtools::build(args = build_args )
 
 check_args <-  '--as-cran'
