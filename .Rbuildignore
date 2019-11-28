@@ -7,3 +7,5 @@ Makefile
 ^\.travis\.yml$
 ^README\.Rmd$
 ^appveyor\.yml$
+^doc$
+^Meta$
