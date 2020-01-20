@@ -1,3 +1,6 @@
+# 0.4.4
+* Removing gRain integration to pass CRAN checks 
+
 # 0.4.3
 * Minor changes to pass CRAN checks
 
