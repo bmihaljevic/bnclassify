@@ -1,5 +1,5 @@
 ## Test environments
-* Ubuntu 16.04 R 3.6.0 (local)
+* Ubuntu 16.04 R 3.6.2 (local)
 * ubuntu 14.04 R R-release (travis ci)
 * ubuntu 14.04 R R-devel (travis ci)
 * windows R R-devel (win-builder) 
