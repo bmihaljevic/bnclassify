@@ -29,7 +29,7 @@ nbcarclass <- function() {
 
 random_letters_db <- function(nlet = 6, nrow = 100) {
   df <- replicate(nlet, random_letters_vector(nlet, nrow))
-  df <- as.data.frame(df)
+  df <- as.data.frame(df, stringsAsFactors = TRUE)
   colnames(df) <- letters[seq_len(nlet)]
   df
 }
