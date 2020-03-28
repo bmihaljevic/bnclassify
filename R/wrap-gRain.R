@@ -51,7 +51,7 @@ compute_grain_log_joint_instance <- function(instance, grain, class) {
 	  grain <- gRain::setEvidence(grain, nodes = vars, states = instance)
   }
   # gRain has a bug and cannot return unnormalized class. Therefore, using the workaround: P(C | x_evidence) * P(x_evidence)
-  cp <- gRain::querygrain.grain(grain, nodes = class, normalize = TRUE)[[class]]  
+  cp <- gRain::querygrain(grain, nodes = class, normalize = TRUE)[[class]]  
   cp <- log(cp)
   if (length(vars) > 0) {
     cp <- cp + log(gRain::pEvidence(grain))
@@ -77,9 +77,7 @@ compile_grain <- function(cpts) {
   all_eq <- mapply(equivalent_num, cpts, pcpts, SIMPLIFY = TRUE)
   stopifnot(vapply(all_eq, isTRUE, FUN.VALUE = logical(1)))
   # Assemble the grain
-  grain <- gRain::grain.CPTspec(gRain::compileCPT(pcpts))
-  # Compile and return it 
-  gRain::compile.CPTgrain(gRain::compile.CPTgrain(grain))
+  gRain::grain.CPTspec(gRain::compileCPT(pcpts)) 
 }
 is_grain_compiled <- function(g) {
   if (!requireNamespace("gRain", quietly = TRUE)) {
@@ -89,5 +87,5 @@ is_grain_compiled <- function(g) {
   inherits(g, "grain") && g$isCompiled
 }
 grain_nodes <- function(g) {
-  gRain::nodeNames.grain(g)
+  g$universe$nodes
 }

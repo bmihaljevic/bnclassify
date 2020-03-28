@@ -1,3 +1,6 @@
+# 0.4.3.9999
+- Work-around for gRain changes
+
 # 0.4.3
 * Minor changes to pass CRAN checks
 

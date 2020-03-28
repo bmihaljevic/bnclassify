@@ -219,7 +219,7 @@ The following uses `gRain` to ge the marginal probability of the `buying` featur
 ```{r}
 a <- lp(nb('class', car), car, smooth = 1)
 g <- as_grain(a)
-gRain::querygrain.grain(g)$buying
+gRain::querygrain(g)$buying
 ```
 
 # Selecting features

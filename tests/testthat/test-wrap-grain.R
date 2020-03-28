@@ -25,6 +25,7 @@ test_that(" joint prob instance with no evidence", {
 })
 
 test_that("cpts to grain", {
+  skip("gRain has removed the predict function")
   skip_if_not_installed('gRain')
   a <- nbvote()
   g <- compile_grain(params(a))
