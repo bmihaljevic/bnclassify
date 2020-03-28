@@ -1,5 +1,5 @@
-
-Version: 0.4.5
+# 0.4.5.9999
+- Work-around for gRain changes
 
 # 0.4.5
 * Pass CRAN checks with stringsAsFactors = FALSE as default

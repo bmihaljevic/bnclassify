@@ -25,13 +25,14 @@ test_that(" joint prob instance with no evidence", {
 })
 
 test_that("cpts to grain", {
-  # skip_if_not_installed('gRain')
-  # a <- nbvote()
-  # g <- compile_grain(params(a))
-  # # Check compiled
-  # expect_true(g$isCompiled)
-  # # gRain cannot handle a row that has all missing features. remove 249.
-  # p <- gRain::predict.grain(g, response = 'Class',  
-  #                           newdata = voting[-249, -17], type = "class")
-  # expect_true(all(p$pred[[1]] %in% levels(voting$Class[-249])))
+  skip("gRain has removed the predict function")
+  skip_if_not_installed('gRain')
+  a <- nbvote()
+  g <- compile_grain(params(a))
+  # Check compiled
+  expect_true(g$isCompiled)
+  # gRain cannot handle a row that has all missing features. remove 249.
+  p <- gRain::predict.grain(g, response = 'Class',  
+                            newdata = voting[-249, -17], type = "class")
+  expect_true(all(p$pred[[1]] %in% levels(voting$Class[-249])))
 })

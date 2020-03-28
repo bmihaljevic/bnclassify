@@ -217,9 +217,9 @@ For `bnlearn`, first convert to `gRain` and then convert the `gRain` object to a
 
 The following uses `gRain` to ge the marginal probability of the `buying` feature: (NOTE: not currently working due to recent changes in the gRain package)
 ```{r}
-# a <- lp(nb('class', car), car, smooth = 1)
-# g <- as_grain(a)
-# gRain::querygrain.grain(g)$buying
+a <- lp(nb('class', car), car, smooth = 1)
+g <- as_grain(a)
+gRain::querygrain(g)$buying
 ```
 
 # Selecting features

@@ -32,32 +32,31 @@ compute_grain_log_joint <- function(grain, dataset, class) {
   cp
 }
 # Computes the log joint probability of the observed features for each of the classes
-compute_grain_log_joint_instance <- function(instance, grain, class) { 
-  stop("gRain currently incompatible")
-#   if (!requireNamespace("gRain", quietly = TRUE)) {
-#     stop("gRain needed for this function to work. Please install it.",
-#          call. = FALSE)
-#   }
-#   # Instance is character
-#   stopifnot(is.character(instance))    
-#   # Get non-NA nodes in instance 
-#   instance <- instance[!is.na(instance)]
-#   vars <- intersect(names(instance), grain_nodes(grain))
-#   instance <- instance[vars]
-#   # Check class is character and not in instance  
-#   check_class(class) 
-#   stopifnot(!(class %in% vars))
-#   # Set them as evidence if they are more than 0
-#   if (length(instance) > 0) {  
-# 	  grain <- gRain::setEvidence(grain, nodes = vars, states = instance)
-#   }
-#   # gRain has a bug and cannot return unnormalized class. Therefore, using the workaround: P(C | x_evidence) * P(x_evidence)
-#   cp <- gRain::querygrain.grain(grain, nodes = class, normalize = TRUE)[[class]]  
-#   cp <- log(cp)
-#   if (length(vars) > 0) {
-#     cp <- cp + log(gRain::pEvidence(grain))
-#   }
-#   cp
+compute_grain_log_joint_instance <- function(instance, grain, class) {
+  if (!requireNamespace("gRain", quietly = TRUE)) {
+    stop("gRain needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
+  # Instance is character
+  stopifnot(is.character(instance))    
+  # Get non-NA nodes in instance 
+  instance <- instance[!is.na(instance)]
+  vars <- intersect(names(instance), grain_nodes(grain))
+  instance <- instance[vars]
+  # Check class is character and not in instance  
+  check_class(class) 
+  stopifnot(!(class %in% vars))
+  # Set them as evidence if they are more than 0
+  if (length(instance) > 0) {  
+	  grain <- gRain::setEvidence(grain, nodes = vars, states = instance)
+  }
+  # gRain has a bug and cannot return unnormalized class. Therefore, using the workaround: P(C | x_evidence) * P(x_evidence)
+  cp <- gRain::querygrain(grain, nodes = class, normalize = TRUE)[[class]]  
+  cp <- log(cp)
+  if (length(vars) > 0) {
+    cp <- cp + log(gRain::pEvidence(grain))
+  }
+  cp
 }
 # Compiles a grain from a a list of CPTs
 compile_grain <- function(cpts) {
@@ -69,18 +68,16 @@ compile_grain <- function(cpts) {
     stop("gRbase needed for this function to work. Please install it.",
          call. = FALSE)
   }
-  stop("gRain currently incompatible")
-  # # Check cpts is a list 
-  # stopifnot(is.list(cpts))
-  # # TODO: Check each cpt. 
-  # # Convert each cpt to parray
-  # pcpts <- lapply(cpts, gRbase::as.parray, normalize = "none", smooth = 0)
-  # # Check the probabilities are left unchanged 
-  # all_eq <- mapply(equivalent_num, cpts, pcpts, SIMPLIFY = TRUE)
-  # stopifnot(vapply(all_eq, isTRUE, FUN.VALUE = logical(1)))
-  # # Assemble the grain    
-  # grain <- gRain::grain(gRain::compileCPT(pcpts))
-  # grain  
+  # Check cpts is a list 
+  stopifnot(is.list(cpts))
+  # TODO: Check each cpt. 
+  # Convert each cpt to parray
+  pcpts <- lapply(cpts, gRbase::as.parray, normalize = "none", smooth = 0)
+  # Check the probabilities are left unchanged 
+  all_eq <- mapply(equivalent_num, cpts, pcpts, SIMPLIFY = TRUE)
+  stopifnot(vapply(all_eq, isTRUE, FUN.VALUE = logical(1)))
+  # Assemble the grain
+  gRain::grain.CPTspec(gRain::compileCPT(pcpts)) 
 }
 is_grain_compiled <- function(g) {
   if (!requireNamespace("gRain", quietly = TRUE)) {
@@ -89,7 +86,6 @@ is_grain_compiled <- function(g) {
   }
   inherits(g, "grain") && g$isCompiled
 }
-grain_nodes <- function(g) { 
-  # gRain::nodeNames(g)
-  stop("gRain currently incompatible")
+grain_nodes <- function(g) {
+  g$universe$nodes
 }
