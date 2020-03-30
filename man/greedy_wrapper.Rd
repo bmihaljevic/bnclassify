@@ -15,11 +15,17 @@ bsej(class, dataset, k, epsilon = 0.01, smooth = 0, cache_reset = NULL)
 
 tan_hc(class, dataset, k, epsilon = 0.01, smooth = 0, cache_reset = NULL)
 
-kdb(class, dataset, k, kdbk = 2, epsilon = 0.01, smooth = 0,
-  cache_reset = NULL)
+kdb(
+  class,
+  dataset,
+  k,
+  kdbk = 2,
+  epsilon = 0.01,
+  smooth = 0,
+  cache_reset = NULL
+)
 
-tan_hcsp(class, dataset, k, epsilon = 0.01, smooth = 0,
-  cache_reset = NULL)
+tan_hcsp(class, dataset, k, epsilon = 0.01, smooth = 0, cache_reset = NULL)
 }
 \arguments{
 \item{class}{A character. Name of the class variable.}

@@ -4,8 +4,17 @@
 \alias{bnc}
 \title{Learn network structure and parameters.}
 \usage{
-bnc(dag_learner, class, dataset, smooth, dag_args = NULL, awnb_trees = NULL,
-  awnb_bootstrap = NULL, manb_prior = NULL, wanbia = NULL)
+bnc(
+  dag_learner,
+  class,
+  dataset,
+  smooth,
+  dag_args = NULL,
+  awnb_trees = NULL,
+  awnb_bootstrap = NULL,
+  manb_prior = NULL,
+  wanbia = NULL
+)
 }
 \arguments{
 \item{dag_learner}{A character. Name of the structure learning function.}

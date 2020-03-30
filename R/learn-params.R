@@ -47,7 +47,18 @@ lp_implement.bnc_aode <- function(x, dataset, smooth, awnb_trees = NULL,
                          awnb_bootstrap = NULL, manb_prior = NULL, wanbia = NULL, .mem_cpts=NULL, ...) {
   models <- lapply(models(x), lp_implement, dataset = dataset, smooth = smooth) # TODO: pass mem_cpts, wanbia and other parameters to lp_implement?? 
   bnc_aode_bns(x, models) 
-}    
+}
+#' @export
+lp_implement.bnc_multinet <- function(x, dataset, smooth, awnb_trees = NULL, 
+                                      awnb_bootstrap = NULL, manb_prior = NULL, wanbia = NULL, .mem_cpts=NULL, ...) {
+  # TODO: we need to specify the class as parameter of the function 
+  datasets <- split(dataset, dataset[["class"]]) 
+  models <- vector("list")
+  for (i in levels(dataset[["class"]])){
+    models[[i]]<-lp_implement(models(x)[[i]], datasets[[i]], smooth)}
+  #models <- lapply(models(x), lp_implement, dataset = dataset, smooth = smooth) # TODO: pass mem_cpts, wanbia and other parameters to lp_implement?? 
+  bnc_multinet_bns(x, models) 
+}
 #' @export
 lp_implement.bnc_dag <- function(x, dataset, smooth, awnb_trees = NULL, 
                          awnb_bootstrap = NULL, manb_prior = NULL, wanbia = NULL, .mem_cpts=NULL, ...) {

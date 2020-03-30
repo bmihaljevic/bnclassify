@@ -3,7 +3,6 @@
 \docType{package}
 \name{bnclassify}
 \alias{bnclassify}
-\alias{bnclassify-package}
 \title{Learn discrete Bayesian network classifiers from data.}
 \description{
 State-of-the-art algorithms for learning discrete Bayesian network 
@@ -12,7 +11,7 @@ classifiers from data, with functions prediction, model evaluation and inspectio
 \details{
 The learn more about the package, start with the vignettes:
  \code{browseVignettes(package = "bnclassify")}. The following is a list of available
-  functionalities:
+  functionalities: 
 
 Structure learning algorithms:
   \itemize{
