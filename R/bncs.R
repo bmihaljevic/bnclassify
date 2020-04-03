@@ -39,9 +39,10 @@ bnc_multinet_tan <- function(class, dataset, features) {
 }
 #' Fits an multinet model.
 #' @keywords internal
-bnc_multinet_bns <- function(x, fit_models) {
+bnc_multinet_bns <- function(x, fit_models, apriori) {
   stopifnot(inherits(x, 'bnc_multinet'))
   x$.models <- fit_models
+  x$.apriori <- apriori 
   class(x) <- c('bnc_multinet_bns', class(x), 'bnc_fit')
   x
 }
