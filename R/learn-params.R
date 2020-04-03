@@ -56,8 +56,8 @@ lp_implement.bnc_multinet <- function(x, dataset, smooth, awnb_trees = NULL,
   models <- vector("list")
   for (i in levels(dataset[["class"]])){
     models[[i]]<-lp_implement(models(x)[[i]], datasets[[i]], smooth)}
-  #models <- lapply(models(x), lp_implement, dataset = dataset, smooth = smooth) # TODO: pass mem_cpts, wanbia and other parameters to lp_implement?? 
-  bnc_multinet_bns(x, models) 
+  apriori <- extract_cpt(class_var(x), dataset = dataset, smooth = smooth)
+  bnc_multinet_bns(x, models, apriori) 
 }
 #' @export
 lp_implement.bnc_dag <- function(x, dataset, smooth, awnb_trees = NULL, 
