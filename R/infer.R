@@ -76,12 +76,16 @@ compute_log_joint_complete.bnc_aode <- function(x, dataset) {
 #' @export
 compute_log_joint_complete.bnc_multinet<-function(x, dataset){
   stopifnot(nmodels(x) > 0)
-  datasets <- split(dataset, dataset[["class"]]) 
-  p <- vector("list")
-  for (i in levels(dataset[["class"]])){
-    p[[i]]<-compute_log_joint_complete(models(x)[[i]], datasets[[i]])}
-  #average_aode(p) 
-  #column
+  classes <- classes(models(x)[[1]])
+  stopifnot(identical(names(models(x)), classes ))
+  m <- matrix(data = 0.0, nrow = nrow(dataset), ncol = length(classes))
+  colnames(m) <- classes
+  for (i in classes){
+    m[, i]<-compute_log_joint_complete(models(x)[[i]], dataset)[,i]
+  } 
+  browser()
+  prior <- rep(multinet_apriori(x), each = nrow(m))
+  m * prior
 }
 #' @export
 compute_log_joint_complete.bnc_bn <- function(x, dataset) {
