@@ -48,7 +48,7 @@ plot.bnc_dag <- function(x, y, layoutType='dot', fontsize = NULL, ...) {
 print.bnc_base <- function(x, ...) {  
   cat("\n  Bayesian network classifier")  
   is_bnc_bn <- inherits(x, "bnc_bn")
-  is_ensemble <- inherits(x, "bnc_aode") || inherits(x, "bnc_multinet")
+  is_ensemble <- is_ensemble(x)
   # says ensemble as could be others besides aode. 
   if (!is_bnc_bn & !is_ensemble) {
     cat(" (only structure, no parameters)")

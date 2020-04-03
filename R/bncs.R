@@ -52,6 +52,15 @@ is_aode <- function(x) {
   if (!inherits(x, c('bnc_aode'))) return (FALSE)
   if (length(x$.models) < 2) return (FALSE)
   all(sapply(x$.models, is_ode)) # TODO Should be is spode
+} 
+#' Is it an ensemble?
+#'
+#' @keywords internal
+is_ensemble <- function(x) {
+  is_aode(x) || is_multinet(x)  
+}
+is_multinet <- function(x) {
+ inherits(x, "bnc_multinet") 
 }
 nmodels <- function(x) {
  stopifnot(inherits(x, 'bnc_aode') || inherits(x, "bnc_multinet")) 
