@@ -72,7 +72,17 @@ compute_log_joint_complete.bnc_aode <- function(x, dataset) {
   stopifnot(nmodels(x) > 0)
   p <- lapply(models(x), compute_log_joint_complete, dataset = dataset)  
   average_aode(p)  
-} 
+}
+#' @export
+compute_log_joint_complete.bnc_multinet<-function(x, dataset){
+  stopifnot(nmodels(x) > 0)
+  datasets <- split(dataset, dataset[["class"]]) 
+  p <- vector("list")
+  for (i in levels(dataset[["class"]])){
+    p[[i]]<-compute_log_joint_complete(models(x)[[i]], datasets[[i]])}
+  #average_aode(p) 
+  #column
+}
 #' @export
 compute_log_joint_complete.bnc_bn <- function(x, dataset) {
   # compute_anb_log_joint_per_class(x, dataset)

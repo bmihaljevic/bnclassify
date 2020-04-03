@@ -108,4 +108,16 @@ aode <- function(class, dataset, features = NULL) {
   x <- bnc_aode(models = models, class_var = class, features = features) 
   add_dag_call_arg(x, fun_name = 'aode', call = match.call(), 
                    env = parent.frame(), force = TRUE)
-}  
+}
+#' Learn an TAN ensemble.
+#' 
+#' If there is a single predictor then returns a naive Bayes.
+#' 
+#' @export
+#' @inheritParams nb
+#' @return A \code{bnc_multinet_tan} or a \code{bnc_dag} (if returning a naive Bayes)
+multinet_tan <- function(class, dataset, features=NULL) {       
+  x <- bnc_multinet_tan(class=class, dataset=dataset, features=features) 
+  add_dag_call_arg(x, fun_name = 'bnc_multinet_tan', call = match.call(), 
+                   env = parent.frame(), force = TRUE)
+}
