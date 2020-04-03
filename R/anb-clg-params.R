@@ -53,9 +53,8 @@ fit_beta<-function(input,parents,Class,variable){
     
   }
   
-}
-
-lp_implement<-function(bnc_dag,dataset){
+} 
+lp_implement_clg <-function(bnc_dag,dataset, smooth){
   bnc_dag<-families(bnc_dag)
   bnc_fit_clg<-list()
   
@@ -68,4 +67,7 @@ lp_implement<-function(bnc_dag,dataset){
   }
   bnc_fit_clg<-structure(bnc_fit_clg,class='bnc_fit_clg')
   return(bnc_fit_clg)
+}
+has_continuous_features <- function() {
+ #  Return true if at least one feature is continous
 }

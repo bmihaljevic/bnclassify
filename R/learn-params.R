@@ -30,6 +30,9 @@ bnc <- function(dag_learner, class, dataset, smooth, dag_args = NULL,
 #' @rdname learn_params
 lp <- function(x, dataset, smooth, awnb_trees = NULL, awnb_bootstrap = NULL,
                manb_prior = NULL, wanbia = NULL) {
+  if (has_continuous_features(dataset)) { 
+    bn <- lp_implement_clg(x = x, dataset = dataset, smooth = smooth)
+  }
   bn <- lp_implement(x = x, dataset = dataset, smooth = smooth, 
                      awnb_trees = awnb_trees, awnb_bootstrap = awnb_bootstrap,
                      manb_prior = manb_prior, wanbia = wanbia)
