@@ -69,4 +69,11 @@ nmodels <- function(x) {
 models <- function(x) { 
  stopifnot(inherits(x, 'bnc_aode') || inherits(x, "bnc_multinet"))  
  x$.models
+}  
+#' Return a priori class probabilities
+#'
+#' @keywords internal
+multinet_apriori <- function(x) { 
+ stopifnot(inherits(x, "bnc_multinet"))  
+ x$.apriori
 }
