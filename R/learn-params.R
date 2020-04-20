@@ -52,9 +52,10 @@ lp_implement.bnc_aode <- function(x, dataset, smooth, awnb_trees = NULL,
 lp_implement.bnc_multinet <- function(x, dataset, smooth, awnb_trees = NULL, 
                                       awnb_bootstrap = NULL, manb_prior = NULL, wanbia = NULL, .mem_cpts=NULL, ...) {
   # TODO: we need to specify the class as parameter of the function 
-  datasets <- split(dataset, dataset[["class"]]) 
+  class=class_var(x)
+  datasets <- split(dataset, dataset[[class]]) 
   models <- vector("list")
-  for (i in levels(dataset[["class"]])){
+  for (i in levels(dataset[[class]])){
     models[[i]]<-lp_implement(models(x)[[i]], datasets[[i]], smooth)}
   apriori <- extract_cpt(class_var(x), dataset = dataset, smooth = smooth)
   bnc_multinet_bns(x, models, apriori) 

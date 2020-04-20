@@ -115,9 +115,9 @@ aode <- function(class, dataset, features = NULL) {
 #' 
 #' @export
 #' @inheritParams nb
-#' @return A \code{bnc_multinet_tan} or a \code{bnc_dag} (if returning a naive Bayes)
-multinet_tan <- function(class, dataset, features=NULL) {       
-  x <- bnc_multinet_tan(class=class, dataset=dataset, features=features) 
-  add_dag_call_arg(x, fun_name = 'bnc_multinet_tan', call = match.call(), 
+#' @return A \code{multinet_cl} or a \code{bnc_dag} (if returning a naive Bayes)
+multinet_cl <- function(class, dataset, features=NULL, score='loglik') {       
+  x <- bnc_multinet_tan(class=class, dataset=dataset, features=features, score=score) 
+  add_dag_call_arg(x, fun_name = 'multinet_cl', call = match.call(), 
                    env = parent.frame(), force = TRUE)
 }
