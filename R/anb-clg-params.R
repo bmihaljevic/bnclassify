@@ -1,28 +1,30 @@
-#' learn the coefficients of a Bayesian network structure
+#' learn the coefficients and desviations of a Bayesian network structure
 #'
 #' More ditailed description
 #'
 #' @param x The bnc_dag object. The Bayesian network classifier structure.
 #' @param dataset The data frame.The data frame from which to learn coefficients.
 #'
-#' @return bnc_fit_clg. bnc_fit_clg is the object that contains the coefficients of each node in the structure
+#' @return bnc_fit_clg. bnc_fit_clg is the object that contains coefficients and desviations of each node in the structure
 #'
-#' @details betaImplement learns the coefficient of each node in the bayesian network structure by using the function lm().
+#' @details betaImplement learns the coefficients and desviations of each node in the bayesian network structure by using the function lm().
 #'
-#' BetaImplemet only returns the coefficient for numerical node. In case of categorical node, it will return a error information.
+#' BetaImplemet only returns the coefficients and desviations for numerical node. In case of categorical node, it will return a error information.
 #'
-#' When the parents of the node are categorical + numerical, it will returns the coefficients by using the numerical parents based on the different combination of categorical parents.
+#' When the parents of the node are categorical + numerical, it will returns the coefficients and desiations by using the numerical parents based on the different combination of categorical parents.
 #' For example:
 #'
 #' We have a node speed, the parents are velocity(numeric), wheel(categorical,4 levels) and accelerator(categorical, 2 level).
-#'  The node speed will have 8 different result of lm(speed~velocity,data).
-#' Otherwise, it will get another error information.
+#'  The node speed will have 8 different combination of subest: lm(speed~velocity,subset).
 #'
 #' @examples
-#' structure<-tan_cl('Species',as.data.frame(lapply(iris,as.factor)))
-#' plot(structure)
-#' x<-BetaImplement(structure,iris)
-#' x$Sepal.Width
+#'structure<-tan_cl('Species',as.data.frame(lapply(iris,as.factor)))
+#'plot(structure)
+#'x<-BetaImplement(structure,iris)
+
+#'x$Sepal.Width$coef$setosa # get the coefficient of the node 'Sepal.Width' using the subset filtered by the combination Species=setosa
+
+#'x$Sepal.Width$sd$setosa # get the desviations of the node 'Sepal.Width' using the subset filtered by the combination Species=setosa
 #' @export
 
 BetaImplement<-function(x,dataset){
@@ -30,7 +32,7 @@ BetaImplement<-function(x,dataset){
 
   # all parents varieble are categorical
   if(result_check==FALSE){
-    params <- 'Error: node does not have continuous parent'
+    params <- 'Error: the dataset does not have continuous variables'
     return(bn)
   }
   # numeric + categorical variable
@@ -119,25 +121,38 @@ get_combination<-function(categorical,dataset){
   return(new1[-1,])
 }
 
-get_coeficiet<-function(combination,dataset,list,formula){
+get_coeficiet<-function(combination,dataset,list,formula,variable){
   #depending on the subset, get the coefficient
-  x<-NULL
+  coef<-NULL
+  sd<-NULL
   for (i in 1:nrow(combination)){
     data<-dataset
-
     for (j in 1:ncol(combination)){
       tryCatch({ data<-subset(data,data[list$factor[j]]==combination[i,j])},error=function(e){})
     }
 
     colapsed<-paste(combination[i,1:ncol(combination)],collapse=",")
     if (nrow(data)==0){
-      x<-cbind(x,NA)
+      coef<-cbind(coef,NA)
+      sd<-cbind(sd,NA)
     }
     else{
-      x<-cbind(x,t(t(lm(formula,data)$coef)))
+      position <- gregexpr("~",formula)
+      check_formula <- substr(formula,(position[[1]]),(position[[1]]+3))
+        if (check_formula=='~  +'){
+        coef<-cbind(coef,mean(data[variable][,1]))
+        sd<-cbind(sd,sd(data[variable][,1]))
+        }
+        else{
+          lm_result<-lm(formula,data)
+        coef<-cbind(coef,t(t(lm_result$coef)))
+        sd<-cbind(sd,t(t(sd(lm_result$residuals))))
+        }
     }
-    colnames(x)[i] <- colapsed
+    colnames(coef)[i] <- colapsed
+    colnames(sd)[i] <- colapsed
   }
+  x<-list(coef=data.frame(coef),sd=data.frame(sd))
   return(x)
 }
 
@@ -147,10 +162,8 @@ fit_beta<-function(dataset,parents,Class,variable){
   dataFrame<-data.frame(dataset)
   list_cat_num<-Categorical_Numeric_list(parents,dataFrame,Class)
   formula_lm <- generate_formula(variable,list_cat_num)
+
   # fit
-  if (is.null(list_cat_num$numeric)){
-    return('Error: the node does not have continuous parent')
-  }
   if (!(Class %in% list_cat_num$factor)){
     list_cat_num$factor<-append(list_cat_num$factor,Class)
   }
@@ -158,7 +171,7 @@ fit_beta<-function(dataset,parents,Class,variable){
   if (class(combination)!='matrix'){
     combination<-(as.matrix(combination))
   }
-  res<- get_coeficiet(combination,dataset,list_cat_num,formula_lm)
+  res<- get_coeficiet(combination,dataset,list_cat_num,formula_lm,variable)
   return(res)
 }
 
@@ -182,3 +195,5 @@ families2coef <- function(families,dataset){
   bnc_fit_clg<-structure(bnc_fit_clg,class='bnc_fit_clg')
   return(bnc_fit_clg)
 }
+
+

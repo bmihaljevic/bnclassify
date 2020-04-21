@@ -12,7 +12,7 @@ BetaImplement(x, dataset)
 \item{dataset}{The data frame.The data frame from which to learn coefficients.}
 }
 \value{
-bnc_fit_clg. bnc_fit_clg is the object that contains the coefficients of each node in the structure
+bnc_fit_clg. bnc_fit_clg is the object that contains coefficients and desviations of each node in the structure
 }
 \description{
 Learn the coefficients of all the nodes of a structure with the function lm(). Returns a bnc_fit_clg.
@@ -20,22 +20,22 @@ Learn the coefficients of all the nodes of a structure with the function lm(). R
 More ditailed description
 }
 \details{
-betaImplement learns the coefficient of each node in the bayesian network structure by using the function lm().
+betaImplement learns the coefficients and desviations of each node in the bayesian network structure by using the function lm().
 
-BetaImplemet only returns the coefficient for numerical node. In case of categorical node, it will return a error information.
+BetaImplemet only returns the coefficients and desviations for numerical node. In case of categorical node, it will return a error information.
 
-When the parents of the node are categorical + numerical, it will returns the coefficients by using the numerical parents based on the different combination of categorical parents.
+When the parents of the node are categorical + numerical, it will returns the coefficients and desiations by using the numerical parents based on the different combination of categorical parents.
 For example:
 
 We have a node speed, the parents are velocity(numeric), wheel(categorical,4 levels) and accelerator(categorical, 2 level).
- The node speed will have 8 different result of lm(speed~velocity,data).
-Otherwise, it will get another error information.
+ The node speed will have 8 different combination of subest: lm(speed~velocity,subset).
 }
 \examples{
 structure<-tan_cl('Species',as.data.frame(lapply(iris,as.factor)))
 plot(structure)
 x<-BetaImplement(structure,iris)
-x$Sepal.Width
+x$Sepal.Width$coef$setosa # get the coefficient of the node 'Sepal.Width' using the subset filtered by the combination Species=setosa
+x$Sepal.Width$sd$setosa # get the desviations of the node 'Sepal.Width' using the subset filtered by the combination Species=setosa
 }
 \author{
 shanshancheng
