@@ -219,15 +219,14 @@ NULL
 #' bic <- tan_cl('class', car, score = 'bic')   
 NULL
 
-#' create a multinet using a Chow-Liu's algorithm.
+#' Create an ensemble of Bayesian network using a Chow-Liu's algorithm.
 #' 
-#' create a multinet using a Chow-Liu's algorithm, by 
+#' create an ensemble of Bayesian network  using a Chow-Liu's algorithm, by 
 #' maximizing either log-likelihood, the AIC or BIC scores; maximizing 
 #' log-likelihood corresponds to the well-known tree augmented naive Bayes 
-#' (Friedman et al., 1997). When maximizing AIC or BIC the output might be a
-#' forest-augmented rather than a tree-augmented naive Bayes.
+#' (Friedman et al., 1997).
 #' 
-#' @name multinet_tan
+#' @name multinet_cl
 #'   
 #' @inheritParams nb
 #' @param root the  class column of the dataset. The class column will 
@@ -239,7 +238,8 @@ NULL
 #'   classifiers. \emph{Machine Learning}, \bold{29}, pp. 131--163.
 #' @examples 
 #' data(car)
-#' ll <- multinet_cl('class', car, , score = 'loglik')   
+#' ll <- multinet_cl('class', car)
+#' ll <- multinet_cl('class', car, score = 'loglik')      
 #' \dontrun{plot(ll)}
 #' aic <- multinet_cl('class', car, score = 'aic')   
 #' bic <- multinet_cl('class', car, score = 'bic')   

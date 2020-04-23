@@ -52,7 +52,7 @@ plot.bnc_base <- function(x, y, layoutType='dot', fontsize = NULL, ...) {
     plot.bnc_dag(x,y)
   }
   else{
-    print("this type of network can't be plot") 
+    print("An ensemble of Bayesian network classifiers cannot be plotted") 
   }
 }
 
