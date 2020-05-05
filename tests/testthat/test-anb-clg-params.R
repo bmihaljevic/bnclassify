@@ -50,6 +50,11 @@ test_that("compare coefficients and sds to bnlearn:numerical parent+categorical 
   bnsd
   expect_equal(coef, bncoef)
   expect_equal(sd, bnsd)
+  
+  # You have to divide the sum of squared residuals by n - p, where p is the number of continuous variables (including the dependent one).  
+  sqrt(sum(fit$Petal.Width$residuals[1:50] ^ 2) / 48) == bnsd[1]
+  sqrt(sum(fit$Petal.Width$residuals[51:100] ^ 2) / 48)  == bnsd[2]
+  sqrt(sum(fit$Petal.Width$residuals[101:150] ^ 2) / 48) == bnsd[3]
 })
 
 #test4:
