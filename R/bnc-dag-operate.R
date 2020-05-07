@@ -42,6 +42,20 @@ plot.bnc_dag <- function(x, y, layoutType='dot', fontsize = NULL, ...) {
   l <- Rgraphviz::layoutGraph(g, layoutType = layoutType)
   Rgraphviz::renderGraph(l, graph.pars = list(nodes = node_pars))
 }
+
+#' plot a network 
+#' @export
+#' @keywords internal
+plot.bnc_base <- function(x, y, layoutType='dot', fontsize = NULL, ...) {
+  is_bnc_dag <- inherits(x, "bnc_dag")
+  if(is_bnc_dag){
+    plot.bnc_dag(x,y)
+  }
+  else{
+    print("An ensemble of Bayesian network classifiers cannot be plotted") 
+  }
+}
+
 #' Print basic information about a classifier.
 #' @export
 #' @keywords internal
@@ -69,6 +83,8 @@ print.bnc_base <- function(x, ...) {
     cat("  learning algorithm:   ", as.character(x$.call_struct[[1]]), "\n")
   }
 }
+
+
 #' @export 
 #' @describeIn inspect_bnc_dag Returns TRUE if \code{x} is a semi-naive Bayes.
 is_semi_naive <- function(x) {

@@ -83,7 +83,6 @@ compute_log_joint_complete.bnc_multinet<-function(x, dataset){
   for (i in classes){
     m[, i]<-compute_log_joint_complete(models(x)[[i]], dataset)[,i]
   } 
-  browser()
   prior <- rep(multinet_apriori(x), each = nrow(m))
   m * prior
 }

@@ -4,7 +4,7 @@
 \alias{bnc_multinet_tan}
 \title{Returns a \code{c("bnc_multinet", "bnc")} object.}
 \usage{
-bnc_multinet_tan(class, dataset, features)
+bnc_multinet_tan(class, dataset, features, scores)
 }
 \description{
 Returns a \code{c("bnc_multinet", "bnc")} object.

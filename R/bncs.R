@@ -18,7 +18,7 @@ bnc_aode_bns <- function(x, fit_models) {
 }
 #' Returns a \code{c("bnc_multinet", "bnc")} object.
 #' @keywords internal
-bnc_multinet_tan <- function(class, dataset, features) {
+bnc_multinet_tan <- function(class, dataset, features,scores) {
   if (!is.null(dataset)) {
     features <- get_features(class = class, dataset = dataset)
   }
@@ -29,7 +29,7 @@ bnc_multinet_tan <- function(class, dataset, features) {
   datasets <- split(dataset, dataset[[class]])
   models <- vector("list")
   for (i in levels(dataset[[class]])){
-    models[[i]]<-tan_cl("class", datasets[[i]])}
+    models[[i]]<-tan_cl("class", datasets[[i]],scores)}
   stopifnot(length(models) > 0)
   stopifnot(all(vapply(models, is_ode, FUN.VALUE = logical(1))))
   bnc <- bnc_base(class = class, features = features)

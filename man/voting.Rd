@@ -4,7 +4,9 @@
 \name{voting}
 \alias{voting}
 \title{Congress Voting Data Set.}
-\format{A \code{data.frame} with 17 columns and 435 rows.}
+\format{
+A \code{data.frame} with 17 columns and 435 rows.
+}
 \source{
 \url{http://goo.gl/GTXrCz}
 }

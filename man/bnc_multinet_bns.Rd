@@ -4,7 +4,7 @@
 \alias{bnc_multinet_bns}
 \title{Fits an multinet model.}
 \usage{
-bnc_multinet_bns(x, fit_models)
+bnc_multinet_bns(x, fit_models, apriori)
 }
 \description{
 Fits an multinet model.

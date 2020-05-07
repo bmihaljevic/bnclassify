@@ -16,6 +16,7 @@
 #' \item \code{\link{tan_hc}}: Hill-climbing tree augmented naive Bayes (TAN-HC)  (Keogh and Pazzani, 2002)
 #' \item \code{\link{tan_hcsp}}: Hill-climbing super-parent tree augmented naive Bayes (TAN-HCSP) (Keogh and Pazzani, 2002)
 #' \item \code{\link{aode}}: Averaged one-dependence estimators (AODE) (Webb et al., 2005)
+#' \item \code {\link{multinet_tan}}: create a multinet using a Chow-Liu's algorithm (multinet_tan) (Friedman et al., 1997)
 #' }
 #' 
 #' Parameter learning methods (\code{\link{lp}}):
@@ -216,6 +217,32 @@ NULL
 #' \dontrun{plot(ll)}
 #' aic <- tan_cl('class', car, score = 'aic')   
 #' bic <- tan_cl('class', car, score = 'bic')   
+NULL
+
+#' Create an ensemble of Bayesian network using a Chow-Liu's algorithm.
+#' 
+#' create an ensemble of Bayesian network  using a Chow-Liu's algorithm, by 
+#' maximizing either log-likelihood, the AIC or BIC scores; maximizing 
+#' log-likelihood corresponds to the well-known tree augmented naive Bayes 
+#' (Friedman et al., 1997).
+#' 
+#' @name multinet_cl
+#'   
+#' @inheritParams nb
+#' @param root the  class column of the dataset. The class column will 
+#' divide in diferents class levels  to be used as root of 
+#' the diferent augmenting  trees
+#' @return A \code{\link{bnc_dag}} object.
+#'   
+#' @references Friedman N, Geiger D and Goldszmidt M (1997). Bayesian network 
+#'   classifiers. \emph{Machine Learning}, \bold{29}, pp. 131--163.
+#' @examples 
+#' data(car)
+#' ll <- multinet_cl('class', car)
+#' ll <- multinet_cl('class', car, score = 'loglik')      
+#' \dontrun{plot(ll)}
+#' aic <- multinet_cl('class', car, score = 'aic')   
+#' bic <- multinet_cl('class', car, score = 'bic')   
 NULL
 
 #' Learn the parameters of a Bayesian network structure.

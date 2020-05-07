@@ -31,6 +31,6 @@ Suggests:
 License: GPL (>= 2)
 Maintainer: Mihaljevic Bojan <boki.mihaljevic@gmail.com>
 VignetteBuilder: knitr
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 LinkingTo: Rcpp, BH
 SystemRequirements: C++11

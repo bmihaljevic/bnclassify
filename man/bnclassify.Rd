@@ -22,6 +22,7 @@ Structure learning algorithms:
 \item \code{\link{tan_hc}}: Hill-climbing tree augmented naive Bayes (TAN-HC)  (Keogh and Pazzani, 2002)
 \item \code{\link{tan_hcsp}}: Hill-climbing super-parent tree augmented naive Bayes (TAN-HCSP) (Keogh and Pazzani, 2002)
 \item \code{\link{aode}}: Averaged one-dependence estimators (AODE) (Webb et al., 2005)
+\item \code {\link{multinet_tan}}: create a multinet using a Chow-Liu's algorithm (multinet_tan) (Friedman et al., 1997)
 }
 
 Parameter learning methods (\code{\link{lp}}):
