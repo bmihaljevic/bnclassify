@@ -7,4 +7,7 @@
 #'@author shanshancheng
 #'
 #'@name BetaImplement
+#'
+#'@name predict_acc_naive
 NULL
+
