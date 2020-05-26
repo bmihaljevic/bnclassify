@@ -44,7 +44,7 @@
 #'accuracy(acc, iris$Species)
 #' @export
 #'
-PredictGCNs  <- function(data,structure,gaussianParams,prob=FALSE){
+predict_acc_naive  <- function(data,structure,gaussianParams,prob=FALSE){
   #get the conditional probability of each node
   conditionalProbability_List<-local_predict(data,structure,gaussianParams)
   #get the probability pf the class
