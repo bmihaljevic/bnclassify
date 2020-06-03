@@ -25,12 +25,21 @@
 #'p <- predict(nb, car, prob = TRUE)
 #'head(p)
 predict.bnc_fit <- function(object, newdata, prob = FALSE, ...) {      
+
+  check<-tryCatch( {check_dataset(newdata)},error=function(e){
+    #contains continuous variable
+    PredictGCNs(newdata,object,object$params,prob)
+  })
+  if(is.null(check)){
   pred <- compute_cp(x = object, dataset = newdata, ...)  
   if (!prob) {
     pred <- map(pred)
   }
   pred
+  }
+  else{check}
 }
+
 #' Assigns instances to the most likely class.
 #' 
 #' Ties are resolved randomly.

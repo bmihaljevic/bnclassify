@@ -16,27 +16,40 @@
 #' nb <- bnc('nb', 'class', car, smooth = 1)
 #' nb_manb <- bnc('nb', 'class', car, smooth = 1, manb_prior = 0.3)
 #' ode_cl_aic <- bnc('tan_cl', 'class', car, smooth = 1, dag_args = list(score = 'aic'))
-bnc <- function(dag_learner, class, dataset, smooth, dag_args = NULL, 
+bnc <- function(dag_learner, class, dataset, smooth = 0, dag_args = NULL, 
                 awnb_trees = NULL, awnb_bootstrap = NULL,
                 manb_prior = NULL, wanbia = NULL) {
   # It is easier to handle a funct. name than a funct. object in save_bnc_call
   stopifnot(assertthat::is.string(dag_learner))
   dag_args <- append(list(class = class, dataset = dataset), dag_args)
-  dag <- do.call(dag_learner, dag_args)
-  lp(dag, dataset = dataset, smooth = smooth, awnb_trees = awnb_trees, 
+  # Structure learning, in case of containing continues variables, they are transformed into factors except Tan_cl
+ dag <- tryCatch(
+   {dag <- do.call(dag_learner, dag_args)},error=function(e){
+    dag_args$dataset <-  as.data.frame(lapply(dataset,as.factor))
+    dag <- do.call(dag_learner, dag_args)
+  })
+ # Parameter learning. With continues variables -> lp_cont, without contiues variables -> lp
+  tryCatch({check_dataset(dataset)
+    lp(dag, dataset = dataset, smooth = smooth, awnb_trees = awnb_trees, 
      awnb_bootstrap = awnb_bootstrap, manb_prior = manb_prior, wanbia = wanbia)
+    },error=function(e){dag <- lp_cont(dag,class,dataset)} )
 }
+
+lp_cont <- function(dag,class,dataset){
+  dag$params<-GaussianImplement(dag,dataset)
+  class(dag) <- c('bnc_bn', class(dag), 'bnc_fit')
+  return(dag)
+}
+
 #' @export
 #' @rdname learn_params
 lp <- function(x, dataset, smooth, awnb_trees = NULL, awnb_bootstrap = NULL,
                manb_prior = NULL, wanbia = NULL) {
-  if (has_continuous_features(dataset)) { 
-    bn <- lp_implement_clg(x = x, dataset = dataset, smooth = smooth)
-  }
   bn <- lp_implement(x = x, dataset = dataset, smooth = smooth, 
                      awnb_trees = awnb_trees, awnb_bootstrap = awnb_bootstrap,
                      manb_prior = manb_prior, wanbia = wanbia)
-  # TODO: this should only somehow be in lp_implement
+ return(bn)
+   # TODO: this should only somehow be in lp_implement
   # check_bnc_bn(bn) 
   add_params_call_arg(bn, call = match.call(), env = parent.frame(), force = TRUE)
 }    
@@ -48,14 +61,17 @@ lp_implement <- function(x, dataset, smooth, awnb_trees = NULL,
 #' @export
 lp_implement.bnc_aode <- function(x, dataset, smooth, awnb_trees = NULL, 
                          awnb_bootstrap = NULL, manb_prior = NULL, wanbia = NULL, .mem_cpts=NULL, ...) {
-  models <- lapply(models(x), lp_implement, dataset = dataset, smooth = smooth) # TODO: pass mem_cpts, wanbia and other parameters to lp_implement?? 
+   models <- lapply(models(x), lp_implement, dataset = dataset, smooth = smooth) # TODO: pass mem_cpts, wanbia and other parameters to lp_implement?? 
   bnc_aode_bns(x, models) 
 }    
 #' @export
 lp_implement.bnc_dag <- function(x, dataset, smooth, awnb_trees = NULL, 
                          awnb_bootstrap = NULL, manb_prior = NULL, wanbia = NULL, .mem_cpts=NULL, ...) {
-  params <- families2cpts(families(x), dataset = dataset, smooth = smooth,
+
+ 
+    params <- families2cpts(families(x), dataset = dataset, smooth = smooth,
                           .mem_cpts = .mem_cpts)
+  
   bn <- make_bnc_bn(x, params = params)
   awnb <- (!is.null(awnb_trees) || !is.null(awnb_bootstrap))
   manb <- !is.null(manb_prior)
@@ -104,3 +120,4 @@ include_manb_probs <- function(bn, arc_probs, ctgts, smooth) {
   bn$.manb <- arc_probs
   bn
 }
+
