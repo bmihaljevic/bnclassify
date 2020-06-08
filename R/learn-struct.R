@@ -14,6 +14,7 @@
 #' nb2 <- nb('class', features = letters[1:10])
 #' \dontrun{plot(nb2)}
 nb <- function(class, dataset = NULL, features = NULL) {
+  
   #   # if dataset is provided features is ignored
   if (!is.null(dataset)) {
     features <- get_features(class = class, dataset = dataset)
@@ -86,6 +87,7 @@ tan_hcsp <- function(class, dataset, k, epsilon = 0.01, smooth = 0,
 #' @export
 #' @rdname tan_chowliu
 tan_cl <- function(class, dataset, score='loglik', root = NULL) {
+
   x <- chowliu(class, dataset, score = score, blacklist = NULL, 
           root = root)
   add_dag_call_arg(x, fun_name = 'tan_cl', call = match.call(), 
