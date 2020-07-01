@@ -62,6 +62,18 @@ augment_ode <- function(bnc_dag, ...) {
   stopifnot(all(vapply(dags, is_ode, FUN.VALUE = logical(1))))
   dags
 } 
+#' Arcs that do not invalidate the tree-like structure
+#' 
+#' @param ... Ignored.
+#' @keywords internal
+augment_bn <- function(bnc_dag, ...) {
+  arcs <- augment_arcs(bnc_dag)
+  if (length(arcs) == 0) return(NULL)
+  dags <- mapply(add_feature_parents, arcs[, 'from'], arcs[, 'to'], 
+                 MoreArgs = list(x = bnc_dag), SIMPLIFY = FALSE)
+  stopifnot(all(vapply(dags, is_ode, FUN.VALUE = logical(1))))
+  dags
+} 
 #' Arcs that do not invalidate the k-DB structure
 #' 
 #' @param ... Ignored.
@@ -96,6 +108,29 @@ augment_ode_arcs <- function(bnc_dag) {
   # d <- discard_reversed2(arcs)
   # stopifnot(identical(dim(b), dim(d)))
   discard_reversed(arcs)
+  # d <- discard_reversed2(arcs)
+  # discard_reversed2(arcs)
+} 
+
+#' Returns augmenting arcs. 
+#' 
+#' @keywords internal
+#' @return a character matrix. NULL if no arcs can be added.
+augment_arcs <- function(bnc_dag) {
+  orphans <- feature_orphans(bnc_dag) 
+  # An ODE must have at least one orphan
+  stopifnot(length(orphans) >= 1)  
+  if (length(orphans) == 1) return(matrix(character(), ncol = 2))
+  non_orphans <- setdiff(features(bnc_dag), orphans)
+  arcs <- arcs_to_orphans(orphans, non_orphans)
+  arcs <- discard_cycles(arcs, bnc_dag)
+  arcs
+  # reversed arcs are equivalent in odes, since no v-structs, thus prune them 
+  # TODO: move these discard functions to graph-edgematrix-utils or something
+  # b <- discard_reversed(arcs)
+  # d <- discard_reversed2(arcs)
+  # stopifnot(identical(dim(b), dim(d)))
+  # discard_reversed(arcs)
   # d <- discard_reversed2(arcs)
   # discard_reversed2(arcs)
 } 
