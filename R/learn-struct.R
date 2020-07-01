@@ -91,6 +91,17 @@ tan_cl <- function(class, dataset, score='loglik', root = NULL) {
   add_dag_call_arg(x, fun_name = 'tan_cl', call = match.call(), 
                    env = parent.frame(), force = TRUE)
 }
+#' @export
+#' @rdname  bn-anb
+bn_anb<-function(class, dataset, score){
+  full_nb <- nb(class = class, dataset)
+  full_nb <- remove_dag_call_arg(full_nb)
+  x<- greedy_search_scores(class=class, to_include=NULL, init=full_nb,
+                           step = augment_bn, dataset = dataset, score=score)
+  add_dag_call_arg(x, fun_name = 'bn-anb', call = match.call(), 
+                   env = parent.frame(), force = TRUE)
+  
+}
 #' Learn an AODE ensemble.
 #' 
 #' If there is a single predictor then returns a naive Bayes.
