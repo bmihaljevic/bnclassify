@@ -67,8 +67,8 @@ greedy_search_scores <- function(class, to_include, init, step, dataset, score,
     #     evaluate 
     
     #scores <- get_scores(candidate_dags, class, dataset, score)
-    scores <- mapply(get_scores,candidate_dags, 
-                     MoreArgs = list(class=class, dataset=dataset, score=score), SIMPLIFY = TRUE)
+     scores <- mapply(get_scores,candidate_dags, 
+                      MoreArgs = list(class=class, dataset=dataset, score=score), SIMPLIFY = TRUE)
     
     #     Stop if it is not better than current_score 
     if (!is_improvement(scores, current_score, 0)) break         
@@ -101,12 +101,12 @@ get_scores<- function(candidate_dag, class, dataset, score){
   nw_to<-list()
   y<-1
   for (i in 1:length(from)){
-    if(from[i]=="class" & i %in% index){
+    if(from[i]==class & i %in% index){
       nw_from[[i]]<- c(from[i], father[y])
       nw_to[i]<- to[i]
       y<-y+1
     }
-    else if(v1[i]=="class"){
+    else if(from[i]==class){
       nw_from[i]<- from[i]
       nw_to[i]<- to[i]
     }
@@ -116,7 +116,7 @@ get_scores<- function(candidate_dag, class, dataset, score){
   
   pairwise_score <- mapply(family_scores, nw_from, nw_to, 
                           MoreArgs = list(dataset = dataset, score=score), 
-                           SIMPLIFY = TRUE)
+                          SIMPLIFY = TRUE)
   ##sum
   sum(pairwise_score)
 }
