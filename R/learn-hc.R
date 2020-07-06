@@ -114,7 +114,6 @@ get_scores<- function(candidate_dag, class, dataset, score){
   
   #pairwise_score <- family_scores(from[1], to[1], dataset, score) 
   
-  browser()
   pairwise_score <- mapply(family_scores, nw_from, nw_to, 
                           MoreArgs = list(dataset = dataset, score=score), 
                           SIMPLIFY = TRUE)
