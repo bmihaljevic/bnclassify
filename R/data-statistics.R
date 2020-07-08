@@ -80,7 +80,7 @@ cmi_degrees_freedom <- function(freqs_table) {
   stopifnot(is.numeric(freqs_table))
 #    Stop if not 3D table  
   dm <- dim(freqs_table)
-  stopifnot(length(dm) >= 3L)
+  stopifnot(length(dm) >= 2L)
   if (length(dm) == 3L){
 #    Compute degrees of freedom. 
   return ((dm[1] - 1) * (dm[2] - 1) * dm[3])

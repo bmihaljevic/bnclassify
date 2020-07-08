@@ -160,9 +160,8 @@ mutual_information<-function(x, y, dataset){
         }
       }
       numerator <- nrow(numerator)
-      denominator<-nrow(dataset[dataset[y] == as.vector(child[["Var1"]]),])
-      pa_b<- numerator/denominator
-      if (pa_b!=0){ MI<-MI + pa_b* log2(pa_b/pa*pb)}
+      pa_b<- numerator/total
+      if (pa_b!=0){ MI<-MI + (pa_b* log2(pa_b/(pa*pb)))}
     }
   }
   MI
