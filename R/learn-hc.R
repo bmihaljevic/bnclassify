@@ -122,7 +122,6 @@ get_scores<- function(candidate_dag, class, dataset, score){
 }
 
 family_scores <- function(x, y, dataset, score){
-  #preguntar si haces check del if o retorna en el primero n numero de registros en el dataset preguntar unit = unit
   N<-nrow(dataset)
   freqs <- extract_ctgt(c(x,y), dataset)  
   unit<-"log"
