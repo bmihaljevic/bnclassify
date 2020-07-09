@@ -72,19 +72,31 @@ cv_lp_partition <- function(x, train, test) {
   ux <- ensure_multi_list(x)
   stopifnot(is_just(train, "list"), is_just(test, "list"), 
             length(train) > 1, length(train) == length(test))
-  p <- mapply(learn_and_assess, train, test, MoreArgs = list(x = ux), 
+   p <- mapply(learn_and_assess, train, test, MoreArgs = list(x = ux), 
               SIMPLIFY = TRUE)
   p <- format_cv_output(p, ensure_list(x))
   colMeans(p)
 }
 learn_and_assess <- function(mem_cpts, test, x) {
-  x <- ensure_multi_list(x)
+
+   x <- ensure_multi_list(x)
   class <- get_common_class(x)
-  x <- lapply(x, lp_implement, .mem_cpts = mem_cpts)
+  #the class of mem_cpt is function:discrete case.The class of mem_cpt is data.frame:gaussian case.
+  if (class(mem_cpts) == 'function'){ 
+    x <- lapply(x, lp_implement, .mem_cpts = mem_cpts)}
+  else if (class(mem_cpts) == 'data.frame' ){
+    if(length(x)==1&&(nrow(x[[1]][2]$.dag$edges)==0))
+    {
+      # structure with only class variable
+      x <- lapply(x,  lp_implement, as.data.frame(lapply(mem_cpts,as.factor)), smooth = 0)
+      }else{
+        x <-lapply(x, GaussianImplement,mem_cpts)
+        }
+  }
   # predictions <- multi_predict(x, test,  prob = FALSE)
-  predictions <- lapply(x, predict, test,  prob = FALSE, normalize  = FALSE)
+   predictions <- lapply(x, predict, test,  prob = FALSE, normalize  = FALSE)
   vapply(predictions, accuracy, test[, class], FUN.VALUE = numeric(1))
-}
+  }
 partition_dataset <- function(dataset, class, k) { 
   check_class_in_dataset(class = class, dataset = dataset)
   make_stratified_folds(dataset[[class]], k = k)

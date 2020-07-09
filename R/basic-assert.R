@@ -60,6 +60,32 @@ are_factors <- function(x) {
   stopifnot(is.data.frame(x))
   all(vapply(x, is.factor, FUN.VALUE = logical(1)))
 }
+#' Checks if all columns in a data frame satisfy Gaussian format
+#' class variable must be a factor
+#' Predictor variables must be either numerical or categorical
+#' 
+#' @param x a \code{data.frame} 
+#' @keywords internal
+are_gaussian <- function(x,class) {
+  #   If x is not data.frame stop
+  stopifnot(is.data.frame(x))
+  #   If x is factor stop
+  stopifnot(!are_factors(x))
+  #   If class variable is not factor stop
+
+  if(is.factor(x[,class])==FALSE){return(FALSE)}
+  #   If predictor variables are not character and factor, return false
+  all(vapply(x, is_fact_num, FUN.VALUE = logical(1)))
+}
+
+is_fact_num <- function(var){
+  if (is.numeric(var)==FALSE){
+    if(is.factor(var)==FALSE){
+      return(FALSE)
+    }
+  }
+  TRUE
+}
 is_just <- function(x, class) {
   identical(class(x), class)
 }

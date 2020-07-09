@@ -14,6 +14,7 @@
 #' nb2 <- nb('class', features = letters[1:10])
 #' \dontrun{plot(nb2)}
 nb <- function(class, dataset = NULL, features = NULL) {
+  
   #   # if dataset is provided features is ignored
   if (!is.null(dataset)) {
     features <- get_features(class = class, dataset = dataset)
@@ -32,6 +33,7 @@ fssj <- function(class, dataset, k, epsilon = 0.01, smooth = 0,
   x <- greedy_search(class = class, to_include = features, init = just_class_nb,
                 step = fssj_step, dataset = dataset, epsilon = epsilon, k = k,
                 smooth = smooth, cache_reset = cache_reset)
+
   add_dag_call_arg(x, fun_name = 'fssj', call = match.call(), 
                    env = parent.frame(), force = TRUE)
 }
@@ -41,7 +43,8 @@ bsej <- function(class, dataset, k, epsilon = 0.01, smooth = 0,
                  cache_reset = NULL) {    
   full_nb <- nb(class = class, dataset)
   full_nb <- remove_dag_call_arg(full_nb)
-  x <- greedy_search(class = class, to_include = NULL, init = full_nb,
+
+    x <- greedy_search(class = class, to_include = NULL, init = full_nb,
                 step = bsej_step, dataset = dataset, epsilon = epsilon, k = k,
                 smooth = smooth, cache_reset = cache_reset)
   add_dag_call_arg(x, fun_name = 'bsej', call = match.call(), env = parent.frame())
@@ -86,6 +89,7 @@ tan_hcsp <- function(class, dataset, k, epsilon = 0.01, smooth = 0,
 #' @export
 #' @rdname tan_chowliu
 tan_cl <- function(class, dataset, score='loglik', root = NULL) {
+
   x <- chowliu(class, dataset, score = score, blacklist = NULL, 
           root = root)
   add_dag_call_arg(x, fun_name = 'tan_cl', call = match.call(), 

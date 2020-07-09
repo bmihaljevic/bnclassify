@@ -40,7 +40,7 @@ test_that("aode bnc funs", {
   expect_false(is_semi_naive(u)) 
   expect_false(is_nb(u))  
   expect_error(narcs(u))
-  expect_error(nparams(u))  
+  expect_equal(nparams(u),NULL)  
   expect_error(params(u)) 
   expect_equal(length(models(u)), 9)
   expect_output(print(u), regexp = 'ensemble of 9') 
