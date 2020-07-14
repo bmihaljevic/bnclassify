@@ -153,15 +153,15 @@ test_that("wanbia", {
 }) 
 
 test_that('test bnc with continuous variables',{
-  str<-nb('Species',iris,)
-  str<-lp(str,iris,smooth=0,awnb_trees = NULL, awnb_bootstrap = NULL,
-          manb_prior = NULL, wanbia = NULL)
-  nb <- bnc('nb','Species',iris)
-  expect_equal(str,nb)
+str<-nb('Species',iris,)
+str<-lp(str,iris,smooth=0,awnb_trees = NULL, awnb_bootstrap = NULL,
+        manb_prior = NULL, wanbia = NULL)
+nb <- bnc('nb','Species',iris)
+expect_equal(str,nb)
   
-  str<-tan_cl('Species',iris,)
-  str<-lp(str,iris,smooth=0,awnb_trees = NULL, awnb_bootstrap = NULL,
-          manb_prior = NULL, wanbia = NULL)
-  nb <- bnc('tan_cl','Species',iris)
-  expect_equal(str,nb)
+str<-tan_cl('Species',iris,)
+str<-lp(str,iris,smooth=0,awnb_trees = NULL, awnb_bootstrap = NULL,
+        manb_prior = NULL, wanbia = NULL)
+nb <- bnc('tan_cl','Species',iris)
+expect_equal(str,nb)
 })
