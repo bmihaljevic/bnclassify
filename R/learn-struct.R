@@ -25,7 +25,7 @@ nb <- function(class, dataset = NULL, features = NULL) {
 #' @export
 #' @rdname greedy_wrapper
 fssj <- function(class, dataset, k, epsilon = 0.01, smooth = 0, 
-                 cache_reset = NULL) {   
+                 cache_reset = NULL) {    
   just_class_nb <- nb(class = class)
   # Use just the structure, not the call 
   just_class_nb <- remove_dag_call_arg(just_class_nb)

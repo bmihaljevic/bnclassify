@@ -48,7 +48,7 @@ GaussianImplement<-function(x,dataset){
 check_continuos_variable <- function(dataSet) {
   #   Check dataset has continuous variable
   for (i in 1:ncol(dataSet)){
-    if (class(dataSet[,i])=='numeric' || class(dataSet[,i])=='integer' ){
+    if (class(dataSet[,i])=='numeric'){
       return(TRUE)
     }
   }
@@ -136,8 +136,8 @@ get_coeficiet<-function(combination,dataset,list,formula,variable){
 
     colapsed<-paste(combination[i,1:ncol(combination)],collapse=",")
     if (nrow(data)==0){
-      coef<-cbind(coef,0)
-      sd<-cbind(sd,0)
+      coef<-cbind(coef,NA)
+      sd<-cbind(sd,NA)
     }
     else{
       position <- gregexpr("~",formula)
@@ -150,11 +150,6 @@ get_coeficiet<-function(combination,dataset,list,formula,variable){
           lm_result<-lm(formula,data)
         coef<-cbind(coef,t(t(lm_result$coef)))
         sd<-cbind(sd,t(t(sqrt(sum(lm_result$residual^2)/(nrow(data)-length(list$numeric)-1)))))
-        if(NA %in% coef){
-          name <- rownames(coef)[which(is.na(coef), arr.ind = TRUE)[1,1]]
-          cat('the variable',name,'is highly correlated with others variables.')
-          stop('The program cannot continue unless it is deleted')
-        }
         }
     }
     colnames(coef)[i] <- colapsed

@@ -93,12 +93,9 @@ learn_and_assess <- function(mem_cpts, test, x) {
         x <-lapply(x, GaussianImplement,mem_cpts)
         }
   }
-
   # predictions <- multi_predict(x, test,  prob = FALSE)
    predictions <- lapply(x, predict, test,  prob = FALSE, normalize  = FALSE)
-   tryCatch({vapply(predictions, accuracy, test[, class], FUN.VALUE = numeric(1))},error=function(error){
-    stop('prediction is 0')
-   })  
+  vapply(predictions, accuracy, test[, class], FUN.VALUE = numeric(1))
   }
 partition_dataset <- function(dataset, class, k) { 
   check_class_in_dataset(class = class, dataset = dataset)

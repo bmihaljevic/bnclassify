@@ -38,7 +38,6 @@ test_that("chowliu bic voting", {
 
 test_that("chowliu single-row dataset", {
   t <- chowliu(class = 'class', dataset = car[1, ], score = "loglik")
-  plot(t)
   expect_equal(narcs(t), 11)
 })
 
@@ -106,6 +105,7 @@ test_that("Max weight forest", {
 })
 
 test_that("continuous chowliu iris", {
+  data(car)
  cl <- chowliu(class = 'Species', dataset = iris)
  check_cl(cl, 4 + 3, 'Species', colnames(iris)[-5])
 }) 
@@ -113,19 +113,4 @@ test_that("continuous chowliu iris", {
 test_that("continuous chowliu No features", {
  cl <- chowliu(class = 'Species', dataset = iris[ , 5, drop=F])
  check_cl(cl, 0, 'Species', character()) 
-})
-test_that("chowliu bic iris", {
-  t <- chowliu(class = 'Species', dataset = iris, score = "bic")
-  check_cl(t, 4 + 3, 'Species', colnames(iris)[-5])   
-})
-test_that("chowliu aic iris", {
-  t <- chowliu(class = 'Species', dataset = iris, score = "aic")
-  check_cl(t, 4 + 3, 'Species', colnames(iris)[-5])   
-})
-
-test_that("Max weight forest", {   
-  g <- pairwise_ode_score_contribs(class = 'Species', iris, score = 'loglik')
-  u <- max_weight_forest(g)
-  expect_equal(graph_num_arcs(u), 3)  
- 
 })
