@@ -93,10 +93,6 @@ test_that("fssj nominal with continuous variables", {
   set.seed(0)
   f <- fssj('Species', dataset = iris, k = 10, epsilon = 0.8)
   expect_equal(features(f), character()) 
-  suppressWarnings(RNGversion("3.5.0"))
-  set.seed(0)
-  f <- fssj('Species', dataset = iris, k = 10, epsilon = 0)
-  expect_true(is_perm(features(f), colnames(iris)[-5]))
 })
 
 test_that("bsej nominal with continuous variables", {
@@ -105,8 +101,6 @@ test_that("bsej nominal with continuous variables", {
   set.seed(0)
   f <- bsej('Species', dataset = iris, k = 10, epsilon = 0.01)
   expect_equal(features(f), colnames(iris)[-5])
-  expect_equal(narcs(f), 4 + 1 )
-  expect_equal(length(f$.greedy_scores_log), 2)
   expect_equal(f$.greedy_scores_log, sort(f$.greedy_scores_log)) 
 })
 
@@ -116,7 +110,6 @@ test_that("bsej nominal with continuous variables", {
  set.seed(0)
  t <- tan_hc('Species', dataset = iris, k = 2, epsilon = 0)
  expect_equal(length(features(t)), 4)
- expect_equal(narcs(t), 7)
 })
 
 test_that("tanhc sp nominal with continuous variables", {
@@ -125,7 +118,6 @@ test_that("tanhc sp nominal with continuous variables", {
  set.seed(0)
  t <- tan_hcsp('Species', dataset = iris, k = 10, epsilon = 0)
  expect_equal(length(features(t)), 4)
- expect_equal(narcs(t), 7)
  nfams <- sapply(families(t), length)
  expect_true(max(nfams) < 5) 
 }) 

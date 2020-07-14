@@ -34,7 +34,8 @@ predict.bnc_fit <- function(object,newdata, prob = FALSE, ...) {
 }
 
 predict.bnc_fit_clg <- function(object,newdata, prob = FALSE, ...) {
-  PredictGCNs(newdata,object,object$params,prob)
+  d<-PredictGCNs(newdata,object,object$params,prob)
+return(d)
 }
 
 #' Assigns instances to the most likely class.
