@@ -24,13 +24,20 @@
 #'head(p)
 #'p <- predict(nb, car, prob = TRUE)
 #'head(p)
-predict.bnc_fit <- function(object, newdata, prob = FALSE, ...) {      
+#'
+predict.bnc_fit <- function(object,newdata, prob = FALSE, ...) {
   pred <- compute_cp(x = object, dataset = newdata, ...)  
   if (!prob) {
     pred <- map(pred)
   }
   pred
 }
+
+predict.bnc_fit_clg <- function(object,newdata, prob = FALSE, ...) {
+  d<-PredictGCNs(newdata,object,object$params,prob)
+return(d)
+}
+
 #' Assigns instances to the most likely class.
 #' 
 #' Ties are resolved randomly.
@@ -48,3 +55,4 @@ map <- function(pred) {
   #   Return a factor with the levels of the class variable
   factor(predicted, levels = classes)
 }
+

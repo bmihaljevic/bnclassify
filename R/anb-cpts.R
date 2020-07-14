@@ -15,8 +15,8 @@ extract_cpt <- function(vars, dataset, smooth) {
   ctgt <- extract_ctgt(vars, dataset)
   ctgt2cpt(ctgt, smooth = smooth)
 }
-make_cpts_cache <- function(dataset, smooth) {
-  check_dataset(dataset)
+make_cpts_cache <- function(dataset, smooth, class) {
+  check_dataset(dataset,class)
   extract_cpt <- function(vars) {
     ctgt <- extract_ctgt(vars, dataset)
     ctgt2cpt(ctgt, smooth = smooth)
@@ -85,4 +85,7 @@ count_cpt_free_params <- function(cpt) {
   d <- dim(cpt)
   stopifnot(length(d) >= 1)
   (d[1] - 1) * prod(d[-1])
+}
+count_continuous_free_params <- function(cpt) {
+  sum(prod(dim(cpt[[1]])),prod(dim(cpt[[2]])))
 }

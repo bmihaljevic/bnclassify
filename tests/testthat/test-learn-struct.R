@@ -79,3 +79,45 @@ test_that("kdb nominal", {
   to$.call_struct <- NULL
   expect_true(isTRUE(all.equal(t, to)))
 })  
+
+#continuous variables
+test_that("nb  Nominal with continuous variables", {
+ n <- nb('Species', iris)
+ expect_identical('Species', class_var(n))
+ expect_equal(graph_num_arcs(dag(n)), 4) 
+})
+
+test_that("fssj nominal with continuous variables", {
+  skip_on_cran() 
+  suppressWarnings(RNGversion("3.5.0"))
+  set.seed(0)
+  f <- fssj('Species', dataset = iris, k = 10, epsilon = 0.8)
+  expect_equal(features(f), character()) 
+})
+
+test_that("bsej nominal with continuous variables", {
+  skip_on_cran() 
+  suppressWarnings(RNGversion("3.5.0"))
+  set.seed(0)
+  f <- bsej('Species', dataset = iris, k = 10, epsilon = 0.01)
+  expect_equal(features(f), colnames(iris)[-5])
+  expect_equal(f$.greedy_scores_log, sort(f$.greedy_scores_log)) 
+})
+
+ test_that("tan_hc nominal with continuous variables", {
+ skip_on_cran() 
+ suppressWarnings(RNGversion("3.5.0"))
+ set.seed(0)
+ t <- tan_hc('Species', dataset = iris, k = 2, epsilon = 0)
+ expect_equal(length(features(t)), 4)
+})
+
+test_that("tanhc sp nominal with continuous variables", {
+ skip_on_cran() 
+ suppressWarnings(RNGversion("3.5.0"))
+ set.seed(0)
+ t <- tan_hcsp('Species', dataset = iris, k = 10, epsilon = 0)
+ expect_equal(length(features(t)), 4)
+ nfams <- sapply(families(t), length)
+ expect_true(max(nfams) < 5) 
+}) 

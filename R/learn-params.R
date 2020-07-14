@@ -16,46 +16,55 @@
 #' nb <- bnc('nb', 'class', car, smooth = 1)
 #' nb_manb <- bnc('nb', 'class', car, smooth = 1, manb_prior = 0.3)
 #' ode_cl_aic <- bnc('tan_cl', 'class', car, smooth = 1, dag_args = list(score = 'aic'))
-bnc <- function(dag_learner, class, dataset, smooth, dag_args = NULL, 
+bnc <- function(dag_learner, class, dataset, smooth = 0, dag_args = NULL, 
                 awnb_trees = NULL, awnb_bootstrap = NULL,
                 manb_prior = NULL, wanbia = NULL) {
   # It is easier to handle a funct. name than a funct. object in save_bnc_call
   stopifnot(assertthat::is.string(dag_learner))
   dag_args <- append(list(class = class, dataset = dataset), dag_args)
   dag <- do.call(dag_learner, dag_args)
-  lp(dag, dataset = dataset, smooth = smooth, awnb_trees = awnb_trees, 
-     awnb_bootstrap = awnb_bootstrap, manb_prior = manb_prior, wanbia = wanbia)
+ # Parameter learning. With continues variables -> lp_cont, without contiues variables -> lp
+  #if (are_factors(dataset)){
+    dag <-lp(dag, dataset = dataset, smooth = smooth, awnb_trees = awnb_trees, 
+       awnb_bootstrap = awnb_bootstrap, manb_prior = manb_prior, wanbia = wanbia)
+  #}else if(are_gaussian(dataset,class)){
+   # dag <- lp_cont(dag,class,dataset)
+  #}
+  return(dag)
 }
+
 #' @export
 #' @rdname learn_params
-lp <- function(x, dataset, smooth, awnb_trees = NULL, awnb_bootstrap = NULL,
+lp <- function(x, dataset, smooth = 0, awnb_trees = NULL, awnb_bootstrap = NULL,
                manb_prior = NULL, wanbia = NULL) {
-  if (has_continuous_features(dataset)) { 
-    bn <- lp_implement_clg(x = x, dataset = dataset, smooth = smooth)
-  }
-  bn <- lp_implement(x = x, dataset = dataset, smooth = smooth, 
+
+  bn <- lp_implement(x = x, dataset = dataset,smooth = smooth, class = x$.class,
                      awnb_trees = awnb_trees, awnb_bootstrap = awnb_bootstrap,
                      manb_prior = manb_prior, wanbia = wanbia)
-  # TODO: this should only somehow be in lp_implement
+    # TODO: this should only somehow be in lp_implement
   # check_bnc_bn(bn) 
   add_params_call_arg(bn, call = match.call(), env = parent.frame(), force = TRUE)
-}    
+
+  }    
 #' @keywords internal
-lp_implement <- function(x, dataset, smooth, awnb_trees = NULL, 
+lp_implement <- function(x, dataset = NULL, smooth, class = class, awnb_trees = NULL, 
                          awnb_bootstrap = NULL, manb_prior = NULL, wanbia = NULL, .mem_cpts=NULL, ...) {
   UseMethod("lp_implement")
 }  
+
 #' @export
-lp_implement.bnc_aode <- function(x, dataset, smooth, awnb_trees = NULL, 
+lp_implement.bnc_aode <- function(x, dataset, smooth, class = class, awnb_trees = NULL, 
                          awnb_bootstrap = NULL, manb_prior = NULL, wanbia = NULL, .mem_cpts=NULL, ...) {
-  models <- lapply(models(x), lp_implement, dataset = dataset, smooth = smooth) # TODO: pass mem_cpts, wanbia and other parameters to lp_implement?? 
+   models <- lapply(models(x), lp_implement, dataset = dataset, smooth = smooth) # TODO: pass mem_cpts, wanbia and other parameters to lp_implement?? 
   bnc_aode_bns(x, models) 
 }    
 #' @export
-lp_implement.bnc_dag <- function(x, dataset, smooth, awnb_trees = NULL, 
+lp_implement.bnc_dag <- function(x, dataset=NULL, smooth, class = class, awnb_trees = NULL, 
                          awnb_bootstrap = NULL, manb_prior = NULL, wanbia = NULL, .mem_cpts=NULL, ...) {
+  if (!is.null(.mem_cpts)||are_factors(dataset)){
   params <- families2cpts(families(x), dataset = dataset, smooth = smooth,
                           .mem_cpts = .mem_cpts)
+    
   bn <- make_bnc_bn(x, params = params)
   awnb <- (!is.null(awnb_trees) || !is.null(awnb_bootstrap))
   manb <- !is.null(manb_prior)
@@ -76,7 +85,11 @@ lp_implement.bnc_dag <- function(x, dataset, smooth, awnb_trees = NULL,
     weights <- compute_wanbia_weights(class_var(bn), dataset = dataset)
     bn <- set_weights(bn, weights)  
   }
-  bn
+  return(bn)
+  }
+  else if (are_gaussian(dataset,class)){
+    return(lp_cont(x,class,dataset))
+  }
 } 
 set_weights <- function(bn, weights) {
   stopifnot(inherits(bn, "bnc_bn"))  
@@ -103,4 +116,9 @@ include_manb_probs <- function(bn, arc_probs, ctgts, smooth) {
   # register arc probs
   bn$.manb <- arc_probs
   bn
+}
+
+lp_cont <- function(dag,class,dataset){
+  bn<-GaussianImplement(dag,dataset)
+  return(bn)
 }

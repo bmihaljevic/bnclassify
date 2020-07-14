@@ -10,9 +10,11 @@ greedy_search <- function(class, to_include, init, step, dataset, epsilon, k,
   #   Get indices of training sets 
   test_folds <- partition_dataset(dataset, class, k)
   train <- lapply(test_folds, function(x) dataset[-x, , drop = FALSE])
-  train <- lapply(train, make_cpts_cache, smooth = smooth)
+  if(are_factors(dataset)){train <- lapply(train, make_cpts_cache, smooth = smooth, class = class)}
   test <- lapply(test_folds, function(x) dataset[x, , drop = FALSE])
   test <- lapply(test, make_evidence)
+
+  
   #   Start caches for training sets 
   # TODO: smooth goes directly to cache. 
   # skip asserts during greedy search
@@ -20,13 +22,15 @@ greedy_search <- function(class, to_include, init, step, dataset, epsilon, k,
   while (length(candidate_dags) > 0) {
     # if max accuracy then break
     if (isTRUE(fast_equal(current_score, 1))) { break }
+   
     #     Score all candidate states
     #     Update each candidate dag on the correct cache 
     #     Get the prediction for each ddag
     #     evaluate 
+
     scores <- cv_lp_partition(candidate_dags, train, test)
     #     Stop if it is not better than current_score 
-    if (!is_improvement(scores, current_score, epsilon)) break         
+    if (!is_improvement(scores, current_score, epsilon)) break  
     #     Make the best dag the current one
     best_ind <- max_random(scores)
     current_dag <- candidate_dags[[best_ind]]
@@ -40,7 +44,7 @@ greedy_search <- function(class, to_include, init, step, dataset, epsilon, k,
     candidate_dags <- step(bnc_dag = current_dag,
                            features_to_include = to_include, 
                            train = train, test = test)
-  }      
+    }      
   # Turn assert back on  
   skip_env$skip_assert <- FALSE
   current_dag$.greedy_scores_log <- scores_log
