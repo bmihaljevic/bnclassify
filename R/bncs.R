@@ -29,7 +29,7 @@ bnc_multinet_tan <- function(class, dataset, features,scores) {
   datasets <- split(dataset, dataset[[class]])
   models <- vector("list")
   for (i in levels(dataset[[class]])){
-    models[[i]]<-tan_cl("class", datasets[[i]],scores)}
+    models[[i]]<-tan_cl(class, datasets[[i]],scores)}
   stopifnot(length(models) > 0)
   stopifnot(all(vapply(models, is_ode, FUN.VALUE = logical(1))))
   bnc <- bnc_base(class = class, features = features)
