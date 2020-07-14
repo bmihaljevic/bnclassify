@@ -29,19 +29,19 @@
 
 GaussianImplement<-function(x,dataset){
   #result_check<-check_continuos_variable(dataset)
-
+  
   # all parents varieble are categorical then stop
   #if(result_check==FALSE){
-    #params <- 'Error: the dataset does not have continuous variables'
-   # return(bn)
+  #params <- 'Error: the dataset does not have continuous variables'
+  # return(bn)
   #}
   stopifnot(check_continuos_variable(dataset))
   # numeric + categorical variable
   #else{
-    params <- families2coef(families(x), dataset = dataset)
-    x$params<-params
-    class(x) <- c('bnc_bn',class(x),'bnc_fit_clg')
-    return(x)
+  params <- families2coef(families(x), dataset = dataset)
+  x$params<-params
+  class(x) <- c('bnc_bn',class(x),'bnc_fit_clg')
+  return(x)
   #}
 }
 
@@ -84,7 +84,7 @@ generate_formula <- function(variable,list){
 
 get_combination<-function(categorical,dataset){
   #get different combinations of categorical variable
-
+  
   #generate the chain of the categorical variable
   for(i in 1:length(categorical)){
     if(i==1){
@@ -101,7 +101,7 @@ get_combination<-function(categorical,dataset){
   new1=''
   for (i in 1:nrow(res)){
     for (j in 1:length(list)){
-
+      
       #first filter: avoid repetition of classes that come from the same category variable
       if(j!=1){
         for (k in 1:(j)){
@@ -133,7 +133,7 @@ get_coeficiet<-function(combination,dataset,list,formula,variable){
     for (j in 1:ncol(combination)){
       tryCatch({ data<-subset(data,data[list$factor[j]]==combination[i,j])},error=function(e){})
     }
-
+    
     colapsed<-paste(combination[i,1:ncol(combination)],collapse=",")
     if (nrow(data)==0){
       coef<-cbind(coef,0)
@@ -142,12 +142,12 @@ get_coeficiet<-function(combination,dataset,list,formula,variable){
     else{
       position <- gregexpr("~",formula)
       check_formula <- substr(formula,(position[[1]]),(position[[1]]+3))
-        if (check_formula=='~  +'){
+      if (check_formula=='~  +'){
         coef<-cbind(coef,mean(data[variable][,1]))
         sd<-cbind(sd,sd(data[variable][,1]))
-        }
-        else{
-          lm_result<-lm(formula,data)
+      }
+      else{
+        lm_result<-lm(formula,data)
         coef<-cbind(coef,t(t(lm_result$coef)))
         sd<-cbind(sd,t(t(sqrt(sum(lm_result$residual^2)/(nrow(data)-length(list$numeric)-1)))))
         if(NA %in% coef){
@@ -155,7 +155,7 @@ get_coeficiet<-function(combination,dataset,list,formula,variable){
           cat('the variable',name,'is highly correlated with others variables.')
           stop('The program cannot continue unless it is deleted')
         }
-        }
+      }
     }
     colnames(coef)[i] <- colapsed
     colnames(sd)[i] <- colapsed
@@ -170,7 +170,7 @@ fit_beta<-function(dataset,parents,Class,variable){
   dataFrame<-data.frame(dataset)
   list_cat_num<-Categorical_Numeric_list(parents,dataFrame,Class)
   formula_lm <- generate_formula(variable,list_cat_num)
-
+  
   # fit
   if (!(Class %in% list_cat_num$factor)){
     list_cat_num$factor<-append(list_cat_num$factor,Class)
@@ -187,7 +187,7 @@ families2coef <- function(families,dataset){
   # obtain the coefficients for each node
   # the result is a object bnc_fit_clg
   bnc_fit_clg<-list()
-
+  
   for (i in 1:(length(families)-1)){
     Parents<-families[[i]][2:length(families[[i]])]
     variable<-families[[i]][1]
@@ -199,7 +199,7 @@ families2coef <- function(families,dataset){
       bnc_fit_clg[[variable]]<-(fit_beta(dataset,Parents,class,variable))
     }
   }
-
+  
   bnc_fit_clg<-structure(bnc_fit_clg,class='bnc_fit_clg')
   return(bnc_fit_clg)
 }

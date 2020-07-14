@@ -31,9 +31,9 @@ fssj <- function(class, dataset, k, epsilon = 0.01, smooth = 0,
   just_class_nb <- remove_dag_call_arg(just_class_nb)
   features <- get_features(class, dataset)
   x <- greedy_search(class = class, to_include = features, init = just_class_nb,
-                step = fssj_step, dataset = dataset, epsilon = epsilon, k = k,
-                smooth = smooth, cache_reset = cache_reset)
-
+                     step = fssj_step, dataset = dataset, epsilon = epsilon, k = k,
+                     smooth = smooth, cache_reset = cache_reset)
+  
   add_dag_call_arg(x, fun_name = 'fssj', call = match.call(), 
                    env = parent.frame(), force = TRUE)
 }
@@ -43,10 +43,10 @@ bsej <- function(class, dataset, k, epsilon = 0.01, smooth = 0,
                  cache_reset = NULL) {    
   full_nb <- nb(class = class, dataset)
   full_nb <- remove_dag_call_arg(full_nb)
-
-    x <- greedy_search(class = class, to_include = NULL, init = full_nb,
-                step = bsej_step, dataset = dataset, epsilon = epsilon, k = k,
-                smooth = smooth, cache_reset = cache_reset)
+  
+  x <- greedy_search(class = class, to_include = NULL, init = full_nb,
+                     step = bsej_step, dataset = dataset, epsilon = epsilon, k = k,
+                     smooth = smooth, cache_reset = cache_reset)
   add_dag_call_arg(x, fun_name = 'bsej', call = match.call(), env = parent.frame())
 }
 #' @export
@@ -56,20 +56,20 @@ tan_hc <- function(class, dataset, k, epsilon = 0.01, smooth = 0,
   full_nb <- nb(class = class, dataset)
   full_nb <- remove_dag_call_arg(full_nb)
   x <- greedy_search(class = class, to_include = NULL, init = full_nb,
-                step = augment_ode, dataset = dataset, epsilon = epsilon, k = k,
-                smooth = smooth, cache_reset = cache_reset)
+                     step = augment_ode, dataset = dataset, epsilon = epsilon, k = k,
+                     smooth = smooth, cache_reset = cache_reset)
   add_dag_call_arg(x, fun_name = 'tan_hc', call = match.call(), 
                    env = parent.frame(), force = TRUE)
 } 
 #' @export
 #' @rdname greedy_wrapper
 kdb <- function(class, dataset, k, kdbk = 2, epsilon = 0.01, smooth = 0,
-                   cache_reset = NULL) {    
+                cache_reset = NULL) {    
   full_nb <- nb(class = class, dataset)
   full_nb <- remove_dag_call_arg(full_nb)
   x <- greedy_search(class = class, to_include = NULL, init = full_nb,
-                step = augment_kdb(kdbk), dataset = dataset, epsilon = epsilon, k = k,
-                smooth = smooth, cache_reset = cache_reset)
+                     step = augment_kdb(kdbk), dataset = dataset, epsilon = epsilon, k = k,
+                     smooth = smooth, cache_reset = cache_reset)
   add_dag_call_arg(x, fun_name = 'kdb', call = match.call(), 
                    env = parent.frame(), force = TRUE)
 }
@@ -81,17 +81,17 @@ tan_hcsp <- function(class, dataset, k, epsilon = 0.01, smooth = 0,
   full_nb <- nb(class = class, dataset)
   full_nb <- remove_dag_call_arg(full_nb)
   x <- greedy_search(class = class, to_include = NULL, init = full_nb,
-                step = augment_ode_sp, dataset = dataset, epsilon = epsilon, 
-                k = k, smooth = smooth, cache_reset = cache_reset)
+                     step = augment_ode_sp, dataset = dataset, epsilon = epsilon, 
+                     k = k, smooth = smooth, cache_reset = cache_reset)
   add_dag_call_arg(x, fun_name = 'tan_hcsp', call = match.call(), env = parent.frame(), 
                    force = TRUE)
 }
 #' @export
 #' @rdname tan_chowliu
 tan_cl <- function(class, dataset, score='loglik', root = NULL) {
-
+  
   x <- chowliu(class, dataset, score = score, blacklist = NULL, 
-          root = root)
+               root = root)
   add_dag_call_arg(x, fun_name = 'tan_cl', call = match.call(), 
                    env = parent.frame(), force = TRUE)
 }
