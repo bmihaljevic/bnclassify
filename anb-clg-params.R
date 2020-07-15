@@ -7,9 +7,9 @@
 #'
 #' @return bnc_fit_clg. bnc_fit_clg is the object that contains coefficients and desviations of each node in the structure
 #'
-#' @details GaussianImplement learns the coefficients and desviations of each node in the bayesian network structure by using the function lm().
+#' @details betaImplement learns the coefficients and desviations of each node in the bayesian network structure by using the function lm().
 #'
-#' GaussianImplement only returns the coefficients and desviations for numerical node. In case of categorical node, it will return a error information.
+#' BetaImplemet only returns the coefficients and desviations for numerical node. In case of categorical node, it will return a error information.
 #'
 #' When the parents of the node are categorical + numerical, it will returns the coefficients and desiations by using the numerical parents based on the different combination of categorical parents.
 #' For example:
@@ -20,35 +20,32 @@
 #' @examples
 #'structure<-tan_cl('Species',as.data.frame(lapply(iris,as.factor)))
 #'plot(structure)
-#'x<-GaussianImplement(structure,iris)
+#'x<-BetaImplement(structure,iris)
 
 #'x$Sepal.Width$coef$setosa # get the coefficient of the node 'Sepal.Width' using the subset filtered by the combination Species=setosa
 
 #'x$Sepal.Width$sd$setosa # get the desviations of the node 'Sepal.Width' using the subset filtered by the combination Species=setosa
 #' @export
 
-GaussianImplement<-function(x,dataset){
-  #result_check<-check_continuos_variable(dataset)
+BetaImplement<-function(x,dataset){
+  result_check<-check_continuos_variable(dataset)
 
-  # all parents varieble are categorical then stop
-  #if(result_check==FALSE){
-    #params <- 'Error: the dataset does not have continuous variables'
-   # return(bn)
-  #}
-  stopifnot(check_continuos_variable(dataset))
+  # all parents varieble are categorical
+  if(result_check==FALSE){
+    params <- 'Error: the dataset does not have continuous variables'
+    return(bn)
+  }
   # numeric + categorical variable
-  #else{
+  else{
     params <- families2coef(families(x), dataset = dataset)
-    x$params<-params
-    class(x) <- c('bnc_bn',class(x),'bnc_fit_clg')
-    return(x)
-  #}
+    return(params)
+  }
 }
 
 check_continuos_variable <- function(dataSet) {
   #   Check dataset has continuous variable
   for (i in 1:ncol(dataSet)){
-    if (class(dataSet[,i])=='numeric' || class(dataSet[,i])=='integer' ){
+    if (class(dataSet[,i])=='numeric'){
       return(TRUE)
     }
   }
@@ -136,8 +133,8 @@ get_coeficiet<-function(combination,dataset,list,formula,variable){
 
     colapsed<-paste(combination[i,1:ncol(combination)],collapse=",")
     if (nrow(data)==0){
-      coef<-cbind(coef,0)
-      sd<-cbind(sd,0)
+      coef<-cbind(coef,NA)
+      sd<-cbind(sd,NA)
     }
     else{
       position <- gregexpr("~",formula)
@@ -150,11 +147,6 @@ get_coeficiet<-function(combination,dataset,list,formula,variable){
           lm_result<-lm(formula,data)
         coef<-cbind(coef,t(t(lm_result$coef)))
         sd<-cbind(sd,t(t(sqrt(sum(lm_result$residual^2)/(nrow(data)-length(list$numeric)-1)))))
-        if(NA %in% coef){
-          name <- rownames(coef)[which(is.na(coef), arr.ind = TRUE)[1,1]]
-          cat('the variable',name,'is highly correlated with others variables.')
-          stop('The program cannot continue unless it is deleted')
-        }
         }
     }
     colnames(coef)[i] <- colapsed
