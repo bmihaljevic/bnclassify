@@ -45,6 +45,7 @@ bsej <- function(class, dataset, k, epsilon = 0.01, smooth = 0,
   full_nb <- remove_dag_call_arg(full_nb)
 
 	x <- greedy_search(class = class, to_include = NULL, init = full_nb,
+
                 step = bsej_step, dataset = dataset, epsilon = epsilon, k = k,
                 smooth = smooth, cache_reset = cache_reset)
   add_dag_call_arg(x, fun_name = 'bsej', call = match.call(), env = parent.frame())
