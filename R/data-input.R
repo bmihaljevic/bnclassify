@@ -1,13 +1,18 @@
 # Checks it is a data frame, with all named unique factor columns.
-check_dataset <- function(dataset) {  
+check_dataset <- function(dataset,class=NULL) {  
 #   Check dataset is a data frame  
   stopifnot(is.data.frame(dataset))  
 #   Check every column has a unique name 
   cnames <- colnames(dataset)
   stopifnot(is_non_empty_complete(cnames), are_all_unique(cnames))
-#   Make sure they are all factors 
-  stopifnot(are_factors(dataset))
+#   Make sure they are all factors (discrete case). If not,  Make sure they satisfy the gaussian format
+  if (are_factors(dataset)==FALSE){
+    stopifnot(are_gaussian(dataset,class))
+    return(TRUE)}
 }
+
+
+
 # Checks class is a length 1 character
 check_class <- function(class) { 	
 #   Check class is length 1 character   
@@ -26,7 +31,7 @@ check_features <- function(features, class) {
 check_class_in_dataset <- function(class, dataset) {
   check_class(class)
   #   Check data set has unique column names
-  check_dataset(dataset)  
+  check_dataset(dataset,class)  
   #   Check class in dataset
   stopifnot(!are_disjoint(class, colnames(dataset)))  
 }

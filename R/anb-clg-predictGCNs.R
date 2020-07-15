@@ -53,6 +53,7 @@ PredictGCNs  <- function(data,structure,gaussianParams,prob=FALSE){
   prediction<-prediction(conditionalProbability_List,prior,prob)
   return(prediction)
 }
+
 get_conditionalProbability <- function(data,structure,variable,gaussianParams){
   #calculate the conditional probability of the corresponding node
   classType <- levels(data[,structure$.class])
@@ -60,18 +61,25 @@ get_conditionalProbability <- function(data,structure,variable,gaussianParams){
   conditionalProbability<-matrix(nrow= nrow(data), ncol=length(classType))
   colnames(conditionalProbability)<-(classType)
   for (i in 1:length(classType)){
+    tmp = 0
     #compute average
     x <- gaussianParams$coef[classType[i]]
-    for (j in rownames(x)){
-      if (j == '(Intercept)'||j=='1'){average = x[1,1] }
-      else{
-        average = average + (x[j,1]*(data[,j]))}
+    averageNode <- x[1,1]
+    for(j in rownames(x)){
+      if( j!='1' && j != '(Intercept)'){
+        dat <- subset(data[,j],data[,structure$.class]==classType[i])
+        tmp <- x[j,1]*(dat-mean(dat)) + tmp
+      }
     }
+    average = averageNode + tmp
     #compute conditional probability of each class
-    conditionalProbability[,i]<- dnorm(as.numeric(unlist(data[variable])), mean = average, sd = gaussianParams$sd[[classType[i]]])
-  }
+    d <- dnorm(as.numeric(unlist(data[variable])), mean = average, sd = gaussianParams$sd[[classType[i]]])
+    d[which(d==0)] <- 0.000000001
+    conditionalProbability[,i]<- d
+    }
   return(conditionalProbability)
 }
+
 
 local_predict <- function(data,structure,gaussianParams){
   #obtain the name of the childrens
@@ -82,8 +90,9 @@ local_predict <- function(data,structure,gaussianParams){
   for (j in 1:length(to)){
     gd<-get_conditionalProbability(data,structure,to[j],gaussianParams[[to[j]]])#conditional probability of the corresponding node
     conditionalProbability_List<-append(conditionalProbability_List,list(gd))## add
-    names(conditionalProbability_List)[j] <- to[j]
-  }
+    names(conditionalProbability_List)[length(conditionalProbability_List)] <- to[j]
+
+     }
   return(conditionalProbability_List)
 }
 
@@ -101,7 +110,7 @@ get_prior <- function(data,class){
   return(prior)
 }
 
-normalize <- function(x) {
+normalization <- function(x) {
   return ((x - min(x)) / (max(x) - min(x)))
 }
 
@@ -109,6 +118,9 @@ naive <- function(gaussianDensity){
   tmp <- 1
   for (i in 1:length(gaussianDensity)){
     tmp<-gaussianDensity[[i]]*tmp
+    if(0 %in% tmp){
+      gaussianDensity[[i]]
+    }
   }
   return(tmp)
 }
@@ -120,7 +132,7 @@ prediction <- function(gaussianDensity,prior,prob){
   #chai rule:
   probability <- naiveDensity*prior
   #normalization
-  normalizedProb<-normalize(probability)
+  normalizedProb<-normalization(probability)
   #predic the label for each row: The corresponding label with the highest probability for each row
   predictedLabel <- apply(normalizedProb, 1, function(t) colnames(normalizedProb)[which.max(t)])
   if(prob ==FALSE){

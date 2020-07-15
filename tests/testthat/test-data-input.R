@@ -17,8 +17,9 @@ test_that("Check dataset", {
   expect_error(check_dataset(tm),
                "is_non_empty_complete(cnames) is not TRUE", fixed = TRUE)
   tm <- car; tm[[1]] <- as.numeric(tm[[1]])
-  expect_error(check_dataset(tm), "factors")
+  expect_true(check_dataset(tm,'class'))
 })
+
 
 test_that("Get features", {
   expect_error(get_features('class', voting), "disjoint")
@@ -27,7 +28,7 @@ test_that("Get features", {
   ft <- get_features('class', car)  
   expect_identical(ft, colnames(car)[-7])
   tm <- car; tm[[1]] <- as.numeric(tm[[1]])
-  expect_error(get_features('class', tm), "factors")
+  expect_error(stopifnot(are_factors(tm)), "factors")
 })
 
 test_that("check features", {
@@ -50,3 +51,16 @@ test_that("trim dataset", {
   # Integer vars
   expect_error(trim_dataset(1, car), "character")
 })
+
+test_that("check gaussian variables", {
+ check_dataset(iris,'Species')
+ expect_error(check_dataset(as.matrix(iris),'Species'))
+ expect_error(check_dataset(iris,'Sepal.Length'))
+ tm <- cbind(iris, Species=iris$Species)
+ expect_error(check_dataset(tm), "unique")
+ tm <- iris; colnames(tm)[1] <- NA
+ expect_error(check_dataset(tm),
+              "is_non_empty_complete(cnames) is not TRUE", fixed = TRUE)
+ tm <- as.data.frame(lapply(iris,as.factor))
+ expect_error(are_gaussian(tm,'Species'))
+})  

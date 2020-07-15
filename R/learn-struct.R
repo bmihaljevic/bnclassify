@@ -25,7 +25,7 @@ nb <- function(class, dataset = NULL, features = NULL) {
 #' @export
 #' @rdname greedy_wrapper
 fssj <- function(class, dataset, k, epsilon = 0.01, smooth = 0, 
-                 cache_reset = NULL) {    
+                 cache_reset = NULL) {   
   just_class_nb <- nb(class = class)
   # Use just the structure, not the call 
   just_class_nb <- remove_dag_call_arg(just_class_nb)
@@ -33,6 +33,7 @@ fssj <- function(class, dataset, k, epsilon = 0.01, smooth = 0,
   x <- greedy_search(class = class, to_include = features, init = just_class_nb,
                 step = fssj_step, dataset = dataset, epsilon = epsilon, k = k,
                 smooth = smooth, cache_reset = cache_reset)
+
   add_dag_call_arg(x, fun_name = 'fssj', call = match.call(), 
                    env = parent.frame(), force = TRUE)
 }
@@ -42,7 +43,8 @@ bsej <- function(class, dataset, k, epsilon = 0.01, smooth = 0,
                  cache_reset = NULL) {    
   full_nb <- nb(class = class, dataset)
   full_nb <- remove_dag_call_arg(full_nb)
-  x <- greedy_search(class = class, to_include = NULL, init = full_nb,
+
+	x <- greedy_search(class = class, to_include = NULL, init = full_nb,
                 step = bsej_step, dataset = dataset, epsilon = epsilon, k = k,
                 smooth = smooth, cache_reset = cache_reset)
   add_dag_call_arg(x, fun_name = 'bsej', call = match.call(), env = parent.frame())

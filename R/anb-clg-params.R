@@ -28,24 +28,27 @@
 #' @export
 
 GaussianImplement<-function(x,dataset){
-  result_check<-check_continuos_variable(dataset)
+  #result_check<-check_continuos_variable(dataset)
 
-  # all parents varieble are categorical
-  if(result_check==FALSE){
-    params <- 'Error: the dataset does not have continuous variables'
-    return(bn)
-  }
+  # all parents varieble are categorical then stop
+  #if(result_check==FALSE){
+    #params <- 'Error: the dataset does not have continuous variables'
+   # return(bn)
+  #}
+  stopifnot(check_continuos_variable(dataset))
   # numeric + categorical variable
-  else{
+  #else{
     params <- families2coef(families(x), dataset = dataset)
-    return(params)
-  }
+    x$params<-params
+    class(x) <- c('bnc_bn',class(x),'bnc_fit_clg')
+    return(x)
+  #}
 }
 
 check_continuos_variable <- function(dataSet) {
   #   Check dataset has continuous variable
   for (i in 1:ncol(dataSet)){
-    if (class(dataSet[,i])=='numeric'){
+    if (class(dataSet[,i])=='numeric' || class(dataSet[,i])=='integer' ){
       return(TRUE)
     }
   }
@@ -133,8 +136,8 @@ get_coeficiet<-function(combination,dataset,list,formula,variable){
 
     colapsed<-paste(combination[i,1:ncol(combination)],collapse=",")
     if (nrow(data)==0){
-      coef<-cbind(coef,NA)
-      sd<-cbind(sd,NA)
+      coef<-cbind(coef,0)
+      sd<-cbind(sd,0)
     }
     else{
       position <- gregexpr("~",formula)
@@ -147,6 +150,11 @@ get_coeficiet<-function(combination,dataset,list,formula,variable){
           lm_result<-lm(formula,data)
         coef<-cbind(coef,t(t(lm_result$coef)))
         sd<-cbind(sd,t(t(sqrt(sum(lm_result$residual^2)/(nrow(data)-length(list$numeric)-1)))))
+        if(NA %in% coef){
+          name <- rownames(coef)[which(is.na(coef), arr.ind = TRUE)[1,1]]
+          cat('the variable',name,'is highly correlated with others variables.')
+          stop('The program cannot continue unless it is deleted')
+        }
         }
     }
     colnames(coef)[i] <- colapsed

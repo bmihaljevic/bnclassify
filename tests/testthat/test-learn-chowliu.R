@@ -103,3 +103,14 @@ test_that("Max weight forest", {
   u <- max_weight_forest(g)
   expect_equal(graph_num_arcs(u), 3)  
 })
+
+test_that("continuous chowliu iris", {
+  data(car)
+ cl <- chowliu(class = 'Species', dataset = iris)
+ check_cl(cl, 4 + 3, 'Species', colnames(iris)[-5])
+}) 
+
+test_that("continuous chowliu No features", {
+ cl <- chowliu(class = 'Species', dataset = iris[ , 5, drop=F])
+ check_cl(cl, 0, 'Species', character()) 
+})
