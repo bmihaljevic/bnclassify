@@ -86,6 +86,6 @@ cmi_degrees_freedom <- function(freqs_table) {
   return ((dm[1] - 1) * (dm[2] - 1) * dm[3])
   }
   else{
-    return (prod(dim[-length(dim)] - 1) * dim[length(dim)])
+    return (prod(dm[-length(dm)] - 1) * dm[length(dm)])
   }
 }

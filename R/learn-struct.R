@@ -98,7 +98,7 @@ bn_anb<-function(class, dataset, score){
   full_nb <- remove_dag_call_arg(full_nb)
   x<- greedy_search_scores(class=class, to_include=NULL, init=full_nb,
                            step = augment_bn, dataset = dataset, score=score)
-  add_dag_call_arg(x, fun_name = 'bn-anb', call = match.call(), 
+  add_dag_call_arg(x, fun_name = 'bn_anb', call = match.call(), 
                    env = parent.frame(), force = TRUE)
   
 }

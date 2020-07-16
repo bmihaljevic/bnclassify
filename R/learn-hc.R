@@ -122,7 +122,6 @@ get_scores<- function(candidate_dag, class, dataset, score){
 }
 
 family_scores <- function(x, y, dataset, score){
-  #preguntar si haces check del if o retorna en el primero n numero de registros en el dataset preguntar unit = unit
   N<-nrow(dataset)
   freqs <- extract_ctgt(c(x,y), dataset)  
   unit<-"log"
@@ -134,7 +133,7 @@ family_scores <- function(x, y, dataset, score){
     df<-cmi_degrees_freedom(freqs)
     return (N * (mutual_information(x, y, dataset) - entrpy) - log(N) / 2 * df)}
   if(score=='aic'){
-    entrpy <- entropy::entropy(x, method = "ML", unit = unit, verbose = F)
+    entrpy <- entropy::entropy(freqs, method = "ML", unit = unit, verbose = F)
     df<-cmi_degrees_freedom(freqs)
     return (N * (mutual_information(x, y, dataset) - entrpy) - df)}
 }
@@ -160,9 +159,8 @@ mutual_information<-function(x, y, dataset){
         }
       }
       numerator <- nrow(numerator)
-      denominator<-nrow(dataset[dataset[y] == as.vector(child[["Var1"]]),])
-      pa_b<- numerator/denominator
-      if (pa_b!=0){ MI<-MI + pa_b* log2(pa_b/pa*pb)}
+      pa_b<- numerator/total
+      if (pa_b!=0){ MI<-MI + (pa_b* log2(pa_b/(pa*pb)))}
     }
   }
   MI
