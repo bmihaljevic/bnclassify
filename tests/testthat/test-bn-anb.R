@@ -10,6 +10,7 @@ iris$Petal.Width<- factor(iris$Petal.Width)
 test_that(" not a error with loglik", {
   bnanb<-bn_anb('class', car, score = 'loglik' )
   expect_equal(class(bnanb), c("bnc_dag", "bnc_base"))
+  expect_true(narcs(bnanb) > 6)
 })
 
 test_that("negative mutual information",{ 
