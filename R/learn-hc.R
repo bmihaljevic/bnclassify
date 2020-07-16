@@ -133,7 +133,7 @@ family_scores <- function(x, y, dataset, score){
     df<-cmi_degrees_freedom(freqs)
     return (N * (mutual_information(x, y, dataset) - entrpy) - log(N) / 2 * df)}
   if(score=='aic'){
-    entrpy <- entropy::entropy(x, method = "ML", unit = unit, verbose = F)
+    entrpy <- entropy::entropy(freqs, method = "ML", unit = unit, verbose = F)
     df<-cmi_degrees_freedom(freqs)
     return (N * (mutual_information(x, y, dataset) - entrpy) - df)}
 }

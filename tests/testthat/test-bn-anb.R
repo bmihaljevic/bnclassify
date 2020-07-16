@@ -29,3 +29,15 @@ test_that("family score becomes negative after adding a parent",{
   b<-family_scores("Species", "Sepal.Length", iris, score = 'loglik')
   expect_true(a>=b)
 }) 
+
+test_that("family score with aic",{ 
+  a<-family_scores(c("Species", "Sepal.Width"), "Sepal.Length", iris, score = 'aic')
+  b<-family_scores("Species", "Sepal.Length", iris, score = 'aic')
+  expect_true(a>=b)
+}) 
+
+test_that("family score with bic",{ 
+  a<-family_scores(c("Species", "Sepal.Width"), "Sepal.Length", iris, score = 'bic')
+  b<-family_scores("Species", "Sepal.Length", iris, score = 'bic')
+  expect_true(a>=b)
+}) 
