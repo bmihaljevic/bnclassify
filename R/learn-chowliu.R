@@ -4,10 +4,6 @@ chowliu <- function(class, dataset, score='loglik', blacklist = NULL,
   # Get pairwise scores   
   pairwise_scores <- 
     pairwise_ode_score_contribs(class = class, dataset = dataset, score = score, root = root)
-  structure<-draw(pairwise_scores,root,class)
-  return(structure)
-}
-draw<-function(pairwise_scores,root,class){
   # Get the augmenting forest   
   aug_forest <- max_weight_forest(pairwise_scores)  
   # Direct the forest (TODO: test the forest is effectively directed) 
@@ -16,6 +12,7 @@ draw<-function(pairwise_scores,root,class){
   ode <- superimpose_node(dag =  aug_forest, node = class)  
   bnc_dag(dag = ode, class = class)
 }
+
 
 pairwise_ode_score_contribs <- function(class, dataset, score, root) {
   #   Check score in decomposable_ode_scores
@@ -37,34 +34,23 @@ pairwise_ode_score_contribs <- function(class, dataset, score, root) {
     fun <-'local_ode_score_contrib'
     Npa <- NULL
   }
-  else if(are_gaussian(dataset,class)){
+  else if(are_gaussian(dataset, class)){
     fun <-'local_ode_score_contrib_cont'
-    if(score != 'loglik'){
-      #construct the tan_cl structure and get its number of parameters
-      pairwise_score <- mapply(fun, from, to, 
-                               MoreArgs = list(class = class, dataset = dataset,param=NULL), 
-                               SIMPLIFY = TRUE)
-      pairwise_scores <- call_makegraph(score,pairwise_score,from,to,features)
-      loglikStructure<-draw(pairwise_scores,root,class)
-      #get number parameter
-      classNumber <- length(levels(dataset[,class]))
-      coefNumberParams <- prod(narcs(loglikStructure), classNumber)
-      sdNumberParams <-prod(ncol(dataset)-1, classNumber)
-      Npa <- sdNumberParams + coefNumberParams    
-    }else{
-      Npa <- NULL}
+    #compute number of parameters. useful for aic bic
+    classNumber <- length(levels(dataset[,class]))
+    narc <- (length(features)-1) + length(features)
+    coefNumberParams <- prod(narc, classNumber)
+    sdNumberParams <-prod(length(features), classNumber)
+    Npa <- sdNumberParams + coefNumberParams 
   }
+
   # For each get pairwise contribution to score
   pairwise_score <- mapply(fun, from, to, 
                            MoreArgs = list(class = class, dataset = dataset, param = Npa), 
                            SIMPLIFY = TRUE)
   stopifnot(identical(rownames(pairwise_score), decomposable_ode_scores()))
-  d <- call_makegraph(score,pairwise_score,from,to,features)
-  return(d)
-}
-call_makegraph<- function(score,pairwise_score,from,to,features){
   # Select the score 
-  pairwise_score <- pairwise_score[score, ]  
+  pairwise_score <- pairwise_score[score, ] 
   # Remove negative scores (possible for BIC and AIC) and weight the edges
   # ...If I also removed 0 scores --which are possible for loglik-- the structure
   # ...may turn out a forest even when using loglik
@@ -72,8 +58,9 @@ call_makegraph<- function(score,pairwise_score,from,to,features){
   from <- from[ind_keep]
   to <- to[ind_keep]
   pairwise_score <- pairwise_score[ind_keep]
-  make_graph(features, from, to, pairwise_score)
+  make_graph(features, from, to, pairwise_score)  
 }
+
 #' Returns pairwise component of ODE (penalized) log-likelihood scores. 
 #' In natural logarithms.  
 #' @keywords internal
@@ -102,20 +89,16 @@ local_ode_score_contrib <- function(x, y, class, dataset, param = NULL) {
 }
 decomposable_ode_scores <- function() { c('loglik', 'bic', 'aic') }
 
-local_ode_score_contrib_cont <- function(x, y, class, dataset, param = NULL){
+local_ode_score_contrib_cont <- function(x, y, class, dataset, param = param){
   prior <- t(get_prior(dataset,class))
   classType <- as.matrix(levels(dataset[,class]))
   #compute cmi
   cor_coef <- apply(cbind(prior,classType),1,get_coef,class,x,y,dataset)
   cmi<--sum(cor_coef)/2
   #compute aic and bic
-  if (!is.null(param)){
-    aic <- 2*param -2*log(cmi)
-    bic <- param*log(nrow(dataset)) - 2*log(cmi)
-  }
-  else{aic = 0
-  bic = 0}
-  
+  aic <- 2*param -2*log(cmi)
+  bic <- param*log(nrow(dataset)) - 2*log(cmi)
+
   c(loglik = cmi, bic = bic, aic = aic) 
   
 }
