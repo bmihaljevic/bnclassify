@@ -91,15 +91,13 @@ test_that("Max weight forest", {
   g <- pairwise_ode_score_contribs(class = 'Class', voting, score = 'loglik')
   u <- max_weight_forest(g)
   expect_equal(graph_num_arcs(u), 15)  
-  
   g <- pairwise_ode_score_contribs(class = 'class', dataset = car, 
                                    score = "loglik")
   u <- max_weight_forest(g)
   expect_equal(graph_num_arcs(u), 5)  
-  
 # Forest
   g <- pairwise_ode_score_contribs(class = 'class', dataset = car, 
-                                   score = "aic")
+                                 score = "aic")
   u <- max_weight_forest(g)
   expect_equal(graph_num_arcs(u), 3)  
 })
@@ -110,7 +108,48 @@ test_that("continuous chowliu iris", {
  check_cl(cl, 4 + 3, 'Species', colnames(iris)[-5])
 }) 
 
+test_that("continuous chowliu mammographic", {
+  data(mammographic)
+  cl <- chowliu(class = 'class', dataset = mammographic)
+  check_cl(cl, 4 + 5, 'class', colnames(mammographic)[-6])
+}) 
+
 test_that("continuous chowliu No features", {
  cl <- chowliu(class = 'Species', dataset = iris[ , 5, drop=F])
  check_cl(cl, 0, 'Species', character()) 
 })
+
+test_that('loglik,aic,bic test with continuous variables',{
+  data("mammographic")
+  x_iyes<-subset(mammographic$X5, mammographic$class == 'yes')
+  x_ino<-subset(mammographic$X5, mammographic$class == 'no')
+  x_jno<-subset(mammographic$X67, mammographic$class == 'no')
+  x_jyes<-subset(mammographic$X67, mammographic$class == 'yes')
+  
+  first_class <- log(1-cor(x_iyes,x_jyes)^2)*0.5
+  second_class <- log(1-cor(x_ino,x_jno)^2)*0.5
+  cmi <- -(first_class+second_class)/2
+  aic <- 2*28-(2*log(cmi))
+  bic <- 28*log(884) - 2*log(cmi)
+  
+  
+  scores <- local_ode_score_contrib_cont(x = 'X5', 
+                                         y = 'X67', class = 'class',
+                                         dataset = mammographic, param = 28)
+  expect_equal(scores[['loglik']], cmi, tolerance = 1e-3)
+  expect_equal(scores[['aic']], aic,tolerance = 1e-1)
+  expect_equal(scores[['bic']], bic, tolerance = 1e-1)
+  
+  })
+
+test_that("local scores bic correctness with continuous variables", {
+  cl <- bnc("tan_cl",'class',mammographic,dag_args = list('loglik'))
+  acclog <- accuracy(predict(cl,mammographic),mammographic$class)
+  
+  aic <- bnc("tan_cl",'class',mammographic,dag_args = list('aic'))
+  accaic <- accuracy(predict(aic,mammographic),mammographic$class)
+  
+  expect_gt(accaic,acclog)
+  
+  })
+

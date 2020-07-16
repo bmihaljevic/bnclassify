@@ -86,24 +86,34 @@ n <- nb('Species', iris)
 expect_identical('Species', class_var(n))
 expect_equal(graph_num_arcs(dag(n)), 4) 
 })
+ 
 
-test_that("fssj nominal with continuous variables", {
-  skip_on_cran() 
-  suppressWarnings(RNGversion("3.5.0"))
-  set.seed(0)
-  f <- fssj('Species', dataset = iris, k = 10, epsilon = 0.8)
-  expect_equal(features(f), character()) 
-})
+#test_that("fssj nominal with continuous variables: complex data set", {
+ # data("breastCancer")
+#  skip_on_cran() 
+#  suppressWarnings(RNGversion("3.5.0"))
+#  set.seed(0)
+#  f <- fssj('class', dataset = mammographic, k = 10, epsilon = 1)
+#  expect_equal(features(f), character()) 
+ 
+#})
 
-test_that("bsej nominal with continuous variables", {
-  skip_on_cran() 
-  suppressWarnings(RNGversion("3.5.0"))
-  set.seed(0)
-  f <- bsej('Species', dataset = iris, k = 10, epsilon = 0.01)
-  expect_equal(features(f), colnames(iris)[-5])
-  expect_equal(f$.greedy_scores_log, sort(f$.greedy_scores_log)) 
-})
-
+#test_that("bsej: cotinuous variable", {
+ # skip_on_cran() 
+  #suppressWarnings(RNGversion("3.5.0"))
+  #set.seed(0)
+  #f <- bsej('class', dataset = mammographic, k = 5, epsilon = 0.5)
+  #expect_equal(features(f), colnames(mammographic)[-6])
+  #expect_equal(narcs(f), 5 + 0)
+  #expect_equal(length(f$.greedy_scores_log), 1)
+  
+  #suppressWarnings(RNGversion("3.5.0"))
+  #set.seed(0)
+  #f <- bsej('Result', dataset = phishing, k = 6, epsilon = 0)
+  #expect_equal(features(f), colnames(phishing)[-7])
+  #expect_equal(narcs(f), 7 + 1 + 1)
+  #expect_equal(length(f$.greedy_scores_log), 3)
+#})
 test_that("tan_hc nominal with continuous variables", {
 skip_on_cran() 
 suppressWarnings(RNGversion("3.5.0"))
