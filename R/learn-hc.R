@@ -125,19 +125,21 @@ family_scores <- function(x, y, dataset, score){
   N<-nrow(dataset)
   stopifnot(length(y) == 1)
   freqs <- extract_ctgt(y, dataset)  
-  unit<-"log"
-  if(score=='loglik'){ 
-    entrpy <- entropy::entropy(freqs, method = "ML", unit = unit, verbose = F)
-    mi<-mutual_information(x, y, dataset)
-    return(N * (mi - entrpy))}
-  if(score=='bic'){
-    entrpy <- entropy::entropy(freqs, method = "ML", unit = unit, verbose = F)
+  entrpy <- entropy::entropy(freqs, method = "ML", unit = "log", verbose = F)
+  mi<-mutual_information(x, y, dataset)
+  scorevalue <- N * (mi - entrpy)
+  if (score=='loglik') {  
+    return (scorevalue)
+  }
+  if (score=='bic') {
     df<-cmi_degrees_freedom(freqs)
-    return (N * (mutual_information(x, y, dataset) - entrpy) - log(N) / 2 * df)}
-  if(score=='aic'){
-    entrpy <- entropy::entropy(freqs, method = "ML", unit = unit, verbose = F)
+    return (scorevaluescore - log(N) / 2 * df)
+  }
+  if (score=='aic') {
     df<-cmi_degrees_freedom(freqs)
-    return (N * (mutual_information(x, y, dataset) - entrpy) - df)}
+    return (scorevalue - df)
+  }
+  stop("Invalid score.")
 }
 
 
