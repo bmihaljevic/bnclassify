@@ -67,8 +67,8 @@ greedy_search_scores <- function(class, to_include, init, step, dataset, score,
     #     evaluate 
     
     #scores <- get_scores(candidate_dags, class, dataset, score)
-     scores <- mapply(get_scores,candidate_dags, 
-                      MoreArgs = list(class=class, dataset=dataset, score=score), SIMPLIFY = TRUE)
+    scores <- mapply(get_scores,candidate_dags, 
+                     MoreArgs = list(class=class, dataset=dataset, score=score), SIMPLIFY = TRUE)
     
     #     Stop if it is not better than current_score 
     if (!is_improvement(scores, current_score, 0)) break         
@@ -112,7 +112,7 @@ get_scores<- function(candidate_dag, class, dataset, score){
     }
   } 
   
-  #pairwise_score <- family_scores(from[1], to[1], dataset, score) 
+  #pairwise_score <- family_scores(nw_from[[1]], nw_to[[1]], dataset, score) 
   
   pairwise_score <- mapply(family_scores, nw_from, nw_to, 
                           MoreArgs = list(dataset = dataset, score=score), 
@@ -127,7 +127,8 @@ family_scores <- function(x, y, dataset, score){
   unit<-"log"
   if(score=='loglik'){ 
     entrpy <- entropy::entropy(freqs, method = "ML", unit = unit, verbose = F)
-    return(N * (mutual_information(x, y, dataset) - entrpy))}
+    mi<-mutual_information(x, y, dataset)
+    return(N * (mi - entrpy))}
   if(score=='bic'){
     entrpy <- entropy::entropy(freqs, method = "ML", unit = unit, verbose = F)
     df<-cmi_degrees_freedom(freqs)
