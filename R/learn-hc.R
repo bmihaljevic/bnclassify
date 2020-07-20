@@ -123,7 +123,8 @@ get_scores<- function(candidate_dag, class, dataset, score){
 
 family_scores <- function(x, y, dataset, score){
   N<-nrow(dataset)
-  freqs <- extract_ctgt(c(x,y), dataset)  
+  stopifnot(length(y) == 1)
+  freqs <- extract_ctgt(y, dataset)  
   unit<-"log"
   if(score=='loglik'){ 
     entrpy <- entropy::entropy(freqs, method = "ML", unit = unit, verbose = F)
@@ -161,7 +162,7 @@ mutual_information<-function(x, y, dataset){
       }
       numerator <- nrow(numerator)
       pa_b<- numerator/total
-      if (pa_b!=0){ MI<-MI + (pa_b* log2(pa_b/(pa*pb)))}
+      if (pa_b!=0){ MI<-MI + (pa_b* log(pa_b/(pa*pb)))}
     }
   }
   MI
