@@ -71,7 +71,7 @@ augment_bn <- function(bnc_dag, ...) {
   if (length(arcs) == 0) return(NULL)
   dags <- mapply(add_feature_parents, arcs[, 'from'], arcs[, 'to'], 
                  MoreArgs = list(x = bnc_dag), SIMPLIFY = FALSE)
-  stopifnot(all(vapply(dags, is_ode, FUN.VALUE = logical(1))))
+  #stopifnot(all(vapply(dags, is_ode, FUN.VALUE = logical(1))))
   dags
 } 
 #' Arcs that do not invalidate the k-DB structure
@@ -117,7 +117,7 @@ augment_ode_arcs <- function(bnc_dag) {
 #' @keywords internal
 #' @return a character matrix. NULL if no arcs can be added.
 augment_arcs <- function(bnc_dag) {
-  orphans <- feature_orphans(bnc_dag) 
+  orphans <- feature_orphans1(bnc_dag) 
   # An ODE must have at least one orphan
   stopifnot(length(orphans) >= 1)  
   if (length(orphans) == 1) return(matrix(character(), ncol = 2))

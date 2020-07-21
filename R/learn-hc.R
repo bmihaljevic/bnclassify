@@ -71,7 +71,7 @@ greedy_search_scores <- function(class, to_include, init, step, dataset, score,
                      MoreArgs = list(class=class, dataset=dataset, score=score), SIMPLIFY = TRUE)
     
     #     Stop if it is not better than current_score 
-    if (!is_improvement(scores, current_score, 0)) break         
+    if (!is_improvement(scores, current_score, 0.01)) break         
     #     Make the best dag the current one
     best_ind <- max_random(scores)
     current_dag <- candidate_dags[[best_ind]]
