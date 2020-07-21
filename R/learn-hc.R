@@ -123,20 +123,23 @@ get_scores<- function(candidate_dag, class, dataset, score){
 
 family_scores <- function(x, y, dataset, score){
   N<-nrow(dataset)
-  freqs <- extract_ctgt(c(x,y), dataset)  
-  unit<-"log"
-  if(score=='loglik'){ 
-    entrpy <- entropy::entropy(freqs, method = "ML", unit = unit, verbose = F)
-    mi<-mutual_information(x, y, dataset)
-    return(N * (mi - entrpy))}
-  if(score=='bic'){
-    entrpy <- entropy::entropy(freqs, method = "ML", unit = unit, verbose = F)
+  stopifnot(length(y) == 1)
+  freqs <- extract_ctgt(y, dataset)  
+  entrpy <- entropy::entropy(freqs, method = "ML", unit = "log", verbose = F)
+  mi<-mutual_information(x, y, dataset)
+  scorevalue <- N * (mi - entrpy)
+  if (score=='loglik') {  
+    return (scorevalue)
+  }
+  if (score=='bic') {
     df<-cmi_degrees_freedom(freqs)
-    return (N * (mutual_information(x, y, dataset) - entrpy) - log(N) / 2 * df)}
-  if(score=='aic'){
-    entrpy <- entropy::entropy(freqs, method = "ML", unit = unit, verbose = F)
+    return (scorevaluescore - log(N) / 2 * df)
+  }
+  if (score=='aic') {
     df<-cmi_degrees_freedom(freqs)
-    return (N * (mutual_information(x, y, dataset) - entrpy) - df)}
+    return (scorevalue - df)
+  }
+  stop("Invalid score.")
 }
 
 
@@ -161,7 +164,7 @@ mutual_information<-function(x, y, dataset){
       }
       numerator <- nrow(numerator)
       pa_b<- numerator/total
-      if (pa_b!=0){ MI<-MI + (pa_b* log2(pa_b/(pa*pb)))}
+      if (pa_b!=0){ MI<-MI + (pa_b* log(pa_b/(pa*pb)))}
     }
   }
   MI
