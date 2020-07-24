@@ -46,6 +46,34 @@ bnc_multinet_bns <- function(x, fit_models, apriori) {
   class(x) <- c('bnc_multinet_bns', class(x), 'bnc_fit')
   x
 }
+#' Returns a \code{c("bnc_multinet_atan", "bnc")} object.
+#' @keywords internal
+bnc_multinet_atan <- function(class, dataset, features,scores) {
+  if (!is.null(dataset)) {
+    features <- get_features(class = class, dataset = dataset)
+  }
+  if (length(features) == 1){ 
+    return(nb(class = class, features = features))
+  }
+  names(features) <- features
+  models<-average_tan(class, dataset,scores)
+  stopifnot(length(models) > 0)
+  bnc <- bnc_base(class = class, features = features)
+  bnc$.models <- models
+  class(bnc) <- c('bnc_multinet_atan', class(bnc))
+  bnc
+}
+
+#' Fits an atan model.
+#' @keywords internal
+bnc_multinet_bnsatan <- function(x, fit_models) {
+  stopifnot(inherits(x, 'bnc_multinet_atan'))
+  x$.models <- fit_models
+  x$.apriori <- apriori 
+  class(x) <- c('bnc_multinet_bnsatan', class(x), 'bnc_fit')
+  x
+}
+
 #' Is it en AODE?
 #'
 #' @keywords internal
@@ -61,14 +89,14 @@ is_ensemble <- function(x) {
   is_aode(x) || is_multinet(x)  
 }
 is_multinet <- function(x) {
- inherits(x, "bnc_multinet") 
+ inherits(x, "bnc_multinet") || inherits(x, "bnc_multinet_atan")
 }
 nmodels <- function(x) {
- stopifnot(inherits(x, 'bnc_aode') || inherits(x, "bnc_multinet")) 
+ stopifnot(inherits(x, 'bnc_aode') || inherits(x, "bnc_multinet") || inherits(x, "bnc_multinet_atan")) 
  length(x$.models)
 }
 models <- function(x) { 
- stopifnot(inherits(x, 'bnc_aode') || inherits(x, "bnc_multinet"))  
+ stopifnot(inherits(x, 'bnc_aode') || inherits(x, "bnc_multinet") || inherits(x, "bnc_multinet_atan"))  
  x$.models
 }  
 #' Return a priori class probabilities

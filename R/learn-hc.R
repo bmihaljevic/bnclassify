@@ -132,10 +132,12 @@ family_scores <- function(x, y, dataset, score){
     return (scorevalue)
   }
   if (score=='bic') {
+    freqs <- extract_ctgt(c(x, y), dataset) 
     df<-cmi_degrees_freedom(freqs)
-    return (scorevaluescore - log(N) / 2 * df)
+    return (scorevalue - log(N) / 2 * df)
   }
   if (score=='aic') {
+    freqs <- extract_ctgt(c(x, y), dataset) 
     df<-cmi_degrees_freedom(freqs)
     return (scorevalue - df)
   }

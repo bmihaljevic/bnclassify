@@ -91,6 +91,20 @@ tan_cl <- function(class, dataset, score='loglik', root = NULL) {
   add_dag_call_arg(x, fun_name = 'tan_cl', call = match.call(), 
                    env = parent.frame(), force = TRUE)
 }
+
+#' @export
+#' @rdname average_tan
+average_tan <- function(class, dataset, score='loglik', root = NULL) {
+  x <- average(class, dataset, blacklist = NULL, 
+               root = root)
+  dags<-list()
+  for (i in names(x)){ 
+    dags[[i]]<-add_dag_call_arg(x[[i]], fun_name = 'average_tan', call = match.call(), 
+                     env = parent.frame(), force = TRUE)
+  }
+  dags
+}
+
 #' @export
 #' @rdname  bn-anb
 bn_anb<-function(class, dataset, score){
@@ -130,5 +144,18 @@ aode <- function(class, dataset, features = NULL) {
 multinet_cl <- function(class, dataset, features=NULL, score='loglik') {       
   x <- bnc_multinet_tan(class=class, dataset=dataset, features=features, score=score) 
   add_dag_call_arg(x, fun_name = 'multinet_cl', call = match.call(), 
+                   env = parent.frame(), force = TRUE)
+}
+
+#' Learn an ATAN ensemble.
+#' 
+#' If there is a single predictor then returns a naive Bayes.
+#' 
+#' @export
+#' @inheritParams nb
+#' @return A \code{multinet_atan} or a \code{bnc_dag} (if returning a naive Bayes)
+multinet_atan <- function(class, dataset, features=NULL, score='loglik') {       
+  x <- bnc_multinet_atan(class=class, dataset=dataset, features=features, score=score) 
+  add_dag_call_arg(x, fun_name = 'multinet_atan', call = match.call(), 
                    env = parent.frame(), force = TRUE)
 }
