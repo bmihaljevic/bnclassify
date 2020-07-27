@@ -43,10 +43,10 @@ lp_implement <- function(x, dataset, smooth, awnb_trees = NULL,
   UseMethod("lp_implement")
 }  
 #' @export
-lp_implement.bnc_aode <- function(x, dataset, smooth, awnb_trees = NULL, 
+lp_implement.bnc_ensemble <- function(x, dataset, smooth, awnb_trees = NULL, 
                          awnb_bootstrap = NULL, manb_prior = NULL, wanbia = NULL, .mem_cpts=NULL, ...) {
   models <- lapply(models(x), lp_implement, dataset = dataset, smooth = smooth) # TODO: pass mem_cpts, wanbia and other parameters to lp_implement?? 
-  bnc_aode_bns(x, models) 
+  bnc_ensemble_bns(x, models) 
 }
 #' @export
 lp_implement.bnc_multinet <- function(x, dataset, smooth, awnb_trees = NULL, 
