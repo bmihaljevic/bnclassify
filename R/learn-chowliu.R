@@ -11,6 +11,23 @@ chowliu <- function(class, dataset, score='loglik', blacklist = NULL,
   ode <- superimpose_node(dag =  aug_forest, node = class)  
   bnc_dag(dag = ode, class = class)
 }
+average <- function(class, dataset, blacklist = NULL, 
+                    root = NULL) {
+  # Get pairwise scores   
+  pairwise_scores <- 
+    mi_score_contribs(class = class, dataset = dataset)
+  # Get the augmenting forest 
+  bnc_ds<-list()
+  for (pi in pairwise_scores){
+    aug_forest <- max_weight_forest(pi)  
+    # Direct the forest (TODO: test the forest is effectively directed) 
+    aug_forest <- direct_forest(aug_forest, root = root)    
+    # TODO: Add blacklisting. 
+    ode <- superimpose_node(dag =  aug_forest, node = class)  
+    bnc_ds[[pi$nodes[1]]] <- bnc_dag(dag = ode, class = class)
+  }
+  bnc_ds
+}
 pairwise_ode_score_contribs <- function(class, dataset, score) {
 #   Check score in decomposable_ode_scores
   stopifnot(score %in% decomposable_ode_scores())
@@ -40,6 +57,31 @@ pairwise_ode_score_contribs <- function(class, dataset, score) {
   to <- to[ind_keep]
   pairwise_score <- pairwise_score[ind_keep]
   make_graph(features, from, to, pairwise_score)
+}
+mi_score_contribs <- function(class, dataset) {
+  graphs<-list()
+  # Get features   
+  features = get_features(class = class, dataset = dataset)
+  # If 0 features then return empty graph   
+  if (length(features) == 0) return(graph_empty_undirected()) 
+  # If 1 feature then return single node graph (no arcs)
+  for (i in features){
+    new_features<-c(i)
+    new_features[2:length(features)] <-features[features!=i]
+  
+    pairs <- complete_graph(new_features)  
+    if (length(features) == 1) return(pairs)  
+    # Get each pair of features 
+    edges <- pairs$edges  
+    from <- edges[, 1]
+    to <- edges[, 2]; rm(edges)
+    # For each get pairwise contribution to score
+    pairwise_score <- mapply(mutual_information, from, to, 
+                             MoreArgs = list(dataset = dataset), 
+                             SIMPLIFY = TRUE)
+    graphs[[i]]<-make_graph(new_features, from, to, pairwise_score)
+  }
+  graphs
 }
 #' Returns pairwise component of ODE (penalized) log-likelihood scores. 
 #' In natural logarithms.  

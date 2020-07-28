@@ -12,7 +12,7 @@ iris$Petal.Width<- factor(iris$Petal.Width)
 test_that(" not a error with loglik", {
   bnanb<-bn_anb('class', car, score = 'loglik' )
   expect_equal(class(bnanb), c("bnc_dag", "bnc_base"))
-  expect_equal(narcs(bnanb), 6 + 15)
+  expect_true(narcs(bnanb)> 6 )
 })
 
 test_that(" not a error with loglik", {
@@ -70,13 +70,6 @@ test_that("family score becomes negative after adding a parent",{
   expect_true(a>=b)
 }) 
 
-test_that("entropy becomes negative after adding a parent",{ 
-  freqs1 <- extract_ctgt(c(c("Species", "Sepal.Width"), "Sepal.Length"), iris)
-  freqs2 <- extract_ctgt(c("Species", "Sepal.Length"), iris)
-  entrpy1 <- entropy::entropy(freqs1, method = "ML", unit = "log", verbose = F)
-  entrpy2 <- entropy::entropy(freqs2, method = "ML", unit = "log", verbose = F)
-  expect_true(entrpy1>=entrpy2)
-}) 
 
 test_that("family score with aic",{ 
   a<-family_scores(c("Species", "Sepal.Width"), "Sepal.Length", iris, score = 'aic')

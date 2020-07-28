@@ -176,6 +176,24 @@ feature_orphans <- function(bnc_dag) {
   # return features
   feats
 } 
+
+feature_orphans1 <- function(bnc_dag){
+  # Get the family of each feature 
+  fams <- feature_families(bnc_dag)
+  # Get those features whose family is of size 2 (itself and class)
+  #ind_orphans <- (vapply(fams, length, FUN.VALUE = integer(1)) == 2)
+  #fams <- fams[ind_orphans]
+  if (length(fams) == 0) return(NULL)
+  #  ... check they effectively are themselves and class
+  feats <- features(bnc_dag)
+  #fams_ok <- mapply(is_orphan_fam, fams, feats, 
+  #                  MoreArgs = list(class = class_var(bnc_dag)), 
+  #                  SIMPLIFY = TRUE)
+  #stopifnot(fams_ok)                      
+  # return features
+  feats
+  
+}
 # Return features with up to k feature parents
 # NULL if none
 upto_k_parents <- function(bnc_dag, k = 0) { 

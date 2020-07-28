@@ -67,11 +67,11 @@ compute_log_joint_complete <- function(x, dataset) {
   UseMethod("compute_log_joint_complete")
 } 
 #' @export
-compute_log_joint_complete.bnc_aode <- function(x, dataset) { 
+compute_log_joint_complete.bnc_ensemble <- function(x, dataset) { 
   # TODO: validate aode: at least one model , or two models?
   stopifnot(nmodels(x) > 0)
   p <- lapply(models(x), compute_log_joint_complete, dataset = dataset)  
-  average_aode(p)  
+  average_bnc_ensemble(p)  
 }
 #' @export
 compute_log_joint_complete.bnc_multinet<-function(x, dataset){
@@ -96,15 +96,15 @@ compute_log_joint_incomplete <- function(x, dataset) {
   UseMethod("compute_log_joint_incomplete")
 }  
 #' @export
-compute_log_joint_incomplete.bnc_aode <- function(x, dataset) {  
+compute_log_joint_incomplete.bnc_ensemble <- function(x, dataset) {  
   # TODO: validate aode: at least one model , or two models? 
   stopifnot(nmodels(x) > 0)
   p <- lapply(models(x), compute_log_joint_incomplete, dataset = dataset)  
-  average_aode(p)  
+  average_bnc_ensemble(p)  
 }
 # take the average
 # p is a list of matrices of log joint 
-average_aode <- function(p) {
+average_bnc_ensemble <- function(p) {
   stopifnot(is.list(p))
   nmodels <- length(p)
   p <- lapply(p, exp) 

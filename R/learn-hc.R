@@ -71,7 +71,7 @@ greedy_search_scores <- function(class, to_include, init, step, dataset, score,
                      MoreArgs = list(class=class, dataset=dataset, score=score), SIMPLIFY = TRUE)
     
     #     Stop if it is not better than current_score 
-    if (!is_improvement(scores, current_score, 0)) break         
+    if (!is_improvement(scores, current_score, 0.01)) break         
     #     Make the best dag the current one
     best_ind <- max_random(scores)
     current_dag <- candidate_dags[[best_ind]]
@@ -132,10 +132,12 @@ family_scores <- function(x, y, dataset, score){
     return (scorevalue)
   }
   if (score=='bic') {
+    freqs <- extract_ctgt(c(x, y), dataset) 
     df<-cmi_degrees_freedom(freqs)
-    return (scorevaluescore - log(N) / 2 * df)
+    return (scorevalue - log(N) / 2 * df)
   }
   if (score=='aic') {
+    freqs <- extract_ctgt(c(x, y), dataset) 
     df<-cmi_degrees_freedom(freqs)
     return (scorevalue - df)
   }
