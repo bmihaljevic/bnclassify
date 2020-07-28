@@ -67,7 +67,7 @@ bnc_multinet_atan <- function(class, dataset, features,scores) {
 #'
 #' @keywords internal
 is_aode <- function(x) {
-  if (!inherits(x, c('bnc_aode'))) return (FALSE)
+  if (!inherits(x, c('bnc_ensemble'))) return (FALSE)
   if (length(x$.models) < 2) return (FALSE)
   all(sapply(x$.models, is_ode)) # TODO Should be is spode
 } 

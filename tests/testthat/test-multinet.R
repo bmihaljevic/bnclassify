@@ -10,9 +10,4 @@ test_that("Predict", {
   bn <- multinet_cl(class = 'class', dataset = car)
   bn <- lp(bn, car, smooth = 0.1)
   a <- compute_cp(x = bn, car)
-})  
-
-test_that("bnc function", { 
-  nb <- bnc()
-  plot(nb)
-})
+})    
