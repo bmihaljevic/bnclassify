@@ -12,6 +12,3 @@ test_that("Predict", {
   a <- compute_cp(x = bn, car)
 })  
 
-
-
-
