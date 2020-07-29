@@ -12,7 +12,6 @@ test_that("Predict", {
   a <- compute_cp(x = bn, car)
 })  
 
-test_that("bnc function", { 
-  nb <- bnc()
-  plot(nb)
-})
+
+
+
