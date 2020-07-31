@@ -155,7 +155,7 @@ multinet_cl <- function(class, dataset, features=NULL, score='loglik') {
 #' @inheritParams nb
 #' @return A \code{multinet_atan} or a \code{bnc_dag} (if returning a naive Bayes)
 multinet_atan <- function(class, dataset, features=NULL, score='loglik') {       
-  x <- bnc_multinet_atan(class=class, dataset=dataset, features=features, score=score) 
+  x <- bnc_atan(class=class, dataset=dataset, features=features, score=score) 
   add_dag_call_arg(x, fun_name = 'multinet_atan', call = match.call(), 
                    env = parent.frame(), force = TRUE)
 }

@@ -48,7 +48,7 @@ bnc_multinet_bns <- function(x, fit_models, apriori) {
 }
 #' Returns a \code{c("bnc_ensemble", "bnc")} object.
 #' @keywords internal
-bnc_multinet_atan <- function(class, dataset, features,scores) {
+bnc_atan <- function(class, dataset, features,scores) {
   if (!is.null(dataset)) {
     features <- get_features(class = class, dataset = dataset)
   }
