@@ -84,7 +84,7 @@ compute_log_joint_complete.bnc_multinet<-function(x, dataset){
     m[, i]<-compute_log_joint_complete(models(x)[[i]], dataset)[,i]
   } 
   prior <- rep(multinet_apriori(x), each = nrow(m))
-  m * prior
+  m + log(prior)
 }
 #' @export
 compute_log_joint_complete.bnc_bn <- function(x, dataset) {
