@@ -32,8 +32,15 @@ penalize_loglik <- function(ll, k) {
 }
 #' @export 
 #' @describeIn inspect_bnc_bn Returns the number of free parameters in the model.
-nparams <- function(x) {      
-  sum(vapply(params(x), count_cpt_free_params, FUN.VALUE = numeric(1)))
+nparams <- function(x) {  
+  if(inherits(x, "bnc_multinet")){
+    p<-0
+    for(i in x$.models){
+      p<-p + sum(vapply(params(i), count_cpt_free_params, FUN.VALUE = numeric(1)))
+    }
+    p/length(x$.models)
+  }
+  else{sum(vapply(params(x), count_cpt_free_params, FUN.VALUE = numeric(1)))}
 }
 #' @export
 #' @describeIn inspect_bnc_bn Returns the posterior of each arc from the class
