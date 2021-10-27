@@ -1,5 +1,6 @@
-# 0.4.5.9999
+# 0.4.6
 - Work-around for gRain changes
+- Skip a test that fails due to changes in R-devel
 
 # 0.4.5
 * Pass CRAN checks with stringsAsFactors = FALSE as default
