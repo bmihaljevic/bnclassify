@@ -6,8 +6,8 @@ Authors@R: c(person("Mihaljevic","Bojan",email="boki.mihaljevic@gmail.com",role=
     person("Bielza","Concha",email="mcbielza@fi.upm.es",role="aut"),
     person("Larranaga","Pedro",email="pedro.larranaga@fi.upm.es",role="aut"), 
     person("Wickham", "Hadley", role="ctb", comment="some code extracted from memoise package"))
-URL: http://github.com/bmihaljevic/bnclassify
-BugReports: http://github.com/bmihaljevic/bnclassify/issues
+URL: https://github.com/bmihaljevic/bnclassify
+BugReports: https://github.com/bmihaljevic/bnclassify/issues
 Depends:
     R (>= 3.2.0)
 Imports:
