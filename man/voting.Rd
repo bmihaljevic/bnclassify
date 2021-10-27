@@ -6,7 +6,7 @@
 \title{Congress Voting Data Set.}
 \format{A \code{data.frame} with 17 columns and 435 rows.}
 \source{
-\url{http://goo.gl/GTXrCz}
+\url{https://goo.gl/GTXrCz}
 }
 \description{
 Data set from the UCI repository

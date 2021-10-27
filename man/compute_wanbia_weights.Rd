@@ -6,7 +6,7 @@
  
 Computes feature weights by optimizing conditional log-likelihood.  
 Weights are bounded to [0, 1]. Implementation based on the original paper 
-and the code provided at \url{http://sourceforge.net/projects/rawnaivebayes}.}
+and the code provided at \url{https://sourceforge.net/projects/rawnaivebayes}.}
 \usage{
 compute_wanbia_weights(class, dataset, return_optim_object = FALSE)
 }
@@ -25,6 +25,6 @@ Compute WANBIA weights.
  
 Computes feature weights by optimizing conditional log-likelihood.  
 Weights are bounded to [0, 1]. Implementation based on the original paper 
-and the code provided at \url{http://sourceforge.net/projects/rawnaivebayes}.
+and the code provided at \url{https://sourceforge.net/projects/rawnaivebayes}.
 }
 \keyword{internal}

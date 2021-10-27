@@ -10,3 +10,5 @@ Makefile
 ^doc$
 ^Meta$
 ^CRAN-RELEASE$
+^Makefile$
+^Jenkinsfile$
