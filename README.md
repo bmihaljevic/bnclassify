@@ -1,7 +1,6 @@
-bnclassify
-==========
+# bnclassify
 
-[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/bnclassify)](https://cran.r-project.org/package=bnclassify)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/bnclassify)](https://cran.r-project.org/package=bnclassify)
 ![](https://cranlogs.r-pkg.org/badges/bnclassify?color=yellow)
 ![](https://cranlogs.r-pkg.org/badges/grand-total/bnclassify?color=yellowgreen)
 [![Research software
@@ -11,14 +10,14 @@ impact](http://depsy.org/api/package/cran/bnclassify/badge.svg)](http://depsy.or
 Status](https://travis-ci.org/bmihaljevic/bnclassify.svg?branch=master)](https://travis-ci.org/bmihaljevic/bnclassify)
 [![AppVeyor Build
 Status](https://ci.appveyor.com/api/projects/status/github/bmihaljevic/bnclassify?branch=master&svg=true)](https://ci.appveyor.com/project/bmihaljevic/bnclassify)
+[![R-CMD-check](https://github.com/bmihaljevic/bnclassify/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/bmihaljevic/bnclassify/actions/workflows/R-CMD-check.yaml)
 
 Implements algorithms for learning discrete Bayesian network classifiers
 from data, as well as functions for using these classifiers for
 prediction, assessing their predictive performance, and inspecting and
 analyzing their properties.
 
-Example
-=======
+# Example
 
 Load a data set and learn a one-dependence estimator by maximizing
 Akaike’s information criterion (AIC) score.
@@ -64,7 +63,7 @@ Estimate predictive accuracy with cross validation.
 
 ``` r
 cv(tn, car, k = 10)
-#> [1] 0.9415736
+#> [1] 0.9386534
 ```
 
 Or compute the log-likelihood
@@ -74,8 +73,7 @@ logLik(tn, car)
 #> 'log Lik.' -13280.39 (df=131)
 ```
 
-Install
-=======
+# Install
 
 Make sure you have at least version 3.2.0 of R. You can install
 `bnclassify` from CRAN:
@@ -104,14 +102,12 @@ source("http://bioconductor.org/biocLite.R")
 biocLite(c("graph", "Rgraphviz"))
 ```
 
-Overview
-========
+# Overview
 
 See an overview of the package and examples of usage:
 
 ``` r
 vignette('overview', package = 'bnclassify')
-#> Warning: vignette 'overview' not found
 ```
 
 See the list of main functionalities.

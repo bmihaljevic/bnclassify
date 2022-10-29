@@ -12,3 +12,4 @@ Makefile
 ^CRAN-RELEASE$
 ^Makefile$
 ^Jenkinsfile$
+^\.github$

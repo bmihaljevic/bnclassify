@@ -26,7 +26,7 @@ bool safediff(unsigned int x, int y) {
 
 // [[Rcpp::export]]
 bool are_disjoint(Rcpp::Nullable<Rcpp::CharacterVector> x, Rcpp::Nullable<Rcpp::CharacterVector> y) {
-  if (x.isNotNull() & y.isNotNull()) {
+  if (x.isNotNull() && y.isNotNull()) {
     Rcpp::CharacterVector xx(x);
     Rcpp::CharacterVector yy(y);
     Rcpp::LogicalVector init = in(xx, yy)  ;
