@@ -1,3 +1,6 @@
+# 0.4.7
+- Fix a WARN on r-devel clang
+
 # 0.4.6
 - Work-around for gRain changes
 - Skip a test that fails due to changes in R-devel
