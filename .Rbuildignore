@@ -13,3 +13,4 @@ Makefile
 ^Makefile$
 ^Jenkinsfile$
 ^\.github$
+^CRAN-SUBMISSION$
