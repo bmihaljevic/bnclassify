@@ -16,7 +16,7 @@ narcs <- function(x) {
 #' @param ... Not used.
 #' @examples  
 #' 
-#' # Requires the graph and Rgraphviz packages to be installed.
+#' # Requires the igraph package to be installed.
 #' data(car)
 #' nb <- nb('class', car)
 #' nb <- nb('class', car)
@@ -28,19 +28,18 @@ narcs <- function(x) {
 #' \dontrun{plot(nb, layoutType = 'twopi')}
 #' \dontrun{plot(nb, layoutType = 'neato')}
 plot.bnc_dag <- function(x, y, layoutType='dot', fontsize = NULL, ...) { 
-  if (!requireNamespace("graph", quietly = TRUE)) {
+  if (!requireNamespace("igraph", quietly = TRUE)) {
     stop("Package graph needed ", call. = FALSE)
   }
-  if (!requireNamespace("Rgraphviz", quietly = TRUE)) {
-    stop("Package Rgraphviz needed ", call. = FALSE)
-  }
   g <- graph_internal2graph_NEL(dag(x))
-  node_pars <- list(col = "green", textCol = "blue",  lty = "longdash", lwd = 1)
-  if (!is.null(fontsize)) {
-    node_pars$fontsize <- fontsize
-  }
-  l <- Rgraphviz::layoutGraph(g, layoutType = layoutType)
-  Rgraphviz::renderGraph(l, graph.pars = list(nodes = node_pars))
+  # node_pars <- list(col = "green", textCol = "blue",  lty = "longdash", lwd = 1)
+  # if (!is.null(fontsize)) {
+  #   node_pars$fontsize <- fontsize
+  # }
+  # how to get the node of the class?
+  l <- igraph::layout_as_tree(g)
+  plot(g, layout = l, vertex.label.cex = fontsize, ...)
+  # Rgraphviz::renderGraph(l, graph.pars = list(nodes = node_pars))
 }
 #' Print basic information about a classifier.
 #' @export
