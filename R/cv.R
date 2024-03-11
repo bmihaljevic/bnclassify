@@ -14,7 +14,6 @@
 #'   Parameters are always learned.
 #' @param mean A logical. Whether to return mean accuracy for each classifier or
 #'   to return a k-row matrix with accuracies per fold.
-#' @inheritParams learn_params
 #' @export
 #' @return A numeric vector of same length as \code{x}, giving the predictive
 #'   accuracy of each classifier. If \code{mean = FALSE} then a matrix with k

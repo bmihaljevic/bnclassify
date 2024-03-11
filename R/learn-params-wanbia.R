@@ -65,7 +65,6 @@ cll_gradient_var <- function(x, cpt, class, class_posterior) {
 #' and the code provided at \url{https://sourceforge.net/projects/rawnaivebayes}.
 #' 
 #' @inheritParams nb
-#' @param class character 
 #' @param dataset The data frame from which to learn feature weights
 #' @param return_optim_object Return full output of `optim`
 #' @return a named numeric vector
