@@ -11,7 +11,7 @@ and the code provided at \url{https://sourceforge.net/projects/rawnaivebayes}.}
 compute_wanbia_weights(class, dataset, return_optim_object = FALSE)
 }
 \arguments{
-\item{class}{character}
+\item{class}{A character. Name of the class variable.}
 
 \item{dataset}{The data frame from which to learn feature weights}
 

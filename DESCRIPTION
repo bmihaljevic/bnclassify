@@ -27,6 +27,7 @@ Suggests:
     rmarkdown(>= 0.7),
     mlbench,
     covr
+Encoding: UTF-8
 License: GPL (>= 2)
 Maintainer: Mihaljevic Bojan <boki.mihaljevic@gmail.com>
 VignetteBuilder: knitr

@@ -49,7 +49,6 @@
 #'  \item and more. See \code{\link{inspect_bnc_dag}} and \code{\link{inspect_bnc_bn}}.
 #'  } 
 #' 
-#' @docType package
 #' @name bnclassify
 #' @importFrom stats predict as.formula complete.cases setNames logLik AIC BIC nobs optim
 #' @importFrom graphics plot
@@ -86,7 +85,7 @@
 #'   Pazzani M (1996). Constructive induction of Cartesian product attributes. 
 #'   In \emph{Proceedings of the Information, Statistics and Induction in 
 #'   Science Conference (ISIS-1996)}, pp. 66-77
-NULL
+"_PACKAGE"
 
 
 #' Bayesian network classifier with structure and parameters.
