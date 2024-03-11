@@ -1,6 +1,4 @@
-# TODO: requiere message for graph package
-
-# TODO: will use this function for conversion to graphNEL
+# TODO: requiere message for igraph package
 graphNEL2_graph_internal <- function(x) { 
   stopifnot(inherits(x, "igraph"))
   if (requireNamespace("igraph", quietly = TRUE)) {
@@ -20,9 +18,8 @@ graphNEL2_graph_internal <- function(x) {
   else stop()
 }  
 graph_internal2graph_NEL <- function(x) {  
-  
-  if (!requireNamespace("graph", quietly = TRUE)) {
-    stop("Package graph required for this functionality.")
+  if (!requireNamespace("igraph", quietly = TRUE)) {
+    stop("Package igraph required for this functionality.")
   }
       stopifnot(inherits( x, "bnc_graph_internal")) 
       edges <- x$edges 
@@ -41,21 +38,3 @@ graph_internal2graph_NEL <- function(x) {
       igraph::set_edge_attr(graph, "weight", value = weights)
       graph 
 }  
-# 
-#' Returns an edge matrix with node names (instead of node indices).
-#' 
-#' TODO Not sure this function is used.
-#' 
-#' @param g A graphNEL.
-#' @return A character matrix. 
-#' @keywords internal
-named_edge_matrix <- function(g) { 
-  if (requireNamespace("graph", quietly = TRUE)) {
-      u <- graph::edgeMatrix(g)
-      u[] <- graph::nodes(g)[as.vector(u)]
-      if (length(u) == 0) mode(u) <- 'character'
-      stopifnot(is.character(u))
-      u 
-  }
-  else stop()
-}

@@ -33,20 +33,20 @@ query this object with the functions documented in
 }
 \section{Functions}{
 \itemize{
-\item \code{nparams}: Returns the number of free parameters in the model.
+\item \code{nparams()}: Returns the number of free parameters in the model.
 
-\item \code{manb_arc_posterior}: Returns the posterior of each arc from the class
+\item \code{manb_arc_posterior()}: Returns the posterior of each arc from the class
 according to the MANB method.
 
-\item \code{awnb_weights}: Returns the AWNB feature weights.
+\item \code{awnb_weights()}: Returns the AWNB feature weights.
 
-\item \code{params}: Returns the list of CPTs, in the same order as \code{\link{vars}}.
+\item \code{params()}: Returns the list of CPTs, in the same order as \code{\link{vars}}.
 
-\item \code{values}: Returns the possible values of each variable, in the same order as \code{\link{vars}}.
+\item \code{values()}: Returns the possible values of each variable, in the same order as \code{\link{vars}}.
 
-\item \code{classes}: Returns the possible values of the class variable.
+\item \code{classes()}: Returns the possible values of the class variable.
+
 }}
-
 \examples{
  
 data(car)

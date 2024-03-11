@@ -47,29 +47,29 @@ Functions for inspecting a \code{\link{bnc_dag}} object.
 }
 \section{Functions}{
 \itemize{
-\item \code{class_var}: Returns the class variable.
+\item \code{class_var()}: Returns the class variable.
 
-\item \code{features}: Returns the features.
+\item \code{features()}: Returns the features.
 
-\item \code{vars}: Returns all variables (i.e., features + class).
+\item \code{vars()}: Returns all variables (i.e., features + class).
 
-\item \code{families}: Returns the family of each variable.
+\item \code{families()}: Returns the family of each variable.
 
-\item \code{modelstring}: Returns the model string of the network in bnlearn format (adding a space in between two families).
+\item \code{modelstring()}: Returns the model string of the network in bnlearn format (adding a space in between two families).
 
-\item \code{feature_families}: Returns the family of each feature.
+\item \code{feature_families()}: Returns the family of each feature.
 
-\item \code{narcs}: Returns the number of arcs.
+\item \code{narcs()}: Returns the number of arcs.
 
-\item \code{is_semi_naive}: Returns TRUE if \code{x} is a semi-naive Bayes.
+\item \code{is_semi_naive()}: Returns TRUE if \code{x} is a semi-naive Bayes.
 
-\item \code{is_anb}: Returns TRUE if \code{x} is an augmented naive Bayes.
+\item \code{is_anb()}: Returns TRUE if \code{x} is an augmented naive Bayes.
 
-\item \code{is_nb}: Returns TRUE if \code{x} is a naive Bayes.
+\item \code{is_nb()}: Returns TRUE if \code{x} is a naive Bayes.
 
-\item \code{is_ode}: Returns TRUE if \code{x} is a one-dependence estimator.
+\item \code{is_ode()}: Returns TRUE if \code{x} is a one-dependence estimator.
+
 }}
-
 \examples{
 data(car)
 nb <- bnc('nb', 'class', car, smooth = 1)

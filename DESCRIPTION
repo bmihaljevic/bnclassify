@@ -32,3 +32,4 @@ Maintainer: Mihaljevic Bojan <boki.mihaljevic@gmail.com>
 VignetteBuilder: knitr
 LinkingTo: Rcpp, BH
 SystemRequirements: C++11
+RoxygenNote: 7.3.1

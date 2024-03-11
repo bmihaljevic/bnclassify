@@ -19,11 +19,11 @@ Convert a \code{\link{bnc_dag}} to \code{graphNEL} and
 }
 \section{Functions}{
 \itemize{
-\item \code{as_graphNEL}: Convert to a graphNEL.
+\item \code{as_graphNEL()}: Convert to a graphNEL.
 
-\item \code{as_grain}: Convert to a grain.
+\item \code{as_grain()}: Convert to a grain.
+
 }}
-
 \examples{
 data(car)
 nb <- bnc('nb', 'class', car, smooth = 1)

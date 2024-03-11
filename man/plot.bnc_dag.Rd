@@ -25,7 +25,7 @@ with argument fontsize. Also, you may try multiple different layouts.
 \examples{
  
 
-# Requires the graph and Rgraphviz packages to be installed.
+# Requires the igraph package to be installed.
 data(car)
 nb <- nb('class', car)
 nb <- nb('class', car)

@@ -2,6 +2,7 @@
 % Please edit documentation in R/0bnclassify-doc.R
 \docType{package}
 \name{bnclassify}
+\alias{bnclassify-package}
 \alias{bnclassify}
 \title{Learn discrete Bayesian network classifiers from data.}
 \description{
@@ -87,4 +88,27 @@ Bielza C and Larranaga P (2014), Discrete Bayesian network
   Pazzani M (1996). Constructive induction of Cartesian product attributes. 
   In \emph{Proceedings of the Information, Statistics and Induction in 
   Science Conference (ISIS-1996)}, pp. 66-77
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/bmihaljevic/bnclassify}
+  \item Report bugs at \url{https://github.com/bmihaljevic/bnclassify/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Mihaljevic Bojan \email{boki.mihaljevic@gmail.com}
+
+Authors:
+\itemize{
+  \item Bielza Concha \email{mcbielza@fi.upm.es}
+  \item Larranaga Pedro \email{pedro.larranaga@fi.upm.es}
+}
+
+Other contributors:
+\itemize{
+  \item Wickham Hadley (some code extracted from memoise package) [contributor]
+}
+
 }
