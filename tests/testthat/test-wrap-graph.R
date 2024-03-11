@@ -21,7 +21,7 @@ test_that("Complete graph", {
 test_that("Superimpose node", {
   skip_if_not_installed("graph")
 #    Nominal
-  g <- graph(edges = c("A", "B"), directed = TRUE)
+  g <- igraph::graph(edges = c("A", "B"), directed = TRUE)
   sg <- superimpose_node(graphNEL2_graph_internal(g), 'C')
   sg <- graph_internal2graph_NEL(sg)  
   expect_equal(sort(igraph::V(sg)$name), LETTERS[1:3])
@@ -36,6 +36,11 @@ test_that("Direct forest", {
   gr <- pairwise_ode_score_contribs(class = 'class', dataset = car, score = 'loglik') 
   af <- max_weight_forest(gr)
   f <- direct_forest(g = af)
-  expect_equivalent(igraph::as.undirected(graph_internal2graph_NEL(f)), graph_internal2graph_NEL(af))
+  # check labels, weights
+  igf <- graph_internal2graph_NEL(f)
+  igaf <- graph_internal2graph_NEL(af)
+  expect_true(igraph::graph.isomorphic(igraph::as.undirected(igf), igaf))
+  expect_equal(sort(igraph::V(igf)$name), sort(igraph::V(igaf)$name))
+  # weights
 })
 

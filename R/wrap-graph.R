@@ -14,7 +14,7 @@ graphNEL2_graph_internal <- function(x) {
         weights <- igraph::E(x)$weight
       }, error = function(e) {})
       edgemode <- ifelse(igraph::is_directed(x), "directed", "undirected")
-      # weights <- unlist(weights)
+      weights <- igraph::E(x)$weight
       graph_internal(nodes, edges, weights, edgemode) 
   }
   else stop()
@@ -33,13 +33,13 @@ graph_internal2graph_NEL <- function(x) {
       }
       # TODO: handle undirected. If directed, then build directed graph in BH.
       # graph::ftM2graphNEL(ft = edges, W = weights, V = x$nodes, edgemode = x$edgemode)  
-      
-      # Assuming x$edgemode is a character indicating either "directed" or "undirected"
       edgemode <- ifelse(x$edgemode == "directed", TRUE, FALSE)
       
       # Build the igraph graph
-      # , weights = weights
-      igraph::graph_from_edgelist(edges, directed = edgemode)
+      graph <- igraph::graph_from_edgelist(edges, directed = edgemode)
+      # igraph::E(graph)$weight <- weights
+      igraph::set_edge_attr(graph, "weight", value = weights)
+      graph 
 }  
 # 
 #' Returns an edge matrix with node names (instead of node indices).
