@@ -362,9 +362,9 @@ NULL
 #' cLogLik(nb, car)   
 NULL
 
-#' Convert to graph and gRain.
+#' Convert to igraph and gRain.
 #' 
-#' Convert a \code{\link{bnc_dag}} to \code{graphNEL} and
+#' Convert a \code{\link{bnc_dag}} to \code{igraph} and
 #' \code{\link[gRain]{grain}} objects.
 #' 
 #' @name grain_and_graph
@@ -372,7 +372,7 @@ NULL
 #' @examples 
 #' data(car)
 #' nb <- bnc('nb', 'class', car, smooth = 1)
-#' # Requires the grain and graph packages installed
+#' # Requires the grain and igraph packages installed
 #' \dontrun{g <- as_grain(nb)}
 #' \dontrun{gRain::querygrain.grain(g)$buying}
 NULL

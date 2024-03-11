@@ -210,7 +210,7 @@ You can convert a `bnc_bn` object to `bnlearn` [@scutari2009learning], `gRain` [
 
 Use 
 
-- `as_graphNEL` for `graph`
+- `as_igraph` for `graph`
 - `as_grain` for `gRain`
 
 For `bnlearn`, first convert to `gRain` and then convert the `gRain` object to a `bnlearn` one (see `bnlearn` docs for how to do this).

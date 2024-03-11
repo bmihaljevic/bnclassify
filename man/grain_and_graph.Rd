@@ -2,11 +2,11 @@
 % Please edit documentation in R/0bnclassify-doc.R, R/anb-dag.R, R/wrap-gRain.R
 \name{grain_and_graph}
 \alias{grain_and_graph}
-\alias{as_graphNEL}
+\alias{as_igraph}
 \alias{as_grain}
-\title{Convert to graph and gRain.}
+\title{Convert to igraph and gRain.}
 \usage{
-as_graphNEL(x)
+as_igraph(x)
 
 as_grain(x)
 }
@@ -14,12 +14,12 @@ as_grain(x)
 \item{x}{The \code{\link{bnc_bn}} object. The Bayesian network classifier.}
 }
 \description{
-Convert a \code{\link{bnc_dag}} to \code{graphNEL} and
+Convert a \code{\link{bnc_dag}} to \code{igraph} and
 \code{\link[gRain]{grain}} objects.
 }
 \section{Functions}{
 \itemize{
-\item \code{as_graphNEL()}: Convert to a graphNEL.
+\item \code{as_igraph()}: Convert to a graphNEL.
 
 \item \code{as_grain()}: Convert to a grain.
 
@@ -27,7 +27,7 @@ Convert a \code{\link{bnc_dag}} to \code{graphNEL} and
 \examples{
 data(car)
 nb <- bnc('nb', 'class', car, smooth = 1)
-# Requires the grain and graph packages installed
+# Requires the grain and igraph packages installed
 \dontrun{g <- as_grain(nb)}
 \dontrun{gRain::querygrain.grain(g)$buying}
 }

@@ -35,7 +35,7 @@ check_bnc_dag_basic <- function(x) {
 
 #' @export 
 #' @describeIn grain_and_graph Convert to a graphNEL.
-as_graphNEL <- function(x) {
+as_igraph <- function(x) {
   stopifnot(inherits(x, "bnc_dag"))
   graph_internal2graph_NEL(dag(x))
 } 
