@@ -1,6 +1,6 @@
 # Implementation 
 \label{sec:implementation} 
-With complete data, \pkg{bnclassify} implements prediction for augmented naive Bayes models as well as for ensembles of such models. It multiplies the corresponding \mthetas/ in logarithmic space, applying the *log-sum-exp* trick before normalizing, to reduce the chance of underflow. On instances with missing entries, it uses the \CRANpkg{gRain} package \citep{grain130,Hojsgaard2012} to perform exact inference, which is noticeably slower. Network plotting is implemented by the \pkg{Rgraphviz} package. Some functions are implemented in C++ with \pkg{Rcpp} for efficiency. The package is extensively tested, with over 200 unit and integrated tests that give a 94% code coverage.  
+With complete data, \pkg{bnclassify} implements prediction for augmented naive Bayes models as well as for ensembles of such models. It multiplies the corresponding \mthetas/ in logarithmic space, applying the *log-sum-exp* trick before normalizing, to reduce the chance of underflow. On instances with missing entries, it uses the \CRANpkg{gRain} package \citep{grain130,Hojsgaard2012} to perform exact inference, which is noticeably slower. Network plotting is implemented by the \pkg{igraph} package. Some functions are implemented in C++ with \pkg{Rcpp} for efficiency. The package is extensively tested, with over 200 unit and integrated tests that give a 94% code coverage.  
 
 # Related software
 \label{sec:relatedsw} 

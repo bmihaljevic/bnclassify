@@ -42,7 +42,7 @@
 #' 
 #' Inspecting models:
 #'  \itemize{ 
-#'  \item \code{\link[=plot.bnc_dag]{plot}}: Structure plotting (through \code{Rgraphviz})
+#'  \item \code{\link[=plot.bnc_dag]{plot}}: Structure plotting (through \code{igraph})
 #'  \item \code{\link[=print.bnc_base]{print}}: Summary 
 #'  \item \code{\link{params}}: Access conditional probability tables 
 #'  \item \code{\link{nparams}}: Number of free parameters 
