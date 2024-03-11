@@ -3,7 +3,7 @@ graphNEL2_graph_internal <- function(x) {
   stopifnot(inherits(x, "igraph"))
   if (requireNamespace("igraph", quietly = TRUE)) {
       nodes <- igraph::V(x)$name
-      edges <- igraph::get.edgelist(x)  # Assuming 'x' is an igraph object
+      edges <- igraph::as_edgelist(x)  # Assuming 'x' is an igraph object
       colnames(edges) <- c("from", "to")
       # edges <- t(named_edge_matrix(x)) 
       weights <- NULL
