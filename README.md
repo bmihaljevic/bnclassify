@@ -63,7 +63,7 @@ Estimate predictive accuracy with cross validation.
 
 ``` r
 cv(tn, car, k = 10)
-#> [1] 0.9386534
+#> [1] 0.9420844
 ```
 
 Or compute the log-likelihood
@@ -94,20 +94,13 @@ Ideally, you would use the `build_vignettes = TRUE` version, and thus
 get the vignettes, but it requires programs such as texi2dvi to be
 installed on your side.
 
-For network plotting and prediction with incomplete data you will also
-need two packages from Bioconductor. Install them with:
-
-``` r
-source("http://bioconductor.org/biocLite.R")
-biocLite(c("graph", "Rgraphviz"))
-```
-
 # Overview
 
 See an overview of the package and examples of usage:
 
 ``` r
 vignette('overview', package = 'bnclassify')
+#> Warning: vignette 'overview' not found
 ```
 
 See the list of main functionalities.

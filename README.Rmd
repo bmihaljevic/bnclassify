@@ -70,13 +70,6 @@ devtools::install_github('bmihaljevic/bnclassify')
 
 Ideally, you would use the `build_vignettes = TRUE` version, and thus get the vignettes, but it requires programs such as texi2dvi to be installed on your side. 
 
-For network plotting and prediction with incomplete data you will also need two packages from Bioconductor. Install them with:
-```{r, eval = FALSE}
-source("http://bioconductor.org/biocLite.R")
-biocLite(c("graph", "Rgraphviz"))
-```
-
-
 # Overview
 
 See an overview of the package and examples of usage:

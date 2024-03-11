@@ -1,7 +1,7 @@
-context("Graph")
+context("igraph")
 
-test_that("Make graph", {
-  skip_if_not_installed("graph")
+test_that("Make igraph", {
+  skip_if_not_installed("igraph")
   expect_error(make_graph(nodes = LETTERS[1], from = LETTERS[1], to=1, 
                           weights = 1))
   expect_error(make_graph(nodes = LETTERS[1], from =LETTERS[1],to=LETTERS[1],
@@ -12,14 +12,14 @@ test_that("Make graph", {
 })
 
 test_that("Complete graph", {
-  skip_if_not_installed("graph")
+  skip_if_not_installed("igraph")
   g <- complete_graph(LETTERS[1:5])  
   g <- graph_internal2graph_NEL(g)
   expect_equal(length(igraph::E(g)), 10)
 })
 
 test_that("Superimpose node", {
-  skip_if_not_installed("graph")
+  skip_if_not_installed("igraph")
 #    Nominal
   g <- igraph::graph(edges = c("A", "B"), directed = TRUE)
   sg <- superimpose_node(graphNEL2_graph_internal(g), 'C')
@@ -32,7 +32,7 @@ test_that("Superimpose node", {
 
 
 test_that("Direct forest", {
-  skip_if_not_installed("graph")
+  skip_if_not_installed("igraph")
   gr <- pairwise_ode_score_contribs(class = 'class', dataset = car, score = 'loglik') 
   af <- max_weight_forest(gr)
   f <- direct_forest(g = af)
