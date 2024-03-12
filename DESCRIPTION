@@ -1,8 +1,8 @@
 Package: bnclassify
 Title: Learning Discrete Bayesian Network Classifiers from Data
 Description: State-of-the art algorithms for learning discrete Bayesian network classifiers from data, including a number of those described in Bielza & Larranaga (2014) <doi:10.1145/2576868>, with functions for prediction, model evaluation and inspection.
-Version: 0.4.7
-Authors@R: c(person("Mihaljevic","Bojan",email="boki.mihaljevic@gmail.com",role=c("aut","cre")),
+Version: 0.4.8
+Authors@R: c(person("Mihaljevic","Bojan",email="boki.mihaljevic@gmail.com",role=c("aut","cre", "cph")),
     person("Bielza","Concha",email="mcbielza@fi.upm.es",role="aut"),
     person("Larranaga","Pedro",email="pedro.larranaga@fi.upm.es",role="aut"), 
     person("Wickham", "Hadley", role="ctb", comment="some code extracted from memoise package"))
