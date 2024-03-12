@@ -31,7 +31,6 @@ tn
 #>   num. arcs:   9 
 #>   learning algorithm:    tan_cl
 plot(tn)
-#> Warning in length(eattrs[[name]]) <- ec: length of NULL cannot be changed
 ```
 
 ![](man/figures/README-unnamed-chunk-2-1.png)
@@ -60,7 +59,7 @@ Estimate predictive accuracy with cross validation.
 
 ``` r
 cv(tn, car, k = 10)
-#> [1] 0.938106
+#> [1] 0.9386641
 ```
 
 Or compute the log-likelihood
