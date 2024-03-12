@@ -7,7 +7,7 @@
 graph_connected_components(g)
 }
 \arguments{
-\item{x}{currently a graphNEL. TODO But will be a graph_internal.}
+\item{g}{graph_internal.}
 }
 \description{
 connected_components

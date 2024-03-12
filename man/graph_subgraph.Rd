@@ -10,7 +10,7 @@ graph_subgraph(nodes, g)
 \arguments{
 \item{nodes}{character}
 
-\item{x}{currently a graphNEL. TODO But will be a graph_internal.}
+\item{g}{graph_internal.}
 }
 \description{
 Subgraph.  

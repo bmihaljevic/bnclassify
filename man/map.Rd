@@ -9,8 +9,6 @@ map(pred)
 \arguments{
 \item{pred}{A numeric matrix. Each row corresponds to class posterior 
 probabilities for an instance.}
-
-\item{x}{a \code{bnc_fit} object.}
 }
 \value{
 a factor with the same levels as the class variable.

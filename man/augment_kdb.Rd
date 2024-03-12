@@ -6,9 +6,6 @@
 \usage{
 augment_kdb(kdbk)
 }
-\arguments{
-\item{...}{Ignored.}
-}
 \description{
 Arcs that do not invalidate the k-DB structure
 }

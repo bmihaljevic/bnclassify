@@ -70,7 +70,7 @@ call_bh <- function(fun, g, ...) {
 }
 #' connected_components 
 #'  
-#' @param x currently a graphNEL. TODO But will be a graph_internal.
+#' @param g graph_internal.
 #' @keywords internal
 graph_connected_components <- function(g) {
   stopifnot(inherits(g, "bnc_graph_internal"))  
@@ -88,7 +88,7 @@ graph_connected_components <- function(g) {
 #' Only for a directed graph?
 #' 
 #' @param nodes character 
-#' @param  x currently a graphNEL. TODO But will be a graph_internal.
+#' @param  g graph_internal.
 #' @keywords internal
 graph_subgraph <- function(nodes, g) {   
   stopifnot(inherits( g, "bnc_graph_internal"))   

@@ -64,7 +64,6 @@ augment_ode <- function(bnc_dag, ...) {
 } 
 #' Arcs that do not invalidate the k-DB structure
 #' 
-#' @param ... Ignored.
 #' @keywords internal
 augment_kdb <- function(kdbk) {
   stopifnot(is.numeric(kdbk), kdbk > 0)

@@ -37,7 +37,6 @@ predict.bnc_fit <- function(object, newdata, prob = FALSE, ...) {
 #' 
 #' @param pred A numeric matrix. Each row corresponds to class posterior 
 #'   probabilities for an instance.
-#' @param x a \code{bnc_fit} object.
 #' @return a factor with the same levels as the class variable.
 #' @keywords internal
 map <- function(pred) {
