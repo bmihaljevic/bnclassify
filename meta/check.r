@@ -14,8 +14,12 @@ check_args <-  '--as-cran'
 ## First to build win so I can proceed with local while it is tested remotely 
 devtools::check_win_devel('.', args = build_args ) 
 devtools::check_win_release('.', args = build_args ) 
+devtools::check_mac_release() 
 # devtools::build_win('.', version = 'R-release', args = build_args ) 
 # devtools::build_win('.', version = 'R-devel', args = build_args )  
+
+rhub::check_for_cran()
+rhub::check_with_sanitizers()
 
 devtools::check(args = check_args , cran = TRUE, build_args = build_args )
 ## cran = FALSE probably runs tests skipped on cran
