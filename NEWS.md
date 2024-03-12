@@ -1,3 +1,6 @@
+# 0.4.8
+- Switch from graph and Rgraphviz to igraph
+
 # 0.4.7
 - Fix a WARN on r-devel clang
 
