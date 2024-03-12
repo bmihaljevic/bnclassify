@@ -5,7 +5,7 @@
 ![](https://cranlogs.r-pkg.org/badges/grand-total/bnclassify?color=yellowgreen)
 [![Research software
 impact](http://depsy.org/api/package/cran/bnclassify/badge.svg)](http://depsy.org/package/r/bnclassify)
-[![codecov.io](https://codecov.io/github/bmihaljevic/bnclassify/coverage.svg?branch=master)](https://codecov.io/github/bmihaljevic/bnclassify?branch=master)
+[![codecov.io](https://app.codecov.io/github/bmihaljevic/bnclassify?branch=master)](https://app.codecov.io/github/bmihaljevic/bnclassify?branch=master)
 [![R-CMD-check](https://github.com/bmihaljevic/bnclassify/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/bmihaljevic/bnclassify/actions/workflows/R-CMD-check.yaml)
 
 Implements algorithms for learning discrete Bayesian network classifiers
@@ -31,6 +31,7 @@ tn
 #>   num. arcs:   9 
 #>   learning algorithm:    tan_cl
 plot(tn)
+#> Warning in length(eattrs[[name]]) <- ec: length of NULL cannot be changed
 ```
 
 ![](man/figures/README-unnamed-chunk-2-1.png)
@@ -59,7 +60,7 @@ Estimate predictive accuracy with cross validation.
 
 ``` r
 cv(tn, car, k = 10)
-#> [1] 0.9403731
+#> [1] 0.938106
 ```
 
 Or compute the log-likelihood
