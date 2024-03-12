@@ -2,8 +2,8 @@
 % Please edit documentation in R/0bnclassify-doc.R
 \docType{package}
 \name{bnclassify}
-\alias{bnclassify-package}
 \alias{bnclassify}
+\alias{bnclassify-package}
 \title{Learn discrete Bayesian network classifiers from data.}
 \description{
 State-of-the-art algorithms for learning discrete Bayesian network 
