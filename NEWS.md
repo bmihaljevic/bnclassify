@@ -1,4 +1,4 @@
-# 0.4.8
+# bnclassify 0.4.8
 - Switch from graph and Rgraphviz to igraph
 
 # 0.4.7

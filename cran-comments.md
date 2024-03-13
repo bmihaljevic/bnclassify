@@ -1,6 +1,5 @@
 ## Test environments
-- Ubuntu 18.04 R 3.6.3 (local) 
-- Debian Linux, R-devel, clang, ISO-8859-15 locale
+- Ubuntu 22.04 R 4.3.3 (local) 
 - windows R-devel (win-builder) 
 - windows R-release (win-builder)  
 - Github actions: ...
@@ -8,6 +7,8 @@
 
 ## R CMD check results   
 Locally and on win-builder there were no ERRORs, no WARNINGs, and no NOTEs.        
+
+0 errors | 0 warnings | 0 notes
 
 On Windows R-devel (win-builder), there was 1 WARNING and 2 NOTES. The WARNING was:
 
@@ -24,5 +25,5 @@ New submission
 
 Package was archived on CRAN
 
-## Downstream dependencies
+## Reverse dependencies
 There are currently no downstream dependencies for this package.
